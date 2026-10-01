@@ -1,0 +1,28 @@
+The Generation behavior is still not the UX I want. Please change the behavior rather than continuing to debug the existing auto-selection rule.
+Do NOT automatically select and lock/hide the Generation control just because the selected model currently has only one generation in the catalog.
+Generation should remain a normal, enabled, clickable dropdown whenever a Model has been selected.
+For example, with the current demo data:
+- Tesla → Model Y → opening Generation should show First Generation.
+- Dodge → Charger → opening Generation should show Seventh Generation.
+- Ram → 1500 → opening Generation should show Fifth Generation.
+If the catalog currently contains only one generation for that model, the dropdown should simply contain that one selectable option. It should NOT become disabled, disappear, or become non-interactive.
+If the catalog later contains multiple generations for a model, the exact same dropdown should automatically list all applicable generations from the catalog. No frontend code change should be required when new generations are added.
+Before the user chooses a generation, the control may display “All generations” or equivalent. Selecting a generation should then filter Model Year and Trim accordingly.
+Do not auto-select a sole generation merely because only one exists.
+Remove the sole-generation auto-selection behavior that was just added to the shared Browse filter resolver, including the behavior that automatically writes that generation into the URL when only the Model was selected.
+Preserve explicit generation selections from URLs/deep links when the user actually selected a generation.
+Generation options must continue to come entirely from the catalog data. Do not hard-code Tesla, Dodge, Ram, generation names, or manufacturer/model-specific behavior.
+Keep the rest of the cascading system:
+Manufacturer → Model → Generation → Model Year → Trim.
+Changing Manufacturer or Model should clear an incompatible explicitly selected Generation, Year, and Trim. Selecting Generation should constrain Year, and selecting Year should constrain Trim.
+Add/update regression tests specifically verifying:
+1. A model with one generation still has an enabled/clickable Generation dropdown.
+2. That dropdown contains its one catalog generation.
+3. A model with multiple generations exposes all catalog generations.
+4. Selecting a model alone does not automatically select a generation or add one to the URL.
+5. Explicit generation selections remain represented in the URL.
+6. Newly added catalog generations flow into the dropdown without frontend-specific changes.
+Do not modify vehicle data, invent generations, change the schema, or alter the visual design. This is a Browse Generation-control behavior correction only.
+
+That should finally align Replit's tests with what you actually expect to happen on screen, instead of having it tell us that an automatically selected generation is technically working.
+And importantly, when we eventually add a second, third, sixth, etc. generation for a model, we shouldn't need another prompt to modify Browse. The dropdown should simply receive the additional generations from the catalog.

@@ -9,7 +9,7 @@ import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } f
 import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
-import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, economyUnit, getActiveReportSection, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, economyUnit, getActiveReportSection, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
 import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
 import { STATE_TAX_ESTIMATES } from './state-tax-estimates';
@@ -236,7 +236,11 @@ function BrowsePage() {
   const scoped = catalog.filter((option) => !browse.make || option.makeSlug === browse.make);
   const modelOptions = [...new Map(scoped.map((option) => [option.modelId, { id: option.modelId, name: option.model }])).values()];
   const selectedModelOptions = scoped.filter((option) => !browse.modelId || String(option.modelId) === browse.modelId);
-  const generationOptions = [...new Map(selectedModelOptions.map((option) => [option.generationId, { id: option.generationId, name: option.generation }])).values()];
+  const generationOptions = getBrowseGenerationOptions(selectedModelOptions);
+  const generationFilterEnabled = isGenerationFilterEnabled({
+    catalogReady,
+    modelSelected: Boolean(browse.modelId),
+  });
   const generationHint = getGenerationFilterHint({
     catalogReady,
     modelSelected: Boolean(browse.modelId),
@@ -265,7 +269,7 @@ function BrowsePage() {
       {invalidHierarchyFilter && <div className="catalog-filter-mismatch" role="status">A saved vehicle filter does not match the available catalog. It remains active so results are not broadened; clear or change filters to continue.</div>}
       <label className="field-label">Manufacturer<select disabled={!catalogReady} value={browse.make} onChange={event => updateFilters({ make: event.target.value, model: "", modelId: "", generationId: "", year: "", trim: "", trimId: "" })}><option value="">All manufacturers</option>{makeOptions.map(makeOption => <option value={makeOption.slug} key={makeOption.slug}>{makeOption.name}</option>)}</select></label>
       <label className="field-label">Model<select disabled={!catalogReady || !browse.make} value={browse.modelId} onChange={event => updateFilters({ model: "", modelId: event.target.value, generationId: "", year: "", trim: "", trimId: "" })}><option value="">All models</option>{modelOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
-      <label className="field-label">Generation<select aria-describedby={generationHint ? "browse-generation-help" : undefined} disabled={!catalogReady || !browse.modelId} value={browse.generationId} onChange={event => updateFilters({ generationId: event.target.value, year: "", trim: "", trimId: "" })}><option value="">All generations</option>{generationOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select>{generationHint && <small id="browse-generation-help" className="filter-help">{generationHint}</small>}</label>
+      <label className="field-label">Generation<select aria-describedby={generationHint ? "browse-generation-help" : undefined} disabled={!generationFilterEnabled} value={browse.generationId} onChange={event => updateFilters({ generationId: event.target.value, year: "", trim: "", trimId: "" })}><option value="">All generations</option>{generationOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select>{generationHint && <small id="browse-generation-help" className="filter-help">{generationHint}</small>}</label>
       <label className="field-label">Model year<select disabled={!catalogReady} value={browse.year} onChange={event => updateFilters({ year: event.target.value, trim: "", trimId: "" })}><option value="">All years</option>{yearOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
       <label className="field-label">Trim<select disabled={!catalogReady} value={browse.trimId} onChange={event => updateFilters({ trim: "", trimId: event.target.value })}><option value="">All trims</option>{trimOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
       <label className="field-label">Order by<select value={browse.sort} onChange={event => updateFilters({ sort: event.target.value as BrowseFilters["sort"] })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label>

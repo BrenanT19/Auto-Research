@@ -27,6 +27,20 @@ export type CatalogOption = {
   trim: string;
 };
 
+export function getBrowseGenerationOptions(options: CatalogOption[]) {
+  return [...new Map(options.map((option) => [
+    option.generationId,
+    { id: option.generationId, name: option.generation },
+  ])).values()];
+}
+
+export function isGenerationFilterEnabled(options: {
+  catalogReady: boolean;
+  modelSelected: boolean;
+}): boolean {
+  return options.catalogReady && options.modelSelected;
+}
+
 export type BrowseSuggestion =
   | { kind: "manufacturer"; label: string; makeSlug: string }
   | { kind: "model"; label: string; makeSlug: string; modelId: number };
@@ -147,13 +161,6 @@ export function resolveBrowseFilters(filters: BrowseFilters, options: CatalogOpt
     }
   }
   const underModel = underMake.filter((option) => !next.modelId || String(option.modelId) === next.modelId);
-
-  if (!next.generationId && next.modelId) {
-    const modelGenerations = unique(underModel.map((option) => String(option.generationId)));
-    if (modelGenerations.length === 1) {
-      next = { ...next, generationId: modelGenerations[0] };
-    }
-  }
 
   const underGeneration = underModel.filter((option) =>
     !next.generationId || String(option.generationId) === next.generationId,

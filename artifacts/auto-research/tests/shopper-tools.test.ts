@@ -9,11 +9,13 @@ import {
   calculateOwnershipEstimate,
   clearBrowseFilters,
   economyUnit,
+  getBrowseGenerationOptions,
   getActiveReportSection,
   getBrowseSuggestions,
   getGenerationFilterHint,
   hasActiveBrowseFilters,
   hasInvalidBrowseSelection,
+  isGenerationFilterEnabled,
   normalizeCalculatorNumber,
   optionalVehicleQueryOptions,
   parseCalculatorNumber,
@@ -461,11 +463,11 @@ test("browse deep links resolve legacy names without broadening invalid hierarch
   const legacy = parseBrowseFilters("?make=ford&model=F-150&year=2024&trim=XLT");
   const resolved = resolveBrowseFilters(legacy, browseCatalog);
   assert.equal(resolved.modelId, "11");
-  assert.equal(resolved.generationId, "111");
+  assert.equal(resolved.generationId, "");
   assert.equal(resolved.trimId, "11111");
   assert.equal(
     buildBrowseLocation(resolved),
-    "/browse?make=ford&modelId=11&generationId=111&year=2024&trimId=11111",
+    "/browse?make=ford&modelId=11&year=2024&trimId=11111",
   );
 
   const invalid = resolveBrowseFilters({
@@ -476,12 +478,13 @@ test("browse deep links resolve legacy names without broadening invalid hierarch
   assert.equal(hasInvalidBrowseSelection(invalid, browseCatalog), true);
 });
 
-test("browse auto-selects a sole model generation and scopes years and trims to it", () => {
+test("Browse generation stays enabled and unselected for single-generation models", () => {
   const cases = [
     {
       make: "tesla",
       modelId: "21",
       generationId: "211",
+      generationName: "First Generation",
       trimYear: 2024,
       expectedYears: [2024],
       expectedTrims: ["Long Range", "Performance"],
@@ -490,6 +493,7 @@ test("browse auto-selects a sole model generation and scopes years and trims to 
       make: "dodge",
       modelId: "31",
       generationId: "311",
+      generationName: "Seventh generation",
       trimYear: 2023,
       expectedYears: [2023],
       expectedTrims: ["GT"],
@@ -498,26 +502,61 @@ test("browse auto-selects a sole model generation and scopes years and trims to 
       make: "ram",
       modelId: "41",
       generationId: "411",
+      generationName: "Fifth generation",
       trimYear: 2024,
       expectedYears: [2024],
       expectedTrims: ["Big Horn"],
     },
   ];
 
-  for (const { make, modelId, generationId, trimYear, expectedYears, expectedTrims } of cases) {
+  for (const {
+    make,
+    modelId,
+    generationId,
+    generationName,
+    trimYear,
+    expectedYears,
+    expectedTrims,
+  } of cases) {
     const resolved = resolveBrowseFilters(
       { ...clearBrowseFilters(), make, modelId },
       browseCatalog,
     );
-    assert.equal(resolved.generationId, generationId, `${make} model should select its sole generation`);
+    assert.equal(resolved.generationId, "", `${make} model alone must not select a generation`);
     assert.equal(
       buildBrowseLocation(resolved),
-      `/browse?make=${make}&modelId=${modelId}&generationId=${generationId}`,
+      `/browse?make=${make}&modelId=${modelId}`,
     );
 
-    const selectedGeneration = browseCatalog.filter((option) =>
+    const modelOptions = browseCatalog.filter((option) =>
       String(option.modelId) === modelId &&
-      String(option.generationId) === resolved.generationId,
+    );
+    const generationOptions = getBrowseGenerationOptions(modelOptions);
+    assert.deepEqual(generationOptions, [{ id: Number(generationId), name: generationName }]);
+    assert.equal(
+      isGenerationFilterEnabled({ catalogReady: true, modelSelected: true }),
+      true,
+      "a selected model keeps the generation control enabled even with one option",
+    );
+    assert.equal(
+      isGenerationFilterEnabled({ catalogReady: true, modelSelected: false }),
+      false,
+      "the generation control is disabled until a model is selected",
+    );
+
+    const explicitlySelected = resolveBrowseFilters(
+      { ...resolved, generationId },
+      browseCatalog,
+    );
+    assert.equal(explicitlySelected.generationId, generationId);
+    assert.equal(
+      buildBrowseLocation(explicitlySelected),
+      `/browse?make=${make}&modelId=${modelId}&generationId=${generationId}`,
+      "an explicit generation selection remains in the URL",
+    );
+
+    const selectedGeneration = modelOptions.filter((option) =>
+      String(option.generationId) === explicitlySelected.generationId,
     );
     assert.deepEqual(
       [...new Set(selectedGeneration.map((option) => option.year))].sort((a, b) => a - b),
@@ -541,11 +580,43 @@ test("browse auto-selects a sole model generation and scopes years and trims to 
       modelYearId: 9921, year: 2025, trimId: 99211, trim: "Test Trim B",
     },
   ];
+  assert.deepEqual(
+    getBrowseGenerationOptions(multipleGenerationFixture),
+    [
+      { id: 991, name: "Generation A" },
+      { id: 992, name: "Generation B" },
+    ],
+  );
   const multipleGenerations = resolveBrowseFilters(
     { ...clearBrowseFilters(), make: "test-make", modelId: "99" },
     multipleGenerationFixture,
   );
   assert.equal(multipleGenerations.generationId, "");
+  assert.equal(
+    isGenerationFilterEnabled({ catalogReady: true, modelSelected: true }),
+    true,
+    "models with multiple generations use the same enabled control",
+  );
+
+  const laterGeneration: CatalogOption = {
+    ...multipleGenerationFixture[1]!,
+    profileId: "test-profile-c",
+    generationId: 993,
+    generation: "Generation C",
+    modelYearId: 9931,
+    year: 2026,
+    trimId: 99311,
+    trim: "Test Trim C",
+  };
+  assert.deepEqual(
+    getBrowseGenerationOptions([...multipleGenerationFixture, laterGeneration]),
+    [
+      { id: 991, name: "Generation A" },
+      { id: 992, name: "Generation B" },
+      { id: 993, name: "Generation C" },
+    ],
+    "new catalog generations appear without manufacturer/model-specific code",
+  );
 
   const makeOnly = resolveBrowseFilters(
     { ...clearBrowseFilters(), make: "tesla" },
