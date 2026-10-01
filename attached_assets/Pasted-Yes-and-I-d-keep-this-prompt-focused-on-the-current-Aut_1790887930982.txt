@@ -1,0 +1,107 @@
+Yes — and I’d keep this prompt focused on the current AutoResearch website only. We should not ask Replit to invent a separate mobile app or do a major responsive redesign. We’ll just tell it to preserve the current desktop experience and avoid breaking whatever responsive behavior already exists.
+Paste this in Build mode:
+Refine the Browse Cars filter-sidebar UX and the Clear All scroll behavior on the existing AutoResearch website.
+IMPORTANT:
+I am currently focused on the existing AutoResearch website and especially the desktop/laptop experience. Do not redesign the site for a separate mobile app, do not create a new mobile interface, and do not make major responsive-layout changes that could disrupt the current desktop design.
+Preserve the current visual design, Browse architecture, filters, cards, autocomplete, cascading logic, Compare, Calculator, routes, and vehicle data.
+1. Make the desktop Refine Research panel more compact
+Currently, when scrolling down Browse Cars, the Refine Research panel on the left becomes sticky, but the lower controls can fall below the visible screen.
+For example, I may only be able to see down through Order by / Most popular while the bottom of the filter panel, including Clear all filters, is no longer visible.
+I also cannot naturally scroll farther down inside the left panel with the mouse. Instead, the main vehicle-results page continues scrolling.
+I do not want users to have to reach the bottom of a long vehicle-results page just to access Clear all filters.
+This will become much more important when AutoResearch eventually contains hundreds or thousands of vehicles.
+Please make the current desktop Refine Research panel more vertically compact so that the full filter set can fit within a normal desktop/laptop viewport whenever reasonably possible.
+Keep:
+- Search
+- Manufacturer
+- Model
+- Generation
+- Model Year
+- Trim
+- Order by
+- Clear all filters when filters are active
+Reduce unnecessary vertical whitespace between controls and slightly reduce vertical padding where appropriate.
+Do NOT make the controls tiny or cramped.
+Preserve:
+- clear labels
+- comfortable click targets
+- the existing premium/editorial design
+- current colors
+- current typography
+- current control styling
+The goal is simply to use the vertical space more efficiently.
+2. Keep the Refine Research panel useful while scrolling
+Keep the desktop/laptop filter panel sticky while the user scrolls through vehicle results.
+It should remain positioned below the main site header and should not disappear underneath the header.
+Ideally, at a typical laptop/desktop viewport height, the entire filter interface including an active Clear all filters control should remain visible.
+Do NOT make the sidebar independently scrollable as the normal behavior if the complete panel can reasonably fit after reducing unnecessary spacing.
+However, if the browser window is unusually short and the complete panel genuinely cannot fit while preserving usable control sizes, add a graceful overflow fallback.
+In that short-screen fallback only:
+- the left filter area may scroll internally,
+- the mouse wheel over the filter panel must actually scroll the filter panel,
+- every filter and Clear all filters must remain reachable.
+Access to Clear all filters must never depend on reaching the bottom of the vehicle-results list.
+3. Fix the Clear All two-stage/jolting scroll
+Clear all filters currently resets the filters correctly, but returning to the top of Browse Cars feels laggy or like a two-stage movement.
+Visually, it appears to move upward, pause or get caught around the sticky Refine Research area, and then continue to the top.
+I want this to feel like ONE clean transition.
+Diagnose the actual cause rather than adding another scroll operation.
+When the user clicks Clear all filters:
+1. Reset Search, Manufacturer, Model, Generation, Model Year, Trim, and sorting according to the existing behavior.
+2. Update the existing URL/history state correctly.
+3. Remove the Clear all filters control because no filters remain active.
+4. Return the user to the beginning/top of the Browse Cars experience with ONE smooth, continuous transition.
+Look specifically for competing behavior involving:
+- multiple scrollTo calls
+- scrollIntoView
+- anchor navigation
+- focus-triggered scrolling
+- layout effects
+- sticky-position changes
+- history/URL restoration
+- state changes that cause an additional scroll
+Do not solve the issue by stacking multiple delayed scroll operations.
+Respect prefers-reduced-motion by using immediate positioning when reduced motion is enabled.
+Individual filter changes should NOT automatically scroll the user to the top. This behavior is specifically for Clear all filters.
+4. Future scalability
+This behavior must not depend on there currently being only 13 demo vehicles.
+Design the Browse filter interface so it remains usable when the database eventually contains thousands of vehicle records and the results area becomes much longer.
+The filter panel should always be usable independently of how long the vehicle-results list becomes.
+Do not implement pagination, infinite scrolling, or the real automotive dataset as part of this task.
+5. Responsive safety — preserve rather than redesign
+I am not asking for a new mobile site or mobile app in this task.
+Preserve the responsive behavior that the existing AutoResearch website already has and make sure these desktop changes do not break it.
+Do not force the desktop sticky-sidebar behavior onto small screens if the existing layout already changes appropriately.
+Do not introduce a new mobile drawer, bottom sheet, or mobile navigation system as part of this task.
+Only make small responsive safeguards if necessary to prevent the desktop sidebar changes from causing overflow, unusable controls, or broken layouts on narrower screens.
+The desktop/laptop experience is the primary focus of this task.
+Do not change
+- vehicle data
+- catalog hierarchy
+- Generation behavior
+- autocomplete behavior
+- cascading-filter logic
+- vehicle cards
+- sorting semantics
+- Compare
+- Calculator
+- Community
+- API/schema
+- routes
+- overall site design
+This should be a focused Browse Cars UX refinement only.
+Verification
+Verify the finished behavior in the actual AutoResearch preview, not only through unit tests.
+Test:
+- a normal laptop/desktop-height viewport
+- a shorter desktop browser window
+- scrolling through Browse results while filters are active
+- reaching Clear all filters at any point in a long results page
+- Clear all filters producing one smooth transition to the beginning of Browse
+- existing responsive behavior still functioning without a mobile redesign
+At completion, tell me:
+1. What caused the lower Refine Research controls to become inaccessible while scrolling.
+2. What spacing/sticky/overflow changes you made.
+3. What caused the two-stage Clear All movement.
+4. How you changed it to one transition.
+5. How you ensured the desktop changes did not break the site's existing responsive behavior.
