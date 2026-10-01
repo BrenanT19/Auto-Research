@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "yzXKHfPPRIF4NJWJvvkXu"
+uri = "file://research/notes.md"
+type = "text"
+title = "AutoResearch Stage 2 Research Notes"
+description = "Research plan, coverage checklist, and findings log for the source-backed vehicle-data architecture review."
+logical_id = "5b6c631d-d124-4d19-a8ca-36f79102f3d1"
+content_hash = "sha256:c14e8c7687052d4dbbbf7373dd3691b6c2b7c0bc06f44715142f9d0e03f0ed41"
+size = 2265
+mtime_ms = 1790890292065
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/06c35bd5-3ce0-4fcc-b133-454ad716f84f"
+storage_version_token = "1790890294609167"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "JsL3Gs0XOvk5qiV9ESWfh"
+uri = "file://artifacts/auto-research/STAGE-2-ARCHITECTURE-PLAN.md"
+type = "text"
+title = "AutoResearch Stage 2 Data Architecture Plan"
+description = "Review-ready, source-backed architecture and migration proposal covering the current demo catalog, global vehicle identity, provenance and applicability, source comparisons, pilot candidates, compatibility, risks, and approval gates. Planning only; no app or data changes."
+logical_id = "890cc000-1ab9-4f47-b679-6d489ff29360"
+content_hash = "sha256:cf172fedca402862ac4131359b6d44ec2ab75dabbd89e06242022a40de5a2a4d"
+size = 74746
+mtime_ms = 1790891461973
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/890cc000-1ab9-4f47-b679-6d489ff29360/8ca7f062-979c-4205-be9b-3b1da137bf2b"
+storage_version_token = "1790891485972803"
+content_type = "text/markdown"

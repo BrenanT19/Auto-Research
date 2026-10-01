@@ -1,0 +1,148 @@
+{
+  "accessed": "2026-10-01",
+  "sources": [
+    {
+      "key": "nhtsa-vpic-api",
+      "title": "Vehicle API",
+      "url": "http://vpic.nhtsa.dot.gov/api",
+      "publicationDate": "Not shown; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-01-nhtsa-vpic-api.md",
+      "accessFormat": "Public REST API; page also documents downloadable standalone databases",
+      "claimsSupported": [
+        "vPIC is built around manufacturer-reported VIN-decoding data and has methods for VIN decoding, manufacturers/WMI, make/model and vehicle variables.",
+        "Supports partial VINs, batch decoding, JSON/XML/CSV output; recommends model year parameter.",
+        "Automated traffic rate control applies; standalone downloads are limited for non-VIN functions."
+      ],
+      "limitations": [
+        "U.S. market/compliance data; field completeness varies; an absent variable means NHTSA lacks data for that variable, not that it is zero or not applicable.",
+        "Not a global canonical trim/configuration catalog; output is a decoder response, not proof that every returned value applies to every equipment/package variant."
+      ],
+      "terms": "Public documentation and service observed; verify current service terms, rate policy, bulk reuse/storage rights and operational limits before adoption.",
+      "freshness": "Manufacturer submissions and NHTSA API/database updates; retrieve on demand or schedule bounded refreshes after evaluating rate limits and change detection."
+    },
+    {
+      "key": "nhtsa-wmi-handbook-2014",
+      "title": "NHTSA Product Information Catalog and Vehicle Listing - Home (New Manufacturers Handbook PDF)",
+      "url": "https://www.nhtsa.gov/sites/nhtsa.gov/files/manufacturer_information_march2014.pdf",
+      "publicationDate": "March 2014, inferred from file name; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-02-nhtsa-wmi-handbook.md",
+      "accessFormat": "Public PDF handbook",
+      "claimsSupported": [
+        "The handbook describes manufacturer submissions and NHTSA's MID/vPIC role; WMI assignment/coordination involves SAE.",
+        "The retrieved text says vPIC coverage is model year 1981 and later and focuses on vehicles intended for sale/import into the United States."
+      ],
+      "limitations": [
+        "The handbook is dated 2014; check current regulations/docs before treating process details as current.",
+        "U.S.-oriented VIN decoding does not provide global model/trim/configuration coverage."
+      ],
+      "terms": "Government handbook publicly accessible; this does not grant rights to proprietary SAE WMI datasets or third-party OEM material.",
+      "freshness": "Regulatory/manufacturer submissions; verify current manufacturer submission process before implementation."
+    },
+    {
+      "key": "iso-3780-2009",
+      "title": "ISO 3780:2009 - Road vehicles — World manufacturer identifier (WMI) code",
+      "url": "https://www.iso.org/cms/live/live/en/sites/isoorg/contents/data/standard/04/58/45844.html",
+      "publicationDate": "2009 standard edition (ISO page notes current edition); accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-03-iso-3780.md",
+      "accessFormat": "Public scope/metadata and preview; full standard is sold by ISO",
+      "claimsSupported": [
+        "WMI identifies road-vehicle manufacturers worldwide and forms the first section of the VIN specified by ISO 3779.",
+        "Scope covers road vehicles including motorcycles, mopeds, trailers and motor vehicles."
+      ],
+      "limitations": [
+        "WMI identifies the manufacturer, not an individual AutoResearch trim/configuration or every relevant commercial brand relationship.",
+        "The full standard is not freely available; public summary is not a substitute for licensed text."
+      ],
+      "terms": "ISO metadata/preview is accessible; full standard requires purchase/licensing. Do not reproduce standards text or assume licensed reuse.",
+      "freshness": "Use current ISO edition/corrigenda and validate the assigned WMI with appropriate registration data."
+    },
+    {
+      "key": "nhtsa-vpic-downloads",
+      "title": "Downloads - NHTSA vPIC - Department of Transportation",
+      "url": "https://vpic.nhtsa.dot.gov/Downloads",
+      "publicationDate": "Not shown; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-snippets.md",
+      "accessFormat": "Public download page; standalone database options",
+      "claimsSupported": [
+        "The official page snippet states downloaded standalone databases are limited to VIN decoding; other make/model/variable/attribute information still requires vPIC APIs."
+      ],
+      "limitations": [
+        "Only snippet was saved in this workstream; confirm the current page, database version, coverage and terms before use."
+      ],
+      "terms": "Verify download/API use terms and update cadence before storing/redistributing derived data.",
+      "freshness": "Check vPIC release/version metadata; do not assume standalone files contain every API dataset."
+    },
+    {
+      "key": "sae-wmi-vin",
+      "title": "WMI/VIN Information - Standards Development - Standards - SAE International",
+      "url": "https://legacy.sae.org/standards/development/wmi-vin-information",
+      "publicationDate": "Not shown; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-snippets.md",
+      "accessFormat": "Public standards landing page; WMI database and standards are referenced",
+      "claimsSupported": [
+        "SAE page identifies ISO 3779 (VIN content/structure), ISO 3780 (WMI), and an SAE WMI Database."
+      ],
+      "limitations": [
+        "Search snippet does not establish database coverage, access mechanics, currentness or exact public/paid terms."
+      ],
+      "terms": "Treat WMI database as potentially licensed; verify access and redistribution rights directly with SAE before adoption.",
+      "freshness": "Verify registry updates and historical reassignment/identity semantics with SAE."
+    },
+    {
+      "key": "dot-vpic-catalog",
+      "title": "NHTSA Product Information Catalog and Vehicle Listing (vPIC) - VIN Decoder | Department of Transportation - Data Portal",
+      "url": "https://data.transportation.gov/Automobiles/NHTSA-Product-Information-Catalog-and-Vehicle-List/jzka-dpba",
+      "publicationDate": "Not shown; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-snippets.md",
+      "accessFormat": "Public DOT data portal catalog description",
+      "claimsSupported": [
+        "vPIC's stated purpose is centralized basic VIN decoding, MID/manufacturer plant identification and associated data."
+      ],
+      "limitations": [
+        "Catalog description is not a complete field-level schema or license; use API docs for method details."
+      ],
+      "terms": "Verify API and data reuse terms directly; public portal availability does not by itself define redistribution rights.",
+      "freshness": "Check actual API/documentation release and submission timestamps."
+    },
+    {
+      "key": "nhtsa-vpic-decoder",
+      "title": "Welcome to VIN Decoding :: provided by vPIC",
+      "url": "https://vpic.nhtsa.dot.gov/decoder",
+      "publicationDate": "Not shown; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-snippets.md",
+      "accessFormat": "Public web decoder backed by vPIC",
+      "claimsSupported": [
+        "NHTSA accepts partial VINs; an explicitly entered model year overrides the VIN-encoded model year; Canadian vehicle specifications are referenced."
+      ],
+      "limitations": [
+        "A VIN decoder response is not a complete market-wide trim taxonomy or a VIN-specific current-recall status."
+      ],
+      "terms": "Web tool is public; verify programmatic endpoint use and storage terms rather than assuming UI permission authorizes bulk use.",
+      "freshness": "Decode again as needed when NHTSA manufacturer-submitted data updates; retain retrieval date and raw response."
+    },
+    {
+      "key": "iso-3780-corrigendum-2010",
+      "title": "ISO 3780:2009/Cor 1:2010 - Road vehicles — World manufacturer identifier (WMI) code — Technical Corrigendum 1",
+      "url": "https://www.iso.org/cms/live/live/en/sites/isoorg/contents/data/standard/05/76/57625.html",
+      "publicationDate": "2010 corrigendum; accessed 2026-10-01",
+      "tier": 1,
+      "savedEvidence": "research/sources/identity-snippets.md",
+      "accessFormat": "Public ISO metadata",
+      "claimsSupported": [
+        "A technical corrigendum applies to ISO 3780:2009; verify applicable edition and corrigenda."
+      ],
+      "limitations": [
+        "Search result only; inspect the current ISO catalog before implementation."
+      ],
+      "terms": "Full standard/corrigendum licensing terms require verification.",
+      "freshness": "Check ISO catalog for later editions/corrigenda at design approval."
+    }
+  ]
+}

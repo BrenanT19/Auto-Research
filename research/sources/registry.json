@@ -1,0 +1,516 @@
+{
+  "generatedAt": "2026-10-01",
+  "note": "Research source register. Search-snippet-only evidence is identified per record; it supports only the recorded limited claim and must be fetched before implementation.",
+  "sources": [
+    {
+      "key": "nhtsa_vpic",
+      "title": "NHTSA Vehicle Product Information Catalog (vPIC) API documentation",
+      "url": "https://vpic.nhtsa.dot.gov/api/",
+      "date": "Version 4.06; code changed 2026-06-13",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/vpic-root.md",
+      "notes": "VIN decoding/manufacturer/make/model/year; not a complete exact-as-built configuration catalog. Recheck terms/rates."
+    },
+    {
+      "key": "nhtsa_vin",
+      "title": "NHTSA VIN Decoder",
+      "url": "https://www.nhtsa.gov/vin-decoder",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/nhtsa-vin-decoder.md",
+      "notes": "Supports VIN-oriented decoding; not a public exact configuration or defect determination."
+    },
+    {
+      "key": "nhtsa_faq",
+      "title": "NHTSA vPIC FAQ",
+      "url": "https://vpic.nhtsa.dot.gov/Downloads/FAQ",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/vpic-faq.md",
+      "notes": "Public documentation; check current coverage and rate limits."
+    },
+    {
+      "key": "nhtsa_downloads",
+      "title": "NHTSA vPIC Downloads",
+      "url": "https://vpic.nhtsa.dot.gov/Downloads",
+      "date": "Snapshot dates in page; September 2026 example",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/vpic-downloads.md",
+      "notes": "Standalone databases are for VIN decoding; other attributes use APIs. Reuse rights need confirmation."
+    },
+    {
+      "key": "nhtsa_datasets",
+      "title": "NHTSA Datasets and APIs",
+      "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/nhtsa-datasets.md",
+      "notes": "Static source descriptions for recalls, NCAP, complaints and related datasets."
+    },
+    {
+      "key": "nhtsa_policy",
+      "title": "NHTSA API Use Policy",
+      "url": "https://api.nhtsa.gov/",
+      "date": "Last updated January 2023",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/nhtsa-policy.md",
+      "notes": "Policy says consumer API is not intended for third-party bulk VIN lookups; rate controls. Recheck before implementation."
+    },
+    {
+      "key": "nhtsa_recall_lookup",
+      "title": "NHTSA Check for Recalls",
+      "url": "https://www.nhtsa.gov/recalls",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/recall-lookup.md",
+      "notes": "Consumer VIN/plate lookup coverage exclusions; result needs time/coverage qualifier."
+    },
+    {
+      "key": "nhtsa_odi",
+      "title": "NHTSA ODI Complaints dataset",
+      "url": "https://data.transportation.gov/Automobiles/NHTSA-s-Office-of-Defects-Investigation-ODI-Compla/8qbs-9p4c",
+      "date": "Catalog metadata updated 2026-09-02",
+      "tier": "Tier 1 — U.S. government dataset/catalog",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/odi-complaints.md",
+      "notes": "Daily updated public complaint data; complaints are not a defect finding or prevalence denominator."
+    },
+    {
+      "key": "nhtsa_resources",
+      "title": "NHTSA Resources Related to Investigations and Recalls",
+      "url": "https://www.nhtsa.gov/resources-investigations-recalls",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/recall-resources.md",
+      "notes": "Investigations, communications and recall resources are separate evidence classes."
+    },
+    {
+      "key": "nhtsa_ratings",
+      "title": "NHTSA Ratings / NCAP program",
+      "url": "https://www.nhtsa.gov/Ratings",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/ratings-program.md",
+      "notes": "Ratings apply only to tested variants/programs; preserve test basis."
+    },
+    {
+      "key": "epa_downloads",
+      "title": "Download Fuel Economy Data",
+      "url": "https://www.fueleconomy.gov/feg/download.shtml",
+      "date": "All-years data page updated 2026-09-29",
+      "tier": "Tier 1 — EPA/DOE program source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-01-fueleconomy-downloads.md",
+      "notes": "1984–2026 files; label data/test context; verify file-specific terms and version."
+    },
+    {
+      "key": "epa_services",
+      "title": "FuelEconomy.gov Web Services",
+      "url": "https://www.fueleconomy.gov/feg/ws/index.shtml",
+      "date": "Not stated",
+      "tier": "Tier 1 — EPA/DOE program source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-02-fueleconomy-web-services.md",
+      "notes": "Vehicle, emissions, menus and fuel-price endpoints; terms/limits/SLA not established by docs reviewed."
+    },
+    {
+      "key": "epa_testing",
+      "title": "Fuel Economy and EV Range Testing",
+      "url": "https://www.epa.gov/greenvehicles/fuel-economy-and-ev-range-testing",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. EPA primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-03-epa-ev-testing.md",
+      "notes": "Test basis, adjustments, MPGe and EV range context."
+    },
+    {
+      "key": "epa_compliance",
+      "title": "EPA Compliance and Fuel Economy Data",
+      "url": "https://www.epa.gov/compliance-and-fuel-economy-data",
+      "date": "Search result says updated 2026-07-30",
+      "tier": "Tier 1 — U.S. EPA primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-snippets.md",
+      "notes": "Snippet only; follow links and inspect dataset-specific fields before use."
+    },
+    {
+      "key": "epa_testcars",
+      "title": "EPA Data on Cars Used for Testing Fuel Economy",
+      "url": "https://www.epa.gov/compliance-and-fuel-economy-data/data-cars-used-testing-fuel-economy",
+      "date": "Annual files; snippet shows 2026 January 2026, 2024 May 2025",
+      "tier": "Tier 1 — U.S. EPA primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-snippets.md",
+      "notes": "Test-car records are not a comprehensive retail trim catalog; snippet only."
+    },
+    {
+      "key": "afdc_models",
+      "title": "DOE Alternative Fuels Data Center Maps and Data",
+      "url": "https://afdc.energy.gov/data?page=3",
+      "date": "Model offerings updated March 2026 per search result",
+      "tier": "Tier 1 — U.S. DOE primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-snippets.md",
+      "notes": "Alternative-vehicle model offerings and infrastructure context; not exact trim catalog; snippet only."
+    },
+    {
+      "key": "afdc_downloads",
+      "title": "DOE Alternative Fuels Data Center Data Downloads",
+      "url": "https://afdc.energy.gov/data_download",
+      "date": "Not stated",
+      "tier": "Tier 1 — U.S. DOE primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/epa-snippets.md",
+      "notes": "Terms statement scoped to specific downloads; infrastructure datasets are not vehicle specs; snippet only."
+    },
+    {
+      "key": "iso3780",
+      "title": "ISO 3780:2009 — World manufacturer identifier (WMI)",
+      "url": "https://www.iso.org/cms/live/live/en/sites/isoorg/contents/data/standard/04/58/45844.html",
+      "date": "2009; corrigendum 2010",
+      "tier": "Tier 1 — international standards body",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/identity-03-iso-3780.md",
+      "notes": "Public summary only; full standard is licensed/purchased."
+    },
+    {
+      "key": "nhtsa_wmi",
+      "title": "NHTSA Manufacturer Information Handbook",
+      "url": "https://www.nhtsa.gov/sites/nhtsa.gov/files/manufacturer_information_march2014.pdf",
+      "date": "March 2014",
+      "tier": "Tier 1 — U.S. government primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/identity-02-nhtsa-wmi-handbook.md",
+      "notes": "U.S. VIN/manufacturer process, model years 1981 onward; old handbook, reconfirm."
+    },
+    {
+      "key": "sae_wmi",
+      "title": "SAE WMI/VIN Information",
+      "url": "https://legacy.sae.org/standards/development/wmi-vin-information",
+      "date": "Not stated",
+      "tier": "Tier 2 — standards organization",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/identity-snippets.md",
+      "notes": "Snippet indicates standards/database access; scope, price and reuse need verification."
+    },
+    {
+      "key": "mazda_owners",
+      "title": "Mazda Owner Resources",
+      "url": "https://www.mazdausa.com/owners/how-to-use-my-mazda",
+      "date": "Not stated; returned page covered 2000–2026",
+      "tier": "Tier 2 — manufacturer primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-01-mazda-owner-resources.md",
+      "notes": "Year/model manuals; U.S.-vehicle scope; page did not state reuse rights."
+    },
+    {
+      "key": "nissan_manual",
+      "title": "2023 Nissan Versa Owner's Manual",
+      "url": "https://www.nissanusa.com/content/dam/Nissan/us/manuals-and-guides/versa/2023/2023-nissan-versa-owner-manual.pdf",
+      "date": "2023 model year",
+      "tier": "Tier 2 — manufacturer primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-02-nissan-owner-manual.md",
+      "notes": "Maintenance information; reproduction/storage/transmission requires prior written permission."
+    },
+    {
+      "key": "motor_data",
+      "title": "MOTOR Our Data",
+      "url": "https://dev-www.motor.com/about-motor/our-data",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-03-motor-data-provenance.md",
+      "notes": "Licensed data and delivery options described; exact current coverage/rights require contract verification."
+    },
+    {
+      "key": "motor_brochure",
+      "title": "MOTOR Data-as-a-Service brochure",
+      "url": "https://www.motor.com/wp-content/uploads/2015/11/daas-product-description.pdf",
+      "date": "2015",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Historical REST/API brochure; stale and insufficient for current coverage/terms."
+    },
+    {
+      "key": "repairpal_estimator",
+      "title": "RepairPal Repair Cost Estimator",
+      "url": "https://repairpal.com/estimate",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial/editorial estimate",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Parts/labor model; API, geography, rights and field coverage not established."
+    },
+    {
+      "key": "repairpal_partners",
+      "title": "RepairPal Partner Integrations",
+      "url": "https://partnersuccess.repairpal.com/article/302-website-integrations",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Partner access claim only; does not establish generally available API rights."
+    },
+    {
+      "key": "jdp_ev",
+      "title": "J.D. Power EV Data API",
+      "url": "https://www.jdpower.com/business/ev-data-api",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Marketing/docs do not establish full field coverage, pricing, or redistribution terms."
+    },
+    {
+      "key": "jdp_terms",
+      "title": "J.D. Power Terms of Use",
+      "url": "https://www.jdpower.com/business/terms-conditions",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Terms are product-specific; obtain written data license and sample."
+    },
+    {
+      "key": "sp_mobility",
+      "title": "S&P Global Mobility Data Lake",
+      "url": "https://www.spglobal.com/mobility/en/products/automotive-mobility-data-lake.html",
+      "date": "Not stated",
+      "tier": "Tier 3 — commercial provider",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Public landing page insufficient to establish exact source coverage or rights."
+    },
+    {
+      "key": "autocare_aces",
+      "title": "Auto Care Digital Standards",
+      "url": "https://digital.autocare.org/standards",
+      "date": "Not stated",
+      "tier": "Tier 2 — industry standards body",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Reference/fitment standard context, not evidence of complete specifications/maintenance data."
+    },
+    {
+      "key": "nastf",
+      "title": "National Automotive Service Task Force",
+      "url": "https://www.nastf.org/",
+      "date": "Not stated",
+      "tier": "Tier 2 — industry service-information organization",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/oem-snippets.md",
+      "notes": "Secure service/security-info access; not a public catalog feed."
+    },
+    {
+      "key": "gm_brands",
+      "title": "GM Brands",
+      "url": "https://www.gm.com/our-brands",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer corporate primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-01-gm-current-brands.md",
+      "notes": "GM's current brand roster only; not a universal American-brand definition."
+    },
+    {
+      "key": "gm_retired",
+      "title": "GM Discontinued Brands",
+      "url": "https://experience.gm.com/discontinued-brands",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer corporate primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Retired marque examples; snippet only."
+    },
+    {
+      "key": "ford_mercury",
+      "title": "Ford: The Story of the Mercury Brand",
+      "url": "https://corporate.ford.com/articles/history/history-of-the-mercury-brand",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer corporate primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Mercury ended in 2011; snippet only."
+    },
+    {
+      "key": "stellantis_na",
+      "title": "Stellantis North America",
+      "url": "https://www.stellantis.com/en/news/insights/discover-stellantis/north-america-home-of-icons-at-the-heart-of-innovation",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer corporate primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "North American operations include American-heritage and non-U.S.-origin brands; snippet only."
+    },
+    {
+      "key": "scout_story",
+      "title": "Scout Motors: Our Story",
+      "url": "https://www.scoutmotors.com/ourstory",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-02-scout-history.md",
+      "notes": "Company/brand self-description; recheck production and corporate status."
+    },
+    {
+      "key": "ford_f150_guide",
+      "title": "2026 Ford F-150 Order Guide",
+      "url": "https://www.fromtheroad.ford.com/content/dam/fordmediasite/us/en/library/2026/order-guides/2026_Ford_F-150_Order_Guide.pdf",
+      "date": "Effective Job #2, 2026-04-06",
+      "tier": "Tier 3 — OEM product document",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-03-ford-f150-order-guide.md",
+      "notes": "Year-specific packages and availability; confirm each configuration and rights."
+    },
+    {
+      "key": "ford_maverick_specs",
+      "title": "2025 Ford Maverick and Lobo Technical Specifications",
+      "url": "https://www.fromtheroad.ford.com/content/dam/fordmediasite/us/en/library/2025/specs/2025-Ford-Maverick-and-Lobo-Technical-Specs.pdf",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM product document",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "HEV vs EcoBoost details; snippet only."
+    },
+    {
+      "key": "epa_maverick",
+      "title": "EPA Fuel Economy record: 2025 Ford Maverick HEV FWD",
+      "url": "https://fueleconomy.gov/Feg/noframes/48869.shtml",
+      "date": "Not stated",
+      "tier": "Tier 1 — EPA/DOE program source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "One EPA vehicle record only, not all Maverick trims; snippet only."
+    },
+    {
+      "key": "silverado",
+      "title": "2025 Chevrolet Silverado 1500",
+      "url": "https://www.chevrolet.com/trucks/previous-year/silverado/1500",
+      "date": "Model year 2025",
+      "tier": "Tier 3 — OEM product source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Towing is configuration/predicate-specific; snippet only."
+    },
+    {
+      "key": "wrangler_4xe",
+      "title": "2025 Jeep Wrangler 4xe Press Kit",
+      "url": "https://media.stellantisnorthamerica.com/newsrelease.do?id=26168",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM product source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "PHEV architecture; exact trims/footnotes must be confirmed."
+    },
+    {
+      "key": "pacifica_phev",
+      "title": "2025 Chrysler Pacifica Plug-in Hybrid Specification Sheet",
+      "url": "https://stellantis-wn2025-assetlib.s3.amazonaws.com/resources/2025_CH_Pacifica_Plug-in_Hybrid.SP.pdf",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM product source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "PHEV/MPV pilot evidence; snippet verifies document only."
+    },
+    {
+      "key": "corvette_z06",
+      "title": "2025 Chevrolet Corvette Z06 Trim Comparison",
+      "url": "https://www.chevrolet.com/shopping/configurator/performance/2025/corvette/corvette-z06/compare",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM product source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Z06-specific engine/transmission; snippet only."
+    },
+    {
+      "key": "rivian_r1t",
+      "title": "Rivian R1T Configurator",
+      "url": "https://rivian.com/configurations/builder/r1t/build?CONFIG=GEN-2_2026_RGN-USA_MOT-201_EXP-LSV_ROOF-FGP_WHL-2SS_INT-BMP_UTL-T01_TON-P02_PROC40WJ94_PKG-ADV_CHRG-NACS01_BLD-DR1T_ACTBDG-DRK_BAT-A01",
+      "date": "2026 model year in selected URL",
+      "tier": "Tier 3 — OEM dynamic configurator",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Dynamic selection and ambiguous snippet; do not scrape or use as static verification."
+    },
+    {
+      "key": "tesla_manual_eu",
+      "title": "Tesla Model Y EU Owner's Manual — Subsystems",
+      "url": "https://www.tesla.com/ownersmanual/modely/en_eu/GUID-E414862C-CFA1-4A0B-9548-BE21C32CAA58.html",
+      "date": "Not stated",
+      "tier": "Tier 3 — OEM manual, wrong market for U.S. population",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Explicitly not used to populate U.S. pilot; demonstrates market scoping."
+    },
+    {
+      "key": "tesla_sec",
+      "title": "Tesla, Inc. 2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm",
+      "date": "Filed 2026; 2025 fiscal year",
+      "tier": "Tier 1 — SEC company filing",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Supports only the company's disclosed legal/business facts; not a universal brand-origin taxonomy."
+    },
+    {
+      "key": "rivian_deliveries",
+      "title": "Rivian Begins R2 Public Customer Deliveries",
+      "url": "https://rivian.com/newsroom/article/rivian-begins-r2-public-customer-deliveries",
+      "date": "Not stated in snippet",
+      "tier": "Tier 3 — manufacturer primary source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Supports company/model activity only; not a general U.S.-origin rule."
+    },
+    {
+      "key": "lucid_sec",
+      "title": "Lucid 2026 Form 10-K",
+      "url": "https://ir.lucidmotors.com/static-files/e84f1f4e-4624-4cdb-b5ea-54d2f9fbf064",
+      "date": "Filed 2026-02-24 per search result",
+      "tier": "Tier 3 — company filing copy",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Snippet refers to a predecessor entity; do not use it alone to characterize current domicile or brand origin."
+    },
+    {
+      "key": "gm_pontiac",
+      "title": "Pontiac — GM Heritage Collection",
+      "url": "https://www.gm.com/heritage/collection/pontiac",
+      "date": "Not stated",
+      "tier": "Tier 3 — manufacturer heritage source",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Historical marque lead; snippet only."
+    },
+    {
+      "key": "ford_f150_towing",
+      "title": "2025 Ford F-150 Towing Guide",
+      "url": "https://www.ford.com/content/dam/brand_ford/en_us/brand/towing/pdf/2025-Ford-F150-Towing-Guide-1.pdf",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM product document",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Towing guidance is configuration-dependent; snippet only."
+    },
+    {
+      "key": "silverado_config",
+      "title": "2025 Chevrolet Silverado 1500 Configurator",
+      "url": "https://www.chevrolet.com/shopping/configurator/truck/2025/silverado/silverado-1500/config",
+      "date": "2025 model year",
+      "tier": "Tier 3 — OEM dynamic configurator",
+      "accessed": "2026-10-01",
+      "evidence": "research/sources/brand-pilot-snippets.md",
+      "notes": "Dynamic source; corroborate configuration combinations with stable order guide."
+    }
+  ]
+}
