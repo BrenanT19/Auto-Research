@@ -28,3 +28,17 @@ mtime_ms = 1790891461973
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/890cc000-1ab9-4f47-b679-6d489ff29360/8ca7f062-979c-4205-be9b-3b1da137bf2b"
 storage_version_token = "1790891485972803"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "6sPy7SzzmZpE5Mkg6fCHs"
+uri = "file://artifacts/auto-research/STAGE-2A-DATABASE-FOUNDATION-IMPLEMENTATION-PLAN.md"
+type = "text"
+title = "Stage 2A Database Foundation Implementation Plan"
+description = "Planning-only specification covering the canonical schema, applicability and evidence model, 13-profile baseline, migrations, rollback, API compatibility, and validation."
+logical_id = "1ce7964f-4ee2-4c1d-84e1-322aa0d8cae7"
+content_hash = "sha256:8ea6be55a2477fb4393254b41a38c4da48de4704c3b546205492afa19ee0979f"
+size = 44253
+mtime_ms = 1790892803672
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/1ce7964f-4ee2-4c1d-84e1-322aa0d8cae7/7626a54c-f600-4929-a14b-a36b6472bc43"
+storage_version_token = "1790892830656351"
+content_type = "text/markdown"
