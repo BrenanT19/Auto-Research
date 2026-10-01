@@ -1,0 +1,35 @@
+Redesign the visual appearance of my existing website while preserving all current functionality, routes, navigation, vehicle data structures, search functionality, comparison tools, calculator functionality, and existing pages.
+
+I do NOT want the current cream, teal, minimalist editorial aesthetic. The current design feels too much like a lifestyle/editorial or financial website and not enough like a serious automotive research platform.
+
+Give the website a modern, premium automotive appearance.
+
+Use a primarily dark charcoal/near-black and white color palette with one restrained accent color. Increase contrast significantly. Replace the current serif-heavy typography with clean, modern sans-serif typography. Text should be easy to read and important vehicle statistics should stand out immediately.
+
+Reduce excessive empty whitespace and make the layout feel information-rich without becoming cluttered.
+
+Replace generic illustrated vehicle graphics with areas designed for high-quality real vehicle photography. For demo vehicles, use appropriate placeholders if licensed/usable real images are not currently available rather than inventing misleading vehicle images.
+
+Redesign the hero section around the main purpose of the website.
+
+Use the headline:
+
+“Know What You’re Buying.”
+
+Supporting text:
+
+“Research reliability, common problems, maintenance costs and real-world ownership information before you buy your next car.”
+
+Make the Year / Make / Model / Trim vehicle finder one of the most visually prominent elements on the homepage. Also provide a natural-language vehicle search field such as “Search 2018 BMW 340i.”
+
+Redesign vehicle cards to look more automotive and data-focused. Each card should have space for a large vehicle image followed by important information such as year/make/model/trim, reliability, estimated annual maintenance/ownership cost, and a clear button to view the full ownership report.
+
+Keep the existing homepage concepts including Popular Vehicles, Ownership Cost, Reliability, Most Researched, Browse by Manufacturer, Compare Vehicles, and the footer, but redesign them to match the new automotive aesthetic.
+
+Make the navigation more substantial and modern while retaining Home, Browse Cars, Compare, Calculator, Community, About, and Find a Car.
+
+Use clear cards, subtle borders, strong hierarchy, modern icons, tasteful hover effects and polished transitions. Avoid excessive gradients, neon colors, gaming aesthetics, oversized rounded corners, and generic AI-looking design.
+
+The website should feel like a credible automotive research product someone would trust when researching a $10,000–$80,000 vehicle.
+
+IMPORTANT: This task is primarily a visual redesign. Do not remove existing functionality, routes, database structures, calculator logic, comparison functionality, or vehicle information. Preserve the application’s underlying functionality while changing the presentation.
