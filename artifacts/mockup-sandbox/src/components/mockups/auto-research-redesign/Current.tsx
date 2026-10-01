@@ -4,6 +4,8 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
+  Check,
+  CircleAlert,
   Info,
   Menu,
   Search,
@@ -116,6 +118,45 @@ const makes: Make[] = [
 ];
 const discoveryStats = { vehicleCount: 68, makeCount: 12 };
 
+type QueryResult<T> = {
+  data: T;
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+};
+
+const queryResult = <T,>(data: T): QueryResult<T> => ({
+  data,
+  isLoading: false,
+  isError: false,
+  refetch: () => undefined,
+});
+
+function useListMakes() {
+  return queryResult(makes);
+}
+
+function useListPopularVehicles() {
+  return queryResult(popularItems);
+}
+
+function useListTrendingVehicles() {
+  return queryResult(trendingItems);
+}
+
+function useGetDiscoveryStats() {
+  return queryResult(discoveryStats);
+}
+
+function useListVehicles(_options: { limit: number }) {
+  return queryResult(vehicles);
+}
+
+function useLocation(): [string, (nextLocation: string) => void] {
+  const [location, setLocation] = useState('/');
+  return [location, setLocation];
+}
+
 const money = (n?: number | null) =>
   n == null
     ? '—'
@@ -152,6 +193,45 @@ function Link({
     >
       {children}
     </a>
+  );
+}
+
+function LoadingBlock() {
+  return (
+    <div className="skeleton-grid">
+      <div className="skeleton tall" />
+      <div className="skeleton" />
+      <div className="skeleton" />
+    </div>
+  );
+}
+
+function ErrorBlock({ retry }: { retry: () => void }) {
+  return (
+    <div className="state-box">
+      <CircleAlert />
+      <h3>We couldn't load this research</h3>
+      <p>Give it another try in a moment.</p>
+      <button className="button secondary" onClick={retry}>
+        Try again
+      </button>
+    </div>
+  );
+}
+
+function EmptyBlock({
+  title = 'No vehicles found',
+  text = 'Try broadening your search or clearing a filter.',
+}: {
+  title?: string;
+  text?: string;
+}) {
+  return (
+    <div className="state-box">
+      <Search />
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </div>
   );
 }
 
@@ -247,7 +327,15 @@ function Reliability({ score, size = 'normal' }: { score: number; size?: string 
   );
 }
 
-function VehicleCard({ vehicle }: { vehicle: VehicleSummary }) {
+function VehicleCard({
+  vehicle,
+  onCompare,
+  selected = false,
+}: {
+  vehicle: VehicleSummary;
+  onCompare?: (vehicle: VehicleSummary) => void;
+  selected?: boolean;
+}) {
   return (
     <article className="vehicle-card">
       <div
@@ -289,6 +377,15 @@ function VehicleCard({ vehicle }: { vehicle: VehicleSummary }) {
             <ArrowRight size={17} />
           </Link>
         </div>
+        {onCompare && (
+          <button
+            className={`compare-toggle ${selected ? 'chosen' : ''}`}
+            onClick={() => onCompare(vehicle)}
+          >
+            {selected ? <Check size={14} /> : <span className="plus">+</span>}
+            {selected ? 'Added to compare' : 'Add to compare'}
+          </button>
+        )}
       </div>
     </article>
   );
@@ -321,12 +418,18 @@ function SectionHeading({
 }
 
 function HomePage() {
+  const makes = useListMakes();
+  const popular = useListPopularVehicles();
+  const trending = useListTrendingVehicles();
+  const stats = useGetDiscoveryStats();
+  const selectorVehicles = useListVehicles({ limit: 100 });
   const [q, setQ] = useState('');
   const [searchYear, setSearchYear] = useState('');
   const [searchMake, setSearchMake] = useState('');
   const [searchModel, setSearchModel] = useState('');
   const [searchTrim, setSearchTrim] = useState('');
-  const options = vehicles;
+  const [loc, setLoc] = useLocation();
+  const options = selectorVehicles.data || [];
   const searchYears = [...new Set(options.map((v) => v.year))].sort((a, b) => b - a);
   const searchModels = [
     ...new Set(
@@ -353,7 +456,16 @@ function HomePage() {
   ];
   const find = (event: FormEvent) => {
     event.preventDefault();
+    const params = new URLSearchParams();
+    if (q.trim()) params.set('q', q.trim());
+    if (searchYear) params.set('year', searchYear);
+    if (searchMake) params.set('make', searchMake);
+    if (searchModel) params.set('model', searchModel);
+    if (searchTrim) params.set('trim', searchTrim);
+    setLoc(`/browse${params.size ? `?${params.toString()}` : ''}`);
   };
+  const popularItems = popular.data || [];
+  const trendingItems = trending.data || [];
 
   return (
     <Shell>
@@ -416,7 +528,7 @@ function HomePage() {
                   }}
                 >
                   <option value="">Any make</option>
-                  {makes.map((make) => (
+                  {(makes.data || []).map((make) => (
                     <option key={make.id} value={make.slug}>
                       {make.name}
                     </option>
@@ -458,7 +570,13 @@ function HomePage() {
           <div className="hero-shortcuts">
             <span>TRY</span>
             {['Ford F-150', 'Chevrolet Silverado', 'Tesla Model Y'].map((item) => (
-              <button key={item} onClick={() => setQ(item)}>
+              <button
+                key={item}
+                onClick={() => {
+                  setQ(item);
+                  setLoc(`/browse?q=${encodeURIComponent(item)}`);
+                }}
+              >
                 {item}
               </button>
             ))}
@@ -482,10 +600,10 @@ function HomePage() {
           </div>
           <div className="hero-facts">
             <span>
-              <b>{discoveryStats.vehicleCount}</b> vehicle trims
+              <b>{stats.data?.vehicleCount ?? '—'}</b> vehicle trims
             </span>
             <span>
-              <b>{discoveryStats.makeCount}</b> manufacturers
+              <b>{stats.data?.makeCount ?? '—'}</b> manufacturers
             </span>
             <span className="mono">ALL FIGURES ARE ESTIMATES</span>
           </div>
@@ -506,11 +624,19 @@ function HomePage() {
             link="Browse all cars"
             href="/browse"
           />
-          <div className="vehicle-grid">
-            {popularItems.slice(0, 4).map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
-            ))}
-          </div>
+          {popular.isLoading ? (
+            <LoadingBlock />
+          ) : popular.isError ? (
+            <ErrorBlock retry={() => popular.refetch()} />
+          ) : popularItems.length ? (
+            <div className="vehicle-grid">
+              {popularItems.slice(0, 4).map((vehicle) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} />
+              ))}
+            </div>
+          ) : (
+            <EmptyBlock />
+          )}
         </section>
         <section className="split-feature">
           <div className="feature-note">
@@ -579,31 +705,39 @@ function HomePage() {
             link="See all vehicles"
             href="/browse?sort=popular"
           />
-          <div className="trend-list">
-            {trendingItems.slice(0, 5).map((vehicle, index) => (
-              <Link
-                key={vehicle.id}
-                href={`/vehicles/${vehicle.id}`}
-                className="trend-row"
-              >
-                <span className="trend-rank mono">0{index + 1}</span>
-                <span className="trend-name">
-                  <small>
-                    {vehicle.year} / {vehicle.trim}
-                  </small>
-                  <b className="serif">
-                    {vehicle.make} {vehicle.model}
-                  </b>
-                </span>
-                <span className="trend-cost">
-                  {money(vehicle.annualOwnershipEstimateUsd)}
-                  <small>annual est.</small>
-                </span>
-                <Reliability score={vehicle.reliabilityEstimate} size="small" />
-                <ArrowUpRight size={17} />
-              </Link>
-            ))}
-          </div>
+          {trending.isLoading ? (
+            <LoadingBlock />
+          ) : trending.isError ? (
+            <ErrorBlock retry={() => trending.refetch()} />
+          ) : trendingItems.length ? (
+            <div className="trend-list">
+              {trendingItems.slice(0, 5).map((vehicle, index) => (
+                <Link
+                  key={vehicle.id}
+                  href={`/vehicles/${vehicle.id}`}
+                  className="trend-row"
+                >
+                  <span className="trend-rank mono">0{index + 1}</span>
+                  <span className="trend-name">
+                    <small>
+                      {vehicle.year} / {vehicle.trim}
+                    </small>
+                    <b className="serif">
+                      {vehicle.make} {vehicle.model}
+                    </b>
+                  </span>
+                  <span className="trend-cost">
+                    {money(vehicle.annualOwnershipEstimateUsd)}
+                    <small>annual est.</small>
+                  </span>
+                  <Reliability score={vehicle.reliabilityEstimate} size="small" />
+                  <ArrowUpRight size={17} />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <EmptyBlock />
+          )}
         </section>
         <section className="makes-section">
           <div className="makes-intro">
@@ -618,23 +752,34 @@ function HomePage() {
             </p>
           </div>
           <div className="make-list">
-            {makes.map((make, index) => (
-              <Link
-                href={`/manufacturers/${make.slug}`}
-                className="make-row"
-                key={make.id}
+            {makes.isLoading ? (
+              <div className="skeleton" />
+            ) : makes.isError ? (
+              <button
+                className="button secondary"
+                onClick={() => makes.refetch()}
               >
-                <span className="make-mark">{make.mark}</span>
-                <span>
-                  <b>{make.name}</b>
-                  <small>{make.vehicleCount} researched trims</small>
-                </span>
-                <span className="make-index mono">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <ArrowUpRight size={16} />
-              </Link>
-            ))}
+                Retry manufacturers
+              </button>
+            ) : (
+              (makes.data || []).map((make, index) => (
+                <Link
+                  href={`/manufacturers/${make.slug}`}
+                  className="make-row"
+                  key={make.id}
+                >
+                  <span className="make-mark">{make.mark}</span>
+                  <span>
+                    <b>{make.name}</b>
+                    <small>{make.vehicleCount} researched trims</small>
+                  </span>
+                  <span className="make-index mono">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <ArrowUpRight size={16} />
+                </Link>
+              ))
+            )}
           </div>
         </section>
         <section className="closing-cta">

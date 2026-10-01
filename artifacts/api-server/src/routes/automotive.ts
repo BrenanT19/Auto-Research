@@ -90,14 +90,17 @@ async function loadVehicles(options: {
   const conditions: SQL[] = [];
 
   if (options.q?.trim()) {
-    const term = `%${options.q.trim()}%`;
-    const search = or(
-      ilike(makesTable.name, term),
-      ilike(modelsTable.name, term),
-      ilike(trimsTable.name, term),
-      ilike(sql`${modelYearsTable.year}::text`, term),
-    );
-    if (search) conditions.push(search);
+    // A shopper's phrase can span year, make, model, and trim columns.
+    for (const token of options.q.trim().split(/\s+/)) {
+      const term = `%${token}%`;
+      const search = or(
+        ilike(makesTable.name, term),
+        ilike(modelsTable.name, term),
+        ilike(trimsTable.name, term),
+        ilike(sql`${modelYearsTable.year}::text`, term),
+      );
+      if (search) conditions.push(search);
+    }
   }
   if (options.makeSlug) conditions.push(eq(makesTable.slug, options.makeSlug));
   if (options.model) conditions.push(ilike(modelsTable.name, `%${options.model}%`));

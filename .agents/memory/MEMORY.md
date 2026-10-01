@@ -1,0 +1,2 @@
+- [Automotive redesign constraints](automotive-redesign-constraints.md) — visual changes preserve working research tools; vehicle media must be licensed/usable or honestly labeled placeholders.
+- [Optional detail lookups](optional-detail-lookups.md) — explicitly disable generated queries for empty IDs; empty detail URLs can resolve to collection data.

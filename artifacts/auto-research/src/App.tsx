@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } from 'wouter';
-import { useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
+import { getGetVehicleQueryKey, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
 
@@ -48,10 +48,11 @@ function Reliability({ score, size = 'normal' }: { score: number; size?: string 
 
 function VehicleCard({ vehicle, onCompare, selected = false }: { vehicle: VehicleSummary; onCompare?: (v: VehicleSummary) => void; selected?: boolean }) {
   return <article className="vehicle-card">
-    <div className={`car-art art-${(vehicle.imageKey || 'sedan').replace(/[^a-z0-9]/gi, '').toLowerCase()}`} aria-hidden="true"><div className="art-sun"/><div className="car-silhouette"><span/></div><span className="art-caption">{vehicle.bodyType || 'OWNERSHIP PROFILE'}</span></div>
+    <div className={`car-art art-${(vehicle.imageKey || 'sedan').replace(/[^a-z0-9]/gi, '').toLowerCase()}`} aria-label={`Vehicle photo placeholder for ${label(vehicle)}`}><span className="art-caption">{vehicle.bodyType || 'OWNERSHIP PROFILE'}</span></div>
     <div className="vehicle-card-body"><div className="card-overline">{vehicle.year} · {vehicle.generation || 'MODEL YEAR'}</div><Link href={`/vehicles/${vehicle.id}`} className="vehicle-title serif">{vehicle.make} {vehicle.model}</Link><div className="trim-line">{vehicle.trim} <span>·</span> {vehicle.drivetrain}</div>
       <div className="vehicle-score-row"><Reliability score={vehicle.reliabilityEstimate}/><span className="estimate-caption">estimated reliability</span></div>
-      <div className="vehicle-card-foot"><span><b>{money(vehicle.annualOwnershipEstimateUsd)}</b><small>annual ownership est.</small></span><Link href={`/vehicles/${vehicle.id}`} className="circle-link" aria-label={`View ${label(vehicle)}`}><ArrowRight size={17}/></Link></div>
+      <div className="vehicle-card-foot"><span><b>{money(vehicle.annualOwnershipEstimateUsd)}</b><small>annual ownership est.</small></span></div>
+      <Link href={`/vehicles/${vehicle.id}`} className="circle-link" aria-label={`View full ownership report for ${label(vehicle)}`}>View full ownership report <ArrowRight size={16}/></Link>
       {onCompare && <button className={`compare-toggle ${selected ? 'chosen' : ''}`} onClick={() => onCompare(vehicle)}>{selected ? <Check size={14}/> : <span className="plus">+</span>}{selected ? 'Added to compare' : 'Add to compare'}</button>}
     </div>
   </article>;
@@ -91,9 +92,9 @@ function HomePage() {
   const trendingItems = trending.data || [];
   return <Shell>
     <section className="hero">
-      <div className="hero-copy"><span className="eyebrow"><span className="live-dot"/> RESEARCH THE OWNERSHIP, NOT THE HYPE</span><h1 className="serif">Know the car<br/><em>before you</em><br/>buy it.</h1><p>Look beyond the test drive. Explore what a vehicle may cost to own, where issues tend to show up, and how it holds up over time.</p>
+      <div className="hero-copy"><span className="eyebrow"><span className="live-dot"/> RESEARCH THE OWNERSHIP, NOT THE HYPE</span><h1 className="serif">Know What You’re Buying.</h1><p>Research reliability, common problems, maintenance costs and real-world ownership information before you buy your next car.</p>
         <form className="hero-search-form" onSubmit={find}>
-          <div className="hero-search"><Search size={18}/><input aria-label="Search vehicles" placeholder="Search make, model, or year…" value={q} onChange={e => setQ(e.target.value)}/><button aria-label="Search"><ArrowRight size={19}/></button></div>
+          <div className="hero-search"><Search size={18}/><input aria-label="Search vehicles" placeholder="Search 2018 BMW 340i" value={q} onChange={e => setQ(e.target.value)}/><button aria-label="Search"><ArrowRight size={19}/></button></div>
           <div className="hero-search-selects">
             <label>Year<select value={searchYear} onChange={e => { setSearchYear(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any year</option>{searchYears.map(y => <option key={y} value={y}>{y}</option>)}</select></label>
             <label>Make<select value={searchMake} onChange={e => { setSearchMake(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any make</option>{(makes.data || []).map(m => <option key={m.id} value={m.slug}>{m.name}</option>)}</select></label>
@@ -109,13 +110,13 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <div className="hero-visual"><div className="hero-stamp">A clearer road<br/>to your next car</div><div className="hero-art"><div className="landscape-line line-one"/><div className="landscape-line line-two"/><div className="hero-car"><div className="window-shape"/><div className="wheel wheel-a"/><div className="wheel wheel-b"/></div><div className="hero-road"/></div><div className="hero-facts"><span><b>{stats.data?.vehicleCount ?? '—'}</b> vehicle trims</span><span><b>{stats.data?.makeCount ?? '—'}</b> manufacturers</span><span className="mono">ALL FIGURES ARE ESTIMATES</span></div></div>
+      <div className="hero-visual"><div className="hero-stamp">High confidence<br/>starts with good research</div><div className="hero-art" role="img" aria-label="Vehicle photography placeholder. No licensed demo vehicle photography is available."/><div className="hero-facts"><span><b>{stats.data?.vehicleCount ?? '—'}</b> vehicle trims</span><span><b>{stats.data?.makeCount ?? '—'}</b> manufacturers</span><span className="mono">ALL FIGURES ARE ESTIMATES</span></div></div>
       <div className="hero-bottom"><span>01 / START WITH THE LONG VIEW</span><a href="#explore">Scroll to explore <ArrowDown size={14}/></a></div>
     </section>
     <div className="content-wrap">
       <DemoNotice/>
       <section id="explore" className="content-section">
-        <SectionHeading kicker="THE SHORTLIST" title="Popular starting points" link="Browse all cars" href="/browse"/>
+        <SectionHeading kicker="THE SHORTLIST" title="Popular Vehicles" link="Browse all cars" href="/browse"/>
         {popular.isLoading ? <LoadingBlock/> : popular.isError ? <ErrorBlock retry={() => popular.refetch()}/> : popularItems.length ? <div className="vehicle-grid">{popularItems.slice(0, 4).map(v => <VehicleCard key={v.id} vehicle={v}/>)}</div> : <EmptyBlock/>}
       </section>
        <section className="split-feature"><div className="feature-note"><span className="eyebrow">NOT JUST THE STICKER PRICE</span><h2 className="serif">Know the cost<br/>of keeping it.</h2><p>Fuel, maintenance, insurance, repairs and depreciation all add up. Build a monthly estimate that reflects how you actually drive.</p><Link href="/calculator" className="button dark">Estimate ownership cost <ArrowRight size={16}/></Link></div><div className="cost-visual"><div className="cost-card"><span className="eyebrow">A MORE COMPLETE PICTURE</span><strong className="serif">$ / month</strong><div className="cost-bars"><i/><i/><i/><i/><i/></div><div className="cost-labels"><span>Fuel</span><span>Service</span><span>Cover</span><span>Value</span></div><small>Illustrative ownership categories</small></div><div className="orbit orbit-a"/><div className="orbit orbit-b"/><div className="orbit-dot"/></div></section>
@@ -149,7 +150,7 @@ function BrowsePage() {
   const [loc, setLoc] = useLocation();
   const toggle = (v: VehicleSummary) => setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="THE VEHICLE INDEX" title="Find the right long view." sub="Search trims, narrow the field, and see what ownership may look like beyond the purchase price." action={<span className="small-stamp"><BookOpen size={16}/> {vehicles.data?.length ?? '—'} profiles</span>}/><DemoNotice/>
-    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div><label className="field-label">Search<input data-testid="input-search-vehicles" value={q} onChange={e => setQ(e.target.value)} placeholder="Make, model, trim"/></label><label className="field-label">Manufacturer<select value={make} onChange={e => { setMake(e.target.value); setModel(''); setTrim(''); }}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option value={m.slug} key={m.id}>{m.name}</option>)}</select></label><label className="field-label">Model year<input type="number" min="1990" max="2030" value={year} onChange={e => { setYear(e.target.value); setModel(''); setTrim(''); }} placeholder="Any year"/></label><label className="field-label">Model<select value={model} onChange={e => { setModel(e.target.value); setTrim(''); }}><option value="">All models</option>{modelOptions.map(m => <option key={m}>{m}</option>)}</select></label><label className="field-label">Trim<select value={trim} onChange={e => setTrim(e.target.value)}><option value="">All trims</option>{trimOptions.map(t => <option key={t}>{t}</option>)}</select></label><label className="field-label">Order by<select value={sort} onChange={e => setSort(e.target.value)}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label><button className="clear-filters" onClick={() => { setQ(''); setMake(''); setModel(''); setTrim(''); setYear(''); setSort('popular'); }}>Clear all filters <X size={14}/></button><p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
+    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div><label className="field-label">Search<input data-testid="input-search-vehicles" value={q} onChange={e => setQ(e.target.value)} placeholder="Make, model, trim"/></label><label className="field-label">Manufacturer<select value={make} onChange={e => { setMake(e.target.value); setModel(''); setTrim(''); }}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option value={m.slug} key={m.id}>{m.name}</option>)}</select></label><label className="field-label">Model year<input type="number" min="1990" max="2030" value={year} onChange={e => { setYear(e.target.value); setModel(''); setTrim(''); }} placeholder="Any year"/></label><label className="field-label">Model<select value={model} onChange={e => { setModel(e.target.value); setTrim(''); }}><option value="">All models</option>{modelOptions.map(m => <option key={m}>{m}</option>)}</select></label><label className="field-label">Trim<select value={trim} onChange={e => setTrim(e.target.value)}><option value="">All trims</option>{trimOptions.map(t => <option key={t}>{t}</option>)}</select></label><label className="field-label">Order by<select value={sort} onChange={e => setSort(e.target.value)}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label><button className="clear-filters" onClick={() => { setQ(''); setMake(''); setModel(''); setTrim(''); setYear(''); setSort('popular'); setLoc('/browse', { replace: true }); }}>Clear all filters <X size={14}/></button><p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
     <div className="results-area"><div className="results-top"><span>{vehicles.data?.length ?? 0} matches</span><span className="mono">SORT: {sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}
     </div></div>
@@ -229,7 +230,7 @@ function CompareCell({ id, render }: { id: string; render: (d: VehicleDetail) =>
 function CalculatorPage() {
   const params = new URLSearchParams(window.location.search);
   const vehicleId = params.get('vehicle') || '';
-  const vehicle = useGetVehicle(vehicleId);
+  const vehicle = useGetVehicle(vehicleId, { query: { queryKey: getGetVehicleQueryKey(vehicleId), enabled: Boolean(vehicleId) } });
   const [price, setPrice] = useState(32000);
   const [down, setDown] = useState(5000);
   const [apr, setApr] = useState(6.4);
@@ -241,7 +242,7 @@ function CalculatorPage() {
   const [insurance, setInsurance] = useState(145);
   const [maintenance, setMaintenance] = useState(110);
   const [repairs, setRepairs] = useState(55);
-  const vehicleIsElectric = vehicle.data?.fuelType.toLowerCase() === 'electric';
+  const vehicleIsElectric = Boolean(vehicleId) && vehicle.data?.fuelType.toLowerCase() === 'electric';
   const loan = Math.max(0, price - down);
   const r = apr / 100 / 12;
   const payment = term > 0 ? r === 0 ? loan / term : loan * r * Math.pow(1 + r, term) / (Math.pow(1 + r, term) - 1) : 0;
