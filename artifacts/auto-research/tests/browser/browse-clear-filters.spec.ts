@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import type { CatalogOption } from "../../src/shopper-tools";
 
 declare global {
   interface Window {
@@ -72,7 +71,7 @@ test("Clear all filters returns the desktop Browse page to the top without scrol
   expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual([]);
 });
 
-test("Clear all filters scrolls immediately on mobile when reduced motion is enabled", async ({ page }) => {
+test("Clear all filters returns mobile Browse to the top and respects reduced motion", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await captureScrollBehaviors(page);
@@ -88,4 +87,16 @@ test("Clear all filters scrolls immediately on mobile when reduced motion is ena
   await expect(page.getByTestId("input-search-vehicles")).toHaveValue("");
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual(["instant"]);
+
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto(teslaModelYUrl);
+  await expect(clearButton).toBeVisible();
+  await page.evaluate(() => window.scrollTo({ top: 620, behavior: "instant" }));
+  await page.waitForFunction(() => window.scrollY > 0);
+  await page.evaluate(() => { window.__clearFilterScrollBehaviors = []; });
+  await clearButton.click();
+  await expect(page).toHaveURL(/\/browse$/);
+  await expect(clearButton).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual(["smooth"]);
 });

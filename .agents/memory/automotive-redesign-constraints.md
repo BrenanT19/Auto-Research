@@ -26,3 +26,9 @@ Generation selection must remain explicit, including when a model has only one c
 **Why:** The user explicitly wants a consistent manual-selection interaction that continues to work when the catalog grows, and rejected sole-generation auto-selection.
 
 **How to apply:** Model selection alone must not add a generation to the URL. Verify physical menu opening and option clicks, not just filter-state assertions.
+
+Browse returns to the page top only after an explicit Clear all filters action, with reduced motion respected. Individual filter refinements and history restoration must not acquire that return-to-top behavior.
+
+**Why:** Clearing begins a new search, while individual refinements should preserve the user's browsing context.
+
+**How to apply:** Keep reset-specific scrolling separate from general filter or URL synchronization.

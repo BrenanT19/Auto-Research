@@ -51,6 +51,18 @@ years, reload persistence, and mouse clearing via All generations. Generation
 selection is never replaced with `selectOption()`, keyboard input, or injected
 state. These checks perform no database or catalog writes.
 
+## Clear All scrolling regression
+
+```sh
+pnpm --filter @workspace/auto-research test:clear-filters:ui
+```
+
+`tests/browser/browse-clear-filters.spec.ts` clicks Clear all filters in a
+scrolled desktop/mobile Browse page and checks the complete reset, clean URL,
+button disappearance, and return to the top. It checks smooth scrolling for
+normal motion, immediate scrolling for reduced motion, and no return-to-top
+when changing an individual sort filter.
+
 ## Browser smoke check
 
 Run with the Auto Research web workflow and API Server workflow running against
