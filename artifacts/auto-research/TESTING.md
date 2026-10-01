@@ -30,6 +30,27 @@ set this variable to a hosted database or use `DATABASE_URL` as a substitute.
 The browser smoke check below remains a separate manual check against the local
 development workflows and their demo database.
 
+## Generation mouse-interaction regression
+
+With the web and API workflows running, run:
+
+```sh
+pnpm --filter @workspace/auto-research exec playwright install chromium
+pnpm --filter @workspace/auto-research test:generation:ui
+```
+
+The standalone runner also requires Chromium's Linux shared libraries (including
+`libglib-2.0.so.0`); downloading the browser alone does not install these.
+`AUTO_RESEARCH_PREVIEW_URL` can point to the running preview; it defaults to the
+local shared proxy at `http://localhost:80`.
+
+`tests/browser/generation.spec.ts` reads the existing catalog, chooses Tesla
+Model Y, Dodge Charger, and Ram 1500, then **clicks** the Generation trigger and
+the visible option. It asserts the open listbox, selected name, URL, dependent
+years, reload persistence, and mouse clearing via All generations. Generation
+selection is never replaced with `selectOption()`, keyboard input, or injected
+state. These checks perform no database or catalog writes.
+
 ## Browser smoke check
 
 Run with the Auto Research web workflow and API Server workflow running against

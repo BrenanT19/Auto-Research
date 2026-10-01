@@ -20,3 +20,9 @@ Browse autocomplete suggestions are limited to Manufacturer and Model results; d
 **Why:** The user wants high-level discovery first and does not want per-configuration matches cluttering search suggestions.
 
 **How to apply:** Keep autocomplete to the current make/model discovery level while preserving the existing cascading filters. Vehicle report navigation remains available through the vehicle cards.
+
+Generation selection must remain explicit, including when a model has only one catalog generation. Keep the same enabled dropdown for one or many generations; do not infer the selection from the option count.
+
+**Why:** The user explicitly wants a consistent manual-selection interaction that continues to work when the catalog grows, and rejected sole-generation auto-selection.
+
+**How to apply:** Model selection alone must not add a generation to the URL. Verify physical menu opening and option clicks, not just filter-state assertions.
