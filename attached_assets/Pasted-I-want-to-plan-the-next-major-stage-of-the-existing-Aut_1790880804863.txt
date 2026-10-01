@@ -1,0 +1,553 @@
+I want to plan the next major stage of the existing AutoResearch website before implementing it.
+
+IMPORTANT:
+This is a PLANNING task first.
+
+Do NOT redesign the website from scratch.
+Do NOT populate the site with large amounts of invented automotive data.
+Do NOT build production automotive API integrations yet.
+Do NOT build authentication or user accounts.
+Do NOT implement a large database migration without first explaining the proposed architecture.
+
+Inspect the existing AutoResearch project, components, routes, data structures, Browse Cars experience, Compare system, Calculator integration, Community structure, and individual vehicle ownership/research pages.
+
+Preserve the existing visual identity:
+- dark charcoal + warm yellow palette
+- premium/editorial automotive research feel
+- current typography and spacing language
+- existing navigation
+- existing vehicle-card design direction
+- current report-page design direction
+
+The goal is to prepare AutoResearch to eventually become a real, source-backed automotive research platform rather than a collection of demo vehicle profiles.
+
+--------------------------------------------------
+1. VEHICLE DATA HIERARCHY
+--------------------------------------------------
+
+Plan a scalable vehicle information architecture based roughly on:
+
+Manufacturer
+→ Model
+→ Generation
+→ Model Year
+→ Trim
+→ Powertrain / configuration
+
+The architecture needs to handle cases where:
+
+- one model has many generations
+- generations span multiple model years
+- specifications change during a generation
+- one model year has multiple trims
+- trims may have different engines, motors, batteries, transmissions, drivetrains, wheel/tire packages, towing capacities, etc.
+- one engine/powertrain may be shared across multiple trims
+- a reliability issue may apply only to certain years, engines, transmissions, drivetrains, batteries, trims, or production ranges
+- a recall may apply to a model population but not necessarily be open on an individual VIN
+- maintenance information may vary by engine/powertrain/configuration
+- electric vehicles require different fields from ICE vehicles
+- hybrids and plug-in hybrids need to be represented correctly
+- historical vehicles may eventually be supported
+
+Avoid unnecessary overengineering, but do not structure everything as independent flat vehicle cards if that will make real automotive data difficult to maintain later.
+
+Explain how the existing 13 demo profiles could eventually fit into this hierarchy without breaking current routes unnecessarily.
+
+--------------------------------------------------
+2. BROWSE CARS EXPERIENCE
+--------------------------------------------------
+
+Plan improvements to the existing Browse Cars page while preserving its current visual design.
+
+SEARCH:
+
+Replace the current basic text filtering experience with an autocomplete/search-suggestion system.
+
+Example:
+
+User types:
+Tes
+
+Possible suggestions:
+
+Tesla
+Manufacturer
+
+Tesla Model Y
+Model
+
+2024 Tesla Model Y Long Range
+Vehicle / configuration
+
+Suggestions should be generated from the available vehicle dataset, not hard-coded search phrases.
+
+Plan for:
+- clickable suggestions
+- keyboard navigation
+- Enter selection
+- Escape to close
+- appropriate no-results state
+- clearing the query
+- closing suggestions after selection
+- responsive/mobile behavior
+- accessible semantics
+
+Do not require a production search service yet.
+
+FILTER HIERARCHY:
+
+The Browse Cars filters should become dependent/cascading rather than independent.
+
+Preferred user-facing hierarchy:
+
+Manufacturer
+→ Model
+→ Generation / Model Year
+→ Trim
+
+The underlying data may separate Generation and Model Year if that is cleaner.
+
+Example:
+
+If Manufacturer = Tesla,
+Model should only show Tesla models available in the dataset.
+
+If Model = Model Y,
+Generation and Model Year should only show applicable options.
+
+If Model Year = 2024,
+Trim should only show trims/configurations available for that selection.
+
+Changing an earlier filter should automatically reset incompatible downstream filters.
+
+Example:
+
+Tesla
+→ Model Y
+→ 2024
+→ Performance
+
+If the user changes Manufacturer to Ford, incompatible Model, Year, Generation, and Trim selections should reset safely.
+
+MODEL YEAR:
+
+Replace the manually typed year field with a dropdown/select control.
+
+Do NOT create hundreds of meaningless years with no matching vehicles.
+
+For now, derive available years from the current dataset.
+
+The architecture should nevertheless support much older vehicles in the future as the database expands.
+
+CLEAR FILTERS:
+
+"Clear all filters" should only appear when the user actually has an active search/filter/sort override.
+
+Clicking it should:
+- clear search
+- reset manufacturer
+- reset model
+- reset generation/year
+- reset trim
+- restore default sorting
+- close search suggestions
+- return Browse Cars to its default state
+
+After everything is reset, the Clear All control should disappear.
+
+"Most popular" may remain the default sort and should not by itself count as an active filter.
+
+Keep the existing sorting concepts for now:
+- Most popular
+- Estimated reliability
+- Annual ownership cost
+
+Do not redesign the vehicle cards during this planning stage.
+
+--------------------------------------------------
+3. VEHICLE RESEARCH PAGE NAVIGATION
+--------------------------------------------------
+
+The current individual vehicle page has section navigation such as:
+
+Overview
+Reliability
+Ownership costs
+Owner reports
+
+There is also a small up/down/middle-arrow style control on the right side of this navigation area.
+
+Plan to remove that unnecessary arrow/scroll control.
+
+The section navigation should become scroll-aware.
+
+Example:
+
+If the user clicks Ownership Costs:
+- smoothly scroll to Ownership Costs
+- highlight Ownership Costs
+
+If the user manually scrolls back upward into Overview:
+- remove the Ownership Costs highlight
+- highlight Overview
+
+The highlighted section should always represent the section currently being viewed, not merely the last tab clicked.
+
+Consider whether the section navigation should become sticky while the user is within the research report.
+
+If recommending sticky behavior, explain how to prevent it from conflicting with the main site header, mobile screens, or anchor offsets.
+
+--------------------------------------------------
+4. VEHICLE RESEARCH PAGE INFORMATION ARCHITECTURE
+--------------------------------------------------
+
+Plan how the current vehicle ownership report could evolve into a comprehensive vehicle research report.
+
+Do not populate real data yet.
+
+The eventual report should be capable of supporting sections such as:
+
+A. VEHICLE OVERVIEW
+
+Selected:
+- manufacturer
+- model
+- generation
+- model year
+- trim
+- configuration/powertrain
+
+Potential specifications:
+- engine or motor configuration
+- displacement where applicable
+- horsepower
+- torque
+- transmission
+- drivetrain
+- fuel type
+- EPA fuel economy where applicable
+- EV range where applicable
+- battery capacity where appropriate
+- charging information where appropriate
+- seating
+- dimensions
+- curb weight
+- cargo capacity
+- fuel tank capacity
+- towing capacity where applicable
+- payload where applicable
+- wheel/tire information
+- other configuration-specific specifications
+
+The schema should allow fields to be not-applicable rather than forcing ICE fields onto EVs or EV fields onto ICE vehicles.
+
+B. RELIABILITY RESEARCH
+
+Do not assume that AutoResearch should permanently rely on one simplistic numerical reliability score.
+
+The current 1-10 reliability values are DEMO estimates.
+
+Plan a more defensible future reliability system that could communicate areas such as:
+
+- engine / propulsion
+- transmission / drivetrain
+- battery / charging
+- electrical / electronics
+- suspension / steering
+- cooling
+- HVAC
+- brakes
+- body / interior
+- other relevant systems
+
+AutoResearch should distinguish between:
+- verified facts
+- authoritative data
+- researched patterns
+- owner-reported experiences
+- estimates
+- insufficient evidence
+
+Consider an evidence-strength concept such as:
+Limited evidence
+Moderate evidence
+Strong evidence
+
+Do not implement arbitrary ratings simply to fill the UI.
+
+C. REPORTED / KNOWN PROBLEM PATTERNS
+
+Plan a structured issue model.
+
+A problem pattern may eventually contain:
+
+- issue title
+- affected model years
+- affected generation
+- affected trim(s)
+- affected engine/powertrain
+- affected transmission
+- affected drivetrain
+- production range if known
+- symptoms
+- description
+- severity
+- evidence strength
+- approximate mileage range when credible evidence exists
+- diagnostic clues
+- inspection recommendation
+- potential repair
+- estimated repair-cost range
+- source references
+- date information was last reviewed
+
+Do not invent these values.
+
+D. MAINTENANCE
+
+Plan support for configuration-specific maintenance information such as:
+
+- service item
+- mileage interval
+- time interval
+- applicable powertrain/configuration
+- estimated cost range
+- source
+- notes
+
+This should eventually support both manufacturer-recommended maintenance and clearly distinguished estimated ownership planning information.
+
+E. OWNERSHIP COSTS
+
+Preserve integration with the existing Ownership Calculator.
+
+Vehicle research pages should eventually be capable of pre-filling appropriate assumptions into the Calculator, while still allowing users to edit everything.
+
+Keep sourced/known vehicle information separate from user-entered assumptions and estimates.
+
+F. OWNER EXPERIENCES
+
+Preserve the conceptual separation between:
+
+OWNER REPORTS
+Experiences submitted directly by AutoResearch users.
+
+and
+
+RESEARCHED OWNER-REPORTED ISSUES
+Patterns AutoResearch identifies through external research.
+
+These must never be presented as the same evidence category.
+
+Do not build authentication, submissions, moderation, voting, profiles, or uploads yet.
+
+--------------------------------------------------
+5. VEHICLE-SPECIFIC PRE-PURCHASE INSPECTION
+--------------------------------------------------
+
+The current report has a generic "Practical inspection list."
+
+Plan for this to eventually become much more vehicle-specific.
+
+The future report should support two layers:
+
+GENERAL PRE-PURCHASE CHECKS
+
+Examples:
+- VIN/title verification
+- service records
+- tires
+- brakes
+- leaks
+- warning lights
+- general road test
+- independent pre-purchase inspection
+
+VEHICLE-SPECIFIC INSPECTION POINTS
+
+These should be derived from actual researched issues for the selected:
+
+generation
++ model year
++ trim
++ powertrain/configuration
+
+A vehicle-specific inspection point may eventually explain:
+
+- what component to inspect
+- why it matters
+- which configurations are affected
+- symptoms to watch/listen for
+- mileage context when credible
+- what the buyer can check
+- what a professional mechanic should inspect
+- potential repair-cost range
+- evidence/source
+
+The system should be designed so an issue attached to one engine or configuration is not incorrectly displayed for every version of that model.
+
+Do NOT create fake inspection issues during this stage.
+
+--------------------------------------------------
+6. SAFETY, RECALLS, AND FUTURE VIN LOOKUP
+--------------------------------------------------
+
+Do NOT build the production integration yet.
+
+Plan the architecture for future authoritative safety and recall data.
+
+AutoResearch should eventually support:
+
+MODEL-LEVEL INFORMATION
+
+- NHTSA safety ratings where available
+- official recall campaigns
+- recall descriptions
+- affected populations/configurations where available
+- source links
+- date last checked
+
+INDIVIDUAL VEHICLE CHECK
+
+Future feature:
+
+"Check your VIN"
+
+A user could enter a 17-character VIN to check applicable/open recall information using authoritative data or be routed appropriately to an official NHTSA result.
+
+The UX must clearly distinguish:
+
+"This model has been subject to this recall"
+
+from:
+
+"This exact VIN currently has an open/unrepaired recall."
+
+Do not imply VIN-specific recall status without authoritative VIN-level data.
+
+Plan where this future feature should live in the report and how the architecture could accommodate it later without requiring a redesign.
+
+--------------------------------------------------
+7. SOURCING AND DATA PROVENANCE
+--------------------------------------------------
+
+This is extremely important to AutoResearch.
+
+Plan a source/provenance system so individual facts can eventually identify where they came from.
+
+Potential source categories may include:
+
+- manufacturer documentation
+- NHTSA
+- EPA
+- other government sources
+- technical service information where legally usable
+- reputable automotive publications
+- structured external datasets
+- AutoResearch research
+- owner-submitted reports
+
+Consider storing metadata such as:
+
+- source name
+- source type
+- source URL/reference
+- publication/retrieval date
+- last reviewed date
+- what specific fact/issue the source supports
+
+Do not invent citations.
+
+Do not treat an AI-generated statement as a source.
+
+The UI does not need to display a citation after every single number if that would make the design unreadable, but the underlying architecture should make source attribution possible.
+
+--------------------------------------------------
+8. DATA CONFIDENCE / TRANSPARENCY
+--------------------------------------------------
+
+AutoResearch should continue following the philosophy:
+
+"A guide, not a verdict."
+
+Plan a consistent way to identify information as:
+
+- official / authoritative
+- researched
+- owner reported
+- estimated
+- demo
+- insufficient evidence
+
+Avoid false precision.
+
+Do not imply that AutoResearch knows more than the available evidence supports.
+
+The current demo disclosures should remain until real data replaces the demo information.
+
+--------------------------------------------------
+9. DO NOT BUILD YET
+--------------------------------------------------
+
+Do not implement these production systems during this planning stage:
+
+- user accounts
+- authentication
+- owner profiles
+- review submission backend
+- moderation system
+- photo uploads
+- verified-owner verification
+- comments
+- voting
+- social feeds
+- AI vehicle recommendation engine
+- full Find-a-Car recommendation engine
+- production NHTSA VIN integration
+- production recall API integration
+- large production automotive database
+- automatic web scraping
+- invented automotive datasets
+- major visual redesign
+
+Do not remove working Calculator, Compare, Community, or navigation functionality.
+
+--------------------------------------------------
+10. WHAT I WANT FROM THIS PLAN
+--------------------------------------------------
+
+After inspecting the current codebase, give me a concrete implementation plan.
+
+Please explain:
+
+1. What the current vehicle data architecture looks like.
+
+2. What should remain unchanged.
+
+3. What should be refactored before adding real automotive data.
+
+4. A proposed scalable vehicle schema/hierarchy.
+
+5. How Browse Cars should query/filter that structure.
+
+6. How autocomplete should work.
+
+7. How cascading filters should work.
+
+8. How the research-page section navigation should work.
+
+9. How reliability issues, maintenance, inspection points, ownership estimates, owner reports, sources, safety data, recalls, and future VIN lookup should relate to the vehicle hierarchy.
+
+10. Which improvements can safely be implemented now using the existing demo dataset.
+
+11. Which improvements should wait until the real-data stage.
+
+12. Any technical risks, migration risks, duplicated data, route issues, or assumptions you discover.
+
+13. A recommended staged implementation order.
+
+Prefer incremental changes that preserve the working site.
+
+Do not implement the large architecture/data migration yet.
+
+I want to review and approve the plan before major implementation begins.
