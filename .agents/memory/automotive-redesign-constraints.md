@@ -14,3 +14,9 @@ Use licensed/usable real vehicle photography when available; otherwise use clear
 **Why:** This research product informs expensive purchase decisions, and the user explicitly prohibited misleading vehicle imagery.
 
 **How to apply:** Verify rights and vehicle identity before assigning a photograph to a model/trim; retain honest placeholders when suitable images are unavailable.
+
+Browse autocomplete suggestions are limited to Manufacturer and Model results; do not add individual vehicle/configuration/trim suggestions without an explicit request. Keep result labels clean and show the entity type as secondary metadata.
+
+**Why:** The user wants high-level discovery first and does not want per-configuration matches cluttering search suggestions.
+
+**How to apply:** Keep autocomplete to the current make/model discovery level while preserving the existing cascading filters. Vehicle report navigation remains available through the vehicle cards.

@@ -11,6 +11,7 @@ import {
   economyUnit,
   getActiveReportSection,
   getBrowseSuggestions,
+  getGenerationFilterHint,
   hasActiveBrowseFilters,
   hasInvalidBrowseSelection,
   normalizeCalculatorNumber,
@@ -491,6 +492,25 @@ test("browse suggestions include only clean manufacturer and model results", () 
   assert.equal(getBrowseSuggestions("  ", browseCatalog).length, 0);
   assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1).length, 1);
   assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1)[0]?.kind, "model");
+});
+
+test("generation filter explains when model selection is needed or only one generation exists", () => {
+  assert.equal(
+    getGenerationFilterHint({ catalogReady: false, modelSelected: false, generationCount: 0 }),
+    undefined,
+  );
+  assert.equal(
+    getGenerationFilterHint({ catalogReady: true, modelSelected: false, generationCount: 0 }),
+    "Choose a model to view its generations.",
+  );
+  assert.equal(
+    getGenerationFilterHint({ catalogReady: true, modelSelected: true, generationCount: 1 }),
+    "Only one generation is currently represented in this catalog.",
+  );
+  assert.equal(
+    getGenerationFilterHint({ catalogReady: true, modelSelected: true, generationCount: 2 }),
+    undefined,
+  );
 });
 
 test("electric economy uses MPGe while combustion economy keeps mpg", () => {

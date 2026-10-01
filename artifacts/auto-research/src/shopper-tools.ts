@@ -31,6 +31,17 @@ export type BrowseSuggestion =
   | { kind: "manufacturer"; label: string; makeSlug: string }
   | { kind: "model"; label: string; makeSlug: string; modelId: number };
 
+export function getGenerationFilterHint(options: {
+  catalogReady: boolean;
+  modelSelected: boolean;
+  generationCount: number;
+}): string | undefined {
+  if (!options.catalogReady) return undefined;
+  if (!options.modelSelected) return "Choose a model to view its generations.";
+  if (options.generationCount === 1) return "Only one generation is currently represented in this catalog.";
+  return undefined;
+}
+
 export type ReportSectionId = "overview" | "reliability" | "costs" | "reports";
 
 export function getActiveReportSection(
@@ -172,7 +183,7 @@ export function getBrowseSuggestions(query: string, options: CatalogOption[], li
   }
   const candidates = [...makes.values(), ...models.values()]
     .map((suggestion) => {
-      const searchable = normalized(suggestion.label.replace(/\s+—\s+.*/, ""));
+      const searchable = normalized(suggestion.label);
       const words = searchable.split(" ");
       const queryWords = term.split(" ");
       const rank = searchable === term ? 0 :

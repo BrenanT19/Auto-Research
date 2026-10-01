@@ -1,4 +1,4 @@
-- [Automotive redesign constraints](automotive-redesign-constraints.md) — visual changes preserve working research tools; vehicle media must be licensed/usable or honestly labeled placeholders.
+- [Automotive redesign constraints](automotive-redesign-constraints.md) — preserve research flows; Browse autocomplete stays at Manufacturer/Model level and vehicle media stays verified or labeled placeholders.
 - [Optional detail lookups](optional-detail-lookups.md) — explicitly disable generated queries for empty IDs; empty detail URLs can resolve to collection data.
 - [Wouter query-only navigation](wouter-query-navigation.md) — synchronize local query-derived state on `popstate`; query-only history changes did not update the route location value.
 - [Automotive evidence types](automotive-evidence-types.md) — direct owner submissions and externally researched owner-reported issues must remain distinct evidence types.
