@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Auto Research"
+description = "A car ownership research platform that helps shoppers compare reliability, common problems, maintenance, repair costs, and long-term ownership expenses using clearly labeled demo data."
+version = "1.0.0"
+id = "artifacts/auto-research"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19943
+
+[services.development]
+run = "pnpm --filter @workspace/auto-research run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/auto-research", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/auto-research/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19943"
+BASE_PATH = "/"

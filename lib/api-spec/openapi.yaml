@@ -9,7 +9,9 @@ servers:
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: catalog
+  - name: community
+  - name: discovery
 paths:
   /healthz:
     get:
@@ -24,6 +26,167 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /makes:
+    get:
+      operationId: listMakes
+      tags: [catalog]
+      summary: List vehicle manufacturers
+      responses:
+        "200":
+          description: Manufacturer directory
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Make"
+  /makes/{makeSlug}:
+    get:
+      operationId: getMake
+      tags: [catalog]
+      summary: Get a manufacturer and its featured vehicles
+      parameters:
+        - in: path
+          name: makeSlug
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Manufacturer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ManufacturerProfile"
+        "404":
+          description: Manufacturer not found
+  /vehicles:
+    get:
+      operationId: listVehicles
+      tags: [catalog]
+      summary: Search and filter vehicle trims
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: makeSlug
+          schema:
+            type: string
+        - in: query
+          name: model
+          schema:
+            type: string
+        - in: query
+          name: year
+          schema:
+            type: integer
+        - in: query
+          name: trim
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [popular, reliability, ownership-cost]
+            default: popular
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 24
+      responses:
+        "200":
+          description: Matching vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VehicleSummary"
+  /vehicles/popular:
+    get:
+      operationId: listPopularVehicles
+      tags: [discovery]
+      summary: Get popular demonstration vehicles
+      responses:
+        "200":
+          description: Popular vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VehicleSummary"
+  /vehicles/trending:
+    get:
+      operationId: listTrendingVehicles
+      tags: [discovery]
+      summary: Get most-researched demonstration vehicles
+      responses:
+        "200":
+          description: Most-researched vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VehicleSummary"
+  /vehicles/{vehicleId}:
+    get:
+      operationId: getVehicle
+      tags: [catalog]
+      summary: Get an ownership research profile
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Vehicle research profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleDetail"
+        "404":
+          description: Vehicle not found
+  /owner-reports:
+    get:
+      operationId: listOwnerReports
+      tags: [community]
+      summary: List sample owner experiences and problem reports
+      parameters:
+        - in: query
+          name: vehicleId
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Owner reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OwnerReport"
+  /discovery/stats:
+    get:
+      operationId: getDiscoveryStats
+      tags: [discovery]
+      summary: Get catalog and research summary counts
+      responses:
+        "200":
+          description: Discovery summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscoveryStats"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +196,204 @@ components:
           type: string
       required:
         - status
+    Make:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        vehicleCount: { type: integer }
+        mark: { type: string }
+      required: [id, name, slug, vehicleCount, mark]
+    ManufacturerProfile:
+      type: object
+      properties:
+        make: { $ref: "#/components/schemas/Make" }
+        description: { type: string }
+        vehicles:
+          type: array
+          items: { $ref: "#/components/schemas/VehicleSummary" }
+      required: [make, description, vehicles]
+    VehicleSummary:
+      type: object
+      properties:
+        id: { type: string }
+        make: { type: string }
+        makeSlug: { type: string }
+        model: { type: string }
+        modelSlug: { type: string }
+        year: { type: integer }
+        generation: { type: string }
+        trim: { type: string }
+        bodyType: { type: string }
+        drivetrain: { type: string }
+        fuelType: { type: string }
+        mpgCity: { type: ["number", "null"] }
+        mpgHighway: { type: ["number", "null"] }
+        mpgCombined: { type: ["number", "null"] }
+        horsepower: { type: integer }
+        priceUsd: { type: integer }
+        reliabilityEstimate: { type: number }
+        annualOwnershipEstimateUsd: { type: integer }
+        annualMaintenanceEstimateUsd: { type: integer }
+        annualRepairEstimateUsd: { type: integer }
+        annualFuelEstimateUsd: { type: integer }
+        researchRank: { type: integer }
+        imageKey: { type: string }
+        isDemo: { type: boolean }
+      required:
+        - id
+        - make
+        - makeSlug
+        - model
+        - modelSlug
+        - year
+        - generation
+        - trim
+        - bodyType
+        - drivetrain
+        - fuelType
+        - mpgCity
+        - mpgHighway
+        - mpgCombined
+        - horsepower
+        - priceUsd
+        - reliabilityEstimate
+        - annualOwnershipEstimateUsd
+        - annualMaintenanceEstimateUsd
+        - annualRepairEstimateUsd
+        - annualFuelEstimateUsd
+        - researchRank
+        - imageKey
+        - isDemo
+    VehicleDetail:
+      allOf:
+        - $ref: "#/components/schemas/VehicleSummary"
+        - type: object
+          properties:
+            overview: { type: string }
+            engineName: { type: string }
+            transmissionName: { type: string }
+            engines:
+              type: array
+              items: { $ref: "#/components/schemas/Engine" }
+            transmissions:
+              type: array
+              items: { $ref: "#/components/schemas/Transmission" }
+            siblingTrims:
+              type: array
+              items: { type: string }
+            reliability:
+              $ref: "#/components/schemas/ReliabilityProfile"
+            commonProblems:
+              type: array
+              items: { $ref: "#/components/schemas/CommonProblem" }
+            maintenance:
+              type: array
+              items: { $ref: "#/components/schemas/MaintenanceItem" }
+            insuranceEstimateUsd: { type: integer }
+            fiveYearDepreciationPercent: { type: number }
+            expectedLifespanMiles: { type: integer }
+            inspectionChecklist:
+              type: array
+              items: { type: string }
+            recallStatus: { type: string }
+            safetyStatus: { type: string }
+          required:
+            - overview
+            - engineName
+            - transmissionName
+            - engines
+            - transmissions
+            - siblingTrims
+            - reliability
+            - commonProblems
+            - maintenance
+            - insuranceEstimateUsd
+            - fiveYearDepreciationPercent
+            - expectedLifespanMiles
+            - inspectionChecklist
+            - recallStatus
+            - safetyStatus
+    Engine:
+      type: object
+      properties:
+        name: { type: string }
+        horsepower: { type: integer }
+        fuelType: { type: string }
+        availability: { type: string }
+      required: [name, horsepower, fuelType, availability]
+    Transmission:
+      type: object
+      properties:
+        name: { type: string }
+        gears: { type: string }
+        availability: { type: string }
+      required: [name, gears, availability]
+    ReliabilityProfile:
+      type: object
+      properties:
+        score: { type: number }
+        label: { type: string }
+        note: { type: string }
+      required: [score, label, note]
+    CommonProblem:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        typicalMileageStart: { type: integer }
+        typicalMileageEnd: { type: integer }
+        repairCostLowUsd: { type: integer }
+        repairCostHighUsd: { type: integer }
+        severity: { type: string }
+      required:
+        - title
+        - description
+        - typicalMileageStart
+        - typicalMileageEnd
+        - repairCostLowUsd
+        - repairCostHighUsd
+        - severity
+    MaintenanceItem:
+      type: object
+      properties:
+        item: { type: string }
+        intervalMiles: { type: integer }
+        estimatedCostUsd: { type: integer }
+      required: [item, intervalMiles, estimatedCostUsd]
+    OwnerReport:
+      type: object
+      properties:
+        id: { type: integer }
+        vehicleId: { type: string }
+        vehicleLabel: { type: string }
+        displayName: { type: string }
+        ownershipMonths: { type: integer }
+        milesDriven: { type: integer }
+        rating: { type: integer }
+        title: { type: string }
+        body: { type: string }
+        reportedProblem: { type: ["string", "null"] }
+        isDemo: { type: boolean }
+      required:
+        - id
+        - vehicleId
+        - vehicleLabel
+        - displayName
+        - ownershipMonths
+        - milesDriven
+        - rating
+        - title
+        - body
+        - reportedProblem
+        - isDemo
+    DiscoveryStats:
+      type: object
+      properties:
+        makeCount: { type: integer }
+        vehicleCount: { type: integer }
+        reportCount: { type: integer }
+        demoLabel: { type: string }
+      required: [makeCount, vehicleCount, reportCount, demoLabel]
 
