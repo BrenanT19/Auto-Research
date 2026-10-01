@@ -198,6 +198,13 @@ function BrowsePage() {
       setLoc(location, replace ? { replace: true } : undefined);
     }
   };
+  const clearAllFilters = () => {
+    commit(clearBrowseFilters());
+    requestAnimationFrame(() => {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
+    });
+  };
   const updateFilters = (changes: Partial<BrowseFilters>) => {
     const candidate = { ...browse, ...changes };
     const next = catalogReady ? resolveBrowseFilters(candidate, catalog) : candidate;
@@ -274,7 +281,7 @@ function BrowsePage() {
       <label className="field-label">Model year<select disabled={!catalogReady} value={browse.year} onChange={event => updateFilters({ year: event.target.value, trim: "", trimId: "" })}><option value="">All years</option>{yearOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
       <label className="field-label">Trim<select disabled={!catalogReady} value={browse.trimId} onChange={event => updateFilters({ trim: "", trimId: event.target.value })}><option value="">All trims</option>{trimOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
       <label className="field-label">Order by<select value={browse.sort} onChange={event => updateFilters({ sort: event.target.value as BrowseFilters["sort"] })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label>
-      {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={() => { commit(clearBrowseFilters()); }} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
+      {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={clearAllFilters} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
     <div className="results-area"><div className="results-top"><span>{vehicles.data?.length ?? 0} profiles shown</span><span className="mono">SORT: {browse.sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}
     </div>
