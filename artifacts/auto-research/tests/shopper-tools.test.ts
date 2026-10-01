@@ -529,7 +529,7 @@ test("Browse generation stays enabled and unselected for single-generation model
     );
 
     const modelOptions = browseCatalog.filter((option) =>
-      String(option.modelId) === modelId &&
+      option.makeSlug === make && String(option.modelId) === modelId,
     );
     const generationOptions = getBrowseGenerationOptions(modelOptions);
     assert.deepEqual(generationOptions, [{ id: Number(generationId), name: generationName }]);
