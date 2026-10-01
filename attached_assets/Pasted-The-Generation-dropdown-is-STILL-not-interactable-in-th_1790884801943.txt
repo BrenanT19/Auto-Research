@@ -1,0 +1,36 @@
+The Generation dropdown is STILL not interactable in the actual Browse Cars preview.
+Stop relying on the existing regression tests as proof that this is fixed. The user-facing interaction is failing even though the tests pass.
+Reproduce this exact interaction yourself in the running desktop preview:
+1. Open Browse Cars.
+2. Select Tesla under Manufacturer.
+3. Select Model Y under Model.
+4. Click the Generation control with the mouse.
+5. Confirm that a dropdown/popover VISIBLY OPENS.
+6. Confirm that First Generation appears as a clickable option inside it.
+7. Click First Generation.
+8. Confirm that the control now displays First Generation and filtering continues correctly.
+Then repeat the actual mouse interaction for:
+Dodge → Charger → Generation → Seventh Generation
+and:
+Ram → 1500 → Generation → Fifth Generation
+This is specifically an INTERACTION/UI bug, not merely a catalog-data or selected-state bug.
+REQUIRED BEHAVIOR:
+- Once a Model is selected, Generation must be enabled and clickable.
+- Clicking Generation must visibly open its dropdown even if there is only ONE generation available.
+- A model with one generation must show that one generation as a clickable option.
+- Do not automatically select the only generation.
+- Do not disable the Generation control because there is only one option.
+- Do not hide or replace the dropdown because there is only one option.
+- Before selection, it can display “All generations.”
+- After the user explicitly selects the generation, display its name.
+- Multiple-generation models must use the exact same component and automatically show all generations supplied by the catalog.
+- Generation options must remain entirely data-driven. Do not hard-code individual vehicles or generations.
+Inspect the actual rendered Generation component and its props/state. Look specifically for disabled conditions, sole-option auto-selection, conditional rendering, pointer-event/CSS issues, Select component behavior, and any state resolver that is still automatically committing a sole generation.
+IMPORTANT: Do not tell me this is fixed merely because unit tests say the selected generation exists in state.
+You must verify in the RUNNING PREVIEW that clicking the Generation control physically opens the menu and allows the generation to be clicked.
+Add an interaction-level regression test that actually opens the Generation dropdown and selects an option, rather than only testing the filter resolver/state.
+Do not change vehicle data, schema, styling, or unrelated Browse functionality.
+At completion, explicitly report:
+- what was preventing the dropdown from opening,
+- what code was changed,
+- and whether you personally verified the clickable dropdown in the running preview for Tesla Model Y, Dodge Charger, and Ram 1500.
