@@ -440,15 +440,33 @@ const browseCatalog: CatalogOption[] = [
     modelId: 21, model: "Model Y", generationId: 211, generation: "First Generation",
     modelYearId: 2111, year: 2024, trimId: 21111, trim: "Long Range",
   },
+  {
+    profileId: "tesla-model-y-2024-performance", makeId: 2, make: "Tesla", makeSlug: "tesla",
+    modelId: 21, model: "Model Y", generationId: 211, generation: "First Generation",
+    modelYearId: 2111, year: 2024, trimId: 21112, trim: "Performance",
+  },
+  {
+    profileId: "dodge-charger-2023-gt", makeId: 3, make: "Dodge", makeSlug: "dodge",
+    modelId: 31, model: "Charger", generationId: 311, generation: "Seventh generation",
+    modelYearId: 3111, year: 2023, trimId: 31111, trim: "GT",
+  },
+  {
+    profileId: "ram-1500-2024-big-horn", makeId: 4, make: "Ram", makeSlug: "ram",
+    modelId: 41, model: "1500", generationId: 411, generation: "Fifth generation",
+    modelYearId: 4111, year: 2024, trimId: 41111, trim: "Big Horn",
+  },
 ];
 
 test("browse deep links resolve legacy names without broadening invalid hierarchy filters", () => {
   const legacy = parseBrowseFilters("?make=ford&model=F-150&year=2024&trim=XLT");
   const resolved = resolveBrowseFilters(legacy, browseCatalog);
   assert.equal(resolved.modelId, "11");
-  assert.equal(resolved.generationId, "");
+  assert.equal(resolved.generationId, "111");
   assert.equal(resolved.trimId, "11111");
-  assert.equal(buildBrowseLocation(resolved), "/browse?make=ford&modelId=11&year=2024&trimId=11111");
+  assert.equal(
+    buildBrowseLocation(resolved),
+    "/browse?make=ford&modelId=11&generationId=111&year=2024&trimId=11111",
+  );
 
   const invalid = resolveBrowseFilters({
     ...resolved, modelId: "12", generationId: "111", year: "2024", trimId: "11111",
@@ -456,6 +474,84 @@ test("browse deep links resolve legacy names without broadening invalid hierarch
   assert.equal(invalid.generationId, "111");
   assert.equal(invalid.trimId, "11111");
   assert.equal(hasInvalidBrowseSelection(invalid, browseCatalog), true);
+});
+
+test("browse auto-selects a sole model generation and scopes years and trims to it", () => {
+  const cases = [
+    {
+      make: "tesla",
+      modelId: "21",
+      generationId: "211",
+      trimYear: 2024,
+      expectedYears: [2024],
+      expectedTrims: ["Long Range", "Performance"],
+    },
+    {
+      make: "dodge",
+      modelId: "31",
+      generationId: "311",
+      trimYear: 2023,
+      expectedYears: [2023],
+      expectedTrims: ["GT"],
+    },
+    {
+      make: "ram",
+      modelId: "41",
+      generationId: "411",
+      trimYear: 2024,
+      expectedYears: [2024],
+      expectedTrims: ["Big Horn"],
+    },
+  ];
+
+  for (const { make, modelId, generationId, trimYear, expectedYears, expectedTrims } of cases) {
+    const resolved = resolveBrowseFilters(
+      { ...clearBrowseFilters(), make, modelId },
+      browseCatalog,
+    );
+    assert.equal(resolved.generationId, generationId, `${make} model should select its sole generation`);
+    assert.equal(
+      buildBrowseLocation(resolved),
+      `/browse?make=${make}&modelId=${modelId}&generationId=${generationId}`,
+    );
+
+    const selectedGeneration = browseCatalog.filter((option) =>
+      String(option.modelId) === modelId &&
+      String(option.generationId) === resolved.generationId,
+    );
+    assert.deepEqual(
+      [...new Set(selectedGeneration.map((option) => option.year))].sort((a, b) => a - b),
+      expectedYears,
+    );
+    assert.deepEqual(
+      selectedGeneration.filter((option) => option.year === trimYear).map((option) => option.trim),
+      expectedTrims,
+    );
+  }
+
+  const multipleGenerationFixture: CatalogOption[] = [
+    {
+      profileId: "test-profile-a", makeId: 99, make: "Test Make", makeSlug: "test-make",
+      modelId: 99, model: "Test Model", generationId: 991, generation: "Generation A",
+      modelYearId: 9911, year: 2024, trimId: 99111, trim: "Test Trim A",
+    },
+    {
+      profileId: "test-profile-b", makeId: 99, make: "Test Make", makeSlug: "test-make",
+      modelId: 99, model: "Test Model", generationId: 992, generation: "Generation B",
+      modelYearId: 9921, year: 2025, trimId: 99211, trim: "Test Trim B",
+    },
+  ];
+  const multipleGenerations = resolveBrowseFilters(
+    { ...clearBrowseFilters(), make: "test-make", modelId: "99" },
+    multipleGenerationFixture,
+  );
+  assert.equal(multipleGenerations.generationId, "");
+
+  const makeOnly = resolveBrowseFilters(
+    { ...clearBrowseFilters(), make: "tesla" },
+    browseCatalog,
+  );
+  assert.equal(makeOnly.generationId, "");
 });
 
 test("browse state preserves invalid filters, normalizes sorts, and detects active filters", () => {

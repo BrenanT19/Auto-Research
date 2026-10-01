@@ -148,6 +148,13 @@ export function resolveBrowseFilters(filters: BrowseFilters, options: CatalogOpt
   }
   const underModel = underMake.filter((option) => !next.modelId || String(option.modelId) === next.modelId);
 
+  if (!next.generationId && next.modelId) {
+    const modelGenerations = unique(underModel.map((option) => String(option.generationId)));
+    if (modelGenerations.length === 1) {
+      next = { ...next, generationId: modelGenerations[0] };
+    }
+  }
+
   const underGeneration = underModel.filter((option) =>
     !next.generationId || String(option.generationId) === next.generationId,
   );
