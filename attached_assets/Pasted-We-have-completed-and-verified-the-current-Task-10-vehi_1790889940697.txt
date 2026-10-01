@@ -1,0 +1,899 @@
+We have completed and verified the current Task #10 vehicle-discovery and Vehicle Research UI foundation.
+
+We are now beginning:
+
+STAGE 2 — REAL VEHICLE DATA ARCHITECTURE & MIGRATION PLANNING
+
+This is a PLANNING TASK ONLY.
+
+Do NOT:
+- implement database migrations
+- populate a large real vehicle catalog
+- replace the existing 13 demo profiles
+- redesign the Vehicle Research page
+- redesign Browse Cars
+- begin building production automotive research
+- make destructive schema changes
+
+I want you to inspect the existing AutoResearch project and produce a detailed architecture and implementation plan for review before any implementation begins.
+
+
+==================================================
+PRODUCT GOAL
+==================================================
+
+AutoResearch is intended to become a scalable, source-backed automotive research platform.
+
+The goal is to help someone understand a vehicle beyond its purchase price by combining:
+
+- vehicle specifications
+- generations/model years/trims/configurations
+- powertrain information
+- reliability research
+- known/reported issues
+- maintenance expectations
+- recalls and safety information
+- ownership costs
+- vehicle-specific inspection considerations
+- owner experiences
+- comparisons
+- ownership calculations
+- transparent sourcing
+
+AutoResearch should be a GUIDE, NOT A VERDICT.
+
+It should help users investigate vehicles without pretending that subjective reliability research or incomplete evidence is universally definitive.
+
+Accuracy, applicability, transparency, and sourcing are extremely important.
+
+Never design the system around fabricated automotive information, fake citations, fake owner reports, unsupported reliability scores, or false precision.
+
+
+==================================================
+IMPORTANT PRODUCT / UI CONTEXT
+==================================================
+
+The real vehicle-data architecture being planned here is intended primarily to power the existing individual Vehicle Research / Full Ownership Report reached through:
+
+Browse Cars
+→ vehicle card
+→ View Full Ownership Report
+→ individual Vehicle Research page
+
+The current Vehicle Research report contains sections for:
+
+- Overview
+- Reliability
+- Ownership Costs
+- Owner Reports
+
+Real automotive data will eventually feed these areas.
+
+For example:
+
+OVERVIEW may contain:
+- exact vehicle identity
+- generation
+- trim/configuration
+- body style
+- engine/powertrain
+- drivetrain
+- transmission
+- major specifications
+- summary ownership information
+
+RELIABILITY may contain:
+- known/reported issues
+- affected model years
+- affected engines/configurations
+- symptoms
+- likely causes when supported
+- severity
+- repair information
+- approximate repair costs when supportable
+- maintenance concerns
+- inspection points
+- recalls/TSBs where appropriate
+- supporting sources/evidence
+
+OWNERSHIP COSTS may eventually contain:
+- maintenance expectations
+- fuel/electricity estimates
+- repair considerations/reserves
+- vehicle-specific ownership-cost inputs
+- connections to the existing Ownership Calculator
+- clear separation between estimates and sourced facts
+
+OWNER REPORTS will eventually contain genuine AutoResearch user-submitted experiences.
+
+Externally researched owner-reported patterns must NOT be represented as direct AutoResearch owner reports.
+
+IMPORTANT:
+
+Do NOT constrain the database architecture to the current four-section report UI.
+
+We expect to redesign and expand the Vehicle Research page later, after real automotive information is available.
+
+Future versions may have dedicated sections such as:
+
+- Specifications
+- Powertrain
+- Reliability
+- Known Issues
+- Maintenance
+- Safety & Recalls
+- Ownership Costs
+- Inspection Guide
+- Owner Reports
+
+Therefore:
+
+KEEP DATA ARCHITECTURE SEPARATE FROM PRESENTATION ARCHITECTURE.
+
+Do not redesign the Vehicle Research page during Stage 2.
+
+Instead, make sure the underlying architecture can support a substantially richer Vehicle Research report later without requiring another fundamental database redesign.
+
+
+==================================================
+INITIAL CATALOG STRATEGY
+==================================================
+
+We want the first major real-data catalog rollout to focus on AMERICAN AUTOMOTIVE BRANDS.
+
+For planning purposes, interpret this primarily as American automotive brands/manufacturers rather than simply vehicles physically assembled in the United States.
+
+For example, vehicles from foreign brands that happen to be manufactured at American factories should not automatically qualify as part of the initial American-brand catalog.
+
+However, do NOT hardcode the architecture around American vehicles.
+
+The architecture must eventually support manufacturers and brands from around the world.
+
+Before implementation, identify which current and discontinued American automotive brands would reasonably belong in the initial catalog and explain how manufacturer/corporate ownership versus consumer-facing brand identity should be represented.
+
+Do not begin importing those vehicles yet.
+
+
+==================================================
+1. AUDIT THE EXISTING ARCHITECTURE
+==================================================
+
+Reinspect the actual current AutoResearch codebase.
+
+Audit:
+
+- PostgreSQL schema
+- Drizzle schema/models
+- existing relationships
+- makes
+- models
+- generations
+- model years
+- trims
+- engines
+- transmissions
+- ownership estimates
+- maintenance records
+- common problems
+- recalls
+- safety structures
+- owner reports
+- Browse Cars API/data flow
+- Vehicle Research API/data flow
+- vehicle slugs
+- URLs
+- current source/provenance fields
+- the existing 13 demo profiles
+
+Do not rely only on the previous architecture plan.
+
+Inspect the current implementation as it exists now.
+
+Document:
+
+1. What is already structurally sound.
+2. What can remain.
+3. What should be extended.
+4. What eventually needs migration.
+5. What current structures could create problems when thousands of real vehicles are introduced.
+6. How compatibility with the current working prototype can be maintained throughout migration.
+
+
+==================================================
+2. DESIGN THE CANONICAL VEHICLE HIERARCHY
+==================================================
+
+Our current conceptual hierarchy is:
+
+Manufacturer
+→ Brand
+→ Model
+→ Generation
+→ Model Year
+→ Trim
+→ Configuration
+→ Powertrain
+
+Determine whether Manufacturer and Brand should actually be separate entities based on real automotive data requirements.
+
+AutoResearch needs to represent corporate/manufacturer relationships without confusing them with the consumer-facing make/brand.
+
+The architecture must correctly support:
+
+- models spanning multiple generations
+- generations spanning multiple model years
+- multiple trims within a model year
+- repeated trim names across years
+- the same trim offered with multiple engines
+- the same trim offered with multiple drivetrains
+- RWD
+- FWD
+- AWD
+- 4WD
+- body styles
+- pickup cab configurations
+- pickup bed lengths
+- engines
+- transmissions
+- performance variants
+- option-dependent mechanical configurations
+- ICE vehicles
+- conventional hybrids
+- plug-in hybrids
+- battery electric vehicles
+- discontinued models
+- discontinued brands
+- mid-model-year mechanical changes where necessary
+- future global manufacturers
+
+Avoid building a giant collection of unnecessarily duplicated independent vehicle records when shared entities and relationships would represent the information more accurately.
+
+At the same time, the architecture must make it possible to identify an exact vehicle configuration when research applicability requires it.
+
+
+==================================================
+3. DESIGN POWERTRAIN / CONFIGURATION ARCHITECTURE
+==================================================
+
+The existing system risks conflating trims with exact mechanical configurations.
+
+Design how AutoResearch should represent:
+
+- trim
+- configuration
+- engine
+- engine family/version
+- transmission
+- transmission family/version
+- drivetrain
+- propulsion type
+- electric motor configuration
+- battery pack/version where relevant
+- hybrid system
+- body configuration
+- cab/bed combinations
+- performance packages where mechanically significant
+
+Explicitly support propulsion categories such as:
+
+- ICE
+- HEV
+- PHEV
+- BEV
+
+Determine which entities should be reusable across model years and which should be year-specific.
+
+Avoid incorrectly duplicating an identical engine simply because it appears in multiple model years.
+
+At the same time, allow revisions/version changes to be represented when mechanically meaningful.
+
+
+==================================================
+4. DESIGN SPECIFICATIONS ARCHITECTURE
+==================================================
+
+Determine how AutoResearch should represent real vehicle specifications.
+
+Potential specifications include, where applicable:
+
+- engine
+- displacement
+- cylinders
+- aspiration
+- horsepower
+- torque
+- transmission
+- number of gears
+- drivetrain
+- fuel type
+- recommended fuel
+- EPA fuel economy
+- EV efficiency
+- EPA EV range
+- battery capacity
+- motor configuration
+- charging information where supportable
+- dimensions
+- length
+- width
+- height
+- wheelbase
+- curb weight
+- GVWR where useful
+- payload
+- towing capacity
+- seating
+- passenger capacity
+- cargo capacity
+- fuel tank capacity
+- wheel/tire information where useful
+
+Do not assume every specification applies at the same hierarchy level.
+
+A specification that applies only to one configuration must not accidentally appear as applying to every trim or model year.
+
+Explicitly design support for:
+
+KNOWN VALUE
+UNKNOWN VALUE
+NOT APPLICABLE
+
+Do not use fake zeros, empty strings, or guessed defaults for unknown automotive information.
+
+Consider whether specifications should support source attribution at the individual fact level.
+
+
+==================================================
+5. DESIGN RELIABILITY / KNOWN-ISSUE RESEARCH
+==================================================
+
+AutoResearch should eventually provide source-backed reliability research rather than relying on a simplistic unsupported numeric reliability score.
+
+Design how to represent:
+
+- known/reported problems
+- affected generations
+- affected model years
+- affected trims
+- affected configurations
+- affected engines
+- affected transmissions
+- affected powertrains
+- mileage ranges when evidence supports them
+- symptoms
+- causes when supported
+- diagnostic considerations
+- repair information
+- approximate repair-cost ranges when supportable
+- severity
+- frequency/confidence without false precision
+- maintenance-related concerns
+- technical service bulletins when appropriate
+- recalls
+- inspection considerations
+
+CRITICAL:
+
+A problem affecting one engine or transmission must NOT automatically appear on every vehicle sharing that model or model year.
+
+Design a reusable applicability mechanism.
+
+For example, a research item may apply to:
+
+Generation
+AND/OR
+Model Year range
+AND/OR
+specific Engine
+AND/OR
+specific Transmission
+AND/OR
+specific Configuration
+AND/OR
+specific Trim
+
+Determine the best normalized way to represent this without creating fragile one-off logic.
+
+
+==================================================
+6. DESIGN VEHICLE-SPECIFIC INSPECTION INFORMATION
+==================================================
+
+AutoResearch should eventually provide useful inspection considerations for someone evaluating a used vehicle.
+
+This should not simply be the same generic checklist copied to every vehicle.
+
+Design how inspection information can derive from or relate to:
+
+- known issues
+- powertrain
+- configuration
+- generation
+- model year
+- maintenance concerns
+- recalls
+- vehicle-specific failure patterns
+
+We may still have a generic baseline inspection checklist, but vehicle-specific inspection points should be added based on applicable research.
+
+Design this without duplicating the same information unnecessarily.
+
+
+==================================================
+7. DESIGN MAINTENANCE ARCHITECTURE
+==================================================
+
+Design how AutoResearch should represent:
+
+- scheduled maintenance
+- manufacturer-recommended intervals
+- mileage intervals
+- time intervals
+- severe-service intervals where applicable
+- fluid services
+- filters
+- spark plugs
+- belts
+- timing components
+- transmission service
+- differential/transfer case service
+- EV-specific maintenance
+- hybrid-specific maintenance
+- expected maintenance costs when supportable
+
+Maintenance applicability must also understand configuration and powertrain differences.
+
+Do not assume every trim of a model has identical maintenance requirements.
+
+
+==================================================
+8. DESIGN SAFETY / RECALL ARCHITECTURE
+==================================================
+
+Plan how AutoResearch should eventually incorporate authoritative safety and recall information.
+
+NHTSA should be investigated as a major authoritative U.S. source.
+
+Design for:
+
+- recalls
+- recall campaigns
+- recall descriptions
+- affected vehicles
+- recall dates
+- remedy information
+- NHTSA identifiers
+- safety ratings where available
+- differences in available rating systems/model years
+- links back to authoritative sources
+
+Also preserve the future ability to offer a VIN-specific recall lookup/check.
+
+Do not pretend a model-level recall result proves whether one exact VIN has an open recall.
+
+
+==================================================
+9. DESIGN SOURCE / EVIDENCE PROVENANCE
+==================================================
+
+This is one of the most important requirements.
+
+AutoResearch must eventually be able to explain where important information came from.
+
+Design a provenance/evidence system capable of associating sources with individual facts or research claims where appropriate.
+
+Consider information such as:
+
+- source organization
+- source type
+- source title
+- URL/reference
+- publication date
+- retrieval date
+- applicable model years
+- evidence notes
+- verification state
+- confidence/evidence strength where appropriate
+- exact fact or research claim supported
+
+Differentiate source/evidence categories such as:
+
+AUTHORITATIVE GOVERNMENT DATA
+
+MANUFACTURER DOCUMENTATION
+
+TECHNICAL/SERVICE INFORMATION
+
+REPUTABLE SECONDARY RESEARCH
+
+EXTERNALLY RESEARCHED OWNER-REPORTED PATTERNS
+
+DIRECT AUTORESEARCH OWNER SUBMISSIONS
+
+AUTORESEARCH CALCULATIONS/ESTIMATES
+
+DEMO/SAMPLE DATA
+
+Do NOT design a system where attaching one generic source URL to an entire vehicle implicitly validates every specification and reliability claim on the page.
+
+Where reasonable, important facts should be traceable to the evidence supporting them.
+
+
+==================================================
+10. RESEARCH POTENTIAL REAL DATA SOURCES
+==================================================
+
+Investigate legitimate sources/APIs/datasets we could eventually use to populate AutoResearch.
+
+Research potential sources for:
+
+- VIN decoding
+- manufacturer identity
+- makes
+- models
+- model years
+- trims
+- configurations
+- engines
+- transmissions
+- specifications
+- recalls
+- safety ratings
+- EPA fuel economy
+- EV efficiency/range
+- manufacturer specifications
+- maintenance information
+- technical information
+- reliability/known-problem research
+
+Prefer authoritative sources whenever available, especially U.S. government sources such as:
+
+- NHTSA
+- EPA
+
+Manufacturer documentation may also be important.
+
+Do NOT assume one API will provide everything AutoResearch needs.
+
+For EVERY proposed source, document:
+
+1. What information it actually provides.
+2. Whether it has an API, downloadable dataset, or web documentation.
+3. Coverage.
+4. Important limitations.
+5. Licensing/terms considerations.
+6. Whether data may reasonably be stored locally or should be retrieved dynamically.
+7. Expected normalization work.
+8. Whether it should be treated as authoritative or supplementary evidence.
+9. How we would identify/update stale information.
+
+Do not invent API capabilities.
+
+If something is uncertain, mark it as requiring verification rather than assuming it works.
+
+
+==================================================
+11. DESIGN INGESTION / NORMALIZATION ARCHITECTURE
+==================================================
+
+We eventually need to add thousands of vehicles without manually creating every Vehicle Research page.
+
+Design an ingestion pipeline conceptually similar to:
+
+SOURCE
+→ RAW INGESTION
+→ VALIDATION
+→ NORMALIZATION
+→ CANONICAL VEHICLE MATCHING
+→ APPLICABILITY
+→ PROVENANCE
+→ DATABASE
+→ AUTORESEARCH UI
+
+Explain how the system should prevent:
+
+- duplicate manufacturers
+- duplicate brands
+- duplicate models
+- duplicate generations
+- duplicate trims
+- duplicate configurations
+- inconsistent naming
+- engine collisions
+- transmission collisions
+- mismatched generations
+- mismatched model years
+- lower-quality sources overwriting better information
+- stale information
+- partial imports producing misleading reports
+- repeated imports creating duplicate records
+
+Determine whether staging/raw-import tables should exist.
+
+Explain how ingestion jobs could be rerun safely and idempotently.
+
+Explain how conflicting information from multiple sources should be handled.
+
+Do not simply overwrite one source with another without preserving provenance.
+
+
+==================================================
+12. SEPARATE FACTS, RESEARCH, ESTIMATES, AND OWNER EXPERIENCES
+==================================================
+
+Preserve AutoResearch's transparency philosophy.
+
+The architecture should make it difficult for the UI to accidentally present:
+
+- an AutoResearch calculated estimate as an authoritative fact
+- an externally reported owner pattern as a verified mechanical defect
+- an individual anecdote as a universal reliability problem
+- a direct AutoResearch owner report as editorial research
+- demo data as real sourced automotive data
+- unknown information as zero
+- missing information as not applicable
+
+Propose explicit classifications/statuses for different kinds of information.
+
+
+==================================================
+13. PLAN MIGRATION OF THE EXISTING 13 DEMO VEHICLES
+==================================================
+
+Do NOT delete or break the existing demo profiles.
+
+Explain exactly how they would map into the proposed architecture.
+
+Preserve existing URLs/slugs wherever practical.
+
+The migration should be:
+
+- additive
+- testable
+- reversible during development
+- compatible with the existing UI during transition
+
+Identify which current demo fields should eventually be replaced with sourced data and which can remain as explicitly labeled demo information until replacement occurs.
+
+Do not silently convert demo values into supposedly verified real data.
+
+
+==================================================
+14. PLAN THE FIRST REAL-VEHICLE PILOT
+==================================================
+
+After the architecture is reviewed, approved, and eventually implemented, we do NOT want to immediately import every American-brand vehicle.
+
+First, we want approximately 5–10 real vehicles populated deeply enough to stress-test the architecture.
+
+Recommend a technically diverse pilot set of American-brand vehicles.
+
+The purpose is NOT to recommend or rank vehicles.
+
+The pilot should intentionally exercise different architectural situations such as:
+
+- conventional gasoline vehicle
+- pickup truck
+- multiple engines
+- multiple drivetrains
+- cab/bed configurations
+- performance vehicle
+- hybrid if appropriate
+- EV
+- multiple generations
+- multiple trims/configurations
+- configuration-specific reliability research
+- meaningful recalls/safety information
+- different maintenance requirements
+
+For each proposed pilot vehicle, explain why it is technically useful for testing the architecture.
+
+The pilot vehicles should eventually be built all the way through as realistic Full Ownership Reports rather than merely adding their names/specifications to Browse Cars.
+
+
+==================================================
+15. PLAN AMERICAN-BRAND CATALOG EXPANSION
+==================================================
+
+Once the pilot works correctly, outline how we would systematically expand AutoResearch across American automotive brands.
+
+Identify which active and discontinued American brands should reasonably be considered.
+
+Do NOT begin importing them during this planning task.
+
+Design manageable rollout batches.
+
+Consider whether the first production catalog should prioritize:
+
+- current vehicles
+- recent used vehicles
+- older high-interest used vehicles
+- discontinued models
+
+We do not necessarily need every American vehicle ever manufactured for the first release.
+
+Recommend a logical coverage strategy.
+
+The catalog architecture must still remain global-ready so foreign manufacturers can be added later without another fundamental redesign.
+
+
+==================================================
+16. PLAN HOW DATA WILL FEED THE FULL OWNERSHIP REPORT
+==================================================
+
+Explain conceptually how the proposed data model will feed the existing:
+
+Browse Cars
+→ View Full Ownership Report
+
+workflow.
+
+Map major data categories to the current report areas:
+
+OVERVIEW
+RELIABILITY
+OWNERSHIP COSTS
+OWNER REPORTS
+
+But do NOT couple database tables directly to those four presentation sections.
+
+Also explain how the same architecture could later support a redesigned report containing sections such as:
+
+Overview
+Specifications
+Powertrain
+Reliability
+Known Issues
+Maintenance
+Safety & Recalls
+Ownership Costs
+Inspection Guide
+Owner Reports
+
+Again:
+
+DO NOT REDESIGN OR IMPLEMENT THIS UI NOW.
+
+We will redesign the Full Ownership Report later after we have real vehicle data available and understand what information needs to be presented.
+
+
+==================================================
+17. KEEP THESE AREAS OUT OF SCOPE
+==================================================
+
+Do not implement or redesign:
+
+- authentication
+- account system
+- owner-submission backend
+- Verified Owner
+- Community backend
+- recommendation/finder engine
+- Compare
+- Calculator
+- Browse Cars visual design
+- Vehicle Research visual design
+- navigation
+- unrelated pages
+
+Do not disturb the currently working:
+
+Manufacturer
+→ Model
+→ Generation
+→ Model Year
+→ Trim
+
+Browse flow.
+
+Do not undo the recently fixed Vehicle Research sticky section navigation or active yellow indicator behavior.
+
+
+==================================================
+18. IDENTIFY RISKS AND UNRESOLVED DECISIONS
+==================================================
+
+Be explicit about areas where there is no obvious correct answer yet.
+
+Identify:
+
+- schema tradeoffs
+- source limitations
+- licensing concerns
+- data quality concerns
+- historical coverage gaps
+- trim/configuration ambiguity
+- generation-definition ambiguity
+- engine naming inconsistencies
+- EV-specific challenges
+- reliability-evidence limitations
+- scalability concerns
+- maintenance-data limitations
+- cost-data limitations
+
+Do not hide uncertainty.
+
+Tell me which decisions should be made BEFORE implementation and which can safely remain flexible.
+
+
+==================================================
+19. PROPOSE THE EXACT IMPLEMENTATION SEQUENCE
+==================================================
+
+After designing the architecture, propose an exact phased implementation sequence.
+
+For example, this may include:
+
+Stage 2A — schema/migration foundation
+
+Stage 2B — provenance/evidence foundation
+
+Stage 2C — ingestion infrastructure
+
+Stage 2D — migrate/compatibly map demo profiles
+
+Stage 2E — first real American-vehicle pilot
+
+Stage 2F — validate Full Ownership Reports using real data
+
+Stage 2G — redesign Vehicle Research presentation after learning from real data
+
+Stage 2H — expand American-brand catalog in controlled batches
+
+Stage 2I — broader/global catalog expansion
+
+However, do not blindly use those stages if your architecture analysis suggests a better sequence.
+
+Explain dependencies and what should be validated before moving to each next stage.
+
+
+==================================================
+DELIVERABLE
+==================================================
+
+Produce a detailed Stage 2 architecture plan containing:
+
+1. Current architecture audit
+2. Proposed canonical vehicle hierarchy
+3. Proposed database/schema changes
+4. Powertrain/configuration model
+5. Specification model
+6. Applicability model
+7. Reliability/known-issue research model
+8. Maintenance model
+9. Inspection-information model
+10. Safety/recall model
+11. Provenance/evidence model
+12. Candidate real-world data sources and their limitations
+13. Ingestion/normalization architecture
+14. Information classification/transparency model
+15. Existing 13-demo-profile migration strategy
+16. First real-vehicle pilot strategy
+17. American-brand rollout strategy
+18. Relationship between the data architecture and Full Ownership Report
+19. Risks/unresolved decisions
+20. Exact phased implementation sequence
+
+Where useful, show proposed entity relationships or schema concepts.
+
+Base the plan on the ACTUAL existing AutoResearch codebase rather than designing a disconnected theoretical system.
+
+
+==================================================
+FINAL INSTRUCTION
+==================================================
+
+STOP AFTER PRODUCING THE PLAN.
+
+Do NOT:
+
+- execute migrations
+- modify the database
+- import real vehicle datasets
+- populate real vehicle records
+- replace demo data
+- redesign pages
+- implement APIs
+- begin Stage 2A
+
+I will review the complete plan before authorizing implementation.
