@@ -15,10 +15,12 @@ for (const { make, model } of [
     const option = modelRows[0]!;
 
     await page.goto("/browse");
-    await page.getByLabel("Manufacturer", { exact: true }).selectOption(option.makeSlug);
-    await page.getByLabel("Model", { exact: true }).selectOption(String(option.modelId));
+    await page.getByRole("combobox", { name: "Manufacturer", exact: true }).selectOption(option.makeSlug);
+    await page.getByRole("combobox", { name: "Model", exact: true }).selectOption(String(option.modelId));
 
-    const trigger = page.getByRole("combobox", { name: "Generation", exact: true });
+    // Radix hides the background accessibility tree while its popup is open.
+    // Keep the same DOM trigger locator across both open and closed states.
+    const trigger = page.getByTestId("browse-generation-trigger");
     await expect(trigger).toBeEnabled();
     await expect(trigger).toHaveText("All generations");
     expect(new URL(page.url()).searchParams.has("generationId")).toBe(false);
@@ -35,7 +37,7 @@ for (const { make, model } of [
     await expect(menu).toBeHidden();
     await expect(trigger).toHaveText(option.generation);
     await expect(page).toHaveURL((url) => url.searchParams.get("generationId") === String(option.generationId));
-    await expect(page.getByLabel("Model year", { exact: true }).locator("option"))
+    await expect(page.getByRole("combobox", { name: "Model year", exact: true }).locator("option"))
       .toHaveText(["All years", ...[...new Set(modelRows.filter((row) => row.generationId === option.generationId).map((row) => row.year))].sort((a, b) => a - b).map(String)]);
 
     await page.reload();

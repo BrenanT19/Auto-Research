@@ -32,15 +32,25 @@ development workflows and their demo database.
 
 ## Generation mouse-interaction regression
 
-With the web and API workflows running, run:
+With the web and API workflows running, use the installed system Chromium in this
+workspace (no additional browser download or Linux library installation needed):
 
 ```sh
-pnpm --filter @workspace/auto-research exec playwright install chromium
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$(command -v chromium)"
+pnpm --filter @workspace/auto-research test:browse:ui
+```
+
+Run just Generation selection with:
+
+```sh
 pnpm --filter @workspace/auto-research test:generation:ui
 ```
 
-The standalone runner also requires Chromium's Linux shared libraries (including
-`libglib-2.0.so.0`); downloading the browser alone does not install these.
+Outside this workspace, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to a supported
+installed Chromium executable, or leave it unset to use Playwright's managed
+browser. For the latter, provision Chromium and its Linux runtime libraries in
+your local/CI environment; downloading the browser alone does not supply those
+libraries. The configuration does not hardcode a workspace-specific browser path.
 `AUTO_RESEARCH_PREVIEW_URL` can point to the running preview; it defaults to the
 local shared proxy at `http://localhost:80`.
 
@@ -62,6 +72,12 @@ scrolled desktop/mobile Browse page and checks the complete reset, clean URL,
 button disappearance, and return to the top. It checks smooth scrolling for
 normal motion, immediate scrolling for reduced motion, and no return-to-top
 when changing an individual sort filter.
+
+`tests/browser/browse-sidebar.spec.ts` additionally verifies 1366×768 and
+1366×720 fitting sticky panels, real mouse-wheel internal scrolling at 1366×520,
+unchanged 700px/390px responsive layouts, and a single uninterrupted Clear All
+scroll while the real reset request is delayed. A browser-only results spacer
+checks sticky reachability deep into a long page without changing vehicle data.
 
 ## Browser smoke check
 

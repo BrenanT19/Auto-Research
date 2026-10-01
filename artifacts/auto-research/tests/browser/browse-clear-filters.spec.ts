@@ -29,11 +29,11 @@ async function makeClearVisible(page: import("@playwright/test").Page) {
   await page.goto(teslaModelYUrl);
   const clearButton = page.getByRole("button", { name: "Clear all search filters" });
   await expect(clearButton).toBeVisible();
-  await expect(page.getByLabel("Manufacturer", { exact: true })).toHaveValue("tesla");
-  await expect(page.getByLabel("Model", { exact: true })).toHaveValue("14");
+  await expect(page.getByRole("combobox", { name: "Manufacturer", exact: true })).toHaveValue("tesla");
+  await expect(page.getByRole("combobox", { name: "Model", exact: true })).toHaveValue("14");
   await expect(page.getByRole("combobox", { name: "Generation", exact: true })).toHaveText("First generation");
-  await expect(page.getByLabel("Model year", { exact: true })).toHaveValue("2024");
-  await expect(page.getByLabel("Order by", { exact: true })).toHaveValue("reliability");
+  await expect(page.getByRole("combobox", { name: "Model year", exact: true })).toHaveValue("2024");
+  await expect(page.getByRole("combobox", { name: "Order by", exact: true })).toHaveValue("reliability");
   await expect(page.getByTestId("input-search-vehicles")).toHaveValue("Tesla Model Y");
   return clearButton;
 }
@@ -51,12 +51,12 @@ test("Clear all filters returns the desktop Browse page to the top without scrol
   await expect(page).toHaveURL(/\/browse$/);
   await expect(clearButton).toHaveCount(0);
   await expect(page.getByTestId("input-search-vehicles")).toHaveValue("");
-  await expect(page.getByLabel("Manufacturer", { exact: true })).toHaveValue("");
-  await expect(page.getByLabel("Model", { exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Manufacturer", exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Model", exact: true })).toHaveValue("");
   await expect(page.getByRole("combobox", { name: "Generation", exact: true })).toHaveText("All generations");
-  await expect(page.getByLabel("Model year", { exact: true })).toHaveValue("");
-  await expect(page.getByLabel("Trim", { exact: true })).toHaveValue("");
-  await expect(page.getByLabel("Order by", { exact: true })).toHaveValue("popular");
+  await expect(page.getByRole("combobox", { name: "Model year", exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Trim", exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Order by", exact: true })).toHaveValue("popular");
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual(["smooth"]);
 
@@ -65,7 +65,7 @@ test("Clear all filters returns the desktop Browse page to the top without scrol
   await page.evaluate(() => window.scrollTo({ top: 320, behavior: "instant" }));
   await page.waitForFunction(() => window.scrollY > 0);
   await page.evaluate(() => { window.__clearFilterScrollBehaviors = []; });
-  await page.getByLabel("Order by", { exact: true }).selectOption("reliability");
+  await page.getByRole("combobox", { name: "Order by", exact: true }).selectOption("reliability");
   await expect(page).toHaveURL(/sort=reliability/);
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual([]);

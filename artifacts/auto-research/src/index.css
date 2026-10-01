@@ -271,6 +271,26 @@ main { min-height: 60vh; }
 .filter-help { display: block; margin-top: 5px; color: #7b8288; font-size: 9px; font-weight: 400; line-height: 1.45; }
 .clear-filters { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border: 0; border-top: 1px solid #e4e6e7; background: none; color: #515961; font-size: 10px; font-weight: 700; }
 .filter-foot { margin: 10px 0 0; color: #858c92; font-size: 9px; line-height: 1.6; }
+/* Desktop-only density and a content-driven short-window overflow fallback.
+   Controls retain their existing height; fitting panels have no internal scroll. */
+@media (min-width: 761px) {
+  .filter-panel {
+    top: calc(var(--site-header-height) + 12px);
+    max-height: calc(100dvh - var(--site-header-height) - 24px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding: 14px;
+  }
+  .filter-panel .filter-title { padding-bottom: 10px; margin-bottom: 10px; }
+  .filter-panel .field-label { margin-bottom: 8px; }
+  .filter-panel .field-label select,
+  .filter-panel .browse-search-input,
+  .filter-panel .browse-generation-trigger { margin-top: 4px; }
+  .filter-panel .browse-search-wrap { margin-bottom: 8px; }
+  .filter-panel .browse-search-wrap > .field-label { margin-bottom: 0; }
+  .filter-panel .clear-filters { min-height: 37px; padding: 8px 0; }
+  .filter-panel .filter-foot { margin-top: 8px; }
+}
 .results-top { display: flex; justify-content: space-between; align-items: center; min-height: 38px; margin-bottom: 12px; color: #4b535b; font-size: 11px; font-weight: 700; }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
 .browse-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

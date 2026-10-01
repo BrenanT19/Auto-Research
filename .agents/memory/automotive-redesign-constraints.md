@@ -32,3 +32,9 @@ Browse returns to the page top only after an explicit Clear all filters action, 
 **Why:** Clearing begins a new search, while individual refinements should preserve the user's browsing context.
 
 **How to apply:** Keep reset-specific scrolling separate from general filter or URL synchronization.
+
+Focused desktop Browse UX refinements are not authorization for a new mobile interface. Preserve the existing responsive layout and usable control sizes; internal sidebar scrolling is a fallback for content that cannot fit, not the normal fitting-panel behavior.
+
+**Why:** The user explicitly prioritized the existing desktop/laptop website and rejected separate mobile interfaces or major responsive-layout changes for this work.
+
+**How to apply:** Scope desktop density/sticky adjustments to the existing desktop breakpoint. Check both fitting and short-window panels with real wheel input, and ensure filter access does not depend on the length of the results list.
