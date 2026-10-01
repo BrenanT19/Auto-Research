@@ -71,6 +71,19 @@ assertions to accommodate development-proxy startup. Navigation waits for the
 DOM rather than unrelated resource loading; assertions still wait for the
 actual controls, catalog options, and resulting state.
 
+## Comparison selection and browser history
+
+```sh
+pnpm --filter @workspace/auto-research test:compare:ui
+```
+
+`tests/browser/comparison-history.spec.ts` reads the four comparison fixtures
+from the existing catalog and selects them through the real picker. It verifies
+suggestions close and the search clears after each pick, the four-vehicle limit,
+removal and re-enabled search, a direct four-ID URL reload, and Back/Forward
+alignment between the URL, selected count, and comparison columns. The test
+uses only catalog and vehicle GET requests; it does not write catalog data.
+
 ## Generation mouse-interaction regression
 
 After the browser setup above, run:
