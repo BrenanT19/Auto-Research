@@ -34,6 +34,28 @@ async function expectSelection(page: Page, vehicle: CatalogOption, kind: "Manufa
   await expect(page.getByRole("combobox", { name: "Order by", exact: true })).toHaveValue("reliability");
 }
 
+async function expectKeyboardSelection(page: Page, vehicle: CatalogOption, kind: "Manufacturer" | "Model") {
+  const expectedParams: Record<string, string> = { make: vehicle.makeSlug };
+  if (kind === "Model") expectedParams.modelId = String(vehicle.modelId);
+  await expect(page).toHaveURL((url) =>
+    url.pathname === "/browse" &&
+    JSON.stringify(Object.fromEntries([...url.searchParams].sort())) ===
+      JSON.stringify(Object.fromEntries(Object.entries(expectedParams).sort())),
+  );
+  await expect(page.getByTestId("input-search-vehicles")).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Manufacturer", exact: true })).toHaveValue(vehicle.makeSlug);
+  const model = page.getByRole("combobox", { name: "Model", exact: true });
+  await expect(model).toBeEnabled();
+  await expect(model).toHaveValue(kind === "Model" ? String(vehicle.modelId) : "");
+  const generation = page.getByRole("combobox", { name: "Generation", exact: true });
+  await expect(generation).toHaveText("All generations");
+  if (kind === "Model") await expect(generation).toBeEnabled();
+  else await expect(generation).toBeDisabled();
+  await expect(page.getByRole("combobox", { name: "Model year", exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Trim", exact: true })).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: "Order by", exact: true })).toHaveValue("popular");
+}
+
 for (const kind of ["Manufacturer", "Model"] as const) {
   test(`Browse: clicking a ${kind} suggestion applies only high-level filters`, async ({ page, request }) => {
     const { catalog, vehicle } = await readCatalog(request);
@@ -82,6 +104,116 @@ for (const kind of ["Manufacturer", "Model"] as const) {
     await expectSelection(page, vehicle, kind);
   });
 }
+
+test("Browse: ArrowDown and ArrowUp maintain the accessible active suggestion; Escape dismisses it", async ({ page, request }) => {
+  const { vehicle } = await readCatalog(request);
+  await page.goto("/browse", { waitUntil: "domcontentloaded" });
+  const search = page.getByTestId("input-search-vehicles");
+  const list = page.getByRole("listbox", { name: "Manufacturer and model suggestions" });
+  await search.pressSequentially(vehicle.make);
+
+  const options = list.getByRole("option");
+  await expect.poll(() => options.count()).toBeGreaterThan(1);
+  await expect(search).toHaveAttribute("aria-expanded", "true");
+  await expect(search).not.toHaveAttribute("aria-activedescendant", /.+/);
+  await expect(list.locator('[aria-selected="true"]')).toHaveCount(0);
+  const optionIds = await options.evaluateAll((elements) => elements.map((element) => element.id));
+  expect(optionIds.every(Boolean)).toBe(true);
+
+  const expectActive = async (index: number) => {
+    await expect(search).toHaveAttribute("aria-activedescendant", optionIds[index]);
+    await expect(options.nth(index)).toHaveAttribute("aria-selected", "true");
+    await expect(list.locator('[aria-selected="true"]')).toHaveCount(1);
+  };
+
+  await search.press("ArrowDown");
+  await expectActive(0);
+  await search.press("ArrowDown");
+  await expectActive(1);
+  await search.press("ArrowUp");
+  await expectActive(0);
+  await search.press("ArrowUp");
+  await expectActive(optionIds.length - 1);
+  await search.press("ArrowDown");
+  await expectActive(0);
+
+  await search.press("Escape");
+  await expect(list).toHaveCount(0);
+  await expect(search).toHaveAttribute("aria-expanded", "false");
+  await expect(search).not.toHaveAttribute("aria-activedescendant", /.+/);
+  await expect(search).toHaveValue(vehicle.make);
+  await expect(page).toHaveURL(/\/browse$/);
+});
+
+for (const kind of ["Manufacturer", "Model"] as const) {
+  test(`Browse: Enter selects the active ${kind.toLowerCase()} suggestion`, async ({ page, request }) => {
+    const { vehicle } = await readCatalog(request);
+    await page.goto("/browse", { waitUntil: "domcontentloaded" });
+    const search = page.getByTestId("input-search-vehicles");
+    const query = kind === "Manufacturer" ? vehicle.make : `${vehicle.make} ${vehicle.model}`;
+    await search.pressSequentially(query);
+
+    const list = page.getByRole("listbox", { name: "Manufacturer and model suggestions" });
+    await expect(list).toBeVisible();
+    const expectedLabel = kind === "Manufacturer" ? vehicle.make : `${vehicle.make} ${vehicle.model}`;
+    const expectedOption = list.getByRole("option").filter({
+      has: page.locator("span", { hasText: new RegExp(`^${expectedLabel}$`) }),
+    });
+    await expect(expectedOption).toHaveCount(1);
+
+    await search.press("ArrowDown");
+    await expect(search).toHaveAttribute("aria-activedescendant", await expectedOption.getAttribute("id"));
+    await expect(expectedOption).toHaveAttribute("aria-selected", "true");
+    await search.press("Enter");
+
+    await expect(list).toHaveCount(0);
+    await expect(search).toHaveAttribute("aria-expanded", "false");
+    await expectKeyboardSelection(page, vehicle, kind);
+  });
+}
+
+test("Browse: Enter searches the typed text when no suggestion is active", async ({ page, request }) => {
+  const { catalog, vehicle } = await readCatalog(request);
+  await page.goto("/browse", { waitUntil: "domcontentloaded" });
+  const search = page.getByTestId("input-search-vehicles");
+
+  // Suggestions are available, but none is active: Enter must search the query
+  // rather than silently selecting the first option.
+  await search.pressSequentially(vehicle.make);
+  const list = page.getByRole("listbox", { name: "Manufacturer and model suggestions" });
+  await expect.poll(() => list.getByRole("option").count()).toBeGreaterThan(0);
+  await expect(search).not.toHaveAttribute("aria-activedescendant", /.+/);
+  await expect(list.locator('[aria-selected="true"]')).toHaveCount(0);
+  await search.press("Enter");
+
+  const expectTextSearch = async (query: string) => {
+    await expect(page).toHaveURL((url) =>
+      url.pathname === "/browse" &&
+      JSON.stringify(Object.fromEntries([...url.searchParams].sort())) ===
+        JSON.stringify({ q: query }),
+    );
+    await expect(search).toHaveValue(query);
+    await expect(page.getByRole("combobox", { name: "Manufacturer", exact: true })).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Model", exact: true })).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Generation", exact: true })).toHaveText("All generations");
+    await expect(page.getByRole("combobox", { name: "Model year", exact: true })).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Trim", exact: true })).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Order by", exact: true })).toHaveValue("popular");
+  };
+  await expectTextSearch(vehicle.make);
+  await expect(list).toHaveCount(0);
+
+  // Also exercise Enter while the open suggestion panel contains no options.
+  const noSuggestionQuery = `${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`;
+  const entityLabels = catalog.flatMap((row) => [row.make, `${row.make} ${row.model}`]);
+  expect(entityLabels.some((label) => label.toLowerCase().includes(noSuggestionQuery.toLowerCase()))).toBe(false);
+  await page.goto("/browse", { waitUntil: "domcontentloaded" });
+  await search.pressSequentially(noSuggestionQuery);
+  await expect(page.getByRole("status")).toHaveText("No catalog suggestions. Press Enter to search this text.");
+  await expect(page.getByRole("listbox", { name: "Manufacturer and model suggestions" })).toHaveCount(0);
+  await search.press("Enter");
+  await expectTextSearch(noSuggestionQuery);
+});
 
 test("Browse: generation, year, trim, and vehicle-configuration searches do not become suggestions", async ({ page, request }) => {
   const { catalog, vehicle } = await readCatalog(request);
