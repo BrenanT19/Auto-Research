@@ -9,6 +9,7 @@ import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } f
 import { getGetVehicleQueryKey, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, removeComparisonId } from './shopper-tools';
 
 const queryClient = new QueryClient();
 const money = (n?: number | null) => n == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -132,25 +133,25 @@ function HomePage() {
 }
 
 function BrowsePage() {
-  const params = new URLSearchParams(window.location.search);
-  const [q, setQ] = useState(params.get('q') || '');
-  const [make, setMake] = useState(params.get('make') || '');
-  const [model, setModel] = useState(params.get('model') || '');
-  const [trim, setTrim] = useState(params.get('trim') || '');
-  const [sort, setSort] = useState(params.get('sort') || 'popular');
-  const [year, setYear] = useState(params.get('year') || '');
+  const initialFilters = parseBrowseFilters(window.location.search);
+  const [q, setQ] = useState(initialFilters.q);
+  const [make, setMake] = useState(initialFilters.make);
+  const [model, setModel] = useState(initialFilters.model);
+  const [trim, setTrim] = useState(initialFilters.trim);
+  const [sort, setSort] = useState(initialFilters.sort);
+  const [year, setYear] = useState(initialFilters.year);
   const makes = useListMakes();
   const catalogOptions = useListVehicles({ limit: 100 });
   const availableVehicles = catalogOptions.data || [];
   const modelOptions = [...new Set(availableVehicles.filter(v => (!make || v.makeSlug === make) && (!year || v.year === Number(year))).map(v => v.model))];
   const trimOptions = [...new Set(availableVehicles.filter(v => (!make || v.makeSlug === make) && (!year || v.year === Number(year)) && (!model || v.model === model)).map(v => v.trim))];
-  const filters = useMemo(() => ({ ...(q.trim() ? { q: q.trim() } : {}), ...(make ? { makeSlug: make } : {}), ...(model ? { model } : {}), ...(year ? { year: Number(year) } : {}), ...(trim ? { trim } : {}), sort: sort as 'popular' | 'reliability' | 'ownership-cost', limit: 60 }), [q, make, model, year, trim, sort]);
+  const filters = useMemo(() => buildVehicleListParams({ q, make, model, year, trim, sort }), [q, make, model, year, trim, sort]);
   const vehicles = useListVehicles(filters);
   const [selected, setSelected] = useState<string[]>([]);
   const [loc, setLoc] = useLocation();
   const toggle = (v: VehicleSummary) => setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="THE VEHICLE INDEX" title="Find the right long view." sub="Search trims, narrow the field, and see what ownership may look like beyond the purchase price." action={<span className="small-stamp"><BookOpen size={16}/> {vehicles.data?.length ?? '—'} profiles</span>}/><DemoNotice/>
-    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div><label className="field-label">Search<input data-testid="input-search-vehicles" value={q} onChange={e => setQ(e.target.value)} placeholder="Make, model, trim"/></label><label className="field-label">Manufacturer<select value={make} onChange={e => { setMake(e.target.value); setModel(''); setTrim(''); }}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option value={m.slug} key={m.id}>{m.name}</option>)}</select></label><label className="field-label">Model year<input type="number" min="1990" max="2030" value={year} onChange={e => { setYear(e.target.value); setModel(''); setTrim(''); }} placeholder="Any year"/></label><label className="field-label">Model<select value={model} onChange={e => { setModel(e.target.value); setTrim(''); }}><option value="">All models</option>{modelOptions.map(m => <option key={m}>{m}</option>)}</select></label><label className="field-label">Trim<select value={trim} onChange={e => setTrim(e.target.value)}><option value="">All trims</option>{trimOptions.map(t => <option key={t}>{t}</option>)}</select></label><label className="field-label">Order by<select value={sort} onChange={e => setSort(e.target.value)}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label><button className="clear-filters" onClick={() => { setQ(''); setMake(''); setModel(''); setTrim(''); setYear(''); setSort('popular'); setLoc('/browse', { replace: true }); }}>Clear all filters <X size={14}/></button><p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
+    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div><label className="field-label">Search<input data-testid="input-search-vehicles" value={q} onChange={e => setQ(e.target.value)} placeholder="Make, model, trim"/></label><label className="field-label">Manufacturer<select value={make} onChange={e => { setMake(e.target.value); setModel(''); setTrim(''); }}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option value={m.slug} key={m.id}>{m.name}</option>)}</select></label><label className="field-label">Model year<input type="number" min="1990" max="2030" value={year} onChange={e => { setYear(e.target.value); setModel(''); setTrim(''); }} placeholder="Any year"/></label><label className="field-label">Model<select value={model} onChange={e => { setModel(e.target.value); setTrim(''); }}><option value="">All models</option>{modelOptions.map(m => <option key={m}>{m}</option>)}</select></label><label className="field-label">Trim<select value={trim} onChange={e => setTrim(e.target.value)}><option value="">All trims</option>{trimOptions.map(t => <option key={t}>{t}</option>)}</select></label><label className="field-label">Order by<select value={sort} onChange={e => setSort(e.target.value)}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label><button className="clear-filters" onClick={() => { const cleared = clearBrowseFilters(); setQ(cleared.q); setMake(cleared.make); setModel(cleared.model); setTrim(cleared.trim); setYear(cleared.year); setSort(cleared.sort); setLoc(buildBrowseLocation(cleared), { replace: true }); }}>Clear all filters <X size={14}/></button><p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
     <div className="results-area"><div className="results-top"><span>{vehicles.data?.length ?? 0} matches</span><span className="mono">SORT: {sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}
     </div></div>
@@ -195,16 +196,15 @@ function DetailPage() {
 
 function ComparePage() {
   const [loc, setLoc] = useLocation();
-  const raw = new URLSearchParams(window.location.search).get('ids') || '';
-  const [ids, setIds] = useState(raw.split(',').filter(Boolean).slice(0, 4));
+  const [ids, setIds] = useState(() => parseComparisonIds(window.location.search));
   const catalog = useListVehicles({ limit: 100 });
   const [search, setSearch] = useState('');
   const selected = ids.map(id => {
     // Query each selected vehicle by ID below; catalog provides convenient quick-add options.
     return id;
   });
-  const remove = (id: string) => { const next = ids.filter(x => x !== id); setIds(next); setLoc(`/compare${next.length ? `?ids=${next.join(',')}` : ''}`); };
-  const add = (id: string) => { if (!ids.includes(id) && ids.length < 4) { const next = [...ids, id]; setIds(next); setLoc(`/compare?ids=${next.join(',')}`); } };
+  const remove = (id: string) => { const next = removeComparisonId(ids, id); setIds(next); setLoc(buildComparisonLocation(next)); };
+  const add = (id: string) => { const next = addComparisonId(ids, id); if (next !== ids) { setIds(next); setLoc(buildComparisonLocation(next)); } };
   const matches = (catalog.data || []).filter(v => `${v.make} ${v.model} ${v.year}`.toLowerCase().includes(search.toLowerCase()) && !ids.includes(v.id)).slice(0, 5);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="SIDE BY SIDE" title="Compare what ownership feels like." sub="Line up up to four vehicles. Estimates are useful for framing questions—not declaring a winner."/><DemoNotice/><div className="compare-picker"><div className="picker-search"><Search size={16}/><input placeholder="Add a vehicle by make or model" value={search} onChange={e => setSearch(e.target.value)}/></div>{search && <div className="picker-results">{catalog.isLoading ? <span>Loading vehicles…</span> : matches.map(v => <button key={v.id} onClick={() => add(v.id)}>{label(v)} <span>{money(v.annualOwnershipEstimateUsd)} / yr est.</span><ArrowRight size={14}/></button>)}</div>}<span className="picker-count">{ids.length} of 4 vehicles selected</span></div>
     {ids.length === 0 ? <EmptyBlock title="Start your comparison" text="Search above or browse the catalog to add vehicles. Your selection stays in this URL so it is easy to revisit."/> : <div className="compare-table-wrap"><table className="compare-table"><thead><tr><th>Research point</th>{selected.map(id => <CompareColumn key={id} id={id} onRemove={remove}/>)}</tr></thead><tbody>
@@ -230,7 +230,7 @@ function CompareCell({ id, render }: { id: string; render: (d: VehicleDetail) =>
 function CalculatorPage() {
   const params = new URLSearchParams(window.location.search);
   const vehicleId = params.get('vehicle') || '';
-  const vehicle = useGetVehicle(vehicleId, { query: { queryKey: getGetVehicleQueryKey(vehicleId), enabled: Boolean(vehicleId) } });
+  const vehicle = useGetVehicle(vehicleId, { query: optionalVehicleQueryOptions(vehicleId, getGetVehicleQueryKey(vehicleId)) });
   const [price, setPrice] = useState(32000);
   const [down, setDown] = useState(5000);
   const [apr, setApr] = useState(6.4);
@@ -243,11 +243,7 @@ function CalculatorPage() {
   const [maintenance, setMaintenance] = useState(110);
   const [repairs, setRepairs] = useState(55);
   const vehicleIsElectric = Boolean(vehicleId) && vehicle.data?.fuelType.toLowerCase() === 'electric';
-  const loan = Math.max(0, price - down);
-  const r = apr / 100 / 12;
-  const payment = term > 0 ? r === 0 ? loan / term : loan * r * Math.pow(1 + r, term) / (Math.pow(1 + r, term) - 1) : 0;
-  const fuel = mpg > 0 ? (miles / mpg) * (vehicleIsElectric ? 33.7 * electricity : gas) / 12 : 0;
-  const monthly = payment + fuel + insurance + maintenance + repairs;
+  const { payment, fuel, monthly } = calculateOwnershipEstimate({ price, down, apr, term, miles, mpg, gas, electricity, insurance, maintenance, repairs, vehicleIsElectric });
   const currency = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
   const updateNum = (setter: (n: number) => void) => (e: ChangeEvent<HTMLInputElement>) => setter(Math.max(0, Number(e.target.value) || 0));
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="OWNERSHIP ESTIMATOR" title="Put your own numbers in." sub="A transparent estimate for monthly and yearly costs. Change any assumption to see the whole picture move."/><DemoNotice/>
