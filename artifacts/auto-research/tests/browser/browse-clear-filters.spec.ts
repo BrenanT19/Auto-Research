@@ -26,7 +26,7 @@ async function captureScrollBehaviors(page: import("@playwright/test").Page) {
 }
 
 async function makeClearVisible(page: import("@playwright/test").Page) {
-  await page.goto(teslaModelYUrl);
+  await page.goto(teslaModelYUrl, { waitUntil: "domcontentloaded" });
   const clearButton = page.getByRole("button", { name: "Clear all search filters" });
   await expect(clearButton).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Manufacturer", exact: true })).toHaveValue("tesla");
@@ -89,7 +89,7 @@ test("Clear all filters returns mobile Browse to the top and respects reduced mo
   expect(await page.evaluate(() => window.__clearFilterScrollBehaviors)).toEqual(["instant"]);
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto(teslaModelYUrl);
+  await page.goto(teslaModelYUrl, { waitUntil: "domcontentloaded" });
   await expect(clearButton).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: 620, behavior: "instant" }));
   await page.waitForFunction(() => window.scrollY > 0);

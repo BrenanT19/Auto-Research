@@ -27,32 +27,57 @@ pnpm --filter @workspace/scripts test:auto-research
 
 CI should provide that PostgreSQL service and URL as job configuration. Do not
 set this variable to a hosted database or use `DATABASE_URL` as a substitute.
-The browser smoke check below remains a separate manual check against the local
-development workflows and their demo database.
+The browser regressions and manual smoke check below run separately against the
+development workflows and their existing catalog. They do not write data.
+
+
+## Browser runner setup
+
+Start the Auto Research web and API Server workflows first. Tests use the shared
+preview proxy at `http://localhost:80` by default, not the direct Vite port.
+Set `AUTO_RESEARCH_PREVIEW_URL` to a different shared preview proxy URL if needed.
+
+On a machine with Playwright's supported Linux dependencies installed, download
+the bundled browser once:
+
+```sh
+pnpm --filter @workspace/auto-research exec playwright install chromium
+```
+
+Downloading Chromium alone does not install its Linux shared libraries (including
+`libglib-2.0.so.0`). If the bundled browser cannot launch, use a working system
+Chromium via the optional `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` environment
+variable. Leave it unset to use Playwright's bundled Chromium. A supplied path
+must point to a runnable executable; an invalid path fails rather than silently
+falling back.
+
+In this Replit workspace, `/repl/tools/bin/chromium` has been verified to launch.
+Use this shell-session setup (the path is not embedded in the app or runner):
+
+```sh
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/repl/tools/bin/chromium
+export AUTO_RESEARCH_PREVIEW_URL=http://localhost:80
+pnpm --filter @workspace/auto-research test:browser
+```
+
+On another machine, use its Chromium executable path or the bundled browser.
+The executable override and preview URL apply to all browser commands:
+`test:browser` (also available as `test:browse:ui`) runs all browser specs,
+`test:generation:ui` runs only Generation, and
+`test:clear-filters:ui` runs only Clear All. Failures retain screenshots and
+traces under `artifacts/auto-research/test-results`.
+Tests run serially with a 90-second per-test budget and 10-second retrying
+assertions to accommodate development-proxy startup. Navigation waits for the
+DOM rather than unrelated resource loading; assertions still wait for the
+actual controls, catalog options, and resulting state.
 
 ## Generation mouse-interaction regression
 
-With the web and API workflows running, use the installed system Chromium in this
-workspace (no additional browser download or Linux library installation needed):
-
-```sh
-export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$(command -v chromium)"
-pnpm --filter @workspace/auto-research test:browse:ui
-```
-
-Run just Generation selection with:
+After the browser setup above, run:
 
 ```sh
 pnpm --filter @workspace/auto-research test:generation:ui
 ```
-
-Outside this workspace, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to a supported
-installed Chromium executable, or leave it unset to use Playwright's managed
-browser. For the latter, provision Chromium and its Linux runtime libraries in
-your local/CI environment; downloading the browser alone does not supply those
-libraries. The configuration does not hardcode a workspace-specific browser path.
-`AUTO_RESEARCH_PREVIEW_URL` can point to the running preview; it defaults to the
-local shared proxy at `http://localhost:80`.
 
 `tests/browser/generation.spec.ts` reads the existing catalog, chooses Tesla
 Model Y, Dodge Charger, and Ram 1500, then **clicks** the Generation trigger and
