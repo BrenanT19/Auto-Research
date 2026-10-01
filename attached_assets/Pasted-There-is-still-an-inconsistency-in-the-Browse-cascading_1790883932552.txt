@@ -1,0 +1,22 @@
+There is still an inconsistency in the Browse cascading filters that needs to be fixed at the system/data-driven level, not vehicle-by-vehicle.
+The existing demo catalog already contains generation information for vehicles. For example, the Dodge Charger is displayed as Seventh Generation, the Ram 1500 as Fifth Generation, and the Tesla Model Y as First Generation. Tesla Model Y now correctly exposes First Generation in the Browse Generation control, but other models such as Dodge Charger are not consistently exposing their existing generation in that control.
+Please investigate why the Generation filter is not consistently receiving/displaying the generation data that already exists in the catalog.
+IMPORTANT: Do not hard-code fixes for Tesla, Dodge, Ram, or any individual manufacturer/model.
+Manufacturer → Model → Generation → Model Year → Trim must be derived dynamically from the underlying catalog relationships. When valid new vehicle records are added in the future, Browse should automatically expose their hierarchy without requiring frontend changes for each vehicle.
+Audit all 13 current demo profiles and compare the generation shown in each vehicle's existing data/report with the generation exposed through Browse catalog options.
+Requirements:
+- Every model should expose the generation(s) already associated with it in the catalog.
+- If exactly one generation exists for the selected model, show/select that generation consistently.
+- If multiple generations eventually exist, allow selection among them.
+- Do not invent, rename, or correct automotive generations as part of this task; use the catalog's existing generation records.
+- Model Year options must derive from the selected generation/model.
+- Trim options must derive from the selected generation/model/year.
+- Search selection and manual Manufacturer/Model selection must resolve to the same hierarchy state.
+- Changing an upstream selection must reset incompatible downstream selections.
+- Do not use manufacturer/model-specific conditionals or hard-coded generation arrays.
+- Preserve autocomplete, URL/history behavior, Clear All, sorting, cards, Compare, Calculator and styling.
+Add regression coverage across multiple manufacturers/models, including at minimum Tesla Model Y, Dodge Charger and Ram 1500, and verify that generation options are derived from catalog data rather than frontend-specific vehicle logic.
+Tell me specifically what caused the inconsistency and whether any of the 13 current demo profiles have hierarchy data that fails to flow correctly into Browse. Do not silently patch individual records without explaining the underlying cause.
+
+Use this version instead of my previous prompt.
+And you're thinking about this correctly: once we build the real database, we absolutely do not want to revisit Browse every time we add another generation. If we later add another Charger generation, for example, the Generation dropdown should gain that option automatically because the underlying catalog now contains it—not because we wrote new frontend code. That's exactly the architecture we're trying to establish before the data stage.
