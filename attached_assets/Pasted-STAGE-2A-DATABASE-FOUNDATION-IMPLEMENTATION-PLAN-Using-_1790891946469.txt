@@ -1,0 +1,61 @@
+STAGE 2A — DATABASE FOUNDATION IMPLEMENTATION PLAN
+
+Using the approved STAGE-2-ARCHITECTURE-PLAN.md, create the exact implementation plan for the next stage of AutoResearch.
+
+Planning only. Do not modify the database, code, API, UI, or vehicle data yet.
+
+Approved decisions:
+
+- AutoResearch will eventually cover global vehicle brands. Start real-data rollout with American-origin automotive brands and U.S.-market vehicles, then later German, Japanese, Korean, British, Italian, and other brands.
+- Keep brand origin, corporate manufacturer/owner, assembly/manufacturing location, and vehicle market as separate concepts.
+- Keep Manufacturer/Organization separate from Consumer Brand.
+- Support future Browse-by-Brand pages (Brand → Models → Generations → Years → Trims/Configurations), but DO NOT build that UI yet.
+- Canonical hierarchy:
+  Consumer Brand → Model → Generation → Model Year → Trim → Vehicle Configuration.
+- Vehicle Configuration represents an actual supported mechanical/configuration combination, not automatically generated combinations.
+- Market/jurisdiction is first-class.
+- Support reusable/versioned engines, transmissions, motors, batteries and other powertrain components.
+- Preserve Known / Unknown / Not Applicable as distinct value states. “Not researched” is a research state.
+- Use fail-closed applicability. Missing applicability must never mean universal applicability.
+- Keep facts, evidence, sources, applicability, review status, estimates, calculations, editorial research, external owner patterns, direct owner reports and demo content distinguishable.
+- Sparse real vehicle reports are acceptable. Never invent data to fill missing fields and do not require a numeric reliability score.
+- Preserve all 13 current demo profiles and their public slugs/URLs.
+- Demo information must remain demo after migration and must never automatically become verified.
+- Before migration, create a reproducible baseline/snapshot of all 13 current demo profiles, IDs, slugs, child records and important API outputs so migration and rollback can be verified.
+- Preserve Browse, Vehicle Research, Compare and Calculator compatibility.
+- Use additive, reversible migrations. No destructive push-force/reseed strategy.
+
+Stage 2A should prepare the database architecture only. DO NOT:
+- import real vehicle data
+- start the real vehicle pilot
+- call automotive APIs
+- scrape websites
+- implement VIN lookup
+- redesign Browse Cars
+- build Browse-by-Brand UI
+- redesign Vehicle Research
+- change Compare/Calculator design
+- build accounts/community submissions
+
+Produce an exact implementation specification covering:
+
+1. Proposed tables and important columns
+2. Relationships, foreign keys, indexes and constraints
+3. Manufacturer/brand/market structure
+4. VehicleConfiguration and component/fitment structure
+5. Applicability structure
+6. Sources/evidence/provenance structure
+7. Typed facts and value states
+8. Demo/content classifications
+9. Slug/legacy compatibility
+10. 13-profile baseline and backup strategy
+11. Migration order
+12. Rollback strategy
+13. API compatibility/adapters
+14. Automated migration/parity tests
+15. Legacy structures that remain temporarily
+16. Exact implementation sequence after authorization
+
+Prefer the simplest safe relational design. Avoid unnecessary abstraction, giant EAV systems, or speculative complexity.
+
+STOP after producing the plan. Do not implement anything.
