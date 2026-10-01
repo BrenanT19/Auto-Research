@@ -7,7 +7,8 @@ pnpm --filter @workspace/scripts test:auto-research
 ```
 
 The suite includes unit checks for optional calculator lookups, loan/fuel
-estimates, browse filters and URL cleanup, and comparison limits/URL state. Its
+estimates, purchase taxes/fees, down-payment caps, cent-rounded amortization,
+browse filters and URL cleanup, and comparison limits/URL state. Its
 read-only API checks require the API Server development workflow and the seeded
 demo database to be running locally. They use only `GET /api/vehicles` and
 reject API base URLs outside `localhost`, `127.0.0.1`, or `::1`; do not point
@@ -15,3 +16,107 @@ these checks at production.
 
 CI should provision the development/test database with its demo fixtures, start
 the local API workflow, then run the command above.
+
+## Browser smoke check
+
+Run with the Auto Research web workflow and API Server workflow running against
+the local seeded demo database. In Chromium:
+
+1. Open `/calculator` without a `vehicle` query parameter. Confirm the estimate
+   renders and the Network panel has no request to `/api/vehicles/`.
+2. Set APR to `0`. With the default gas assumptions, confirm the loan payment is
+   `$450`, fuel is about `$130`, and monthly estimate is `$890`.
+3. Open `/calculator?vehicle=tesla-model-y-2024-long-range`, select **Use vehicle
+   profile estimates**, and set APR to `0`. Confirm the fuel controls show
+   electricity pricing and `122 MPGe`, with about `$44` monthly fuel.
+4. On `/browse`, search `2024 Ford F-150 XLT`. Confirm one result and a matching
+   `q` URL parameter. Select **Clear all filters** and confirm the URL is
+   `/browse`, the search is empty, and all 13 seeded profiles return.
+5. On `/compare`, add the seeded Ford F-150 XLT, Chevrolet Silverado 1500 LT,
+   Tesla Model Y Long Range, and Cadillac Escalade Premium Luxury. Confirm all
+   four IDs appear in the URL. After each selection confirm the search input is
+   empty and suggestions are closed. At four vehicles confirm the search input
+   is disabled, suggestions stay closed, and the counter says `4 of 4 vehicles
+   selected`. Remove one vehicle and confirm searching is enabled again and
+   its ID leaves the URL. Use browser Back and Forward after a removal and
+   confirm the URL, selected count, and columns stay aligned. Reopen the four-ID
+   URL directly and confirm all four columns return.
+
+## Prototype refinement checks
+
+- In every calculator number field, delete the value using the keyboard. While
+  focused, it must stay completely blank; monthly and yearly totals must remain
+  finite. Type a replacement such as `500` and confirm it displays without a
+  leading zero and updates the estimate. An empty field normalizes to `0` only
+  on blur. Check decimal APR/fuel pricing and the EV electricity field too.
+- Verify the yellow header CTA says **Browse cars** and opens `/browse`.
+- On Community, confirm the ownership-sharing CTA says coming soon/preview only
+  and does not open a form. All demo scenarios must be visibly fictional, with
+  owner reports distinguished from researched owner-reported issues.
+- Change the Community manufacturer filter and clear it. Matching vehicle
+  experiences should return, and any fictional preview details should stay
+  consistent for the same report.
+- On About, retain **Better questions make better ownership**, **A guide, not a
+  verdict**, demo disclosures, connected research, and the NHTSA/EPA links.
+- At a narrow mobile viewport, check the navigation menu, calculator fields and
+  totals, comparison picker/table scrolling, Community cards/CTA, and About
+  content. No page-level horizontal overflow or clipped controls should appear.
+
+## Expanded financing checks
+
+Zero-default input cleanup: on a fresh calculator, click the dealer-fee field
+showing `0` and type `300` without deleting first; the raw value must be `300`,
+not `0300`. Repeat with the zero tax-rate field and a decimal such as `7.25`.
+Blank editing/blur normalization must still work, and focusing a non-zero value
+must not select or change it automatically. Fee changes must update financing.
+The purchase breakdown retains **Estimated purchase total**, while the analysis
+uses **Estimated total paid for vehicle** for the unchanged interest-inclusive total.
+
+State tax rates are replaceable prototype assumptions, not verified tax data.
+Start with no state selected and zero tax/fees to preserve the original estimate.
+Run these checks in one real-browser pass after calculator changes:
+
+1. Set vehicle price to `32000`, down payment to `5000`, APR to `0`, term to
+   `60 months`, New York (prototype `4%` tax), dealer fees to `500`, and include
+   taxes/fees in the loan. Expect tax `$1,280.00`, purchase total `$33,780.00`,
+   financed amount `$28,780.00`, monthly loan `$479.67`, and zero interest.
+2. Switch to paying taxes/fees upfront. Expect `$1,780.00` upfront and
+   `$27,000.00` financed, with a `$450.00` loan payment. Purchase cost remains
+   `$33,780.00` at zero APR; taxes/fees must not be counted twice.
+3. Check zero down, down equal to the vehicle price, down exceeding the price,
+   and `10000000000` down in both payment modes. In financed mode, taxes/fees
+   may still require a loan when down equals only the vehicle price. The
+   no-financing threshold is the applicable financing base, not always price.
+   At/exceeding that base, loan principal/payment/interest/loan total are zero.
+   Show coverage and excess messages as appropriate, preserve the entered
+   draft, cap only the applied down payment, and keep purchase cost meaningful.
+   Default gas operating costs still total about `$440/month` with no loan.
+4. Restore a normal loan; check `6.4%` and a higher APR such as `24%`, and
+   all loan terms (`36`, `48`, `60`, `72`, `84`). Confirm total principal equals
+   the financed amount, principal plus interest equals total loan payments,
+   and total purchase cost equals purchase total plus interest.
+5. Change states (including a zero-rate state), manually override the estimated
+   rate, change dealer fees, and change states again. A new state resets the
+   rate to its default; manual overrides update the calculation immediately.
+   Tax/fee changes affect principal only when financed, but always affect the
+   purchase total. The state picker includes all 50 states and Washington, D.C.
+6. Clear all financing numeric fields while focused, including tax and fees.
+   They remain blank until blur and accept replacements without leading zeros.
+   Decimal rates/fees work; drafts never become `NaN`/`Infinity`. Existing
+   driving/ongoing-cost fields and the EV profile still work.
+7. Confirm the restrained principal/interest visual updates with every financing
+   assumption. Expand **View amortization schedule** (collapsed initially);
+   check the full term, payment/principal/interest relationship and final
+   `$0.00` balance. At zero APR, every interest amount is zero. At no financing,
+   show an explanatory empty state rather than a meaningless schedule.
+8. Verify **ESTIMATED MONTHLY OWNERSHIP** describes the combined loan, fuel,
+   insurance, maintenance and repair reserve—not just the loan payment.
+   No negative balances/payments/totals, `NaN`, or `Infinity` should appear.
+9. Use **Print this estimate** and inspect print output: purchase breakdown,
+   ownership breakdown and detailed financing totals must be readable, current,
+   and free of sticky-card/scroll clipping. Taxes/dealer fees are included as
+   estimates; registration/depreciation remain excluded. Verify the revised
+   disclaimer calls for checking dealer/lender/DMV or tax-authority figures.
+10. Check desktop and `375px` layouts; the amortization table should scroll
+    internally on mobile without page-level overflow. Preserve the two-column
+    desktop calculator and the existing stacked mobile layout.

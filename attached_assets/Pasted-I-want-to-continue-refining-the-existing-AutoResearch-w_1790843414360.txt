@@ -1,0 +1,377 @@
+I want to continue refining the existing AutoResearch website. Do NOT redesign the site from scratch. Preserve the current visual identity, layout language, typography, dark charcoal + warm yellow color palette, navigation structure, spacing style, and overall premium/editorial automotive research feel.
+
+This is a refinement pass based on testing the current build.
+
+IMPORTANT:
+- Preserve functionality that is already working.
+- Do not replace the existing design with a generic template.
+- Do not add unnecessary features.
+- Do not build authentication, user accounts, a full community backend, or real owner submissions yet.
+- Keep the current site responsive.
+- Make changes carefully and consistently across the existing components.
+- We are building this website in stages. This pass should improve the current prototype and prepare it for real automotive data later.
+
+-----------------------------------
+1. COMPARE PAGE
+-----------------------------------
+
+Keep the current Compare page and its ability to compare up to 4 vehicles.
+
+I noticed a UX issue with the vehicle search field.
+
+After a user searches for a vehicle and selects it, completely clear the search input and close the suggestion dropdown.
+
+Example:
+
+User types:
+"Tesla"
+
+They select:
+2024 Tesla Model Y Long Range
+
+After selection:
+- Add the vehicle to the comparison.
+- Clear "Tesla" from the search field.
+- Return the search field to its normal placeholder state.
+- Close the dropdown.
+- Allow the user to immediately search for another vehicle.
+
+Repeat this behavior after every vehicle selection.
+
+Once 4 vehicles have been selected:
+- Keep the existing 4-vehicle maximum.
+- The dropdown should remain closed.
+- Clearly communicate that 4 of 4 vehicles are selected.
+- Do not allow a fifth vehicle unless one of the existing vehicles is removed.
+
+If a vehicle is removed, searching should become available again.
+
+Preserve the current comparison table and its general visual design.
+
+Do not make major changes to the comparison data yet because the automotive data system will be improved in a later stage.
+
+-----------------------------------
+2. CALCULATOR – FIX NUMBER INPUT BEHAVIOR
+-----------------------------------
+
+There is an annoying behavior in the ownership calculator's numeric fields.
+
+Currently, if I delete the existing number until the field reaches 0 and then type a new number, the existing zero can remain in front.
+
+Example:
+
+I delete a maintenance value.
+
+The field becomes:
+0
+
+Then I type:
+500
+
+It can display:
+0500
+
+Fix this behavior across ALL numeric calculator fields.
+
+Desired behavior:
+
+Users must be able to temporarily leave a numeric field completely blank while editing.
+
+Do NOT automatically force "0" into the input while the user is typing.
+
+For example:
+
+110
+→ user deletes it
+→ field becomes blank
+→ user types 500
+→ field displays 500
+
+NOT:
+0500
+
+The calculations should remain stable while a field is temporarily empty. Internally, an empty value can be treated safely for calculations, but the UI should not force a visible zero into the field while the user is editing.
+
+On blur, if a value is required, it may safely normalize to an appropriate default.
+
+Apply this behavior consistently to:
+- Vehicle price
+- Down payment
+- APR
+- Miles driven per year
+- Fuel price
+- Fuel economy
+- Insurance
+- Maintenance
+- Repair reserve
+- Any other editable numeric calculator fields
+
+Do not change the overall calculator design.
+
+Keep the live monthly/yearly ownership estimate panel.
+
+-----------------------------------
+3. COMMUNITY PAGE – KEEP THE CONCEPT, IMPROVE THE PREVIEW
+-----------------------------------
+
+We have decided to KEEP the Community section.
+
+Its long-term purpose will be real-world owner experiences.
+
+Eventually AutoResearch will allow actual vehicle owners to submit ownership reports containing information such as:
+- Vehicle year/make/model/trim
+- Length of ownership
+- Current mileage
+- Reliability rating
+- Maintenance costs
+- Repairs and major problems
+- Fuel economy or EV efficiency/range experience
+- Likes
+- Dislikes
+- Whether they would buy the vehicle again
+- Written ownership experience
+- Potential optional photos
+
+Eventually there may also be a "Verified Owner" system.
+
+DO NOT build that full system yet.
+
+For this stage, improve the existing Community page so that its purpose is clearer.
+
+Keep the existing Community navigation item.
+
+Near the top of the Community page, introduce a prominent yellow CTA such as:
+
+"Share Your Ownership Experience →"
+
+However, because submissions are not being implemented yet, this should clearly function as a preview/coming-soon element rather than pretending that submissions currently work.
+
+It could communicate something similar to:
+
+"Owner submissions coming soon."
+
+Do not build authentication, forms, databases, moderation systems, uploads, or account functionality yet.
+
+The current repeated demo ownership cards are useful for layout testing, but make the demo presentation feel intentional rather than looking like 13 identical real reports.
+
+Clearly label sample/demo owner experiences.
+
+If practical without overbuilding, vary the sample content slightly so the page demonstrates what future owner reports could look like.
+
+Future owner reports should eventually support information such as:
+
+Reliability
+Maintenance cost
+Major repairs
+Ownership duration
+Mileage
+Would buy again
+Overall rating
+
+But keep this implementation lightweight for now.
+
+IMPORTANT FUTURE ARCHITECTURE PRINCIPLE:
+
+AutoResearch will eventually distinguish between:
+
+1. OWNER REPORTS
+Experiences submitted directly by AutoResearch users.
+
+2. RESEARCHED OWNER-REPORTED ISSUES
+Patterns AutoResearch identifies from external research sources.
+
+These must never be presented as the same thing.
+
+Do not build this research aggregation system during this pass; simply avoid designing the Community page in a way that would prevent this distinction later.
+
+-----------------------------------
+4. COMMUNITY FILTERING – LIGHT PREPARATION ONLY
+-----------------------------------
+
+Keep the existing manufacturer filtering concept.
+
+The future Community page should eventually support filtering owner experiences by:
+
+- Make
+- Model
+- Year
+- Generation
+- Trim where appropriate
+
+Eventually individual vehicle research pages should be able to link directly to owner experiences for that vehicle.
+
+Example future section on a vehicle page:
+
+OWNER EXPERIENCES
+47 owner reports
+4.3 / 5 average reliability
+83% would buy again
+
+Read owner experiences →
+
+Do NOT implement those statistics with fake production data right now.
+
+Simply keep the Community page/component architecture flexible enough for vehicle-specific filtering and linking later.
+
+-----------------------------------
+5. ABOUT PAGE
+-----------------------------------
+
+Keep the current About page.
+
+I like the existing direction and messaging, particularly:
+
+"Better questions make better ownership."
+
+and:
+
+"A guide, not a verdict."
+
+Preserve these concepts.
+
+The About page should communicate that AutoResearch brings together information such as:
+
+- Reliability research
+- Maintenance expectations
+- Ownership costs
+- Specifications
+- Known/reported issues
+- Owner perspectives
+- Comparison tools
+
+The purpose is to help shoppers understand vehicle ownership beyond the purchase price.
+
+Keep the current "Connected research" and transparency concepts.
+
+The current website is using DEMO / ESTIMATE DATA, so the disclaimers are appropriate for this prototype.
+
+Do not remove necessary demo disclosures yet.
+
+However, structure disclosures so they can eventually become smaller/context-specific notices once verified real data sources are implemented.
+
+Keep the authoritative-source concept for things such as NHTSA recalls/safety information and EPA fuel-economy information.
+
+Long term, AutoResearch should display properly sourced information itself where possible and link users to authoritative underlying sources rather than constantly sending users away from the site.
+
+Do not build the full data integration during this pass.
+
+-----------------------------------
+6. NAVIGATION – YELLOW "FIND A CAR" BUTTON
+-----------------------------------
+
+Currently the yellow "Find a car →" button simply takes users to the same Browse Cars section already accessible through the "Browse cars" navigation link.
+
+For now, change the yellow CTA text to:
+
+"Browse cars →"
+
+It can continue linking to the Browse Cars page.
+
+Do NOT remove the yellow CTA because it provides a useful visual primary action in the navigation.
+
+LONG-TERM PLAN:
+
+Later, this button will become:
+
+"Find a car →"
+
+and will open a genuine vehicle discovery tool.
+
+That future tool may ask users for criteria such as:
+
+- Budget
+- Vehicle type
+- Reliability priorities
+- Maximum mileage
+- Fuel type (gas/hybrid/EV/etc.)
+- Model year range
+- Ownership-cost priorities
+
+AutoResearch would then show matching vehicles and explain WHY each vehicle matched the user's criteria.
+
+DO NOT build this vehicle finder during this pass.
+
+For now simply use "Browse cars →".
+
+-----------------------------------
+7. DATA / TRUST PRINCIPLES
+-----------------------------------
+
+AutoResearch is intended to become a serious automotive research platform.
+
+The site should not present demo estimates as verified facts.
+
+Continue clearly distinguishing:
+- Demo data
+- Estimates
+- Verified/source-backed information
+- Owner-submitted experiences
+
+Do not invent citations, owner reports, reliability evidence, recall information, or authoritative vehicle data.
+
+The real automotive data/research system will be implemented separately.
+
+Also preserve the philosophy that AutoResearch should help users investigate and compare vehicles rather than simply declaring a universal "winner."
+
+-----------------------------------
+8. DO NOT BUILD THESE YET
+-----------------------------------
+
+Do NOT implement the following during this pass:
+
+- User accounts
+- Authentication
+- Owner profile pages
+- Full owner submission backend
+- Review moderation
+- Photo upload infrastructure
+- Verified-owner verification
+- Community voting
+- Comments
+- Social feeds
+- AI vehicle recommendations
+- Full Find-a-Car recommendation engine
+- Production automotive APIs
+- Large new databases
+- Major redesigns
+
+These are future development stages.
+
+-----------------------------------
+9. PRIORITY ORDER
+-----------------------------------
+
+For this pass, prioritize:
+
+1. Fix calculator numeric input behavior.
+2. Improve Compare search/select/reset behavior.
+3. Refine Community so its future purpose is clear.
+4. Add the future owner-submission CTA as a coming-soon concept.
+5. Change the navigation CTA from "Find a car" to "Browse cars".
+6. Preserve/refine the About page.
+7. Preserve everything else that is already working.
+
+The core AutoResearch product flow remains:
+
+Browse Cars
+→ Vehicle Research
+→ Compare
+→ Ownership Calculator
+
+Community will become a larger feature after the core automotive research/data system is functioning.
+
+Before making changes, inspect the existing code and reuse existing components/styles wherever possible.
+
+Do not rewrite working pages unnecessarily.
+
+After completing the changes, test:
+- Navigation
+- Vehicle comparison selection/removal
+- 4-car comparison limit
+- Search field clearing
+- Calculator numeric editing
+- Live calculator totals
+- Community layout
+- Responsive behavior
+
+Then summarize exactly what you changed and identify any issues you found without adding unrelated features.

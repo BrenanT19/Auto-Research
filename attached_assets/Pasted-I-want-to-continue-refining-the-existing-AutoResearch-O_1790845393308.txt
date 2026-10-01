@@ -1,0 +1,357 @@
+I want to continue refining the existing AutoResearch Ownership Calculator. Do NOT redesign the calculator or the website from scratch.
+
+Preserve the current visual identity, dark charcoal + warm yellow palette, typography, spacing, two-column calculator layout, numbered sections, right-side estimate card, responsive behavior, and all existing functionality.
+
+The calculator currently works correctly, including the recently fixed numeric input behavior. Numeric fields can temporarily remain blank while editing and normalize safely on blur. DO NOT regress this behavior or reintroduce leading-zero issues such as typing 500 and receiving 0500.
+
+This update should focus specifically on making Section 01 / Financing much more realistic and informative.
+
+--------------------------------------------------
+1. EXPAND 01 / FINANCING — PURCHASE ASSUMPTIONS
+--------------------------------------------------
+
+Keep the existing:
+- Vehicle price
+- Down payment
+- APR
+- Loan term
+
+Add:
+
+STATE
+Add a dropdown containing all 50 U.S. states plus Washington, D.C.
+
+The selected state should provide an estimated vehicle sales tax rate.
+
+Label this clearly as an estimate because actual vehicle sales tax can vary based on state rules, local taxes, registration location, trade-ins, exemptions, and other circumstances.
+
+Do not present the estimated tax rate as guaranteed or authoritative.
+
+ESTIMATED SALES TAX
+Display the estimated sales tax percentage after a state is selected.
+
+The percentage should be editable by the user so they can enter a more accurate local rate if they know it.
+
+If the user changes states, update the estimated rate to that state's default estimate.
+
+Make it visually clear that this is an estimated/editable rate.
+
+Use reasonable state-level estimated rates for this prototype. Keep the tax-rate data isolated in a clearly named configuration/data structure so it can easily be replaced later with a verified production tax data source.
+
+Do not fabricate citations or claim these prototype rates are official.
+
+ESTIMATED DEALER FEES
+Add an editable dollar field for estimated dealer/documentation fees.
+
+Clearly label this as an estimate.
+
+Do not imply that every dealer charges the same amount.
+
+TAXES & FEES PAYMENT
+Add a control that lets the user choose between:
+
+- Include taxes & fees in loan
+- Pay taxes & fees upfront
+
+This selection must affect the financing calculation correctly.
+
+--------------------------------------------------
+2. PURCHASE PRICE BREAKDOWN
+--------------------------------------------------
+
+Add a clean purchase breakdown associated with Section 01.
+
+Calculate and display:
+
+Vehicle price
+Estimated sales tax
+Estimated dealer fees
+Estimated purchase total
+Down payment
+Taxes & fees paid upfront, if applicable
+Estimated amount financed
+
+The calculation should respond live as the user edits the inputs.
+
+Keep this visually consistent with the existing premium/editorial design. Do not overcrowd the page.
+
+Calculation behavior:
+
+If "Include taxes & fees in loan" is selected:
+
+Estimated amount financed =
+vehicle price
++ estimated sales tax
++ estimated dealer fees
+- down payment
+
+If "Pay taxes & fees upfront" is selected:
+
+Estimated amount financed =
+vehicle price
+- down payment
+
+Taxes and fees should still appear in the overall purchase-cost breakdown, but should not be included in the loan principal.
+
+Never allow the amount financed to become negative.
+
+--------------------------------------------------
+3. DOWN PAYMENT VALIDATION
+--------------------------------------------------
+
+Currently a user can enter an unrealistically large down payment, such as a $10,000,000,000 down payment on a $32,000 vehicle.
+
+Improve this behavior.
+
+Do NOT show negative financing or negative loan payments.
+
+If the entered down payment is equal to or greater than the amount that can actually be financed:
+
+- Estimated amount financed should become $0.
+- Monthly loan payment should become $0.
+- Display a small, non-intrusive validation message such as:
+
+"Down payment covers the financed amount. No financing required."
+
+If the entered down payment exceeds the applicable purchase/financed amount, also communicate that the entered down payment exceeds the estimated amount due.
+
+Do not silently produce confusing results.
+
+Do not automatically replace what the user typed while they are actively editing the field. Preserve the entered value but safely cap the effective value used in financing calculations.
+
+The calculator should never display a negative loan balance or negative monthly loan payment.
+
+--------------------------------------------------
+4. IMPROVE THE RIGHT-SIDE ESTIMATE CARD
+--------------------------------------------------
+
+The large number on the existing right-side card represents the user's combined estimated monthly ownership costs, not just their loan payment.
+
+Make this clearer.
+
+Change the primary label/headline so it communicates:
+
+ESTIMATED MONTHLY OWNERSHIP
+
+Keep the DEMO / ESTIMATE disclosure where appropriate.
+
+Continue showing the large combined monthly ownership estimate.
+
+Underneath, preserve the existing breakdown but make sure it clearly displays:
+
+Loan payment
+Fuel
+Insurance
+Maintenance
+Repair reserve
+
+The monthly ownership total should continue to include all of these applicable monthly costs.
+
+Important:
+If the loan payment becomes $0 because the vehicle is effectively paid in cash, the overall monthly ownership estimate should NOT become $0 because fuel, insurance, maintenance, and repair reserve may still exist.
+
+Do not display negative monthly ownership costs.
+
+--------------------------------------------------
+5. ADD A DETAILED LOAN BREAKDOWN
+--------------------------------------------------
+
+Add a new financing analysis area below the primary calculator inputs.
+
+This should only describe the financing portion of the purchase and should be visually separated from recurring ownership expenses.
+
+Display:
+
+Estimated amount financed
+APR
+Loan term
+Estimated monthly loan payment
+Total principal paid
+Total interest paid
+Total of loan payments
+Estimated total purchase cost
+
+"Total principal paid" should equal the amount financed.
+
+"Total interest paid" should represent the estimated interest paid over the full loan term using the existing standard fixed-rate amortization formula.
+
+"Total of loan payments" should equal principal + total interest.
+
+For estimated total purchase cost, account correctly for:
+- down payment actually applicable to the purchase
+- taxes
+- dealer fees
+- loan interest
+
+Avoid double-counting taxes or fees depending on whether they are financed or paid upfront.
+
+If amount financed is $0, show:
+- Monthly loan payment: $0
+- Total interest: $0
+- Total loan payments: $0
+
+The purchase-cost information should still remain meaningful for a cash purchase.
+
+--------------------------------------------------
+6. PRINCIPAL VS. INTEREST VISUALIZATION
+--------------------------------------------------
+
+Add a simple visual representation of:
+
+Principal
+vs.
+Total interest
+
+Use the site's existing design language.
+
+Keep it clean and restrained rather than adding a flashy dashboard-style chart.
+
+The visualization must update when:
+- vehicle price changes
+- down payment changes
+- APR changes
+- loan term changes
+- tax changes when financed
+- dealer fees change when financed
+
+If there is no financing, gracefully show that there is no loan interest rather than rendering a broken chart.
+
+--------------------------------------------------
+7. EXPANDABLE AMORTIZATION SCHEDULE
+--------------------------------------------------
+
+Add a collapsed-by-default control:
+
+"View amortization schedule"
+
+When expanded, show the payment schedule for the entire loan.
+
+Include columns for:
+
+Payment number
+Payment amount
+Principal
+Interest
+Remaining balance
+
+Use the standard fixed-rate amortization calculation already used by the calculator.
+
+The final payment should handle normal floating-point/rounding differences so the remaining balance finishes at $0 rather than showing a tiny positive or negative balance.
+
+On smaller/mobile screens, make the amortization schedule horizontally scrollable or otherwise responsive without breaking the page layout.
+
+If amount financed is $0, the amortization section should communicate that no financing schedule is required.
+
+--------------------------------------------------
+8. DATA / TRUST LANGUAGE
+--------------------------------------------------
+
+AutoResearch is currently a prototype and must remain transparent about estimates.
+
+Update the existing financing disclaimer as needed because it currently says taxes, registration, and fees are not included.
+
+Taxes and estimated dealer fees WILL now be included in this calculator, so that sentence must no longer incorrectly say they are excluded.
+
+Replace it with accurate language explaining that:
+
+- Financing calculations use a standard fixed-rate amortization formula.
+- Sales tax and dealer fees are estimates.
+- Actual taxes, registration costs, dealer charges, lender terms, insurance, maintenance, and other ownership costs may differ.
+- Users should verify final figures with the dealer, lender, DMV/tax authority, and other appropriate sources.
+
+Do not claim the prototype state tax estimates are official government data.
+
+Registration fees do not need to be calculated in this update.
+
+--------------------------------------------------
+9. DO NOT BUILD YET
+--------------------------------------------------
+
+Do NOT add:
+
+- Extra-payment / early payoff calculator
+- Trade-in calculations
+- Negative equity calculations
+- Rebates or incentives
+- Lease calculations
+- Credit-score recommendations
+- Loan prequalification
+- Lender integrations
+- Registration-fee database
+- ZIP-code/local tax lookup
+- Production tax APIs
+- User accounts
+- Saved calculations
+- AI recommendations
+- Any unrelated new features
+
+These can be considered later.
+
+--------------------------------------------------
+10. PRESERVE EXISTING FUNCTIONALITY
+--------------------------------------------------
+
+Do not break or redesign:
+
+- Fuel assumptions
+- Miles driven per year
+- Fuel economy
+- Fuel price
+- Insurance
+- Maintenance
+- Repair reserve
+- Live monthly ownership estimate
+- Print estimate functionality
+- Navigation
+- Compare
+- Browse Cars
+- Community
+- About
+- Responsive layout
+
+Reuse existing calculator components and styling wherever practical rather than rewriting the calculator from scratch.
+
+--------------------------------------------------
+11. TESTING
+--------------------------------------------------
+
+After implementing the changes, test the calculator in a real browser.
+
+Specifically test:
+
+1. Normal financed purchase.
+2. $0 down payment.
+3. Down payment equal to vehicle price.
+4. Down payment greater than vehicle price.
+5. Extremely large down payment such as $10,000,000,000 on a $32,000 vehicle.
+6. 0% APR.
+7. Higher APR.
+8. Different loan terms.
+9. Changing states.
+10. Manually editing the estimated sales tax rate.
+11. Changing estimated dealer fees.
+12. Including taxes and fees in the loan.
+13. Paying taxes and fees upfront.
+14. Temporarily deleting numeric values and typing replacements.
+15. Confirm there are no leading-zero regressions.
+16. Confirm the monthly ownership total remains correct when loan payment is $0.
+17. Confirm principal + interest calculations are internally consistent.
+18. Confirm amortization reaches a $0 remaining balance.
+19. Confirm no NaN, Infinity, negative loan balances, or negative loan payments appear.
+20. Confirm print estimate still works and includes the relevant updated financing information.
+21. Check desktop and mobile layouts.
+
+Run the existing regression/type checks as well.
+
+Do not modify unrelated working features merely to make tests pass.
+
+After completing the work, summarize:
+- exactly what was changed
+- the financing formulas/logic used
+- how estimated state tax data is stored
+- what validation behavior was added
+- what browser tests were performed
+- whether all existing regression/type checks passed
+- any remaining limitations or issues
+
+Do not add additional features beyond this scope.

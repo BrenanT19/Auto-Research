@@ -1,0 +1,105 @@
+Make a very small cleanup pass to the existing AutoResearch Ownership Calculator. Do NOT redesign the calculator, change its layout, or modify unrelated functionality.
+
+The calculator is currently working correctly, including the state tax estimates, financing calculations, purchase breakdown, loan analysis, amortization schedule, and monthly ownership estimate.
+
+Only make the following changes:
+
+1. FIX DEFAULT-ZERO NUMERIC INPUT BEHAVIOR
+
+The "Estimated dealer fees" field currently displays 0 by default.
+
+When the field contains the default value 0 and the user clicks/focuses the field and begins typing a number, the existing zero should be replaced automatically.
+
+Example:
+
+Current field value:
+0
+
+User clicks the field and types:
+300
+
+Desired result:
+300
+
+NOT:
+0300
+
+The user should not have to manually press Backspace/Delete before entering a value.
+
+A clean implementation would be to select the default zero when the field receives focus so the user's first typed value replaces it.
+
+Preserve the existing numeric-input behavior:
+- Fields may temporarily remain blank while actively editing.
+- Do not force a zero back into the field while the user is typing.
+- If appropriate, an empty field may normalize to 0 on blur.
+- Do not reintroduce leading-zero behavior.
+- Do not interfere with decimal entry.
+- Do not change the value while the user is actively typing except for the intended replacement of a default zero.
+
+Apply this same clean default-zero behavior to other calculator numeric inputs that legitimately initialize at 0, including the editable estimated sales-tax-rate field, where appropriate.
+
+Do not change non-zero values automatically on focus.
+
+2. CLARIFY THE FINAL VEHICLE COST LABEL
+
+In the Financing Analysis section, change the label:
+
+"Estimated total purchase cost"
+
+to:
+
+"Estimated total paid for vehicle"
+
+This figure should continue representing the total amount ultimately paid toward acquiring the vehicle, including applicable upfront/down-payment amounts and total loan payments including interest, without double-counting taxes or dealer fees.
+
+Do NOT change the existing "Estimated purchase total" label in the Purchase Breakdown section.
+
+These are intentionally different:
+
+"Estimated purchase total"
+= estimated vehicle price + applicable estimated sales tax + estimated dealer fees before financing interest.
+
+"Estimated total paid for vehicle"
+= estimated amount ultimately paid for the vehicle after accounting for financing interest and applicable upfront amounts.
+
+Do not change the underlying calculation unless testing reveals an actual accounting error.
+
+3. PRESERVE EVERYTHING ELSE
+
+Do not change:
+- State tax estimates or state dropdown behavior
+- Tax calculations
+- Dealer-fee calculation logic
+- Taxes & fees financing options
+- Loan formulas
+- Down-payment validation
+- Principal vs. interest visualization
+- Amortization schedule
+- Fuel calculations
+- Insurance
+- Maintenance
+- Repair reserve
+- Monthly ownership estimate
+- Print functionality
+- Navigation
+- Other website pages
+- Overall styling/layout
+
+4. TEST
+
+After making these changes, verify in a real browser:
+
+- Dealer fees = 0, click field, type 300 -> field becomes 300, not 0300.
+- Delete dealer fee value completely -> temporary blank editing still works.
+- Leave an empty dealer-fee field -> it safely normalizes as intended.
+- Sales-tax-rate default-zero editing behaves cleanly.
+- Existing non-zero values are not unexpectedly replaced when focused.
+- Decimal entry still works.
+- Financing calculations update correctly after fee changes.
+- "Estimated purchase total" remains in the Purchase Breakdown.
+- "Estimated total paid for vehicle" appears in Financing Analysis.
+- All existing regression/type checks still pass.
+
+Do not add any other features during this cleanup.
+
+After completion, briefly summarize exactly what changed and whether all tests passed.

@@ -68,6 +68,35 @@ export type OwnershipInputs = {
   vehicleIsElectric: boolean;
 };
 
+export type OwnershipDraft = {
+  [Field in Exclude<keyof OwnershipInputs, "term" | "vehicleIsElectric">]: string;
+};
+
+export function parseCalculatorNumber(value: string): number {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.max(0, number) : 0;
+}
+
+export function normalizeCalculatorNumber(value: string): string {
+  return String(parseCalculatorNumber(value));
+}
+
+// Convert only at the calculation boundary; never replace the editable draft.
+export function readOwnershipDraft(draft: OwnershipDraft) {
+  return {
+    price: parseCalculatorNumber(draft.price),
+    down: parseCalculatorNumber(draft.down),
+    apr: parseCalculatorNumber(draft.apr),
+    miles: parseCalculatorNumber(draft.miles),
+    mpg: parseCalculatorNumber(draft.mpg),
+    gas: parseCalculatorNumber(draft.gas),
+    electricity: parseCalculatorNumber(draft.electricity),
+    insurance: parseCalculatorNumber(draft.insurance),
+    maintenance: parseCalculatorNumber(draft.maintenance),
+    repairs: parseCalculatorNumber(draft.repairs),
+  };
+}
+
 export function calculateOwnershipEstimate(inputs: OwnershipInputs) {
   const loan = Math.max(0, inputs.price - inputs.down);
   const rate = inputs.apr / 100 / 12;
