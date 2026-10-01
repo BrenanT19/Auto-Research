@@ -16,6 +16,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CatalogOption,
   DiscoveryStats,
   HealthStatus,
   ListOwnerReportsParams,
@@ -197,6 +198,84 @@ export function useListMakes<TData = Awaited<ReturnType<typeof listMakes>>, TErr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListMakesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetCatalogOptionsUrl = () => {
+
+
+
+
+  return `/api/catalog/options`
+}
+
+/**
+ * Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+ * @summary List complete hierarchy options for the current catalog
+ */
+export const getCatalogOptions = async ( options?: Parameters<typeof customFetch>[1]): Promise<CatalogOption[]> => {
+
+  return customFetch<CatalogOption[]>(getGetCatalogOptionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCatalogOptionsQueryKey = () => {
+    return [
+    `/api/catalog/options`
+    ] as const;
+    }
+
+
+export const getGetCatalogOptionsQueryOptions = <TData = Awaited<ReturnType<typeof getCatalogOptions>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogOptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCatalogOptionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCatalogOptions>>> = ({ signal }) => getCatalogOptions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCatalogOptions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCatalogOptionsQueryResult = NonNullable<Awaited<ReturnType<typeof getCatalogOptions>>>
+export type GetCatalogOptionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List complete hierarchy options for the current catalog
+ */
+
+export function useGetCatalogOptions<TData = Awaited<ReturnType<typeof getCatalogOptions>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogOptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCatalogOptionsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

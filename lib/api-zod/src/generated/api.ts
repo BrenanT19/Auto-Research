@@ -31,6 +31,27 @@ export const ListMakesResponse = zod.array(ListMakesResponseItem)
 
 
 /**
+ * Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+ * @summary List complete hierarchy options for the current catalog
+ */
+export const GetCatalogOptionsResponseItem = zod.object({
+  "profileId": zod.string(),
+  "makeId": zod.number().int(),
+  "make": zod.string(),
+  "makeSlug": zod.string(),
+  "modelId": zod.number().int(),
+  "model": zod.string(),
+  "generationId": zod.number().int(),
+  "generation": zod.string(),
+  "modelYearId": zod.number().int(),
+  "year": zod.number().int(),
+  "trimId": zod.number().int(),
+  "trim": zod.string()
+})
+export const GetCatalogOptionsResponse = zod.array(GetCatalogOptionsResponseItem)
+
+
+/**
  * @summary Get a manufacturer and its featured vehicles
  */
 export const GetMakeParams = zod.object({
@@ -78,6 +99,9 @@ export const GetMakeResponse = zod.object({
 /**
  * @summary Search and filter vehicle trims
  */
+
+
+
 export const listVehiclesQuerySortDefault = `popular`;
 export const listVehiclesQueryLimitDefault = 24;
 export const listVehiclesQueryLimitMax = 100;
@@ -88,7 +112,10 @@ export const ListVehiclesQueryParams = zod.object({
   "q": zod.coerce.string().optional(),
   "makeSlug": zod.coerce.string().optional(),
   "model": zod.coerce.string().optional(),
+  "modelId": zod.coerce.number().int().min(1).optional(),
+  "generationId": zod.coerce.number().int().min(1).optional(),
   "year": zod.coerce.number().int().optional(),
+  "trimId": zod.coerce.number().int().min(1).optional().describe('Database identity of an existing trim. The legacy trim name filter remains supported.'),
   "trim": zod.coerce.string().optional(),
   "sort": zod.enum(['popular', 'reliability', 'ownership-cost']).default(listVehiclesQuerySortDefault),
   "limit": zod.coerce.number().int().min(1).max(listVehiclesQueryLimitMax).default(listVehiclesQueryLimitDefault)
@@ -243,6 +270,7 @@ export const GetVehicleResponse = zod.object({
   "commonProblems": zod.array(zod.object({
   "title": zod.string(),
   "description": zod.string(),
+  "applicability": zod.enum(['applies', 'unknown']),
   "typicalMileageStart": zod.number().int(),
   "typicalMileageEnd": zod.number().int(),
   "repairCostLowUsd": zod.number().int(),

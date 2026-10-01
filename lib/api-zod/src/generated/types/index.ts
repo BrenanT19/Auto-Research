@@ -6,7 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './catalogOption';
 export * from './commonProblem';
+export * from './commonProblemApplicability';
 export * from './discoveryStats';
 export * from './engine';
 export * from './healthStatus';

@@ -5,10 +5,12 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CommonProblemApplicability } from './commonProblemApplicability';
 
 export interface CommonProblem {
   title: string;
   description: string;
+  applicability: CommonProblemApplicability;
   typicalMileageStart: number;
   typicalMileageEnd: number;
   repairCostLowUsd: number;

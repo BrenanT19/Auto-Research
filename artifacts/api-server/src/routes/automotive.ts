@@ -1,7 +1,8 @@
-import { and, asc, count, desc, eq, ilike, or, type SQL, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, or, type SQL, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import {
   GetDiscoveryStatsResponse,
+  GetCatalogOptionsResponse,
   GetMakeParams,
   GetMakeResponse,
   GetVehicleParams,
@@ -81,8 +82,11 @@ async function loadVehicles(options: {
   q?: string;
   makeSlug?: string;
   model?: string;
+  modelId?: number;
+  generationId?: number;
   year?: number;
   trim?: string;
+  trimId?: number;
   vehicleId?: string;
   sort?: VehicleSort;
   limit?: number;
@@ -104,8 +108,11 @@ async function loadVehicles(options: {
   }
   if (options.makeSlug) conditions.push(eq(makesTable.slug, options.makeSlug));
   if (options.model) conditions.push(ilike(modelsTable.name, `%${options.model}%`));
+  if (options.modelId) conditions.push(eq(modelsTable.id, options.modelId));
+  if (options.generationId) conditions.push(eq(generationsTable.id, options.generationId));
   if (options.year) conditions.push(eq(modelYearsTable.year, options.year));
   if (options.trim) conditions.push(ilike(trimsTable.name, `%${options.trim}%`));
+  if (options.trimId) conditions.push(eq(trimsTable.id, options.trimId));
   if (options.vehicleId) conditions.push(eq(trimsTable.slug, options.vehicleId));
 
   const sort = options.sort ?? "popular";
@@ -164,6 +171,7 @@ function toVehicleDetail(
     commonProblems: problems.map((problem) => ({
       title: problem.title,
       description: problem.description,
+      applicability: problem.engineId === row.engineId ? "applies" : "unknown",
       typicalMileageStart: problem.typicalMileageStart,
       typicalMileageEnd: problem.typicalMileageEnd,
       repairCostLowUsd: problem.repairCostLowUsd,
@@ -209,6 +217,32 @@ router.get("/makes", async (_req, res): Promise<void> => {
     .orderBy(asc(makesTable.name));
 
   res.json(ListMakesResponse.parse(makes));
+});
+
+router.get("/catalog/options", async (_req, res): Promise<void> => {
+  const options = await db
+    .select({
+      profileId: trimsTable.slug,
+      makeId: makesTable.id,
+      make: makesTable.name,
+      makeSlug: makesTable.slug,
+      modelId: modelsTable.id,
+      model: modelsTable.name,
+      generationId: generationsTable.id,
+      generation: generationsTable.name,
+      modelYearId: modelYearsTable.id,
+      year: modelYearsTable.year,
+      trimId: trimsTable.id,
+      trim: trimsTable.name,
+    })
+    .from(trimsTable)
+    .innerJoin(modelYearsTable, eq(trimsTable.modelYearId, modelYearsTable.id))
+    .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
+    .innerJoin(modelsTable, eq(generationsTable.modelId, modelsTable.id))
+    .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
+    .orderBy(asc(makesTable.name), asc(modelsTable.name), asc(modelYearsTable.year), asc(trimsTable.name));
+
+  res.json(GetCatalogOptionsResponse.parse(options));
 });
 
 router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
@@ -286,7 +320,10 @@ router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
     db.select().from(enginesTable).where(eq(enginesTable.modelYearId, row.modelYearId)).orderBy(asc(enginesTable.horsepower)),
     db.select().from(transmissionsTable).where(eq(transmissionsTable.modelYearId, row.modelYearId)).orderBy(asc(transmissionsTable.name)),
     db.select({ name: trimsTable.name }).from(trimsTable).where(eq(trimsTable.modelYearId, row.modelYearId)).orderBy(asc(trimsTable.priceUsd)),
-    db.select().from(commonProblemsTable).where(eq(commonProblemsTable.modelYearId, row.modelYearId)).orderBy(asc(commonProblemsTable.title)),
+    db.select().from(commonProblemsTable).where(and(
+      eq(commonProblemsTable.modelYearId, row.modelYearId),
+      or(isNull(commonProblemsTable.engineId), eq(commonProblemsTable.engineId, row.engineId)),
+    )).orderBy(asc(commonProblemsTable.title)),
     db.select().from(maintenanceItemsTable).where(eq(maintenanceItemsTable.trimId, row.trimDbId)).orderBy(asc(maintenanceItemsTable.intervalMiles)),
   ]);
 

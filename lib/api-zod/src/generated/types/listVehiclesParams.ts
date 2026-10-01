@@ -11,7 +11,20 @@ export type ListVehiclesParams = {
 q?: string;
 makeSlug?: string;
 model?: string;
+/**
+ * @minimum 1
+ */
+modelId?: number;
+/**
+ * @minimum 1
+ */
+generationId?: number;
 year?: number;
+/**
+ * Database identity of an existing trim. The legacy trim name filter remains supported.
+ * @minimum 1
+ */
+trimId?: number;
 trim?: string;
 sort?: ListVehiclesSort;
 /**

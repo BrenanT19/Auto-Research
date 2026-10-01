@@ -40,6 +40,21 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Make"
+  /catalog/options:
+    get:
+      operationId: getCatalogOptions
+      tags: [catalog]
+      summary: List complete hierarchy options for the current catalog
+      description: Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+      responses:
+        "200":
+          description: Complete catalog hierarchy options
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CatalogOption"
   /makes/{makeSlug}:
     get:
       operationId: getMake
@@ -79,9 +94,25 @@ paths:
           schema:
             type: string
         - in: query
+          name: modelId
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: generationId
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
           name: year
           schema:
             type: integer
+        - in: query
+          name: trimId
+          description: Database identity of an existing trim. The legacy trim name filter remains supported.
+          schema:
+            type: integer
+            minimum: 1
         - in: query
           name: trim
           schema:
@@ -205,6 +236,22 @@ components:
         vehicleCount: { type: integer }
         mark: { type: string }
       required: [id, name, slug, vehicleCount, mark]
+    CatalogOption:
+      type: object
+      properties:
+        profileId: { type: string }
+        makeId: { type: integer }
+        make: { type: string }
+        makeSlug: { type: string }
+        modelId: { type: integer }
+        model: { type: string }
+        generationId: { type: integer }
+        generation: { type: string }
+        modelYearId: { type: integer }
+        year: { type: integer }
+        trimId: { type: integer }
+        trim: { type: string }
+      required: [profileId, makeId, make, makeSlug, modelId, model, generationId, generation, modelYearId, year, trimId, trim]
     ManufacturerProfile:
       type: object
       properties:
@@ -342,6 +389,7 @@ components:
       properties:
         title: { type: string }
         description: { type: string }
+        applicability: { type: string, enum: [applies, unknown] }
         typicalMileageStart: { type: integer }
         typicalMileageEnd: { type: integer }
         repairCostLowUsd: { type: integer }
@@ -350,6 +398,7 @@ components:
       required:
         - title
         - description
+        - applicability
         - typicalMileageStart
         - typicalMileageEnd
         - repairCostLowUsd

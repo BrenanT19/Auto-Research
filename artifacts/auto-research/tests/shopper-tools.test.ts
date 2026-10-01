@@ -8,6 +8,11 @@ import {
   buildVehicleListParams,
   calculateOwnershipEstimate,
   clearBrowseFilters,
+  economyUnit,
+  getActiveReportSection,
+  getBrowseSuggestions,
+  hasActiveBrowseFilters,
+  hasInvalidBrowseSelection,
   normalizeCalculatorNumber,
   optionalVehicleQueryOptions,
   parseCalculatorNumber,
@@ -15,8 +20,9 @@ import {
   parseComparisonIds,
   readOwnershipDraft,
   removeComparisonId,
+  resolveBrowseFilters,
 } from "../src/shopper-tools.ts";
-import type { OwnershipDraft } from "../src/shopper-tools.ts";
+import type { CatalogOption, OwnershipDraft } from "../src/shopper-tools.ts";
 import {
   calculateFinancingEstimate,
   type FinancingInputs,
@@ -405,8 +411,96 @@ test("browse URL filters become search parameters and clear back to a clean URL"
     trim: "",
     sort: "popular",
     year: "",
+    modelId: "",
+    generationId: "",
+    trimId: "",
   });
   assert.equal(buildBrowseLocation(cleared), "/browse");
+});
+
+const browseCatalog: CatalogOption[] = [
+  {
+    profileId: "ford-f-150-2024-xlt", makeId: 1, make: "Ford", makeSlug: "ford",
+    modelId: 11, model: "F-150", generationId: 111, generation: "Fourteenth Generation",
+    modelYearId: 1111, year: 2024, trimId: 11111, trim: "XLT",
+  },
+  {
+    profileId: "ford-f-150-2024-lariat", makeId: 1, make: "Ford", makeSlug: "ford",
+    modelId: 11, model: "F-150", generationId: 111, generation: "Fourteenth Generation",
+    modelYearId: 1111, year: 2024, trimId: 11112, trim: "Lariat",
+  },
+  {
+    profileId: "ford-mustang-2024-gt", makeId: 1, make: "Ford", makeSlug: "ford",
+    modelId: 12, model: "Mustang", generationId: 112, generation: "Seventh Generation",
+    modelYearId: 1121, year: 2024, trimId: 11211, trim: "GT",
+  },
+  {
+    profileId: "tesla-model-y-2024-long-range", makeId: 2, make: "Tesla", makeSlug: "tesla",
+    modelId: 21, model: "Model Y", generationId: 211, generation: "First Generation",
+    modelYearId: 2111, year: 2024, trimId: 21111, trim: "Long Range",
+  },
+];
+
+test("browse deep links resolve legacy names without broadening invalid hierarchy filters", () => {
+  const legacy = parseBrowseFilters("?make=ford&model=F-150&year=2024&trim=XLT");
+  const resolved = resolveBrowseFilters(legacy, browseCatalog);
+  assert.equal(resolved.modelId, "11");
+  assert.equal(resolved.generationId, "");
+  assert.equal(resolved.trimId, "11111");
+  assert.equal(buildBrowseLocation(resolved), "/browse?make=ford&modelId=11&year=2024&trimId=11111");
+
+  const invalid = resolveBrowseFilters({
+    ...resolved, modelId: "12", generationId: "111", year: "2024", trimId: "11111",
+  }, browseCatalog);
+  assert.equal(invalid.generationId, "111");
+  assert.equal(invalid.trimId, "11111");
+  assert.equal(hasInvalidBrowseSelection(invalid, browseCatalog), true);
+});
+
+test("browse state preserves invalid filters, normalizes sorts, and detects active filters", () => {
+  const parsed = parseBrowseFilters("?sort=made-up&modelId=-1&generationId=12x&trimId=999&year=02024");
+  assert.equal(parsed.sort, "popular");
+  assert.equal(parsed.modelId, "-1");
+  assert.equal(parsed.generationId, "12x");
+  assert.equal(parsed.trimId, "999");
+  assert.equal(parsed.year, "02024");
+  assert.equal(buildVehicleListParams(parsed).modelId, -1);
+  assert.equal(Number.isNaN(buildVehicleListParams(parsed).generationId), true);
+  assert.equal(hasActiveBrowseFilters(parsed), true);
+  assert.equal(hasInvalidBrowseSelection(parsed, browseCatalog), true);
+  assert.equal(hasActiveBrowseFilters(clearBrowseFilters()), false);
+  assert.equal(hasActiveBrowseFilters({ ...clearBrowseFilters(), sort: "reliability" }), true);
+});
+
+test("browse suggestions are catalog-derived, scoped, ranked, and deterministic", () => {
+  const suggestions = getBrowseSuggestions("tesla model y", browseCatalog);
+  assert.ok(suggestions.length > 0);
+  assert.equal(suggestions[0]?.kind, "model");
+  assert.ok(suggestions.some((suggestion) => suggestion.profileId === "tesla-model-y-2024-long-range"));
+  assert.equal(getBrowseSuggestions("  ", browseCatalog).length, 0);
+  assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1).length, 1);
+  assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1)[0]?.kind, "model");
+});
+
+test("electric economy uses MPGe while combustion economy keeps mpg", () => {
+  assert.equal(economyUnit("Electric"), "MPGe");
+  assert.equal(economyUnit("Battery Electric"), "MPGe");
+  assert.equal(economyUnit("Hybrid Electric"), "mpg");
+  assert.equal(economyUnit("Plug-in Hybrid"), "mpg");
+  assert.equal(economyUnit("Gasoline"), "mpg");
+});
+
+test("report navigation tracks the last section across the activation line and reports at page end", () => {
+  const positions = [
+    { id: "overview" as const, top: -200 },
+    { id: "reliability" as const, top: -40 },
+    { id: "costs" as const, top: 80 },
+    { id: "reports" as const, top: 620 },
+  ];
+  assert.equal(getActiveReportSection(positions, 72), "reliability");
+  assert.equal(getActiveReportSection(positions, 100), "costs");
+  assert.equal(getActiveReportSection(positions, 72, true), "reports");
+  assert.equal(getActiveReportSection([], 72), "overview");
 });
 
 test("comparison URL state supports removal and stops at four distinct vehicles", () => {

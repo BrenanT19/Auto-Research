@@ -17,6 +17,21 @@ export interface Make {
   mark: string;
 }
 
+export interface CatalogOption {
+  profileId: string;
+  makeId: number;
+  make: string;
+  makeSlug: string;
+  modelId: number;
+  model: string;
+  generationId: number;
+  generation: string;
+  modelYearId: number;
+  year: number;
+  trimId: number;
+  trim: string;
+}
+
 export interface VehicleSummary {
   id: string;
   make: string;
@@ -72,9 +87,18 @@ export interface ReliabilityProfile {
   note: string;
 }
 
+export type CommonProblemApplicability = typeof CommonProblemApplicability[keyof typeof CommonProblemApplicability];
+
+
+export const CommonProblemApplicability = {
+  applies: 'applies',
+  unknown: 'unknown',
+} as const;
+
 export interface CommonProblem {
   title: string;
   description: string;
+  applicability: CommonProblemApplicability;
   typicalMileageStart: number;
   typicalMileageEnd: number;
   repairCostLowUsd: number;
@@ -132,7 +156,20 @@ export type ListVehiclesParams = {
 q?: string;
 makeSlug?: string;
 model?: string;
+/**
+ * @minimum 1
+ */
+modelId?: number;
+/**
+ * @minimum 1
+ */
+generationId?: number;
 year?: number;
+/**
+ * Database identity of an existing trim. The legacy trim name filter remains supported.
+ * @minimum 1
+ */
+trimId?: number;
 trim?: string;
 sort?: ListVehiclesSort;
 /**

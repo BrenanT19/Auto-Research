@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { ReactNode, FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode, FormEvent, KeyboardEvent } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } from 'wouter';
-import { getGetVehicleQueryKey, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
+import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
-import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId } from './shopper-tools';
-import type { OwnershipDraft } from './shopper-tools';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, economyUnit, getActiveReportSection, getBrowseSuggestions, hasActiveBrowseFilters, hasInvalidBrowseSelection, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
+import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
 import { STATE_TAX_ESTIMATES } from './state-tax-estimates';
 import { FinancingAnalysis, PurchaseBreakdown } from './components/FinancingAnalysis';
@@ -72,14 +72,14 @@ function HomePage() {
   const popular = useListPopularVehicles();
   const trending = useListTrendingVehicles();
   const stats = useGetDiscoveryStats();
-  const selectorVehicles = useListVehicles({ limit: 100 });
+  const searchCatalogOptions = useGetCatalogOptions();
   const [q, setQ] = useState('');
   const [searchYear, setSearchYear] = useState('');
   const [searchMake, setSearchMake] = useState('');
   const [searchModel, setSearchModel] = useState('');
   const [searchTrim, setSearchTrim] = useState('');
-  const [loc, setLoc] = useLocation();
-  const options = selectorVehicles.data || [];
+  const [, setLoc] = useLocation();
+  const options = searchCatalogOptions.data || [];
   const searchYears = [...new Set(options.map(v => v.year))].sort((a, b) => b - a);
   const searchModels = [...new Set(options.filter(v => (!searchMake || v.makeSlug === searchMake) && (!searchYear || v.year === Number(searchYear))).map(v => v.model))];
   const searchTrims = [...new Set(options.filter(v => (!searchMake || v.makeSlug === searchMake) && (!searchYear || v.year === Number(searchYear)) && (!searchModel || v.model === searchModel)).map(v => v.trim))];
@@ -101,11 +101,12 @@ function HomePage() {
         <form className="hero-search-form" onSubmit={find}>
           <div className="hero-search"><Search size={18}/><input aria-label="Search vehicles" placeholder="Search 2018 BMW 340i" value={q} onChange={e => setQ(e.target.value)}/><button aria-label="Search"><ArrowRight size={19}/></button></div>
           <div className="hero-search-selects">
-            <label>Year<select value={searchYear} onChange={e => { setSearchYear(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any year</option>{searchYears.map(y => <option key={y} value={y}>{y}</option>)}</select></label>
-            <label>Make<select value={searchMake} onChange={e => { setSearchMake(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any make</option>{(makes.data || []).map(m => <option key={m.id} value={m.slug}>{m.name}</option>)}</select></label>
-            <label>Model<select value={searchModel} onChange={e => { setSearchModel(e.target.value); setSearchTrim(''); }}><option value="">Any model</option>{searchModels.map(m => <option key={m}>{m}</option>)}</select></label>
-            <label>Trim<select value={searchTrim} onChange={e => setSearchTrim(e.target.value)}><option value="">Any trim</option>{searchTrims.map(t => <option key={t}>{t}</option>)}</select></label>
+            <label>Year<select disabled={!searchCatalogOptions.data} value={searchYear} onChange={e => { setSearchYear(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any year</option>{searchYears.map(y => <option key={y} value={y}>{y}</option>)}</select></label>
+            <label>Make<select disabled={makes.isLoading || makes.isError} value={searchMake} onChange={e => { setSearchMake(e.target.value); setSearchModel(''); setSearchTrim(''); }}><option value="">Any make</option>{(makes.data || []).map(m => <option key={m.id} value={m.slug}>{m.name}</option>)}</select></label>
+            <label>Model<select disabled={!searchCatalogOptions.data} value={searchModel} onChange={e => { setSearchModel(e.target.value); setSearchTrim(''); }}><option value="">Any model</option>{searchModels.map(m => <option key={m}>{m}</option>)}</select></label>
+            <label>Trim<select disabled={!searchCatalogOptions.data} value={searchTrim} onChange={e => setSearchTrim(e.target.value)}><option value="">Any trim</option>{searchTrims.map(t => <option key={t}>{t}</option>)}</select></label>
           </div>
+          {searchCatalogOptions.isError && <div className="hero-search-catalog-error" role="status">Vehicle filters are unavailable. Search by text, or <button type="button" onClick={() => searchCatalogOptions.refetch()}>retry catalog options</button>.</div>}
           <button className="button dark hero-search-submit">Find vehicles <ArrowRight size={15}/></button>
         </form>
         <div className="hero-shortcuts">
@@ -137,38 +138,141 @@ function HomePage() {
 }
 
 function BrowsePage() {
-  const initialFilters = parseBrowseFilters(window.location.search);
-  const [q, setQ] = useState(initialFilters.q);
-  const [make, setMake] = useState(initialFilters.make);
-  const [model, setModel] = useState(initialFilters.model);
-  const [trim, setTrim] = useState(initialFilters.trim);
-  const [sort, setSort] = useState(initialFilters.sort);
-  const [year, setYear] = useState(initialFilters.year);
-  const makes = useListMakes();
-  const catalogOptions = useListVehicles({ limit: 100 });
-  const availableVehicles = catalogOptions.data || [];
-  const modelOptions = [...new Set(availableVehicles.filter(v => (!make || v.makeSlug === make) && (!year || v.year === Number(year))).map(v => v.model))];
-  const trimOptions = [...new Set(availableVehicles.filter(v => (!make || v.makeSlug === make) && (!year || v.year === Number(year)) && (!model || v.model === model)).map(v => v.trim))];
-  const filters = useMemo(() => buildVehicleListParams({ q, make, model, year, trim, sort }), [q, make, model, year, trim, sort]);
+  const [browse, setBrowse] = useState<BrowseFilters>(() => parseBrowseFilters(window.location.search));
+  const [draft, setDraft] = useState(browse.q);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const [composing, setComposing] = useState(false);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+  const [loc, setLoc] = useLocation();
+  const catalogOptions = useGetCatalogOptions();
+  const catalog = catalogOptions.data || [];
+  const suggestions = useMemo(() => getBrowseSuggestions(draft, catalog), [draft, catalog]);
+  const catalogReady = Boolean(catalogOptions.data);
+  const invalidHierarchyFilter = catalogReady && hasInvalidBrowseSelection(browse, catalog);
+
+  useEffect(() => {
+    const restoreFromUrl = () => {
+      const next = parseBrowseFilters(window.location.search);
+      setBrowse(next);
+      setDraft(next.q);
+      setSuggestionsOpen(false);
+      setActiveSuggestion(-1);
+    };
+    window.addEventListener("popstate", restoreFromUrl);
+    return () => window.removeEventListener("popstate", restoreFromUrl);
+  }, []);
+
+  useEffect(() => {
+    if (!catalogReady) return;
+    const resolved = resolveBrowseFilters(browse, catalog);
+    if (JSON.stringify(resolved) !== JSON.stringify(browse)) {
+      setBrowse(resolved);
+    }
+    const canonicalLocation = buildBrowseLocation(resolved);
+    if (canonicalLocation !== `${window.location.pathname}${window.location.search}`) {
+      setLoc(canonicalLocation, { replace: true });
+    }
+    if (resolved.q !== browse.q) setDraft(resolved.q);
+  }, [catalogReady, catalog, browse, setLoc]);
+
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !searchBoxRef.current?.contains(event.target)) {
+        setSuggestionsOpen(false);
+        setActiveSuggestion(-1);
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    return () => document.removeEventListener("pointerdown", closeOutside);
+  }, []);
+
+  const commit = (next: BrowseFilters, replace = false) => {
+    setBrowse(next);
+    setDraft(next.q);
+    setSuggestionsOpen(false);
+    setActiveSuggestion(-1);
+    const location = buildBrowseLocation(next);
+    if (location !== `${window.location.pathname}${window.location.search}`) {
+      setLoc(location, replace ? { replace: true } : undefined);
+    }
+  };
+  const updateFilters = (changes: Partial<BrowseFilters>) => {
+    const candidate = { ...browse, ...changes };
+    const next = catalogReady ? resolveBrowseFilters(candidate, catalog) : candidate;
+    commit(next);
+  };
+  const selectSuggestion = (suggestion: BrowseSuggestion) => {
+    if (suggestion.kind === "vehicle" && suggestion.profileId) {
+      setLoc(`/vehicles/${suggestion.profileId}`);
+      return;
+    }
+    if (suggestion.kind === "manufacturer") {
+      updateFilters({ q: "", make: suggestion.makeSlug, model: "", modelId: "", generationId: "", year: "", trim: "", trimId: "" });
+      return;
+    }
+    updateFilters({ q: "", make: suggestion.makeSlug, model: "", modelId: String(suggestion.modelId), generationId: "", year: "", trim: "", trimId: "" });
+  };
+  const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (composing || event.nativeEvent.isComposing) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSuggestionsOpen(true);
+      setActiveSuggestion((current) => suggestions.length ? (current + 1) % suggestions.length : -1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSuggestionsOpen(true);
+      setActiveSuggestion((current) => suggestions.length ? (current <= 0 ? suggestions.length - 1 : current - 1) : -1);
+    } else if (event.key === "Escape") {
+      setSuggestionsOpen(false);
+      setActiveSuggestion(-1);
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (suggestionsOpen && activeSuggestion >= 0 && suggestions[activeSuggestion]) {
+        selectSuggestion(suggestions[activeSuggestion]);
+      } else {
+        commit({ ...browse, q: draft.trim() });
+      }
+    }
+  };
+
+  const makeOptions = [...new Map(catalog.map((option) => [option.makeSlug, { slug: option.makeSlug, name: option.make }])).values()];
+  const scoped = catalog.filter((option) => !browse.make || option.makeSlug === browse.make);
+  const modelOptions = [...new Map(scoped.map((option) => [option.modelId, { id: option.modelId, name: option.model }])).values()];
+  const selectedModelOptions = scoped.filter((option) => !browse.modelId || String(option.modelId) === browse.modelId);
+  const generationOptions = [...new Map(selectedModelOptions.map((option) => [option.generationId, { id: option.generationId, name: option.generation }])).values()];
+  const selectedGenerationOptions = selectedModelOptions.filter((option) => !browse.generationId || String(option.generationId) === browse.generationId);
+  const yearOptions = [...new Set(selectedGenerationOptions.map((option) => option.year))].sort((a, b) => a - b);
+  const selectedYearOptions = selectedGenerationOptions.filter((option) => !browse.year || String(option.year) === browse.year);
+  const trimOptions = [...new Map(selectedYearOptions.map((option) => [option.trimId, { id: option.trimId, name: option.trim }])).values()];
+  const filters = useMemo(() => buildVehicleListParams(browse), [browse]);
   const vehicles = useListVehicles(filters);
   const [selected, setSelected] = useState<string[]>([]);
-  const [loc, setLoc] = useLocation();
-  const updateFilters = (changes: Partial<ReturnType<typeof clearBrowseFilters>>) => {
-    const next = { q, make, model, trim, sort, year, ...changes };
-    setQ(next.q);
-    setMake(next.make);
-    setModel(next.model);
-    setTrim(next.trim);
-    setSort(next.sort);
-    setYear(next.year);
-    setLoc(buildBrowseLocation(next), { replace: true });
-  };
   const toggle = (v: VehicleSummary) => setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="THE VEHICLE INDEX" title="Find the right long view." sub="Search trims, narrow the field, and see what ownership may look like beyond the purchase price." action={<span className="small-stamp"><BookOpen size={16}/> {vehicles.data?.length ?? '—'} profiles</span>}/><DemoNotice/>
-    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div><label className="field-label">Search<input data-testid="input-search-vehicles" value={q} onChange={e => updateFilters({ q: e.target.value })} placeholder="Make, model, trim"/></label><label className="field-label">Manufacturer<select value={make} onChange={e => updateFilters({ make: e.target.value, model: '', trim: '' })}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option value={m.slug} key={m.id}>{m.name}</option>)}</select></label><label className="field-label">Model year<input type="number" min="1990" max="2030" value={year} onChange={e => updateFilters({ year: e.target.value, model: '', trim: '' })} placeholder="Any year"/></label><label className="field-label">Model<select value={model} onChange={e => updateFilters({ model: e.target.value, trim: '' })}><option value="">All models</option>{modelOptions.map(m => <option key={m}>{m}</option>)}</select></label><label className="field-label">Trim<select value={trim} onChange={e => updateFilters({ trim: e.target.value })}><option value="">All trims</option>{trimOptions.map(t => <option key={t}>{t}</option>)}</select></label><label className="field-label">Order by<select value={sort} onChange={e => updateFilters({ sort: e.target.value })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label><button className="clear-filters" onClick={() => updateFilters(clearBrowseFilters())}>Clear all filters <X size={14}/></button><p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
-    <div className="results-area"><div className="results-top"><span>{vehicles.data?.length ?? 0} matches</span><span className="mono">SORT: {sort.replace('-', ' ').toUpperCase()}</span></div>
+    <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div>
+      <div className="browse-search-wrap" ref={searchBoxRef}><label className="field-label" htmlFor="browse-vehicle-search">Search</label><input id="browse-vehicle-search" data-testid="input-search-vehicles" className="browse-search-input" role="combobox" aria-autocomplete="list" aria-expanded={suggestionsOpen} aria-controls={suggestionsOpen && !catalogOptions.isLoading && !catalogOptions.isError && suggestions.length ? "browse-suggestions" : undefined} aria-activedescendant={activeSuggestion >= 0 ? `browse-suggestion-${activeSuggestion}` : undefined} value={draft} onFocus={() => setSuggestionsOpen(true)} onChange={event => { setDraft(event.target.value); setSuggestionsOpen(true); setActiveSuggestion(-1); }} onCompositionStart={() => setComposing(true)} onCompositionEnd={() => setComposing(false)} onKeyDown={handleSearchKeyDown} placeholder="Make, model, trim"/>
+        {suggestionsOpen && <div className="browse-suggestions" aria-live="polite">
+          {catalogOptions.isLoading ? <div className="browse-suggestion-status" role="status">Loading catalog suggestions…</div> :
+            catalogOptions.isError ? <div className="browse-suggestion-status" role="status">Catalog suggestions are unavailable. You can still search by text and use the existing filters. <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => catalogOptions.refetch()}>Retry</button></div> :
+              suggestions.length ? <div id="browse-suggestions" role="listbox" aria-label="Vehicle search suggestions">{suggestions.map((suggestion, index) => <button type="button" role="option" aria-selected={activeSuggestion === index} id={`browse-suggestion-${index}`} className={activeSuggestion === index ? "active" : ""} key={`${suggestion.kind}-${suggestion.profileId || suggestion.modelId || suggestion.makeSlug}`} onMouseDown={event => event.preventDefault()} onClick={() => selectSuggestion(suggestion)}><span>{suggestion.label}</span><small>{suggestion.kind === "manufacturer" ? "Browse manufacturer" : suggestion.kind === "model" ? "Browse model" : "Open vehicle report"}</small></button>)}</div> :
+                draft.trim() ? <div className="browse-suggestion-status" role="status">No catalog suggestions. Press Enter to search this text.</div> :
+                  <div className="browse-suggestion-status" role="status">Start typing to find a manufacturer, model, or vehicle.</div>}
+        </div>}
+      </div>
+      {catalogOptions.isError && <div className="catalog-options-error" role="status">Catalog filters could not be loaded. Your URL filters are preserved; retry to load complete options. <button type="button" onClick={() => catalogOptions.refetch()}>Retry catalog</button></div>}
+      {invalidHierarchyFilter && <div className="catalog-filter-mismatch" role="status">A saved vehicle filter does not match the available catalog. It remains active so results are not broadened; clear or change filters to continue.</div>}
+      <label className="field-label">Manufacturer<select disabled={!catalogReady} value={browse.make} onChange={event => updateFilters({ make: event.target.value, model: "", modelId: "", generationId: "", year: "", trim: "", trimId: "" })}><option value="">All manufacturers</option>{makeOptions.map(makeOption => <option value={makeOption.slug} key={makeOption.slug}>{makeOption.name}</option>)}</select></label>
+      <label className="field-label">Model<select disabled={!catalogReady || !browse.make} value={browse.modelId} onChange={event => updateFilters({ model: "", modelId: event.target.value, generationId: "", year: "", trim: "", trimId: "" })}><option value="">All models</option>{modelOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
+      <label className="field-label">Generation<select disabled={!catalogReady || !browse.modelId} value={browse.generationId} onChange={event => updateFilters({ generationId: event.target.value, year: "", trim: "", trimId: "" })}><option value="">All generations</option>{generationOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
+      <label className="field-label">Model year<select disabled={!catalogReady} value={browse.year} onChange={event => updateFilters({ year: event.target.value, trim: "", trimId: "" })}><option value="">All years</option>{yearOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
+      <label className="field-label">Trim<select disabled={!catalogReady} value={browse.trimId} onChange={event => updateFilters({ trim: "", trimId: event.target.value })}><option value="">All trims</option>{trimOptions.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
+      <label className="field-label">Order by<select value={browse.sort} onChange={event => updateFilters({ sort: event.target.value as BrowseFilters["sort"] })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label>
+      {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={() => { commit(clearBrowseFilters()); }} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
+    <div className="results-area"><div className="results-top"><span>{vehicles.data?.length ?? 0} profiles shown</span><span className="mono">SORT: {browse.sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}
-    </div></div>
+    </div>
+    </div>
     {selected.length > 0 && <div className="compare-dock"><span><b>{selected.length}</b> selected for comparison <small>Choose up to four vehicles</small></span><div>{selected.map(id => <button aria-label="Remove from comparison" key={id} onClick={() => setSelected(s => s.filter(x => x !== id))}><X size={13}/></button>)}</div><button className="button dark" onClick={() => setLoc(`/compare?ids=${selected.join(',')}`)}>Compare vehicles <ArrowRight size={15}/></button></div>}
   </div></Shell>;
 }
@@ -183,27 +287,73 @@ function DetailPage() {
   const { vehicleId = '' } = useParams();
   const vehicle = useGetVehicle(vehicleId);
   const reports = useListOwnerReports({ vehicleId });
-  const [activeTab, setActiveTab] = useState('Overview');
+  const [activeSection, setActiveSection] = useState("overview");
+  const detailNavRef = useRef<HTMLElement>(null);
   const [loc, setLoc] = useLocation();
+  useEffect(() => {
+    if (!vehicle.data) return;
+    const sectionIds: ReportSectionId[] = ["overview", "reliability", "costs", "reports"];
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
+    const updateActiveSection = () => {
+      const headerHeight = document.querySelector<HTMLElement>(".site-header")?.getBoundingClientRect().height ?? 72;
+      const navHeight = detailNavRef.current?.getBoundingClientRect().height ?? 44;
+      const activationLine = headerHeight + navHeight + 8;
+      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8;
+      setActiveSection(getActiveReportSection(
+        sections.map((section) => ({ id: section.id as ReportSectionId, top: section.getBoundingClientRect().top })),
+        activationLine,
+        atBottom,
+      ));
+    };
+    let animationFrame = 0;
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(updateActiveSection);
+    };
+    const observer = new IntersectionObserver(scheduleUpdate, { threshold: [0, 0.01, 0.5, 1] });
+    sections.forEach((section) => observer.observe(section));
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    scheduleUpdate();
+    const hashSection = window.location.hash.slice(1);
+    if (sectionIds.some((sectionId) => sectionId === hashSection) && !(hashSection === "reports" && reports.isLoading)) {
+      requestAnimationFrame(() => document.getElementById(hashSection)?.scrollIntoView({ block: "start", behavior: "instant" }));
+    }
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [vehicle.data, reports.isLoading]);
+  useEffect(() => {
+    detailNavRef.current?.querySelector<HTMLElement>('[aria-current="location"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeSection]);
   if (vehicle.isLoading) return <Shell><div className="content-wrap page-wrap"><LoadingBlock/></div></Shell>;
   if (vehicle.isError || !vehicle.data) return <Shell><div className="content-wrap page-wrap"><ErrorBlock retry={() => vehicle.refetch()}/></div></Shell>;
   const v = vehicle.data;
-  const tabs = ['Overview', 'Reliability', 'Ownership costs', 'Owner reports'];
+  const tabs = [
+    ["overview", "Overview"],
+    ["reliability", "Reliability"],
+    ["costs", "Ownership costs"],
+    ["reports", "Owner reports"],
+  ];
   return <Shell><div className="content-wrap page-wrap">
     <div className="crumbs"><Link href="/">Home</Link><span>/</span><Link href={`/manufacturers/${v.makeSlug}`}>{v.make}</Link><span>/</span><span>{v.model}</span></div>
     <div className="detail-hero"><div><span className="eyebrow">{v.year} · {v.generation} · {v.bodyType}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1><p>{v.overview}</p><div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>Compare this trim <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></div></div>
     <DemoNotice/>
-    <div className="spec-strip">{[[`${v.mpgCombined ?? '—'} mpg`, 'COMBINED EST.'], [v.drivetrain, 'DRIVETRAIN'], [v.fuelType, 'FUEL'], [`${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{caption}</small></div>)}</div>
-    <div className="detail-tabs">{tabs.map(t => <button className={activeTab === t ? 'active' : ''} key={t} onClick={() => { setActiveTab(t); document.getElementById(t === 'Owner reports' ? 'reports' : t === 'Ownership costs' ? 'costs' : t === 'Reliability' ? 'reliability' : 'overview')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{t}</button>)}</div>
+    <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType)}`, 'COMBINED EST.'], [v.drivetrain, 'DRIVETRAIN'], [v.fuelType, 'FUEL'], [`${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{caption}</small></div>)}</div>
+    <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>
     <div className="detail-columns">
       <div className="detail-main">
          <section id="overview" className="detail-section"><span className="eyebrow">01 / POWERTRAIN & TRIM</span><h2 className="serif">What this vehicle is.</h2><p className="body-copy">This profile represents the {v.year} {v.make} {v.model} {v.trim} in the {v.generation}. Specifications and availability vary by market and configuration; confirm against the original window sticker and manufacturer documentation.</p><div className="powertrain-grid"><div><span className="eyebrow">FEATURED ENGINE</span><h3>{v.engineName}</h3>{v.engines.map((e, index) => <p className="option-line" key={`${e.name}-${index}`}><b>{e.name}</b><span>{e.horsepower} hp · {e.fuelType}</span><small>{e.availability}</small></p>)}</div><div><span className="eyebrow">FEATURED TRANSMISSION</span><h3>{v.transmissionName}</h3>{v.transmissions.map(t => <p className="option-line" key={t.name}><b>{t.name}</b><span>{t.gears}</span><small>{t.availability}</small></p>)}</div></div><div className="trim-note"><span className="eyebrow">SIBLING TRIMS</span><div>{v.siblingTrims.map(trim => <span className="pill" key={trim}>{trim}</span>)}</div></div></section>
-        <section id="reliability" className="detail-section"><span className="eyebrow">02 / PATTERNS, NOT PROMISES</span><h2 className="serif">Reliability, with context.</h2><div className="reliability-panel"><Reliability score={v.reliability.score} size="large"/><div><h3>{v.reliability.label}</h3><p>{v.reliability.note}</p><small>Illustrative score out of 10; not a prediction or verified reliability rating.</small></div></div><h3 className="subhead">Reported problem areas</h3>{v.commonProblems.length ? v.commonProblems.map((p, i) => <div className="problem-row" key={p.title}><span className={`severity severity-${p.severity.toLowerCase()}`}>{p.severity}</span><div><h4>{p.title}</h4><p>{p.description}</p><small>Typical range: {p.typicalMileageStart.toLocaleString()}–{p.typicalMileageEnd.toLocaleString()} miles</small></div><b>{money(p.repairCostLowUsd)}–{money(p.repairCostHighUsd)}<small>repair estimate</small></b></div>) : <EmptyBlock title="No problem patterns listed" text="This demo profile has no illustrative problem records."/>}</section>
+        <section id="reliability" className="detail-section"><span className="eyebrow">02 / PATTERNS, NOT PROMISES</span><h2 className="serif">Reliability, with context.</h2><div className="reliability-panel"><Reliability score={v.reliability.score} size="large"/><div><h3>{v.reliability.label}</h3><p>{v.reliability.note}</p><small>Illustrative score out of 10; not a prediction or verified reliability rating.</small></div></div><h3 className="subhead">Reported problem areas</h3>{v.commonProblems.length ? v.commonProblems.map((p) => <div className="problem-row" key={p.title}><span className={`severity severity-${p.severity.toLowerCase()}`}>{p.severity}</span><div><h4>{p.title}</h4><p>{p.description}</p><small className={`problem-applicability ${p.applicability === "unknown" ? "unknown" : ""}`}>{p.applicability === "applies" ? "Listed for this selected engine" : "Engine applicability unknown — confirm the exact configuration"}</small><small>Typical range: {p.typicalMileageStart.toLocaleString()}–{p.typicalMileageEnd.toLocaleString()} miles</small></div><b>{money(p.repairCostLowUsd)}–{money(p.repairCostHighUsd)}<small>repair estimate</small></b></div>) : <EmptyBlock title="No problem patterns listed" text="This demo profile has no illustrative problem records."/>}</section>
         <section id="costs" className="detail-section"><span className="eyebrow">03 / THE COST OF KEEPING IT</span><h2 className="serif">Ownership costs, itemized.</h2><div className="cost-summary"><div><span>ANNUAL OWNERSHIP EST.</span><b>{money(v.annualOwnershipEstimateUsd)}</b></div><div><span>MAINTENANCE / YEAR</span><b>{money(v.annualMaintenanceEstimateUsd)}</b></div><div><span>REPAIRS / YEAR</span><b>{money(v.annualRepairEstimateUsd)}</b></div><div><span>FUEL / YEAR</span><b>{money(v.annualFuelEstimateUsd)}</b></div><div><span>INSURANCE / YEAR</span><b>{money(v.insuranceEstimateUsd)}</b></div></div><h3 className="subhead">Routine maintenance estimates</h3>{v.maintenance.map(m => <div className="maintenance-row" key={m.item}><Wrench size={16}/><b>{m.item}</b><span>Every {m.intervalMiles.toLocaleString()} miles</span><strong>{money(m.estimatedCostUsd)}</strong></div>)}<div className="depreciation-panel"><div><span className="eyebrow">FIVE-YEAR VALUE CHANGE</span><b>{v.fiveYearDepreciationPercent}%</b><small>illustrative depreciation estimate</small></div><div><span className="eyebrow">EXPECTED LIFESPAN</span><b>{v.expectedLifespanMiles.toLocaleString()} <small>miles</small></b><small>not a guarantee</small></div></div></section>
         <section className="detail-section"><span className="eyebrow">04 / BEFORE YOU BUY</span><h2 className="serif">A practical inspection list.</h2><p className="body-copy">A pre-purchase inspection by an independent mechanic is worth the time. Use this as a starting point, not a substitute.</p><div className="checklist">{v.inspectionChecklist.map(item => <label key={item}><input type="checkbox"/><span>{item}</span></label>)}</div></section>
         <section id="reports" className="detail-section"><span className="eyebrow">05 / OWNER EXPERIENCES</span><h2 className="serif">Life with this vehicle.</h2><p className="body-copy">Owner reports are sample stories for demonstration. They do not establish population-wide reliability.</p>{reports.isLoading ? <LoadingBlock/> : reports.isError ? <ErrorBlock retry={() => reports.refetch()}/> : reports.data?.length ? reports.data.map(r => <article className="report-card" key={r.id}><div className="report-heading"><span className="avatar-initial">{r.displayName.slice(0, 1)}</span><div><b>{r.displayName}</b><small>{r.ownershipMonths} months · {r.milesDriven.toLocaleString()} miles</small></div><span className="report-rating">{r.rating.toFixed(1)} / 5</span></div><h3>{r.title}</h3><p>{r.body}</p>{r.reportedProblem && <div className="reported-problem"><Wrench size={14}/> Reported issue: {r.reportedProblem}</div>}<span className="demo-tag">SAMPLE OWNER REPORT</span></article>) : <EmptyBlock title="No owner reports yet" text="There are no sample experiences associated with this trim."/ >}</section>
       </div>
       <aside className="detail-aside"><div className="aside-card"><span className="eyebrow"><Shield size={14}/> SAFETY & RECALLS</span><h3>Verify directly.</h3><p>Safety ratings and open recalls change. Always check this exact VIN with official sources before buying.</p><div className="status-line"><span>Demo recall status</span><b>{v.recallStatus}</b></div><div className="status-line"><span>Demo safety status</span><b>{v.safetyStatus}</b></div><a className="official-link" href="https://www.nhtsa.gov/recalls" target="_blank" rel="noreferrer">Check recalls at NHTSA <ArrowUpRight size={14}/></a><a className="official-link" href="https://www.nhtsa.gov/ratings" target="_blank" rel="noreferrer">NHTSA safety ratings <ArrowUpRight size={14}/></a></div><div className="aside-card cost-callout"><Calculator size={19}/><h3>Make it personal.</h3><p>Adjust the assumptions to estimate a monthly cost that fits your driving.</p><Link href={`/calculator?vehicle=${v.id}`} className="text-link">Open calculator <ArrowRight size={15}/></Link></div><div className="aside-note"><Info size={15}/><span>All figures on this page are DEMO / ESTIMATE values. Confirm specifications, maintenance schedules, and safety details with the manufacturer and official sources.</span></div></aside>
+    </div>
     </div>
   </div></Shell>;
 }
@@ -239,7 +389,7 @@ function ComparePage() {
   const matches = (catalog.data || []).filter(v => `${v.make} ${v.model} ${v.year}`.toLowerCase().includes(search.toLowerCase()) && !ids.includes(v.id)).slice(0, 5);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="SIDE BY SIDE" title="Compare what ownership feels like." sub="Line up up to four vehicles. Estimates are useful for framing questions—not declaring a winner."/><DemoNotice/><div className="compare-picker"><div className="picker-search"><Search size={16}/><input aria-label="Add a vehicle by make or model" aria-describedby="comparison-selection-status" placeholder="Add a vehicle by make or model" value={search} disabled={atLimit} onChange={e => setSearch(e.target.value)}/></div>{showSuggestions && <div className="picker-results">{catalog.isLoading ? <span>Loading vehicles…</span> : catalog.isError ? <span>Vehicle choices couldn't load. Please refresh to try again.</span> : matches.length ? matches.map(v => <button key={v.id} onClick={() => add(v.id)}>{label(v)} <span>{money(v.annualOwnershipEstimateUsd)} / yr est.</span><ArrowRight size={14}/></button>) : <span>No matching vehicles. Try another make or model.</span>}</div>}<span id="comparison-selection-status" className={`picker-count${atLimit ? ' at-limit' : ''}`} role="status">{ids.length} of 4 vehicles selected{atLimit && <small>Remove a vehicle to add another.</small>}</span></div>
     {ids.length === 0 ? <EmptyBlock title="Start your comparison" text="Search above or browse the catalog to add vehicles. Your selection stays in this URL so it is easy to revisit."/> : <div className="compare-table-wrap"><table className="compare-table"><thead><tr><th>Research point</th>{selected.map(id => <CompareColumn key={id} id={id} onRemove={remove}/>)}</tr></thead><tbody>
-       <CompareRow label="Vehicle" render={d => `${d.year} ${d.make} ${d.model} ${d.trim}`}/><CompareRow label="Generation" render={d => d.generation}/><CompareRow label="Estimated reliability" render={d => `${d.reliability.score.toFixed(1)} / 10 · ${d.reliability.label}`}/><CompareRow label="Annual ownership estimate" render={d => money(d.annualOwnershipEstimateUsd)}/><CompareRow label="Maintenance / year" render={d => money(d.annualMaintenanceEstimateUsd)}/><CompareRow label="Repairs / year" render={d => money(d.annualRepairEstimateUsd)}/><CompareRow label="Fuel / year" render={d => money(d.annualFuelEstimateUsd)}/><CompareRow label="Insurance / year" render={d => money(d.insuranceEstimateUsd)}/><CompareRow label="Combined fuel economy" render={d => d.mpgCombined ? `${d.mpgCombined} ${d.fuelType === 'Electric' ? 'MPGe' : 'mpg'}` : 'Not listed'}/><CompareRow label="Powertrain" render={d => `${d.engineName} · ${d.transmissionName}`}/><CompareRow label="Five-year depreciation" render={d => `${d.fiveYearDepreciationPercent}% est.`}/><CompareRow label="Expected lifespan" render={d => `${d.expectedLifespanMiles.toLocaleString()} miles est.`}/><CompareRow label="Open recalls / safety" render={d => `Recall: ${d.recallStatus} · Safety: ${d.safetyStatus}`}/>
+       <CompareRow label="Vehicle" render={d => `${d.year} ${d.make} ${d.model} ${d.trim}`}/><CompareRow label="Generation" render={d => d.generation}/><CompareRow label="Estimated reliability" render={d => `${d.reliability.score.toFixed(1)} / 10 · ${d.reliability.label}`}/><CompareRow label="Annual ownership estimate" render={d => money(d.annualOwnershipEstimateUsd)}/><CompareRow label="Maintenance / year" render={d => money(d.annualMaintenanceEstimateUsd)}/><CompareRow label="Repairs / year" render={d => money(d.annualRepairEstimateUsd)}/><CompareRow label="Fuel / year" render={d => money(d.annualFuelEstimateUsd)}/><CompareRow label="Insurance / year" render={d => money(d.insuranceEstimateUsd)}/><CompareRow label="Combined fuel economy" render={d => d.mpgCombined ? `${d.mpgCombined} ${economyUnit(d.fuelType)}` : 'Not listed'}/><CompareRow label="Powertrain" render={d => `${d.engineName} · ${d.transmissionName}`}/><CompareRow label="Five-year depreciation" render={d => `${d.fiveYearDepreciationPercent}% est.`}/><CompareRow label="Expected lifespan" render={d => `${d.expectedLifespanMiles.toLocaleString()} miles est.`}/><CompareRow label="Open recalls / safety" render={d => `Recall: ${d.recallStatus} · Safety: ${d.safetyStatus}`}/>
     </tbody></table></div>}
     <p className="compare-foot"><Info size={15}/>Compare like-for-like years and trims where possible. Local market, condition, driving habits and repair history can outweigh broad estimates.</p>
   </div></Shell>;
@@ -273,7 +423,7 @@ function CalculatorPage() {
   const [taxMode, setTaxMode] = useState<'financed' | 'upfront'>('financed');
   const numbers = readOwnershipDraft(draft);
   const { insurance, maintenance, repairs } = numbers;
-  const vehicleIsElectric = Boolean(vehicleId) && vehicle.data?.fuelType.toLowerCase() === 'electric';
+  const vehicleIsElectric = Boolean(vehicleId) && economyUnit(vehicle.data?.fuelType || "") === "MPGe";
   const financing = calculateFinancingEstimate({ price: numbers.price, down: numbers.down, apr: numbers.apr, term, salesTaxRate: parseCalculatorNumber(taxRate), dealerFees: parseCalculatorNumber(dealerFees), taxesAndFeesPayment: taxMode });
   const { fuel } = calculateOwnershipEstimate({ ...numbers, price: financing.amountFinanced, down: 0, term, vehicleIsElectric });
   const payment = financing.monthlyLoanPayment;
