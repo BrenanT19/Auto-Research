@@ -9,13 +9,26 @@ pnpm --filter @workspace/scripts test:auto-research
 The suite includes unit checks for optional calculator lookups, loan/fuel
 estimates, purchase taxes/fees, down-payment caps, cent-rounded amortization,
 browse filters and URL cleanup, and comparison limits/URL state. Its
-read-only API checks require the API Server development workflow and the seeded
-demo database to be running locally. They use only `GET /api/vehicles` and
-reject API base URLs outside `localhost`, `127.0.0.1`, or `::1`; do not point
-these checks at production.
+read-only API checks create a temporary database from fixed demo fixtures, start
+a local API server against it, and make `GET /api/vehicles` requests. The runner
+requires `AUTO_RESEARCH_TEST_DATABASE_URL`; it accepts only a local PostgreSQL
+URL whose database name is exactly `auto_research_test`, creates a uniquely
+named database for the run, and drops it afterward. It does not use
+`DATABASE_URL` or contact a running development or production API.
 
-CI should provision the development/test database with its demo fixtures, start
-the local API workflow, then run the command above.
+For local use and CI, provision a local PostgreSQL service with an
+`auto_research_test` database and a role allowed to create databases, then run
+the same command:
+
+```sh
+export AUTO_RESEARCH_TEST_DATABASE_URL=postgresql://postgres:test@127.0.0.1:5432/auto_research_test
+pnpm --filter @workspace/scripts test:auto-research
+```
+
+CI should provide that PostgreSQL service and URL as job configuration. Do not
+set this variable to a hosted database or use `DATABASE_URL` as a substitute.
+The browser smoke check below remains a separate manual check against the local
+development workflows and their demo database.
 
 ## Browser smoke check
 

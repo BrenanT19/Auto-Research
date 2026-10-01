@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "hello": "tsx ./src/hello.ts",
-    "test:auto-research": "tsx --test ../artifacts/auto-research/tests/shopper-tools.test.ts",
+    "test:auto-research": "node ../lib/db/scripts/auto-research-test-runner.mjs",
+    "test:auto-research:checks": "tsx --test ../artifacts/auto-research/tests/shopper-tools.test.ts",
+    "test:auto-research:safety": "node --test ./tests/auto-research-test-safety.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
