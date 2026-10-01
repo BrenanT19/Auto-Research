@@ -27,13 +27,9 @@ export type CatalogOption = {
   trim: string;
 };
 
-export type BrowseSuggestion = {
-  kind: "manufacturer" | "model" | "vehicle";
-  label: string;
-  makeSlug: string;
-  modelId?: number;
-  profileId?: string;
-};
+export type BrowseSuggestion =
+  | { kind: "manufacturer"; label: string; makeSlug: string }
+  | { kind: "model"; label: string; makeSlug: string; modelId: number };
 
 export type ReportSectionId = "overview" | "reliability" | "costs" | "reports";
 
@@ -165,21 +161,16 @@ export function getBrowseSuggestions(query: string, options: CatalogOption[], li
   if (!term) return [];
   const makes = new Map<string, BrowseSuggestion>();
   const models = new Map<string, BrowseSuggestion>();
-  const vehicles = new Map<string, BrowseSuggestion>();
   for (const option of options) {
     makes.set(option.makeSlug, {
-      kind: "manufacturer", label: `${option.make} — Manufacturer`, makeSlug: option.makeSlug,
+      kind: "manufacturer", label: option.make, makeSlug: option.makeSlug,
     });
     models.set(`${option.makeSlug}:${option.modelId}`, {
-      kind: "model", label: `${option.make} ${option.model} — Model`,
+      kind: "model", label: `${option.make} ${option.model}`,
       makeSlug: option.makeSlug, modelId: option.modelId,
     });
-    vehicles.set(option.profileId, {
-      kind: "vehicle", label: `${option.year} ${option.make} ${option.model} ${option.trim} — Vehicle/configuration`,
-      makeSlug: option.makeSlug, modelId: option.modelId, profileId: option.profileId,
-    });
   }
-  const candidates = [...makes.values(), ...models.values(), ...vehicles.values()]
+  const candidates = [...makes.values(), ...models.values()]
     .map((suggestion) => {
       const searchable = normalized(suggestion.label.replace(/\s+—\s+.*/, ""));
       const words = searchable.split(" ");

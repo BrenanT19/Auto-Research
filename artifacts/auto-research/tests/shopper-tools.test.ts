@@ -472,11 +472,22 @@ test("browse state preserves invalid filters, normalizes sorts, and detects acti
   assert.equal(hasActiveBrowseFilters({ ...clearBrowseFilters(), sort: "reliability" }), true);
 });
 
-test("browse suggestions are catalog-derived, scoped, ranked, and deterministic", () => {
+test("browse suggestions include only clean manufacturer and model results", () => {
+  const teslaSuggestions = getBrowseSuggestions("Tes", browseCatalog);
+  assert.deepEqual(
+    teslaSuggestions.map(({ label, kind }) => ({ label, kind })),
+    [
+      { label: "Tesla", kind: "manufacturer" },
+      { label: "Tesla Model Y", kind: "model" },
+    ],
+  );
+
   const suggestions = getBrowseSuggestions("tesla model y", browseCatalog);
   assert.ok(suggestions.length > 0);
   assert.equal(suggestions[0]?.kind, "model");
-  assert.ok(suggestions.some((suggestion) => suggestion.profileId === "tesla-model-y-2024-long-range"));
+  assert.ok(suggestions.some((suggestion) => suggestion.label === "Tesla Model Y"));
+  assert.ok(suggestions.every((suggestion) => suggestion.kind === "manufacturer" || suggestion.kind === "model"));
+  assert.equal(getBrowseSuggestions("Long Range", browseCatalog).length, 0);
   assert.equal(getBrowseSuggestions("  ", browseCatalog).length, 0);
   assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1).length, 1);
   assert.equal(getBrowseSuggestions("Ford F-150", browseCatalog, 1)[0]?.kind, "model");
