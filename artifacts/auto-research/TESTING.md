@@ -79,6 +79,19 @@ unchanged 700px/390px responsive layouts, and a single uninterrupted Clear All
 scroll while the real reset request is delayed. A browser-only results spacer
 checks sticky reachability deep into a long page without changing vehicle data.
 
+## Vehicle report section navigation
+
+```sh
+pnpm --filter @workspace/auto-research test:report-navigation:ui
+```
+
+Use the same Chromium executable override described above. The tests physically
+click repeated sequential and non-sequential section links on Dodge Charger and
+Tesla Model Y reports, assert immediate and settled active indicators, and use
+mouse-wheel input to track sections upward and downward. They also cover rapid
+retargeting, user interruption, reduced motion, and initial fragment links.
+These checks do not modify vehicle data or report content.
+
 ## Browser smoke check
 
 Run with the Auto Research web workflow and API Server workflow running against

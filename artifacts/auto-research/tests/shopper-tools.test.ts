@@ -699,6 +699,7 @@ test("report navigation tracks the last section across the activation line and r
   assert.equal(getActiveReportSection(positions, 100), "costs");
   assert.equal(getActiveReportSection(positions, 72, true), "reports");
   assert.equal(getActiveReportSection([], 72), "overview");
+  assert.equal(getActiveReportSection([{ id: "overview", top: -300 }, { id: "reliability", top: 128.14 }], 128), "reliability");
 });
 
 test("comparison URL state supports removal and stops at four distinct vehicles", () => {

@@ -9,13 +9,14 @@ import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } f
 import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
-import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, economyUnit, getActiveReportSection, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, calculateOwnershipEstimate, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
 import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
 import { STATE_TAX_ESTIMATES } from './state-tax-estimates';
 import { FinancingAnalysis, PurchaseBreakdown } from './components/FinancingAnalysis';
 import { GenerationSelect } from './components/GenerationSelect';
 import { useBrowseResetScroll } from './hooks/use-browse-reset-scroll';
+import { useReportNavigation } from './hooks/use-report-navigation';
 
 const queryClient = new QueryClient();
 const money = (n?: number | null) => n == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -296,48 +297,8 @@ function DetailPage() {
   const { vehicleId = '' } = useParams();
   const vehicle = useGetVehicle(vehicleId);
   const reports = useListOwnerReports({ vehicleId });
-  const [activeSection, setActiveSection] = useState("overview");
-  const detailNavRef = useRef<HTMLElement>(null);
+  const { activeSection, detailNavRef, navigateToSection } = useReportNavigation(vehicleId, Boolean(vehicle.data), reports.isLoading);
   const [loc, setLoc] = useLocation();
-  useEffect(() => {
-    if (!vehicle.data) return;
-    const sectionIds: ReportSectionId[] = ["overview", "reliability", "costs", "reports"];
-    const sections = sectionIds.map((id) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
-    const updateActiveSection = () => {
-      const headerHeight = document.querySelector<HTMLElement>(".site-header")?.getBoundingClientRect().height ?? 72;
-      const navHeight = detailNavRef.current?.getBoundingClientRect().height ?? 44;
-      const activationLine = headerHeight + navHeight + 8;
-      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8;
-      setActiveSection(getActiveReportSection(
-        sections.map((section) => ({ id: section.id as ReportSectionId, top: section.getBoundingClientRect().top })),
-        activationLine,
-        atBottom,
-      ));
-    };
-    let animationFrame = 0;
-    const scheduleUpdate = () => {
-      cancelAnimationFrame(animationFrame);
-      animationFrame = requestAnimationFrame(updateActiveSection);
-    };
-    const observer = new IntersectionObserver(scheduleUpdate, { threshold: [0, 0.01, 0.5, 1] });
-    sections.forEach((section) => observer.observe(section));
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-    scheduleUpdate();
-    const hashSection = window.location.hash.slice(1);
-    if (sectionIds.some((sectionId) => sectionId === hashSection) && !(hashSection === "reports" && reports.isLoading)) {
-      requestAnimationFrame(() => document.getElementById(hashSection)?.scrollIntoView({ block: "start", behavior: "instant" }));
-    }
-    return () => {
-      cancelAnimationFrame(animationFrame);
-      observer.disconnect();
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-    };
-  }, [vehicle.data, reports.isLoading]);
-  useEffect(() => {
-    detailNavRef.current?.querySelector<HTMLElement>('[aria-current="location"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  }, [activeSection]);
   if (vehicle.isLoading) return <Shell><div className="content-wrap page-wrap"><LoadingBlock/></div></Shell>;
   if (vehicle.isError || !vehicle.data) return <Shell><div className="content-wrap page-wrap"><ErrorBlock retry={() => vehicle.refetch()}/></div></Shell>;
   const v = vehicle.data;
@@ -352,7 +313,7 @@ function DetailPage() {
     <div className="detail-hero"><div><span className="eyebrow">{v.year} · {v.generation} · {v.bodyType}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1><p>{v.overview}</p><div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>Compare this trim <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></div></div>
     <DemoNotice/>
     <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType)}`, 'COMBINED EST.'], [v.drivetrain, 'DRIVETRAIN'], [v.fuelType, 'FUEL'], [`${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{caption}</small></div>)}</div>
-    <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>
+    <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} onClick={event => { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigateToSection(id as ReportSectionId); }} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>
     <div className="detail-columns">
       <div className="detail-main">
          <section id="overview" className="detail-section"><span className="eyebrow">01 / POWERTRAIN & TRIM</span><h2 className="serif">What this vehicle is.</h2><p className="body-copy">This profile represents the {v.year} {v.make} {v.model} {v.trim} in the {v.generation}. Specifications and availability vary by market and configuration; confirm against the original window sticker and manufacturer documentation.</p><div className="powertrain-grid"><div><span className="eyebrow">FEATURED ENGINE</span><h3>{v.engineName}</h3>{v.engines.map((e, index) => <p className="option-line" key={`${e.name}-${index}`}><b>{e.name}</b><span>{e.horsepower} hp · {e.fuelType}</span><small>{e.availability}</small></p>)}</div><div><span className="eyebrow">FEATURED TRANSMISSION</span><h3>{v.transmissionName}</h3>{v.transmissions.map(t => <p className="option-line" key={t.name}><b>{t.name}</b><span>{t.gears}</span><small>{t.availability}</small></p>)}</div></div><div className="trim-note"><span className="eyebrow">SIBLING TRIMS</span><div>{v.siblingTrims.map(trim => <span className="pill" key={trim}>{trim}</span>)}</div></div></section>

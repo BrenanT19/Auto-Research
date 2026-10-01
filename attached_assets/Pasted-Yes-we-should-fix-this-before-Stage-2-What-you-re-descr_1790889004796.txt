@@ -1,0 +1,69 @@
+Yes — we should fix this before Stage 2. What you're describing means the section-navigation logic is still slightly out of sync with the actual scroll position.
+It sounds like this sequence can happen:
+Click Reliability → page moves to Reliability → yellow indicator stays on Overview.
+Click Ownership Costs → page moves → indicator catches up to Reliability.
+That's essentially a one-section lag, probably caused by how the scroll observer determines which section has crossed its activation point after programmatic scrolling. We shouldn't compensate by changing offsets blindly; Replit should reproduce it and fix the underlying interaction.
+Send this in Build mode:
+There is one remaining bug in the individual Vehicle Research report section navigation that needs to be fixed before we move on.
+The sticky section navigation currently contains:
+Overview → Reliability → Ownership Costs → Owner Reports
+The page scrolls to the correct section when I click a navigation item, but the yellow active-section underline/highlight is sometimes one section behind or otherwise out of sync.
+For example, I can reproduce behavior like:
+- Click Reliability → the page scrolls to Reliability, but the yellow underline does not immediately move to Reliability.
+- Click Ownership Costs → the page scrolls toward Ownership Costs, but the yellow underline may only then move to Reliability.
+- Click another section and the highlight may catch up afterward.
+- Repeating clicks sometimes causes it to start behaving correctly.
+This makes the navigation feel delayed/inconsistent.
+Please reproduce this in the actual running Vehicle Research page and diagnose the underlying interaction between anchor clicks, smooth scrolling, sticky-header offsets, and the scroll-aware active-section observer.
+Required behavior
+When a user clicks a section-navigation item:
+1. The page should smoothly scroll to the intended section.
+2. The yellow active indicator should respond immediately to the clicked section.
+3. Once scrolling settles, the viewport/section observer should confirm and continue controlling the active section.
+4. The highlight must not lag one section behind.
+When the user manually scrolls:
+- The active yellow indicator should automatically follow the section currently being viewed.
+- Overview should activate when the user returns to Overview.
+- Reliability should activate while viewing Reliability.
+- Ownership Costs should activate while viewing Ownership Costs.
+- Owner Reports should activate while viewing Owner Reports.
+- Scrolling upward must update the indicator just as reliably as scrolling downward.
+Important
+Do not solve this with arbitrary long timeouts or by permanently locking the active state to the last clicked item.
+Inspect the actual cause. In particular, check:
+- IntersectionObserver thresholds/root margins
+- sticky site-header height
+- sticky report-navigation height
+- anchor/scroll offsets
+- smooth-scroll timing
+- multiple sections being considered intersecting simultaneously
+- click state being immediately overwritten by stale observer callbacks
+- whether section activation is based on the wrong viewport boundary
+- short sections near the bottom of the report
+A good implementation can give the clicked section immediate active feedback while programmatic scrolling occurs, then hand control back to the scroll-position logic once the target reaches the intended activation position.
+Use one deterministic rule for deciding which section is currently active. Do not create separate contradictory systems for click navigation and manual scrolling.
+Verify this through actual interaction, not only state/unit tests.
+Test this sequence several times:
+Overview → Reliability → Ownership Costs → Owner Reports
+Then manually scroll:
+Owner Reports → Ownership Costs → Reliability → Overview
+Also test non-sequential navigation:
+Overview → Owner Reports → Reliability → Ownership Costs → Overview
+Confirm that the yellow indicator responds correctly on every click and continues following manual scrolling afterward.
+Test more than one current vehicle report to ensure this is shared report-navigation behavior and not a Dodge-specific fix.
+Preserve:
+- existing report design
+- sticky navigation
+- section content
+- vehicle data
+- Browse Cars
+- Compare
+- Calculator
+- Community
+- routes/API/schema
+Do not redesign the report or change automotive content. This is specifically a section-navigation synchronization bug fix.
+At completion, tell me:
+1. What caused the active indicator to lag behind.
+2. What logic was changed.
+3. How click navigation and manual-scroll tracking now coordinate.
+4. Which actual click/scroll sequences you verified in the running preview.

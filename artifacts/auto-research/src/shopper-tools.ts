@@ -64,7 +64,9 @@ export function getActiveReportSection(
   atBottom = false,
 ): ReportSectionId {
   if (atBottom) return "reports";
-  return positions.filter((section) => section.top <= activationLine).at(-1)?.id ?? "overview";
+  // Native scroll positions are integer-rounded while section boxes can be
+  // fractional CSS pixels. Treat an aligned section within one pixel as reached.
+  return positions.filter((section) => section.top <= activationLine + 1).at(-1)?.id ?? "overview";
 }
 
 export function parseBrowseFilters(search: string): BrowseFilters {

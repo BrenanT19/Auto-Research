@@ -5,3 +5,4 @@
 - [Calculator accounting choices](calculator-accounting-choices.md) — loan totals reconcile to cent-rounded schedules; default tax assumptions must not invent a shopper's location.
 - [Local PostgreSQL sockets](local-postgres-sockets.md) — temporary clusters may need an explicit Unix-socket directory instead of the absent `/run/postgresql`.
 - [Embedded dropdown verification](embedded-dropdown-interactions.md) — native popup visibility is not proof of mouse selection; verify option clicks and resulting state.
+- [Report navigation coordination](report-navigation-coordination.md) — shared activation boundary; transient click feedback must survive stale completion events and hand back to manual tracking.

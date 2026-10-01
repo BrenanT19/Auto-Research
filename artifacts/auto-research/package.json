@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:generation:ui": "playwright test --config playwright.config.ts tests/browser/generation.spec.ts",
     "test:browse:ui": "playwright test --config playwright.config.ts",
+    "test:report-navigation:ui": "playwright test --config playwright.config.ts tests/browser/report-navigation.spec.ts",
     "test:clear-filters:ui": "playwright test --config playwright.config.ts tests/browser/browse-clear-filters.spec.ts"
   },
   "devDependencies": {
