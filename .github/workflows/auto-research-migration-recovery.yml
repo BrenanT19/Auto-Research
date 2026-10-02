@@ -10,11 +10,17 @@ permissions:
 
 jobs:
   interrupted-migration-recovery:
+    name: Interrupted migration recovery (PostgreSQL ${{ matrix.postgres }})
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in sync with the supported versions in artifacts/auto-research/TESTING.md.
+        postgres: [16, 17]
     services:
       postgres:
-        image: postgres:16
+        image: postgres:${{ matrix.postgres }}
         env:
           POSTGRES_DB: auto_research_test
           POSTGRES_USER: postgres

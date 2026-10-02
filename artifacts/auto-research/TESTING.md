@@ -32,12 +32,28 @@ export AUTO_RESEARCH_TEST_DATABASE_URL=postgresql://postgres:test@127.0.0.1:5432
 pnpm --filter @workspace/scripts test:auto-research
 ```
 
-The GitHub Actions workflow in `.github/workflows/auto-research-migration-recovery.yml`
-starts its own PostgreSQL 16 service, creates `auto_research_test`, and runs only
-the interruption recovery command. It sets the test URL to the service at
-`127.0.0.1` and deliberately does not define `DATABASE_URL`. The runner requires
-the explicit test URL, rejects hosted targets, and never uses `DATABASE_URL` as
-a fallback. Do not point the test URL at a hosted database.
+### Supported PostgreSQL versions
+
+Auto Research supports PostgreSQL major versions **16 and 17**. Version 16 is
+the existing baseline; version 17 is the additional compatibility target.
+Other major versions are not currently part of the project's support contract.
+Use the latest minor release of either supported major version. When changing
+this list, update the CI matrix in
+`.github/workflows/auto-research-migration-recovery.yml` at the same time.
+
+That GitHub Actions workflow runs the focused interruption recovery command
+once per supported major version, using the corresponding `postgres:16` or
+`postgres:17` service image. Each matrix job has its own runner, local PostgreSQL
+service, and `auto_research_test` database; the test creates and drops its own
+uniquely named disposable database within that service. Matrix jobs do not
+cancel one another when a version fails, so every supported version is checked.
+
+Each job sets the test URL to its service at `127.0.0.1` and deliberately does
+not define `DATABASE_URL`. The runner requires the explicit test URL, rejects
+hosted targets, and never uses `DATABASE_URL` as a fallback. Migration
+subprocesses receive `DATABASE_URL` only after the runner has replaced it with
+the newly created disposable database URL. Do not point the test URL at a
+hosted database.
 
 The browser regressions and manual smoke check below run separately against the
 development workflows and their existing catalog. They do not write data.

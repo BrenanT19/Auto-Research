@@ -48,6 +48,33 @@ test("test database selection never falls back to DATABASE_URL", () => {
   );
 });
 
+test("explicit safe test target takes precedence over an unrelated DATABASE_URL", () => {
+  const testUrl = "postgresql://test-user:example@127.0.0.1:5432/auto_research_test";
+  assert.deepEqual(
+    getSafeTestDatabaseUrl({
+      AUTO_RESEARCH_TEST_DATABASE_URL: testUrl,
+      DATABASE_URL: "postgresql://hosted.example.com:5432/production",
+    }),
+    { connectionString: testUrl, databaseName: "auto_research_test" },
+  );
+});
+
+test("invalid explicit test targets cannot fall back to a safe DATABASE_URL", () => {
+  for (const testUrl of [
+    "",
+    "postgresql://hosted.example.com:5432/auto_research_test",
+    "postgresql://localhost:5432/production",
+  ]) {
+    assert.throws(
+      () => getSafeTestDatabaseUrl({
+        AUTO_RESEARCH_TEST_DATABASE_URL: testUrl,
+        DATABASE_URL: "postgresql://localhost:5432/auto_research_test",
+      }),
+      /AUTO_RESEARCH_TEST_DATABASE_URL/,
+    );
+  }
+});
+
 test("temporary database metadata must match the runner name and run ID", () => {
   const createdAt = new Date("2026-10-01T12:00:00.000Z");
   const comment = formatTemporaryDatabaseComment(runnerRunId, createdAt);
