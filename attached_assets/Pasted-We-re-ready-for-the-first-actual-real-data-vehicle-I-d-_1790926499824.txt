@@ -1,0 +1,88 @@
+We’re ready for the first actual real-data vehicle.
+I’d start with the 2024 Ford Mustang EcoBoost Fastback — 2.3L turbo, 10-speed automatic, RWD, U.S. market. It’s intentionally simpler than an F-150 or PHEV and is a good way to prove the entire pipeline before we tackle harder configurations. Your Stage 2B plan included it for exactly that reason.    Pasted text
+I also checked the current public source situation before writing this prompt. NHTSA’s current terms say information on its website is public information that may be copied/distributed, while EPA says EPA-produced data is generally public domain unless otherwise specified; however, individual EPA documents/datasets can have different conditions. So we should still make Replit verify the specific dataset/use rather than assuming every government-hosted item has identical rights. NHTSA
+Ford’s official 2024 Mustang technical specifications also support the basic candidate identity—EcoBoost Fastback, 2.3L EcoBoost, RWD and 10-speed automatic—but Replit should independently re-fetch and document the current primary material before creating the canonical record. Ford From the Road
+Put Replit in Build mode and send this
+STAGE 2B — PILOT VEHICLE #1: 2024 FORD MUSTANG ECOBOOST FASTBACK
+Begin the first real-data vehicle pilot using the approved Stage 2B plan and completed Task #32 infrastructure.
+Target candidate:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbocharged I-4 — 10-speed automatic — RWD.
+This is the first actual real-data pilot configuration. Work carefully and fail closed.
+Phase 1 — Current-source and rights preflight
+Re-fetch current official primary-source documentation rather than relying only on previously captured notes.
+Prioritize:
+- Ford official U.S. MY2024 technical specifications/order documentation and appropriate owner/service documentation.
+- NHTSA official datasets/APIs for recalls, complaints/investigations, and NCAP only where the tested variant can be matched defensibly.
+- EPA/FuelEconomy.gov only if the exact applicable vehicle/test record can be matched.
+For every source actually used, record:
+- publisher
+- exact URL/dataset/API
+- retrieval date
+- document/dataset revision when available
+- authority for the particular fact
+- permitted access/use
+- storage/retention status
+- normalized/derived-value use
+- public-display/redistribution status
+- attribution requirements
+- automation/rate restrictions
+Do not infer permission merely because information is publicly accessible. If the intended use is not sufficiently established, mark it NEEDS RIGHTS VERIFICATION and do not ingest or publish material that depends on that unresolved permission.
+Do not use Consumer Reports, paywalled automotive research, scraped proprietary databases, unofficial specification aggregators, or copied copyrighted prose as canonical evidence.
+Prefer storing normalized factual values plus source metadata/evidence locators. Do not persist large raw copyrighted documents or copied source prose unless the applicable rights explicitly permit it.
+Phase 2 — Exact configuration match
+Complete a reviewer-readable match sheet before creating the canonical configuration.
+Positively verify:
+- United States market
+- 2024 model year
+- Ford consumer brand
+- Mustang model
+- correct generation
+- EcoBoost trim
+- Fastback body
+- 2.3L EcoBoost engine
+- 10-speed automatic transmission
+- rear-wheel drive
+- any material package/build-date predicates affecting the facts being loaded
+Do not create the configuration from independent option lists or Cartesian combinations. If this exact combination cannot be established from dated primary evidence, stop and report the mismatch rather than guessing or broadening the identity.
+Phase 3 — Create the first real canonical draft
+Only after the source-rights and exact-match gates pass, create the canonical identity/configuration in the development environment using the Stage 2A/Task #32 architecture.
+This must be a separate real canonical profile. Do not convert, overwrite, redirect, or attach real evidence to any of the existing 13 demo profiles.
+Load only facts that are individually supported, properly scoped, permitted for the intended use, and reviewable. Missing information must remain unknown, not_yet_researched, or not_applicable as appropriate.
+Do not fabricate completeness.
+Do not require or invent:
+- reliability score
+- ownership-cost estimate
+- lifespan estimate
+- maintenance data
+- issue frequency
+- repair cost
+- safety rating
+- recall status
+- inspection advice
+unless that specific information passes its own evidence, applicability, rights, and review gates.
+NHTSA complaints are research signals, not confirmed defects or prevalence statistics. Model-level recall matching must not be represented as VIN-specific open-recall status. NCAP ratings must not be generalized beyond a defensibly matched tested variant.
+Phase 4 — Validation
+Keep the new canonical profile unpublished/private initially. Do not add it to the public release manifest yet.
+Verify:
+- canonical API list/detail behavior
+- sparse field/state behavior
+- provenance/evidence projection
+- fail-closed applicability
+- demo/canonical isolation
+- no demo values enter the real profile
+- all 13 demo IDs/slugs/values/routes remain unchanged
+- Browse/Compare/Calculator/Vehicle Research compatibility using appropriate synthetic/private canonical testing
+- no unknown values become zero/default values
+Run the relevant Task #32 and Stage 2B regression tests.
+Stop after Vehicle #1 exists as a reviewed, unpublished canonical development draft.
+Do not publish it, do not start Vehicle #2, do not bulk-import Ford vehicles, and do not start the remaining seven pilot vehicles automatically.
+At completion, provide:
+1. exact canonical configuration created,
+2. fields populated,
+3. fields intentionally left unknown/not researched,
+4. every source used,
+5. source-rights decisions and any unresolved rights,
+6. evidence/applicability decisions,
+7. tests run and results,
+8. confirmation that all 13 demos remain unchanged,
+9. whether the profile is ready for my explicit publication review.
