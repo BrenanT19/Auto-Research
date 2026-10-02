@@ -62,6 +62,17 @@ test("temporary database metadata must match the runner name and run ID", () => 
       createdAtMs: createdAt.getTime(),
     },
   );
+  assert.deepEqual(
+    parseRunnerOwnedTemporaryDatabase(
+      `auto_research_stage2a_resumed_${runnerRunId}`,
+      comment,
+    ),
+    {
+      runId: runnerRunId,
+      createdAt: createdAt.toISOString(),
+      createdAtMs: createdAt.getTime(),
+    },
+  );
   assert.equal(
     parseRunnerOwnedTemporaryDatabase(
       `auto_research_stage2a_baseline_5678_a1b2c3d4`,
