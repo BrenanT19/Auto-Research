@@ -1,0 +1,312 @@
+STAGE 2B — REAL VEHICLE DATA PILOT & AMERICAN CATALOG EXPANSION PLAN
+
+We have completed the Stage 2A canonical database foundation, 13-profile fixture alignment, migration/rollback/recovery testing, catalog read adapter, and activation of Stage 2A catalog reads in development. All 13 existing demo profiles, IDs, slugs, URLs, and demo classifications remain intact.
+
+We are now preparing Stage 2B: the first real, evidence-backed vehicle data in AutoResearch.
+
+THIS TASK IS PLANNING ONLY.
+Do not import vehicles, modify the database, change APIs, scrape websites, call automotive providers, redesign UI, or begin implementation. Inspect the actual current project first and produce a detailed implementation plan for my approval.
+
+PRODUCT GOAL
+
+AutoResearch should eventually provide a broad research catalog of American-origin automotive brands and their U.S.-market vehicles, followed later by German, Japanese, Korean, British, Italian, and other global brands.
+
+For this project, “American” means American-origin consumer automotive brands with vehicles offered in the U.S. market. Do NOT use assembly location as the definition of whether a brand is American.
+
+Keep these concepts separate:
+- consumer brand/origin
+- corporate manufacturer/owner
+- market where vehicle is offered
+- assembly/manufacturing location
+
+The long-term goal is not merely 13 hand-built vehicle pages. AutoResearch needs a scalable catalog covering model → generation → model year → trim → exact supported configuration, while avoiding fake combinations and duplicate records.
+
+LEGAL / DATA-USAGE REQUIREMENT
+
+AutoResearch must take a conservative, permission-aware approach to data.
+
+Only recommend sources whose data can reasonably and lawfully be accessed and used for the proposed purpose. Research the current documentation/terms for every proposed source before recommending ingestion, storage, redistribution, caching, or automated access.
+
+Prioritize:
+1. U.S. government/public automotive datasets and APIs where permitted.
+2. Manufacturer/OEM information where the applicable terms permit the intended use.
+3. Properly licensed data providers if needed later.
+4. AutoResearch’s own original research/synthesis.
+
+Do not propose scraping paywalled/proprietary automotive research sites or copying proprietary ratings, reliability databases, reviews, or editorial content.
+
+If storage, redistribution, automation, caching, or commercial-use rights are uncertain, mark the source as NEEDS RIGHTS VERIFICATION and do not design the implementation as if permission exists.
+
+Do not fabricate citations, source capabilities, licensing rights, API limits, vehicle facts, owner reports, reliability information, recalls, ratings, or specifications.
+
+DATA QUALITY PHILOSOPHY
+
+AutoResearch is a guide, not a verdict.
+
+Real information must be distinguishable from:
+- demo content
+- verified/source-backed facts
+- researched/editorial synthesis
+- estimates/calculations
+- externally researched owner-reported patterns
+- direct AutoResearch owner submissions
+
+A fact being found does not automatically make it verified or publishable.
+
+Design a practical review lifecycle such as:
+researched/captured → source-backed → reviewed/verified → publishable/published
+
+The exact states may be revised if the existing Stage 2A architecture already provides a better mechanism.
+
+Missing information must remain Unknown / Not Yet Researched / Not Applicable as appropriate. Never invent values merely to make a report look complete.
+
+Do not require a numeric reliability score. Reliability research should be evidence-based and explain uncertainty.
+
+EXACT CONFIGURATION / APPLICABILITY
+
+Use the canonical hierarchy established in Stage 2A:
+Consumer Brand → Model → Generation → Model Year → Trim → Vehicle Configuration
+
+Vehicle Configuration represents a documented real combination, not a Cartesian product of possible options.
+
+Powertrain/component information may include reusable/versioned:
+- engines
+- transmissions
+- electric motors
+- batteries
+- hybrid systems
+- drivetrain
+- body/cab/bed configurations
+- other configuration-specific equipment when necessary
+
+Research must be fail-closed.
+
+An engine-specific issue must not appear on every trim.
+A battery-specific issue must not appear on unrelated battery versions.
+A safety rating must not silently apply to an untested variant.
+A recall campaign must not be represented as proof that a particular VIN has an open recall.
+
+Missing or unresolved applicability means UNKNOWN, not universal.
+
+FIRST PILOT
+
+Do NOT attempt the entire American catalog immediately.
+
+Design a pilot of approximately 5–10 technically diverse American-brand U.S.-market vehicles/configurations that exercises the Stage 2A architecture before large-scale expansion.
+
+Re-evaluate the pilot candidates from the Stage 2 architecture report rather than blindly accepting them.
+
+The pilot should intentionally test different cases such as:
+- conventional ICE passenger vehicle
+- hybrid
+- plug-in hybrid
+- BEV
+- pickup with meaningful configuration complexity
+- performance vehicle
+- vehicle with multiple powertrain/configuration possibilities
+
+For each proposed pilot vehicle explain:
+- why it is useful as an architecture test
+- exact model year/trim/configuration scope
+- which authoritative/permitted sources could populate it
+- what information is expected to be available
+- what will probably remain unknown initially
+- any configuration-matching risks
+
+REAL PROFILE CONTENT
+
+Determine what a high-quality first real AutoResearch profile can responsibly contain using available evidence.
+
+Evaluate data availability for:
+- canonical vehicle identity
+- generation/model-year information
+- trim/configuration
+- engine/motor/battery/transmission/drivetrain
+- horsepower/torque/output where properly matched
+- dimensions/capacities/weights where available
+- fuel economy / MPGe / EV range
+- maintenance schedules
+- recalls
+- safety ratings
+- complaints/investigations as appropriately labeled research signals
+- known/reported issues
+- configuration-specific inspection points
+- ownership-cost inputs
+- source/provenance information
+
+Do not assume every category can be populated for every vehicle.
+
+NHTSA / EPA / OFFICIAL SOURCES
+
+Re-evaluate current official U.S. sources including, where relevant:
+- NHTSA vPIC
+- NHTSA recall/campaign data
+- NHTSA ODI complaints/investigations
+- NHTSA NCAP safety ratings
+- EPA / FuelEconomy.gov
+- EPA vehicle/compliance/test data
+- DOE AFDC
+- OEM manuals, maintenance schedules, specifications, recalls, and technical material where legally usable
+
+For each source document:
+- authority
+- exact useful fields
+- matching granularity
+- update/freshness behavior
+- API/download method
+- rate limits if documented
+- storage/caching/redistribution implications
+- attribution requirements
+- important limitations
+- whether automated ingestion is appropriate
+- whether manual review is required
+
+Cite current official documentation/terms for source claims.
+
+INGESTION / REVIEW WORKFLOW
+
+Design the Stage 2B pipeline.
+
+It should cover something like:
+source discovery
+→ lawful retrieval
+→ raw/source record
+→ normalization
+→ vehicle/configuration matching
+→ applicability evaluation
+→ evidence attachment
+→ conflict detection
+→ review/verification
+→ publication eligibility
+→ API/report projection
+
+Determine which steps should be automated and which should initially require manual approval.
+
+We want the ability for me to review important vehicle information before it becomes publicly published.
+
+Explain how corrected or updated information should be versioned without silently rewriting historical evidence.
+
+AMERICAN CATALOG EXPANSION
+
+After the pilot succeeds, design how AutoResearch can expand systematically across American-origin brands rather than manually creating random profiles.
+
+Evaluate an initial brand scope including active U.S.-origin consumer brands such as:
+Ford
+Lincoln
+Chevrolet
+Buick
+GMC
+Cadillac
+Chrysler
+Dodge
+Jeep
+Ram
+Tesla
+Rivian
+Lucid
+
+Verify whether this scope needs revision.
+
+Treat discontinued/historical American brands as a later controlled expansion unless there is a strong architectural reason otherwise.
+
+Do NOT import this catalog during this task.
+
+Explain how we determine:
+- which models belong in the catalog
+- model-year coverage
+- generations
+- trims
+- exact configurations
+- when multiple configurations deserve separate research profiles
+- how to avoid duplicate/unsupported combinations
+- approximate catalog scale/profile counts based on the chosen identity strategy
+
+Do not invent an exact total if it cannot yet be determined. Provide a defensible method for calculating it.
+
+CURRENT 13 DEMO PROFILES
+
+The existing 13 demo profiles must remain intact during Stage 2B.
+
+Do not silently convert a demo profile into a real/verified profile simply because a matching real vehicle is researched.
+
+Plan how a real canonical configuration can eventually coexist with or replace presentation of a matching demo while:
+- preserving saved URLs/slugs
+- preserving IDs where required
+- preserving Compare/Calculator links
+- retaining provenance/history
+- clearly preventing demo values from being mistaken for verified facts
+
+CURRENT API / TASK #32
+
+Inspect the current API after Task #27 and #31.
+
+Determine whether the proposed “complete canonical profile projection” work (previously described as Task #32) is actually required BEFORE the Stage 2B pilot, should be implemented AS PART OF Stage 2B, or should wait until after the pilot.
+
+Do not implement #32 in this planning task.
+
+Explain the recommendation and dependencies.
+
+BROWSE / REPORT BEHAVIOR
+
+Do not redesign Browse Cars or Vehicle Research in this stage.
+
+However, explain how real canonical vehicles will flow into:
+- Browse Cars
+- search/autocomplete
+- cascading filters
+- Compare
+- Calculator
+- Vehicle Research / Full Ownership Report
+
+Existing demo and real records must be clearly distinguishable during transition.
+
+The future Browse-by-Brand concept should be supported by the data model, but do NOT build that UI yet.
+
+TESTING / ACCEPTANCE
+
+Define concrete Stage 2B pilot acceptance tests including:
+- exact configuration identity
+- source/evidence linkage
+- no unsupported configuration combinations
+- fail-closed applicability
+- Unknown / Not Applicable behavior
+- demo vs real separation
+- all 13 existing links still work
+- Browse compatibility
+- Compare compatibility
+- Calculator compatibility
+- Vehicle Research compatibility
+- source conflict handling
+- update/version handling
+- rollback/recovery
+- no unsourced facts displayed as verified
+- no real record disappears merely because optional research/estimate data is missing
+
+OUTPUT
+
+Create a detailed Markdown planning document for review, preferably:
+
+artifacts/auto-research/STAGE-2B-REAL-DATA-PILOT-PLAN.md
+
+The report should contain:
+1. Current-state audit after Stage 2A / Tasks #27 and #31
+2. Stage 2B goals and boundaries
+3. Legal/source-use policy
+4. Source comparison with current citations
+5. Pilot vehicle/configuration recommendations
+6. Real-profile field coverage matrix
+7. Ingestion/normalization/review workflow
+8. Publication/review states
+9. Configuration matching/applicability rules
+10. Existing-demo coexistence strategy
+11. Task #32 dependency recommendation
+12. Pilot implementation sequence
+13. Pilot test/acceptance matrix
+14. American-brand expansion strategy
+15. Method for estimating eventual catalog/profile scale
+16. Risks and unresolved decisions
+17. Explicit approval gates before implementation and before large-scale expansion
+
+STOP AFTER THE PLAN.
+
+Do not make database, API, UI, catalog, workflow, or real-data changes during this task. Do not import a pilot vehicle. Do not call production automotive APIs as part of implementation. Researching public documentation for the planning report is allowed.
