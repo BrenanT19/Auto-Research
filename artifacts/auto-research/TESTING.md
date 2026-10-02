@@ -38,6 +38,20 @@ set this variable to a hosted database or use `DATABASE_URL` as a substitute.
 The browser regressions and manual smoke check below run separately against the
 development workflows and their existing catalog. They do not write data.
 
+To run only the deliberate failed-migration recovery check:
+
+```sh
+pnpm --filter @workspace/scripts test:auto-research:failed-migration-recovery
+```
+
+This mode uses the same local `auto_research_test` guard, creates one disposable
+database, injects a PostgreSQL failure into the final Stage 2A migration, checks
+that failure leaves schema, journal, and all seeded legacy data unchanged, then
+retries the checked-in migrations and checks the full legacy data again. It
+verifies all 13 demo-profile aliases and database constraints without starting
+the API server or calling vehicle endpoints. The temporary database is dropped
+when the check exits.
+
 
 ## Browser runner setup
 

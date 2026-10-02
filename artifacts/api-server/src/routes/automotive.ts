@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, isNull, or, type SQL, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray, isNull, or, type SQL, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import {
   GetDiscoveryStatsResponse,
@@ -28,7 +28,14 @@ import {
   ownershipEstimatesTable,
   transmissionsTable,
   trimsTable,
+  consumerBrandsTable,
 } from "@workspace/db";
+import {
+  getLegacyPublicSlugs,
+  getLegacyFallbackTrimIds,
+  resolveLegacyFallbackTrimId,
+  usesCatalogProfileReads,
+} from "../lib/vehicle-profile-source";
 
 const router: IRouter = Router();
 
@@ -92,6 +99,8 @@ async function loadVehicles(options: {
   limit?: number;
 }) {
   const conditions: SQL[] = [];
+  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  if (fallbackTrimIds.length === 0) return [];
 
   if (options.q?.trim()) {
     // A shopper's phrase can span year, make, model, and trim columns.
@@ -113,7 +122,16 @@ async function loadVehicles(options: {
   if (options.year) conditions.push(eq(modelYearsTable.year, options.year));
   if (options.trim) conditions.push(ilike(trimsTable.name, `%${options.trim}%`));
   if (options.trimId) conditions.push(eq(trimsTable.id, options.trimId));
-  if (options.vehicleId) conditions.push(eq(trimsTable.slug, options.vehicleId));
+  if (options.vehicleId) {
+    if (usesCatalogProfileReads()) {
+      const legacyTrimId = await resolveLegacyFallbackTrimId(options.vehicleId);
+      if (legacyTrimId === undefined) return [];
+      conditions.push(eq(trimsTable.id, legacyTrimId));
+    } else {
+      conditions.push(eq(trimsTable.slug, options.vehicleId));
+    }
+  }
+  conditions.push(inArray(trimsTable.id, fallbackTrimIds));
 
   const sort = options.sort ?? "popular";
   const order =
@@ -123,7 +141,7 @@ async function loadVehicles(options: {
         ? asc(ownershipEstimatesTable.annualOwnershipUsd)
         : asc(trimsTable.researchRank);
 
-  return db
+  const rows = await db
     .select(vehicleSelection)
     .from(trimsTable)
     .innerJoin(modelYearsTable, eq(trimsTable.modelYearId, modelYearsTable.id))
@@ -136,6 +154,15 @@ async function loadVehicles(options: {
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(order)
     .limit(options.limit ?? 100);
+  if (!usesCatalogProfileReads()) return rows;
+
+  const publicSlugs = await getLegacyPublicSlugs(
+    rows.map((row) => row.trimDbId),
+  );
+  return rows.map((row) => ({
+    ...row,
+    id: publicSlugs.get(row.trimDbId) ?? row.id,
+  }));
 }
 
 function toVehicleDetail(
@@ -200,13 +227,17 @@ function toVehicleDetail(
 }
 
 router.get("/makes", async (_req, res): Promise<void> => {
+  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const visibleVehicleCount = count(
+    sql`CASE WHEN ${inArray(trimsTable.id, fallbackTrimIds)} THEN ${trimsTable.id} END`,
+  );
   const makes = await db
     .select({
       id: makesTable.id,
       name: makesTable.name,
       slug: makesTable.slug,
       mark: makesTable.mark,
-      vehicleCount: count(trimsTable.id),
+      vehicleCount: visibleVehicleCount,
     })
     .from(makesTable)
     .leftJoin(modelsTable, eq(modelsTable.makeId, makesTable.id))
@@ -220,7 +251,8 @@ router.get("/makes", async (_req, res): Promise<void> => {
 });
 
 router.get("/catalog/options", async (_req, res): Promise<void> => {
-  const options = await db
+  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const queriedOptions = await db
     .select({
       profileId: trimsTable.slug,
       makeId: makesTable.id,
@@ -240,8 +272,16 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
     .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
     .innerJoin(modelsTable, eq(generationsTable.modelId, modelsTable.id))
     .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
+    .where(inArray(trimsTable.id, fallbackTrimIds))
     .orderBy(asc(makesTable.name), asc(modelsTable.name), asc(modelYearsTable.year), asc(trimsTable.name));
 
+  const publicSlugs = await getLegacyPublicSlugs(
+    queriedOptions.map((option) => option.trimId),
+  );
+  const options = queriedOptions.map((option) => ({
+    ...option,
+    profileId: publicSlugs.get(option.trimId) ?? option.profileId,
+  }));
   res.json(GetCatalogOptionsResponse.parse(options));
 });
 
@@ -252,13 +292,16 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     return;
   }
 
+  const fallbackTrimIds = await getLegacyFallbackTrimIds();
   const [make] = await db
     .select({
       id: makesTable.id,
       name: makesTable.name,
       slug: makesTable.slug,
       mark: makesTable.mark,
-      vehicleCount: count(trimsTable.id),
+      vehicleCount: count(
+        sql`CASE WHEN ${inArray(trimsTable.id, fallbackTrimIds)} THEN ${trimsTable.id} END`,
+      ),
     })
     .from(makesTable)
     .leftJoin(modelsTable, eq(modelsTable.makeId, makesTable.id))
@@ -348,9 +391,28 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     return;
   }
 
+  let reportFilter: SQL | undefined;
+  if (usesCatalogProfileReads()) {
+    if (parsed.data.vehicleId) {
+      const legacyTrimId = await resolveLegacyFallbackTrimId(parsed.data.vehicleId);
+      reportFilter =
+        legacyTrimId === undefined
+          ? sql`false`
+          : eq(ownerReportsTable.trimId, legacyTrimId);
+    } else {
+      reportFilter = inArray(
+        ownerReportsTable.trimId,
+        await getLegacyFallbackTrimIds(),
+      );
+    }
+  } else if (parsed.data.vehicleId) {
+    reportFilter = eq(trimsTable.slug, parsed.data.vehicleId);
+  }
+
   const reports = await db
     .select({
       id: ownerReportsTable.id,
+      trimDbId: ownerReportsTable.trimId,
       vehicleId: trimsTable.slug,
       vehicleLabel: sql<string>`${modelYearsTable.year}::text || ' ' || ${makesTable.name} || ' ' || ${modelsTable.name} || ' ' || ${trimsTable.name}`,
       displayName: ownerReportsTable.displayName,
@@ -368,17 +430,33 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
     .innerJoin(modelsTable, eq(generationsTable.modelId, modelsTable.id))
     .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
-    .where(parsed.data.vehicleId ? eq(trimsTable.slug, parsed.data.vehicleId) : undefined)
+    .where(reportFilter)
     .orderBy(desc(ownerReportsTable.createdAt), asc(ownerReportsTable.id));
 
-  res.json(ListOwnerReportsResponse.parse(reports));
+  const publicSlugs = await getLegacyPublicSlugs(
+    reports.map((report) => report.trimDbId),
+  );
+  res.json(
+    ListOwnerReportsResponse.parse(
+      reports.map(({ trimDbId, ...report }) => ({
+        ...report,
+        vehicleId: publicSlugs.get(trimDbId) ?? report.vehicleId,
+      })),
+    ),
+  );
 });
 
 router.get("/discovery/stats", async (_req, res): Promise<void> => {
+  const fallbackTrimIds = await getLegacyFallbackTrimIds();
   const [makeStats, vehicleStats, reportStats] = await Promise.all([
-    db.select({ value: count() }).from(makesTable),
-    db.select({ value: count() }).from(trimsTable),
-    db.select({ value: count() }).from(ownerReportsTable),
+    usesCatalogProfileReads()
+      ? db.select({ value: count() }).from(consumerBrandsTable)
+      : db.select({ value: count() }).from(makesTable),
+    Promise.resolve([{ value: fallbackTrimIds.length }]),
+    db
+      .select({ value: count() })
+      .from(ownerReportsTable)
+      .where(inArray(ownerReportsTable.trimId, fallbackTrimIds)),
   ]);
   const stats = {
     makeCount: makeStats[0]?.value ?? 0,

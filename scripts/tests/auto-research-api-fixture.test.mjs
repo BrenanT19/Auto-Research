@@ -106,6 +106,107 @@ test("legacy list, catalog, make, and discovery endpoints retain all 13 profiles
   assert.equal(trending.length, 8);
 });
 
+test("Browse make, model, and year filters resolve the same public profile choices", async () => {
+  const modelById = mapById(tables.models);
+  const generationById = mapById(tables.generations);
+  const modelYearById = mapById(tables.model_years);
+  const makeById = mapById(tables.makes);
+  const profileMetadata = tables.trims.map((trim) => {
+    const modelYear = modelYearById.get(trim.model_year_id);
+    const generation = generationById.get(modelYear.generation_id);
+    const model = modelById.get(generation.model_id);
+    const make = makeById.get(model.make_id);
+    return {
+      slug: trim.slug,
+      makeSlug: make.slug,
+      model: model.name,
+      year: modelYear.year,
+    };
+  });
+
+  for (const make of tables.makes) {
+    const vehicles = await getJson(
+      `/vehicles?makeSlug=${encodeURIComponent(make.slug)}&limit=100`,
+    );
+    const expected = profileMetadata
+      .filter((profile) => profile.makeSlug === make.slug)
+      .map((profile) => profile.slug)
+      .sort();
+    assert.deepEqual(
+      vehicles.map((vehicle) => vehicle.id).sort(),
+      expected,
+      `${make.slug} Browse results must keep the existing profiles`,
+    );
+
+    const makePage = await getJson(`/makes/${encodeURIComponent(make.slug)}`);
+    assert.deepEqual(
+      makePage.vehicles.map((vehicle) => vehicle.id).sort(),
+      expected,
+      `${make.slug} manufacturer page must keep the same profile links`,
+    );
+  }
+
+  const fordF150 = await getJson(
+    "/vehicles?makeSlug=ford&model=F-150&year=2024&limit=100",
+  );
+  assert.deepEqual(
+    fordF150.map((vehicle) => vehicle.id).sort(),
+    profileMetadata
+      .filter(
+        (profile) =>
+          profile.makeSlug === "ford" &&
+          profile.model === "F-150" &&
+          profile.year === 2024,
+      )
+      .map((profile) => profile.slug)
+      .sort(),
+  );
+});
+
+test("Compare selections and Calculator prefill resolve public slugs to unchanged profile data", async () => {
+  const list = await getJson("/vehicles?limit=100");
+  const listById = new Map(list.map((vehicle) => [vehicle.id, vehicle]));
+  const compareSlugs = [
+    "ford-f-150-2024-xlt",
+    "tesla-model-y-2024-performance",
+    "jeep-grand-cherokee-2024-laredo",
+  ];
+
+  for (const slug of compareSlugs) {
+    const detail = await getJson(`/vehicles/${encodeURIComponent(slug)}`);
+    const listVehicle = listById.get(slug);
+    assert.ok(listVehicle, `${slug} must remain selectable for Compare`);
+    assert.equal(detail.id, slug);
+    assert.deepEqual(
+      [
+        detail.priceUsd,
+        detail.fuelType,
+        detail.mpgCity,
+        detail.mpgHighway,
+        detail.mpgCombined,
+      ],
+      [
+        listVehicle.priceUsd,
+        listVehicle.fuelType,
+        listVehicle.mpgCity,
+        listVehicle.mpgHighway,
+        listVehicle.mpgCombined,
+      ],
+      `${slug} Compare detail must match the Browse choice`,
+    );
+  }
+
+  const calculatorPrefill = await getJson(
+    "/vehicles/tesla-model-y-2024-performance",
+  );
+  assert.equal(calculatorPrefill.id, "tesla-model-y-2024-performance");
+  assert.equal(calculatorPrefill.isDemo, true);
+  assert.equal(calculatorPrefill.priceUsd, 52000);
+  assert.equal(calculatorPrefill.fuelType, "Electric");
+  assert.equal(calculatorPrefill.mpgCombined, 111);
+  assert.equal(calculatorPrefill.horsepower, 456);
+});
+
 test("each legacy profile and its existing demo child rows resolve through the API", async () => {
   const makeById = mapById(tables.makes);
   const modelById = mapById(tables.models);
