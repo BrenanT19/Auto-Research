@@ -1,11 +1,9 @@
 import { db, trimsTable, vehicleProfileAliasesTable } from "@workspace/db";
-import { eq, inArray } from "drizzle-orm";
-
-const legacyFallbackStatuses = new Set([
-  "ambiguous",
-  "demo_identity_only",
-  "unresolved",
-]);
+import { asc, eq, inArray } from "drizzle-orm";
+import {
+  canResolveLegacyFallbackStatus,
+  shouldKeepLegacyFallbackProfile,
+} from "./vehicle-profile-policy";
 
 const profileReadMode = process.env.AUTO_RESEARCH_PROFILE_READ_MODE ?? "catalog";
 let catalogSchemaUnavailable = false;
@@ -40,10 +38,10 @@ function disableCatalogReadsUntilRestart(): void {
 }
 
 /**
- * Stage 2A's alias catalog is authoritative for deciding which legacy demo or
- * unresolved profiles remain readable. Exact-supported catalog mappings are
- * deliberately excluded until the canonical API projection has all required
- * fields; sparse canonical identities are never padded with guessed values.
+ * Stage 2A's alias catalog controls non-demo legacy visibility. Demo profiles
+ * remain on their original legacy records even if a canonical alias is later
+ * attached. Exact-supported non-demo profiles stay excluded until an approved,
+ * complete source can satisfy the existing shopper API contract.
  */
 export async function getLegacyFallbackTrimIds(): Promise<number[]> {
   if (!usesCatalogProfileReads()) {
@@ -56,7 +54,7 @@ export async function getLegacyFallbackTrimIds(): Promise<number[]> {
     legacyTrimId: number | null;
     mappingStatus: string;
   }>;
-  let trims: Array<{ id: number; slug: string }>;
+  let trims: Array<{ id: number; slug: string; isDemo: boolean }>;
   try {
     [aliases, trims] = await Promise.all([
       db
@@ -67,7 +65,11 @@ export async function getLegacyFallbackTrimIds(): Promise<number[]> {
         })
         .from(vehicleProfileAliasesTable),
       db
-        .select({ id: trimsTable.id, slug: trimsTable.slug })
+        .select({
+          id: trimsTable.id,
+          slug: trimsTable.slug,
+          isDemo: trimsTable.isDemo,
+        })
         .from(trimsTable),
     ]);
   } catch (error) {
@@ -94,18 +96,9 @@ export async function getLegacyFallbackTrimIds(): Promise<number[]> {
         ...(aliasesByLegacyId.get(trim.id) ?? []),
         ...(aliasesBySlug.has(trim.slug) ? [aliasesBySlug.get(trim.slug)!] : []),
       ];
-      if (matches.length === 0) return true;
-      if (
-        matches.some(
-          (alias) =>
-            alias.mappingStatus === "exact_supported" ||
-            alias.mappingStatus === "retired",
-        )
-      ) {
-        return false;
-      }
-      return matches.some((alias) =>
-        legacyFallbackStatuses.has(alias.mappingStatus),
+      return shouldKeepLegacyFallbackProfile(
+        trim.isDemo,
+        matches.map((alias) => alias.mappingStatus),
       );
     })
     .map(({ id }) => id);
@@ -150,8 +143,24 @@ export async function resolveLegacyFallbackTrimId(
     disableCatalogReadsUntilRestart();
   }
 
-  if (alias && !legacyFallbackStatuses.has(alias.mappingStatus)) {
-    return undefined;
+  if (alias && !canResolveLegacyFallbackStatus(alias.mappingStatus, false)) {
+    if (alias.legacyTrimId != null) {
+      const [legacyTrim] = await db
+        .select({ id: trimsTable.id, isDemo: trimsTable.isDemo })
+        .from(trimsTable)
+        .where(eq(trimsTable.id, alias.legacyTrimId))
+        .limit(1);
+      return legacyTrim?.isDemo ? legacyTrim.id : undefined;
+    }
+
+    // Do not let a canonical alias collide with and take over an established
+    // demo URL. A non-demo legacy row remains hidden until it has a projection.
+    const [legacyTrim] = await db
+      .select({ id: trimsTable.id, isDemo: trimsTable.isDemo })
+      .from(trimsTable)
+      .where(eq(trimsTable.slug, slug))
+      .limit(1);
+    return legacyTrim?.isDemo ? legacyTrim.id : undefined;
   }
   if (alias?.legacyTrimId != null) return alias.legacyTrimId;
 
@@ -172,15 +181,18 @@ export async function getLegacyPublicSlugs(
 
   const aliases = await db
     .select({
+      id: vehicleProfileAliasesTable.id,
       legacyTrimId: vehicleProfileAliasesTable.legacyTrimId,
       slug: vehicleProfileAliasesTable.slug,
     })
     .from(vehicleProfileAliasesTable)
-    .where(inArray(vehicleProfileAliasesTable.legacyTrimId, [...legacyTrimIds]));
+    .where(inArray(vehicleProfileAliasesTable.legacyTrimId, [...legacyTrimIds]))
+    .orderBy(asc(vehicleProfileAliasesTable.id));
 
-  return new Map(
-    aliases.flatMap((alias) =>
-      alias.legacyTrimId == null ? [] : [[alias.legacyTrimId, alias.slug] as const],
-    ),
-  );
+  const publicSlugs = new Map<number, string>();
+  for (const alias of aliases) {
+    if (alias.legacyTrimId == null || publicSlugs.has(alias.legacyTrimId)) continue;
+    publicSlugs.set(alias.legacyTrimId, alias.slug);
+  }
+  return publicSlugs;
 }
