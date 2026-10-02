@@ -12,6 +12,12 @@ import type { ReliabilityProfile } from './reliabilityProfile';
 import type { Transmission } from './transmission';
 import type { VehicleSummary } from './vehicleSummary';
 
+/**
+ * Details for the same stable public ID used by Browse and Compare.
+ * Empty research collections do not establish that no issues, maintenance,
+ * recalls, or safety concerns exist; consult canonical sectionStates.
+ * Calculator values are suggestions only and require an explicit shopper prefill action.
+ */
 export type VehicleDetail = VehicleSummary & ({
   /** @nullable */
   overview: string | null;

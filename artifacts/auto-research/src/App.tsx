@@ -9,7 +9,7 @@ import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } f
 import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
-import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, missingCanonicalOwnershipInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, missingCanonicalOwnershipInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters } from './shopper-tools';
 import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId, ResearchFieldState } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
 import { STATE_TAX_ESTIMATES } from './state-tax-estimates';
@@ -343,7 +343,7 @@ function DetailPage() {
   if (vehicle.isError || !vehicle.data) return <Shell><div className="content-wrap page-wrap"><ErrorBlock retry={() => vehicle.refetch()}/></div></Shell>;
   const v = vehicle.data;
   const canonical = v.profileKind === "canonical" && !v.isDemo;
-  const researchState = (field: string, category?: string) => v.fieldStates?.[field] || (category ? v.fieldStates?.[category] : undefined);
+  const researchState = (field: string, category?: string) => profileResearchState(v, field, category);
   const sectionState = (section: string) => v.sectionStates?.[section];
   const tabs = [
     ["overview", "Overview"],
@@ -422,8 +422,16 @@ function CompareCell({ id, field, render }: { id: string; field?: string; render
   const canonical = data?.profileKind === "canonical" && !data.isDemo;
   const category = field === "reliabilityEstimate" ? "reliability" :
     ["annualOwnershipEstimateUsd", "annualMaintenanceEstimateUsd", "annualRepairEstimateUsd", "annualFuelEstimateUsd", "insuranceEstimateUsd", "fiveYearDepreciationPercent", "expectedLifespanMiles"].includes(field || "") ? "ownership" :
-      ["mpgCombined", "engineName", "recallStatus"].includes(field || "") ? "specifications" : undefined;
-  return <td>{data ? <>{render(data)}{canonical && field && <CanonicalEvidence state={data.fieldStates?.[field] || (category ? data.fieldStates?.[category] : undefined)} claims={data.claims}/>}</> : <span className="muted">—</span>}</td>;
+      ["mpgCombined", "engineName"].includes(field || "") ? "specifications" :
+        field === "recallStatus" ? "recalls" : undefined;
+  const evidenceFields = field === "engineName"
+    ? [["Engine", "engineName", "specifications"], ["Transmission", "transmissionName", "specifications"]]
+    : field === "recallStatus"
+      ? [["Recall", "recallStatus", "recalls"], ["Safety", "safetyStatus", "safety"]]
+      : field === "reliabilityEstimate"
+        ? [["Score", "reliabilityEstimate", "reliability"], ["Assessment", "reliability.label", "reliability"], ["Context", "reliability.note", "reliability"]]
+        : field ? [["", field, category]] : [];
+  return <td>{data ? <>{render(data)}{canonical && evidenceFields.map(([caption, researchField, section]) => <div key={researchField}>{caption && <small>{caption}</small>}<CanonicalEvidence state={profileResearchState(data, researchField!, section)} claims={data.claims}/></div>)}</> : <span className="muted">—</span>}</td>;
 }
 
 function CalculatorPage() {
@@ -488,7 +496,7 @@ function CalculatorPage() {
   const missingOwnership = missingCanonicalOwnershipInputs(canonicalAssumptions);
   const financingReady = !canonicalCalculatorMode || missingFinance.length === 0;
   const ownershipReady = !canonicalCalculatorMode || missingOwnership.length === 0;
-  const fuelInputsReady = fuelTypeKnown && isEnteredCalculatorValue(displayDraft.miles) && isEnteredCalculatorValue(displayDraft.mpg) &&
+  const fuelInputsReady = energyBasisSelected && isEnteredCalculatorValue(displayDraft.miles) && isEnteredCalculatorValue(displayDraft.mpg) &&
     (vehicleIsElectric ? isEnteredCalculatorValue(displayDraft.electricity) : isEnteredCalculatorValue(displayDraft.gas));
   const payment = financing.monthlyLoanPayment;
   const monthly = payment + fuel + insurance + maintenance + repairs;

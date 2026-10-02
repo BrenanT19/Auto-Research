@@ -207,6 +207,29 @@ test("Compare selections and Calculator prefill resolve public slugs to unchange
   assert.equal(calculatorPrefill.horsepower, 456);
 });
 
+test("every demo summary keeps the original numeric estimates after nullable contract changes", async () => {
+  const list = await getJson("/vehicles?limit=100");
+  const estimates = new Map(tables.ownership_estimates.map((row) => [row.trim_id, row]));
+  for (const trim of tables.trims) {
+    const summary = list.find((vehicle) => vehicle.id === trim.slug);
+    assert.ok(summary);
+    const estimate = estimates.get(trim.id);
+    assert.deepEqual(
+      [
+        summary.priceUsd, summary.mpgCombined, summary.reliabilityEstimate,
+        summary.annualOwnershipEstimateUsd, summary.annualMaintenanceEstimateUsd,
+        summary.annualRepairEstimateUsd, summary.annualFuelEstimateUsd,
+      ],
+      [
+        trim.price_usd, trim.mpg_combined, estimate.reliability_score,
+        estimate.annual_ownership_usd, estimate.annual_maintenance_usd,
+        estimate.annual_repair_usd, estimate.annual_fuel_usd,
+      ],
+      `${trim.slug} must retain its demo values rather than sparse-profile defaults`,
+    );
+  }
+});
+
 test("each legacy profile and its existing demo child rows resolve through the API", async () => {
   const makeById = mapById(tables.makes);
   const modelById = mapById(tables.models);

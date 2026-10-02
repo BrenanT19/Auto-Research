@@ -29,6 +29,7 @@ import {
   parseCalculatorNumber,
   parseBrowseFilters,
   parseComparisonIds,
+  profileResearchState,
   readOwnershipDraft,
   removeComparisonId,
   researchStateLabel,
@@ -575,6 +576,41 @@ test("canonical nulls display research state and never copy unknown values into 
     isDemo: true,
     priceUsd: 10_000,
     fieldStates: { priceUsd: { state: "known", claimIds: [] } },
+  }), {});
+});
+
+test("partial sections never override a missing field's explicit research state", () => {
+  const unknown = { state: "unknown" as const, claimIds: ["withheld"] };
+  const notApplicable = { state: "not_applicable" as const, claimIds: ["scope"] };
+  const known = { state: "known" as const, claimIds: ["assessment"] };
+  const profile = {
+    fieldStates: { reliabilityEstimate: unknown, safetyStatus: notApplicable },
+    sectionStates: { reliability: known, safety: notApplicable, recalls: unknown },
+  };
+  assert.equal(profileResearchState(profile, "reliabilityEstimate", "reliability"), unknown);
+  assert.equal(profileResearchState(profile, "recallStatus", "recalls"), unknown);
+  assert.equal(profileResearchState(profile, "safetyStatus", "safety"), notApplicable);
+  assert.equal(researchStateLabel(notApplicable), "Not applicable");
+  assert.equal(profileResearchState({}, "priceUsd", "ownership"), undefined);
+});
+
+test("identity-only canonical profiles leave every calculator assumption untouched", () => {
+  const draft = {
+    price: "", down: "", apr: "", miles: "", mpg: "", gas: "",
+    electricity: "", insurance: "", maintenance: "", repairs: "",
+  };
+  const profile = {
+    profileKind: "canonical", isDemo: false,
+    priceUsd: null, mpgCombined: null, annualMaintenanceEstimateUsd: null,
+    annualRepairEstimateUsd: null, insuranceEstimateUsd: null,
+    fieldStates: {},
+  };
+  assert.deepEqual(mergeCanonicalCalculatorPrefill(profile, draft, {}), { draft, appliedFields: [] });
+  assert.ok(missingCanonicalOwnershipInputs({ draft, taxRate: "", dealerFees: "", fuelType: null }).includes("fuel type"));
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    ...profile,
+    priceUsd: 12345,
+    fieldStates: { priceUsd: { state: "not_applicable", claimIds: ["excluded"] } },
   }), {});
 });
 

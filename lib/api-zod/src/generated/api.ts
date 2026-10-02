@@ -136,7 +136,7 @@ export const GetMakeResponse = zod.object({
   "unit": zod.string().nullish()
 }))
 })).optional()
-}))
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n'))
 })
 
 
@@ -234,7 +234,7 @@ export const ListVehiclesResponseItem = zod.object({
   "unit": zod.string().nullish()
 }))
 })).optional()
-})
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n')
 export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem)
 
 
@@ -302,7 +302,7 @@ export const ListPopularVehiclesResponseItem = zod.object({
   "unit": zod.string().nullish()
 }))
 })).optional()
-})
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n')
 export const ListPopularVehiclesResponse = zod.array(ListPopularVehiclesResponseItem)
 
 
@@ -370,7 +370,7 @@ export const ListTrendingVehiclesResponseItem = zod.object({
   "unit": zod.string().nullish()
 }))
 })).optional()
-})
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n')
 export const ListTrendingVehiclesResponse = zod.array(ListTrendingVehiclesResponseItem)
 
 
@@ -442,7 +442,7 @@ export const GetVehicleResponse = zod.object({
   "unit": zod.string().nullish()
 }))
 })).optional()
-}).and(zod.object({
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n').and(zod.object({
   "overview": zod.string().nullable(),
   "engineName": zod.string().nullable(),
   "transmissionName": zod.string().nullable(),
@@ -508,7 +508,7 @@ export const GetVehicleResponse = zod.object({
   "inspectionChecklist": zod.array(zod.string()),
   "recallStatus": zod.string().nullable(),
   "safetyStatus": zod.string().nullable()
-}))
+})).describe('Details for the same stable public ID used by Browse and Compare.\nEmpty research collections do not establish that no issues, maintenance,\nrecalls, or safety concerns exist; consult canonical sectionStates.\nCalculator values are suggestions only and require an explicit shopper prefill action.\n')
 
 
 /**

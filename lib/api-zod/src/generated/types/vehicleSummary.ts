@@ -10,6 +10,12 @@ import type { VehicleSummaryFieldStates } from './vehicleSummaryFieldStates';
 import type { VehicleSummaryProfileKind } from './vehicleSummaryProfileKind';
 import type { VehicleSummarySectionStates } from './vehicleSummarySectionStates';
 
+/**
+ * A public vehicle identity, independent of optional research completeness.
+ * Required research properties may be null; null never means zero or a demo estimate.
+ * Canonical profiles disclose fieldStates, sectionStates, and claims to distinguish
+ * unknown, not_yet_researched, and not_applicable from known values.
+ */
 export interface VehicleSummary {
   id: string;
   make: string;

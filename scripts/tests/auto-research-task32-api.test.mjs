@@ -239,6 +239,51 @@ test("a released supported sparse profile has nullable research, explicit state 
   assert.equal(statsResponse.body.reportCount, baselineResponses.get("/discovery/stats").reportCount);
 });
 
+test("identity-only vehicles remain discoverable and comparable without any optional research", async () => {
+  // This released fixture has identity evidence only, unlike the primary fixture
+  // which has some known specifications and several withheld research attempts.
+  const id = synthetic.collision.aliasSlug;
+  const [detailResponse, listResponse, optionsResponse] = await Promise.all([
+    responseAt(apiBaseUrl, `/vehicles/${encodeURIComponent(id)}`),
+    responseAt(apiBaseUrl, `/vehicles?modelKey=canonical:model:${synthetic.collision.modelId}`),
+    responseAt(apiBaseUrl, "/catalog/options"),
+  ]);
+  assert.equal(detailResponse.status, 200);
+  assert.equal(listResponse.status, 200);
+  assert.equal(optionsResponse.status, 200);
+  const detail = detailResponse.body;
+  const summary = listResponse.body.find((vehicle) => vehicle.id === id);
+  assert.ok(summary, "Identity-only vehicles must be selectable in Browse and Compare.");
+  assert.ok(optionsResponse.body.some((option) => option.profileId === id));
+  assert.equal(detail.id, summary.id, "Detail and calculator URLs retain the exact public ID.");
+  assert.equal(detail.isDemo, false);
+  assert.equal(detail.profileKind, "canonical");
+  for (const field of [
+    "priceUsd", "reliabilityEstimate", "annualOwnershipEstimateUsd",
+    "annualMaintenanceEstimateUsd", "annualRepairEstimateUsd",
+    "annualFuelEstimateUsd", "mpgCombined", "horsepower", "fuelType",
+  ]) {
+    assert.equal(detail[field], null, `${field} must not invent a value.`);
+    assert.equal(summary[field], null);
+    assert.equal(detail.fieldStates[field].state, "not_yet_researched");
+    assert.deepEqual(summary.fieldStates[field], detail.fieldStates[field]);
+  }
+  for (const field of [
+    "overview", "engineName", "transmissionName", "insuranceEstimateUsd",
+    "fiveYearDepreciationPercent", "expectedLifespanMiles", "recallStatus", "safetyStatus",
+  ]) assert.equal(detail[field], null, `${field} must stay explicitly unavailable.`);
+  assert.deepEqual(detail.reliability, { score: null, label: null, note: null });
+  for (const section of ["engines", "transmissions", "commonProblems", "maintenance", "inspectionChecklist"]) {
+    assert.deepEqual(detail[section], []);
+    assert.equal(detail.sectionStates[section].state, "not_yet_researched");
+  }
+  for (const sort of ["popular", "reliability", "ownership-cost"]) {
+    const sorted = await responseAt(apiBaseUrl, `/vehicles?sort=${sort}&limit=100`);
+    assert.equal(sorted.status, 200);
+    assert.ok(sorted.body.some((vehicle) => vehicle.id === id), `${sort} cannot hide missing research.`);
+  }
+});
+
 test("rejected, stale, demo, rights-pending, conflicting, wrong-unit/type, mismatched, and empty-scope claims fail closed", async () => {
   const response = await responseAt(apiBaseUrl, `/vehicles/${encodeURIComponent(synthetic.release.slug)}`);
   assert.equal(response.status, 200);

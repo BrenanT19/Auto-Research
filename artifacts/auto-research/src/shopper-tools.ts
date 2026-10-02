@@ -14,6 +14,19 @@ export function researchStateLabel(state?: ResearchFieldState | null): string {
   return "Unknown";
 }
 
+/** A field's state takes precedence over a broader (possibly partial) section. */
+export function profileResearchState(
+  profile: {
+    fieldStates?: Record<string, ResearchFieldState | undefined>;
+    sectionStates?: Record<string, ResearchFieldState | undefined>;
+  },
+  field: string,
+  section?: string,
+): ResearchFieldState | undefined {
+  return profile.fieldStates?.[field] ??
+    (section ? profile.sectionStates?.[section] ?? profile.fieldStates?.[section] : undefined);
+}
+
 export type CanonicalPrefillProfile = {
   profileKind?: string;
   isDemo?: boolean;
