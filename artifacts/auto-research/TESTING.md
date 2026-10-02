@@ -24,17 +24,21 @@ the test target or contact a running development or production API. This
 repeatable demo fixture is not a database backup or authorization to begin the
 Stage 2A migration.
 
-For local use and CI, provision a local PostgreSQL service with an
-`auto_research_test` database and a role allowed to create databases, then run
-the same command:
+For local use, provision a local PostgreSQL service with an `auto_research_test`
+database and a role allowed to create databases, then run:
 
 ```sh
 export AUTO_RESEARCH_TEST_DATABASE_URL=postgresql://postgres:test@127.0.0.1:5432/auto_research_test
 pnpm --filter @workspace/scripts test:auto-research
 ```
 
-CI should provide that PostgreSQL service and URL as job configuration. Do not
-set this variable to a hosted database or use `DATABASE_URL` as a substitute.
+The GitHub Actions workflow in `.github/workflows/auto-research-migration-recovery.yml`
+starts its own PostgreSQL 16 service, creates `auto_research_test`, and runs only
+the interruption recovery command. It sets the test URL to the service at
+`127.0.0.1` and deliberately does not define `DATABASE_URL`. The runner requires
+the explicit test URL, rejects hosted targets, and never uses `DATABASE_URL` as
+a fallback. Do not point the test URL at a hosted database.
+
 The browser regressions and manual smoke check below run separately against the
 development workflows and their existing catalog. They do not write data.
 

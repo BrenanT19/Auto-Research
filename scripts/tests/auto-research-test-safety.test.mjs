@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   cleanupStaleTemporaryDatabases,
   formatTemporaryDatabaseComment,
+  getSafeTestDatabaseUrl,
   parseRunnerOwnedTemporaryDatabase,
   parseSafeTestDatabaseUrl,
 } from "../../lib/db/scripts/auto-research-test-runner.mjs";
@@ -33,6 +34,16 @@ test("test database guard rejects remote, production-named, and overridden targe
 test("test database guard requires an explicit disposable database URL", () => {
   assert.throws(
     () => parseSafeTestDatabaseUrl(undefined),
+    /Set AUTO_RESEARCH_TEST_DATABASE_URL/,
+  );
+});
+
+test("test database selection never falls back to DATABASE_URL", () => {
+  assert.throws(
+    () =>
+      getSafeTestDatabaseUrl({
+        DATABASE_URL: "postgresql://hosted.example.com:5432/production",
+      }),
     /Set AUTO_RESEARCH_TEST_DATABASE_URL/,
   );
 });
