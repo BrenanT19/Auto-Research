@@ -52,6 +52,20 @@ verifies all 13 demo-profile aliases and database constraints without starting
 the API server or calling vehicle endpoints. The temporary database is dropped
 when the check exits.
 
+To test recovery when the migration process is interrupted:
+
+```sh
+pnpm --filter @workspace/scripts test:auto-research:interrupted-migration-recovery
+```
+
+This mode uses the same local-only guard and a uniquely named disposable
+database. It pauses a copied Stage 2A migration after real DDL has run inside its
+transaction, kills that migration process, checks that the journal, schema, and
+seeded legacy data match their pre-migration state, then retries with the normal
+`migrate` command. A second normal migration run must leave the journal and
+schema unchanged. The temporary database and copied migration files are removed
+when the check exits.
+
 
 ## Browser runner setup
 
