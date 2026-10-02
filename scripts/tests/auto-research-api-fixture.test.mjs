@@ -327,5 +327,7 @@ test("each legacy profile and its existing demo child rows resolve through the A
       reports.map(({ id, vehicleId, isDemo }) => ({ id, vehicleId, isDemo })),
       expectedReports,
     );
+    assert.ok(reports.every((report) => report.isDemo === true), "Legacy reports remain visibly illustrative.");
+    assert.ok(reports.every((report) => report.vehicleId === trim.slug), "A saved report link must not change vehicle identity.");
   }
 });

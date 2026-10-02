@@ -813,7 +813,9 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
     .innerJoin(modelsTable, eq(generationsTable.modelId, modelsTable.id))
     .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
-    .where(reportFilter)
+    // This legacy table has no canonical subject or reviewed applicability.
+    // Only its explicitly illustrative reports may be published.
+    .where(and(eq(ownerReportsTable.isDemo, true), reportFilter))
     .orderBy(desc(ownerReportsTable.createdAt), asc(ownerReportsTable.id));
 
   const publicSlugs = await getLegacyPublicSlugs(
@@ -844,7 +846,7 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
     db
       .select({ value: count() })
       .from(ownerReportsTable)
-      .where(inArray(ownerReportsTable.trimId, fallbackTrimIds)),
+      .where(and(eq(ownerReportsTable.isDemo, true), inArray(ownerReportsTable.trimId, fallbackTrimIds))),
     loadCanonicalVehicles({}, releases),
   ]);
   const stats = {

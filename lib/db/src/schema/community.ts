@@ -3,6 +3,9 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { trimsTable } from "./vehicles";
 
+// Legacy illustrative reports only: trim_id is NOT a canonical vehicle_trim ID.
+// Non-demo rows lack reviewed canonical applicability and are not publishable.
+// Real experiences use reviewed owner_experience claims with configuration subjects.
 export const ownerReportsTable = pgTable("owner_reports", {
   id: serial("id").primaryKey(),
   trimId: integer("trim_id").notNull().references(() => trimsTable.id, { onDelete: "cascade" }),

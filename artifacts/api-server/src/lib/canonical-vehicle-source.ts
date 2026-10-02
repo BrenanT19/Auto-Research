@@ -606,7 +606,7 @@ export async function loadCanonicalVehicles(
         !isCurrentClaim(effectiveClaim) || supersededClaims.has(claim.id) ||
         hasConflict || !hasSupportingEvidence || !allParticipatingEvidenceAllowed ||
         (evidence.some((item) => item.sourceKind === "owner_forum") &&
-          claim.contentClass !== "external_owner_pattern" && claim.contentClass !== "direct_owner_experience")) continue;
+          claim.contentClass !== "external_owner_pattern")) continue;
     const appSet = setByClaim.get(claim.id);
     const appAlternatives = appSet ? alternativesBySet.get(appSet.id) ?? [] : [];
     const spec = specsByClaim.get(claim.id);
@@ -1036,6 +1036,9 @@ export async function loadCanonicalVehicles(
     }
     const ownerReports = applicable.flatMap((claim) => {
       const sourceClaim = claimsById.get(Number(claim.id));
+      // A firsthand experience belongs to one configuration, not a label,
+      // model-year, trim, or shared component. Broad externally researched
+      // patterns have their own evidence class and must never become reports.
       if (sourceClaim?.claimKind !== "owner_experience" ||
           sourceClaim.contentClass !== "direct_owner_experience" ||
           sourceClaim.subject.vehicleConfigurationId !== row.configurationId) return [];

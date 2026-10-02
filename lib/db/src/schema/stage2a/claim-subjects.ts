@@ -21,6 +21,9 @@ import {
   powertrainComponentRevisionsTable,
 } from "./identity";
 
+// Direct owner_experience claims must target vehicleConfigurationId exactly.
+// Broader subjects are valid for other claim kinds (e.g. external owner patterns),
+// but never establish firsthand ownership of every configuration below them.
 export const claimSubjectsTable = pgTable(
   "claim_subjects",
   {

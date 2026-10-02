@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { after, before, test } from "node:test";
-import { demoBaseline, seedTask32CanonicalFixtures } from "../../lib/db/scripts/auto-research-task32-fixtures.mjs";
+import { demoBaseline, seedTask32CanonicalFixtures, seedOwnerReportApplicabilityFixtures } from "../../lib/db/scripts/auto-research-task32-fixtures.mjs";
 
 const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const requireApi = createRequire(resolve(workspaceRoot, "artifacts/api-server/package.json"));
@@ -430,6 +430,75 @@ test("duplicate aliases and qualified hierarchy collisions do not merge public i
 test("unknown sort values are rejected instead of silently changing profile selection", async () => {
   const response = await responseAt(apiBaseUrl, "/vehicles?limit=100&sort=task32-unrecognized");
   assert.equal(response.status, 400);
+});
+
+test("owner experiences require exact reviewed identities and never inherit demo or external reports", async () => {
+  const statsBefore = await responseAt(apiBaseUrl, "/discovery/stats");
+  const legacyBefore = await Promise.all(expectedLegacySlugs.map((slug) =>
+    responseAt(apiBaseUrl, `/owner-reports?vehicleId=${encodeURIComponent(slug)}`)));
+  const { acceptedId, excludedIds } = await seedOwnerReportApplicabilityFixtures(pool, synthetic);
+  // A non-demo legacy row has no canonical subject or review. It must not be
+  // published just because it sits next to an existing illustrative report.
+  await pool.query(
+    `INSERT INTO owner_reports
+       (trim_id, display_name, ownership_months, miles_driven, rating, title, body, is_demo)
+     VALUES ($1, 'Synthetic unreviewed owner', 12, 100, 4,
+             'Unreviewed synthetic experience', 'Synthetic test only', false)`,
+    [demoBaseline.tables.trims[0].id],
+  );
+  // Deliberately make all visible identity labels match one legacy demo.
+  // Only canonical keys, not these labels, may govern report applicability.
+  const legacyTrim = demoBaseline.tables.trims[0];
+  const legacyYear = demoBaseline.tables.model_years.find((row) => row.id === legacyTrim.model_year_id);
+  const legacyGeneration = demoBaseline.tables.generations.find((row) => row.id === legacyYear.generation_id);
+  const legacyModel = demoBaseline.tables.models.find((row) => row.id === legacyGeneration.model_id);
+  const legacyMake = demoBaseline.tables.makes.find((row) => row.id === legacyModel.make_id);
+  await pool.query(
+    `UPDATE consumer_brands SET canonical_name = $1 WHERE id = (
+       SELECT consumer_brand_id FROM vehicle_models WHERE id = $2
+     )`, [legacyMake.name, synthetic.primary.modelId],
+  );
+  await pool.query("UPDATE vehicle_models SET name = $1 WHERE id = $2", [legacyModel.name, synthetic.primary.modelId]);
+  await pool.query("UPDATE vehicle_model_years SET model_year = $1 WHERE id = $2", [legacyYear.year, synthetic.primary.modelYearId]);
+  await pool.query("UPDATE vehicle_trims SET sales_name = $1 WHERE id = $2", [legacyTrim.name, synthetic.primary.trimId]);
+  await pool.query("UPDATE vehicle_configurations SET display_label = $1 WHERE id = $2", [legacyTrim.name, synthetic.primary.configurationId]);
+
+  const reports = await responseAt(apiBaseUrl, `/owner-reports?vehicleId=${encodeURIComponent(synthetic.release.slug)}`);
+  assert.equal(reports.status, 200);
+  assert.deepEqual(reports.body.map(({ id }) => id), [acceptedId]);
+  assert.equal(reports.body[0].isDemo, false);
+  assert.equal(reports.body[0].vehicleId, synthetic.release.slug);
+  assert.deepEqual(reports.body[0].claimIds, [String(acceptedId)]);
+  const detail = await responseAt(apiBaseUrl, `/vehicles/${encodeURIComponent(synthetic.release.slug)}`);
+  assert.equal(detail.status, 200);
+  assert.equal(detail.body.sectionStates.ownerReports.state, "unknown", "Excluded research must not imply a complete section.");
+  assert.ok(detail.body.sectionStates.ownerReports.claimIds.includes(String(acceptedId)));
+  const acceptedClaim = detail.body.claims.find(({ id }) => id === String(acceptedId));
+  assert.equal(acceptedClaim.contentClass, "direct_owner_experience");
+  assert.equal(acceptedClaim.applicability, "applies");
+  assert.ok(acceptedClaim.scopeDescription);
+  assert.ok(acceptedClaim.sources.length > 0);
+  for (const other of [synthetic.collision, synthetic.aliasCollisionA, synthetic.aliasCollisionB]) {
+    const otherReports = await responseAt(apiBaseUrl, `/owner-reports?vehicleId=${encodeURIComponent(other.aliasSlug)}`);
+    assert.equal(otherReports.status, 200);
+    assert.deepEqual(otherReports.body, [], "No experience may transfer to a different canonical configuration.");
+  }
+  for (const [index, slug] of expectedLegacySlugs.entries()) {
+    assert.deepEqual(
+      await responseAt(apiBaseUrl, `/owner-reports?vehicleId=${encodeURIComponent(slug)}`),
+      legacyBefore[index],
+      "Existing demo URLs must retain exactly their original reports.",
+    );
+  }
+  const unknown = await responseAt(apiBaseUrl, "/owner-reports?vehicleId=unknown-owner-profile");
+  assert.deepEqual(unknown, { status: 200, body: [] });
+  const all = await responseAt(apiBaseUrl, "/owner-reports");
+  assert.equal(all.status, 200);
+  assert.equal(all.body.filter(({ isDemo }) => !isDemo).length, 1);
+  assert.deepEqual(all.body.filter(({ isDemo }) => !isDemo).map(({ id }) => id), [acceptedId]);
+  assert.ok(all.body.filter(({ isDemo }) => !isDemo).every(({ id }) => !excludedIds.includes(id)));
+  const statsAfter = await responseAt(apiBaseUrl, "/discovery/stats");
+  assert.equal(statsAfter.body.reportCount, statsBefore.body.reportCount + 1);
 });
 
 function canonicalVehicleMakeSlug() {
