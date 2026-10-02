@@ -1,0 +1,1271 @@
+{
+  "format": "auto-research-demo-baseline.v1",
+  "classification": "demo_fixture",
+  "description": "Frozen structural and value baseline from the current development demo catalog. No provider/source data is included.",
+  "ownerReportTextPolicy": "Narrative and display-name fields are intentionally excluded; disposable API tests use clearly synthetic report text while retaining legacy report IDs, vehicle links, timestamps, and demo flags.",
+  "counts": {
+    "makes": 11,
+    "trims": 13,
+    "models": 11,
+    "engines": 12,
+    "recalls": 0,
+    "generations": 11,
+    "model_years": 11,
+    "owner_reports": 13,
+    "transmissions": 11,
+    "safety_ratings": 0,
+    "common_problems": 11,
+    "maintenance_items": 13,
+    "ownership_estimates": 13
+  },
+  "tables": {
+    "makes": [
+      {
+        "id": 12,
+        "mark": "B",
+        "name": "Buick",
+        "slug": "buick",
+        "origin": "United States"
+      },
+      {
+        "id": 13,
+        "mark": "L",
+        "name": "Lincoln",
+        "slug": "lincoln",
+        "origin": "United States"
+      },
+      {
+        "id": 14,
+        "mark": "C",
+        "name": "Chrysler",
+        "slug": "chrysler",
+        "origin": "United States"
+      },
+      {
+        "id": 15,
+        "mark": "R",
+        "name": "Ram",
+        "slug": "ram",
+        "origin": "United States"
+      },
+      {
+        "id": 16,
+        "mark": "J",
+        "name": "Jeep",
+        "slug": "jeep",
+        "origin": "United States"
+      },
+      {
+        "id": 17,
+        "mark": "D",
+        "name": "Dodge",
+        "slug": "dodge",
+        "origin": "United States"
+      },
+      {
+        "id": 18,
+        "mark": "F",
+        "name": "Ford",
+        "slug": "ford",
+        "origin": "United States"
+      },
+      {
+        "id": 19,
+        "mark": "G",
+        "name": "GMC",
+        "slug": "gmc",
+        "origin": "United States"
+      },
+      {
+        "id": 20,
+        "mark": "C",
+        "name": "Cadillac",
+        "slug": "cadillac",
+        "origin": "United States"
+      },
+      {
+        "id": 21,
+        "mark": "T",
+        "name": "Tesla",
+        "slug": "tesla",
+        "origin": "United States"
+      },
+      {
+        "id": 22,
+        "mark": "C",
+        "name": "Chevrolet",
+        "slug": "chevrolet",
+        "origin": "United States"
+      }
+    ],
+    "trims": [
+      {
+        "id": 4,
+        "name": "Big Horn",
+        "slug": "ram-1500-2024-big-horn",
+        "is_demo": true,
+        "mpg_city": 15,
+        "engine_id": 13,
+        "fuel_type": "Gasoline",
+        "image_key": "pickup",
+        "price_usd": 43000,
+        "drivetrain": "4WD",
+        "horsepower": 395,
+        "mpg_highway": 21,
+        "mpg_combined": 17,
+        "model_year_id": 12,
+        "research_rank": 11,
+        "transmission_id": 12
+      },
+      {
+        "id": 5,
+        "name": "Elevation",
+        "slug": "gmc-sierra-1500-2024-elevation",
+        "is_demo": true,
+        "mpg_city": 16,
+        "engine_id": 14,
+        "fuel_type": "Gasoline",
+        "image_key": "pickup",
+        "price_usd": 45000,
+        "drivetrain": "4WD",
+        "horsepower": 355,
+        "mpg_highway": 21,
+        "mpg_combined": 18,
+        "model_year_id": 13,
+        "research_rank": 7,
+        "transmission_id": 13
+      },
+      {
+        "id": 6,
+        "name": "Performance",
+        "slug": "tesla-model-y-2024-performance",
+        "is_demo": true,
+        "mpg_city": 115,
+        "engine_id": 16,
+        "fuel_type": "Electric",
+        "image_key": "electric-suv",
+        "price_usd": 52000,
+        "drivetrain": "AWD",
+        "horsepower": 456,
+        "mpg_highway": 106,
+        "mpg_combined": 111,
+        "model_year_id": 14,
+        "research_rank": 13,
+        "transmission_id": 14
+      },
+      {
+        "id": 7,
+        "name": "Long Range",
+        "slug": "tesla-model-y-2024-long-range",
+        "is_demo": true,
+        "mpg_city": 127,
+        "engine_id": 15,
+        "fuel_type": "Electric",
+        "image_key": "electric-suv",
+        "price_usd": 48000,
+        "drivetrain": "AWD",
+        "horsepower": 384,
+        "mpg_highway": 117,
+        "mpg_combined": 122,
+        "model_year_id": 14,
+        "research_rank": 12,
+        "transmission_id": 14
+      },
+      {
+        "id": 8,
+        "name": "Premium Luxury",
+        "slug": "cadillac-escalade-2024-premium-luxury",
+        "is_demo": true,
+        "mpg_city": 14,
+        "engine_id": 17,
+        "fuel_type": "Gasoline",
+        "image_key": "suv",
+        "price_usd": 90000,
+        "drivetrain": "4WD",
+        "horsepower": 420,
+        "mpg_highway": 18,
+        "mpg_combined": 16,
+        "model_year_id": 15,
+        "research_rank": 4,
+        "transmission_id": 15
+      },
+      {
+        "id": 9,
+        "name": "LT",
+        "slug": "chevrolet-silverado-1500-2024-lt",
+        "is_demo": true,
+        "mpg_city": 16,
+        "engine_id": 18,
+        "fuel_type": "Gasoline",
+        "image_key": "pickup",
+        "price_usd": 47000,
+        "drivetrain": "4WD",
+        "horsepower": 355,
+        "mpg_highway": 21,
+        "mpg_combined": 18,
+        "model_year_id": 16,
+        "research_rank": 3,
+        "transmission_id": 16
+      },
+      {
+        "id": 10,
+        "name": "Touring",
+        "slug": "chrysler-pacifica-2024-touring",
+        "is_demo": true,
+        "mpg_city": 19,
+        "engine_id": 19,
+        "fuel_type": "Gasoline",
+        "image_key": "minivan",
+        "price_usd": 42000,
+        "drivetrain": "FWD",
+        "horsepower": 287,
+        "mpg_highway": 28,
+        "mpg_combined": 22,
+        "model_year_id": 17,
+        "research_rank": 9,
+        "transmission_id": 17
+      },
+      {
+        "id": 11,
+        "name": "Reserve",
+        "slug": "lincoln-navigator-2023-reserve",
+        "is_demo": true,
+        "mpg_city": 16,
+        "engine_id": 20,
+        "fuel_type": "Gasoline",
+        "image_key": "suv",
+        "price_usd": 91000,
+        "drivetrain": "4WD",
+        "horsepower": 440,
+        "mpg_highway": 22,
+        "mpg_combined": 18,
+        "model_year_id": 18,
+        "research_rank": 5,
+        "transmission_id": 18
+      },
+      {
+        "id": 12,
+        "name": "XLT",
+        "slug": "ford-f-150-2024-xlt",
+        "is_demo": true,
+        "mpg_city": 18,
+        "engine_id": 21,
+        "fuel_type": "Gasoline",
+        "image_key": "pickup",
+        "price_usd": 40000,
+        "drivetrain": "4WD",
+        "horsepower": 325,
+        "mpg_highway": 24,
+        "mpg_combined": 20,
+        "model_year_id": 19,
+        "research_rank": 1,
+        "transmission_id": 19
+      },
+      {
+        "id": 13,
+        "name": "Lariat",
+        "slug": "ford-f-150-2024-lariat",
+        "is_demo": true,
+        "mpg_city": 18,
+        "engine_id": 21,
+        "fuel_type": "Gasoline",
+        "image_key": "pickup",
+        "price_usd": 56000,
+        "drivetrain": "4WD",
+        "horsepower": 325,
+        "mpg_highway": 24,
+        "mpg_combined": 20,
+        "model_year_id": 19,
+        "research_rank": 2,
+        "transmission_id": 19
+      },
+      {
+        "id": 14,
+        "name": "Preferred",
+        "slug": "buick-enclave-2024-preferred",
+        "is_demo": true,
+        "mpg_city": 19,
+        "engine_id": 22,
+        "fuel_type": "Gasoline",
+        "image_key": "suv",
+        "price_usd": 47000,
+        "drivetrain": "AWD",
+        "horsepower": 328,
+        "mpg_highway": 24,
+        "mpg_combined": 21,
+        "model_year_id": 20,
+        "research_rank": 6,
+        "transmission_id": 20
+      },
+      {
+        "id": 15,
+        "name": "GT",
+        "slug": "dodge-charger-2023-gt",
+        "is_demo": true,
+        "mpg_city": 18,
+        "engine_id": 23,
+        "fuel_type": "Gasoline",
+        "image_key": "sedan",
+        "price_usd": 35000,
+        "drivetrain": "AWD",
+        "horsepower": 292,
+        "mpg_highway": 27,
+        "mpg_combined": 21,
+        "model_year_id": 21,
+        "research_rank": 8,
+        "transmission_id": 21
+      },
+      {
+        "id": 16,
+        "name": "Laredo",
+        "slug": "jeep-grand-cherokee-2024-laredo",
+        "is_demo": true,
+        "mpg_city": 19,
+        "engine_id": 24,
+        "fuel_type": "Gasoline",
+        "image_key": "suv",
+        "price_usd": 40000,
+        "drivetrain": "4WD",
+        "horsepower": 293,
+        "mpg_highway": 26,
+        "mpg_combined": 22,
+        "model_year_id": 22,
+        "research_rank": 10,
+        "transmission_id": 22
+      }
+    ],
+    "models": [
+      {
+        "id": 12,
+        "name": "1500",
+        "slug": "1500",
+        "make_id": 15
+      },
+      {
+        "id": 13,
+        "name": "Sierra 1500",
+        "slug": "sierra-1500",
+        "make_id": 19
+      },
+      {
+        "id": 14,
+        "name": "Model Y",
+        "slug": "model-y",
+        "make_id": 21
+      },
+      {
+        "id": 15,
+        "name": "Escalade",
+        "slug": "escalade",
+        "make_id": 20
+      },
+      {
+        "id": 16,
+        "name": "Silverado 1500",
+        "slug": "silverado-1500",
+        "make_id": 22
+      },
+      {
+        "id": 17,
+        "name": "Pacifica",
+        "slug": "pacifica",
+        "make_id": 14
+      },
+      {
+        "id": 18,
+        "name": "Navigator",
+        "slug": "navigator",
+        "make_id": 13
+      },
+      {
+        "id": 19,
+        "name": "F-150",
+        "slug": "f-150",
+        "make_id": 18
+      },
+      {
+        "id": 20,
+        "name": "Enclave",
+        "slug": "enclave",
+        "make_id": 12
+      },
+      {
+        "id": 21,
+        "name": "Charger",
+        "slug": "charger",
+        "make_id": 17
+      },
+      {
+        "id": 22,
+        "name": "Grand Cherokee",
+        "slug": "grand-cherokee",
+        "make_id": 16
+      }
+    ],
+    "engines": [
+      {
+        "id": 13,
+        "name": "5.7L HEMI V8",
+        "fuel_type": "Gasoline",
+        "horsepower": 395,
+        "availability": "Sample engine option",
+        "model_year_id": 12
+      },
+      {
+        "id": 14,
+        "name": "5.3L V8",
+        "fuel_type": "Gasoline",
+        "horsepower": 355,
+        "availability": "Sample engine option",
+        "model_year_id": 13
+      },
+      {
+        "id": 15,
+        "name": "Dual motor electric drive",
+        "fuel_type": "Electric",
+        "horsepower": 384,
+        "availability": "Sample engine option",
+        "model_year_id": 14
+      },
+      {
+        "id": 16,
+        "name": "Dual motor electric drive",
+        "fuel_type": "Electric",
+        "horsepower": 456,
+        "availability": "Sample engine option",
+        "model_year_id": 14
+      },
+      {
+        "id": 17,
+        "name": "6.2L V8",
+        "fuel_type": "Gasoline",
+        "horsepower": 420,
+        "availability": "Sample engine option",
+        "model_year_id": 15
+      },
+      {
+        "id": 18,
+        "name": "5.3L V8",
+        "fuel_type": "Gasoline",
+        "horsepower": 355,
+        "availability": "Sample engine option",
+        "model_year_id": 16
+      },
+      {
+        "id": 19,
+        "name": "3.6L V6",
+        "fuel_type": "Gasoline",
+        "horsepower": 287,
+        "availability": "Sample engine option",
+        "model_year_id": 17
+      },
+      {
+        "id": 20,
+        "name": "3.5L twin-turbo V6",
+        "fuel_type": "Gasoline",
+        "horsepower": 440,
+        "availability": "Sample engine option",
+        "model_year_id": 18
+      },
+      {
+        "id": 21,
+        "name": "2.7L EcoBoost V6",
+        "fuel_type": "Gasoline",
+        "horsepower": 325,
+        "availability": "Sample engine option",
+        "model_year_id": 19
+      },
+      {
+        "id": 22,
+        "name": "2.5L turbo four-cylinder",
+        "fuel_type": "Gasoline",
+        "horsepower": 328,
+        "availability": "Sample engine option",
+        "model_year_id": 20
+      },
+      {
+        "id": 23,
+        "name": "3.6L V6",
+        "fuel_type": "Gasoline",
+        "horsepower": 292,
+        "availability": "Sample engine option",
+        "model_year_id": 21
+      },
+      {
+        "id": 24,
+        "name": "3.6L V6",
+        "fuel_type": "Gasoline",
+        "horsepower": 293,
+        "availability": "Sample engine option",
+        "model_year_id": 22
+      }
+    ],
+    "recalls": [],
+    "generations": [
+      {
+        "id": 12,
+        "name": "Fifth generation",
+        "end_year": 2026,
+        "model_id": 12,
+        "body_type": "Full-size pickup",
+        "start_year": 2019
+      },
+      {
+        "id": 13,
+        "name": "Fifth generation",
+        "end_year": 2026,
+        "model_id": 13,
+        "body_type": "Full-size pickup",
+        "start_year": 2019
+      },
+      {
+        "id": 14,
+        "name": "First generation",
+        "end_year": 2026,
+        "model_id": 14,
+        "body_type": "Electric SUV",
+        "start_year": 2020
+      },
+      {
+        "id": 15,
+        "name": "Fifth generation",
+        "end_year": 2026,
+        "model_id": 15,
+        "body_type": "Full-size luxury SUV",
+        "start_year": 2021
+      },
+      {
+        "id": 16,
+        "name": "Fourth generation",
+        "end_year": 2026,
+        "model_id": 16,
+        "body_type": "Full-size pickup",
+        "start_year": 2019
+      },
+      {
+        "id": 17,
+        "name": "Second generation",
+        "end_year": 2026,
+        "model_id": 17,
+        "body_type": "Minivan",
+        "start_year": 2017
+      },
+      {
+        "id": 18,
+        "name": "Fourth generation",
+        "end_year": 2026,
+        "model_id": 18,
+        "body_type": "Full-size luxury SUV",
+        "start_year": 2018
+      },
+      {
+        "id": 19,
+        "name": "Fourteenth generation",
+        "end_year": 2026,
+        "model_id": 19,
+        "body_type": "Full-size pickup",
+        "start_year": 2021
+      },
+      {
+        "id": 20,
+        "name": "Third generation",
+        "end_year": 2026,
+        "model_id": 20,
+        "body_type": "Midsize SUV",
+        "start_year": 2024
+      },
+      {
+        "id": 21,
+        "name": "Seventh generation",
+        "end_year": 2023,
+        "model_id": 21,
+        "body_type": "Full-size sedan",
+        "start_year": 2011
+      },
+      {
+        "id": 22,
+        "name": "Fifth generation",
+        "end_year": 2026,
+        "model_id": 22,
+        "body_type": "Midsize SUV",
+        "start_year": 2022
+      }
+    ],
+    "model_years": [
+      {
+        "id": 12,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 12
+      },
+      {
+        "id": 13,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 13
+      },
+      {
+        "id": 14,
+        "year": 2024,
+        "fuel_type": "Electric",
+        "generation_id": 14
+      },
+      {
+        "id": 15,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 15
+      },
+      {
+        "id": 16,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 16
+      },
+      {
+        "id": 17,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 17
+      },
+      {
+        "id": 18,
+        "year": 2023,
+        "fuel_type": "Gasoline",
+        "generation_id": 18
+      },
+      {
+        "id": 19,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 19
+      },
+      {
+        "id": 20,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 20
+      },
+      {
+        "id": 21,
+        "year": 2023,
+        "fuel_type": "Gasoline",
+        "generation_id": 21
+      },
+      {
+        "id": 22,
+        "year": 2024,
+        "fuel_type": "Gasoline",
+        "generation_id": 22
+      }
+    ],
+    "owner_reports": [
+      {
+        "id": 1,
+        "is_demo": true,
+        "trim_id": 4,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 2,
+        "is_demo": true,
+        "trim_id": 5,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 3,
+        "is_demo": true,
+        "trim_id": 6,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 4,
+        "is_demo": true,
+        "trim_id": 7,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 5,
+        "is_demo": true,
+        "trim_id": 8,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 6,
+        "is_demo": true,
+        "trim_id": 9,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 7,
+        "is_demo": true,
+        "trim_id": 10,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 8,
+        "is_demo": true,
+        "trim_id": 11,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 9,
+        "is_demo": true,
+        "trim_id": 12,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 10,
+        "is_demo": true,
+        "trim_id": 13,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 11,
+        "is_demo": true,
+        "trim_id": 14,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 12,
+        "is_demo": true,
+        "trim_id": 15,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      },
+      {
+        "id": 13,
+        "is_demo": true,
+        "trim_id": 16,
+        "created_at": "2026-10-01T02:25:47.006379+00:00"
+      }
+    ],
+    "transmissions": [
+      {
+        "id": 12,
+        "name": "8-speed automatic",
+        "gears": "8",
+        "availability": "Sample transmission option",
+        "model_year_id": 12
+      },
+      {
+        "id": 13,
+        "name": "10-speed automatic",
+        "gears": "10",
+        "availability": "Sample transmission option",
+        "model_year_id": 13
+      },
+      {
+        "id": 14,
+        "name": "Single-speed reduction gear",
+        "gears": "1",
+        "availability": "Sample transmission option",
+        "model_year_id": 14
+      },
+      {
+        "id": 15,
+        "name": "10-speed automatic",
+        "gears": "10",
+        "availability": "Sample transmission option",
+        "model_year_id": 15
+      },
+      {
+        "id": 16,
+        "name": "10-speed automatic",
+        "gears": "10",
+        "availability": "Sample transmission option",
+        "model_year_id": 16
+      },
+      {
+        "id": 17,
+        "name": "9-speed automatic",
+        "gears": "9",
+        "availability": "Sample transmission option",
+        "model_year_id": 17
+      },
+      {
+        "id": 18,
+        "name": "10-speed automatic",
+        "gears": "10",
+        "availability": "Sample transmission option",
+        "model_year_id": 18
+      },
+      {
+        "id": 19,
+        "name": "10-speed automatic",
+        "gears": "10",
+        "availability": "Sample transmission option",
+        "model_year_id": 19
+      },
+      {
+        "id": 20,
+        "name": "8-speed automatic",
+        "gears": "8",
+        "availability": "Sample transmission option",
+        "model_year_id": 20
+      },
+      {
+        "id": 21,
+        "name": "8-speed automatic",
+        "gears": "8",
+        "availability": "Sample transmission option",
+        "model_year_id": 21
+      },
+      {
+        "id": 22,
+        "name": "8-speed automatic",
+        "gears": "8",
+        "availability": "Sample transmission option",
+        "model_year_id": 22
+      }
+    ],
+    "safety_ratings": [],
+    "common_problems": [
+      {
+        "id": 1,
+        "title": "Possible electrical accessory concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 12,
+        "repair_cost_low_usd": 250,
+        "typical_mileage_end": 80000,
+        "repair_cost_high_usd": 1300,
+        "typical_mileage_start": 40000
+      },
+      {
+        "id": 2,
+        "title": "Possible infotainment concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 13,
+        "repair_cost_low_usd": 250,
+        "typical_mileage_end": 80000,
+        "repair_cost_high_usd": 1200,
+        "typical_mileage_start": 40000
+      },
+      {
+        "id": 3,
+        "title": "Possible display or camera calibration concern",
+        "is_demo": true,
+        "severity": "Low",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 14,
+        "repair_cost_low_usd": 200,
+        "typical_mileage_end": 90000,
+        "repair_cost_high_usd": 1200,
+        "typical_mileage_start": 45000
+      },
+      {
+        "id": 4,
+        "title": "Possible infotainment concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 15,
+        "repair_cost_low_usd": 350,
+        "typical_mileage_end": 75000,
+        "repair_cost_high_usd": 1800,
+        "typical_mileage_start": 35000
+      },
+      {
+        "id": 5,
+        "title": "Possible electrical accessory concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 16,
+        "repair_cost_low_usd": 200,
+        "typical_mileage_end": 80000,
+        "repair_cost_high_usd": 1200,
+        "typical_mileage_start": 40000
+      },
+      {
+        "id": 6,
+        "title": "Possible power-door sensor concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 17,
+        "repair_cost_low_usd": 200,
+        "typical_mileage_end": 85000,
+        "repair_cost_high_usd": 1200,
+        "typical_mileage_start": 45000
+      },
+      {
+        "id": 7,
+        "title": "Possible power accessory concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 18,
+        "repair_cost_low_usd": 300,
+        "typical_mileage_end": 75000,
+        "repair_cost_high_usd": 1600,
+        "typical_mileage_start": 35000
+      },
+      {
+        "id": 8,
+        "title": "Possible sensor or infotainment concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 19,
+        "repair_cost_low_usd": 250,
+        "typical_mileage_end": 85000,
+        "repair_cost_high_usd": 1100,
+        "typical_mileage_start": 45000
+      },
+      {
+        "id": 9,
+        "title": "Possible driver-assistance sensor concern",
+        "is_demo": true,
+        "severity": "Low",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 20,
+        "repair_cost_low_usd": 200,
+        "typical_mileage_end": 80000,
+        "repair_cost_high_usd": 1100,
+        "typical_mileage_start": 40000
+      },
+      {
+        "id": 10,
+        "title": "Possible suspension wear concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 21,
+        "repair_cost_low_usd": 300,
+        "typical_mileage_end": 90000,
+        "repair_cost_high_usd": 1500,
+        "typical_mileage_start": 50000
+      },
+      {
+        "id": 11,
+        "title": "Possible electronic control concern",
+        "is_demo": true,
+        "severity": "Moderate",
+        "engine_id": null,
+        "description": "Illustrative example problem only. Confirm actual history with service records and an independent inspection.",
+        "model_year_id": 22,
+        "repair_cost_low_usd": 250,
+        "typical_mileage_end": 80000,
+        "repair_cost_high_usd": 1400,
+        "typical_mileage_start": 40000
+      }
+    ],
+    "maintenance_items": [
+      {
+        "id": 1,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 4,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 100
+      },
+      {
+        "id": 2,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 5,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 100
+      },
+      {
+        "id": 3,
+        "item": "Tire rotation and inspection",
+        "is_demo": true,
+        "trim_id": 6,
+        "interval_miles": 6250,
+        "estimated_cost_usd": 60
+      },
+      {
+        "id": 4,
+        "item": "Tire rotation and inspection",
+        "is_demo": true,
+        "trim_id": 7,
+        "interval_miles": 6250,
+        "estimated_cost_usd": 60
+      },
+      {
+        "id": 5,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 8,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 125
+      },
+      {
+        "id": 6,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 9,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 100
+      },
+      {
+        "id": 7,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 10,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 95
+      },
+      {
+        "id": 8,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 11,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 125
+      },
+      {
+        "id": 9,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 12,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 95
+      },
+      {
+        "id": 10,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 13,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 95
+      },
+      {
+        "id": 11,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 14,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 105
+      },
+      {
+        "id": 12,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 15,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 90
+      },
+      {
+        "id": 13,
+        "item": "Oil and filter service",
+        "is_demo": true,
+        "trim_id": 16,
+        "interval_miles": 7500,
+        "estimated_cost_usd": 100
+      }
+    ],
+    "ownership_estimates": [
+      {
+        "id": 1,
+        "is_demo": true,
+        "trim_id": 4,
+        "annual_fuel_usd": 2400,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1150,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7,
+        "annual_insurance_usd": 1900,
+        "annual_ownership_usd": 6230,
+        "annual_maintenance_usd": 780,
+        "expected_lifespan_miles": 195000,
+        "five_year_depreciation_percent": 56
+      },
+      {
+        "id": 2,
+        "is_demo": true,
+        "trim_id": 5,
+        "annual_fuel_usd": 2350,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1100,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7,
+        "annual_insurance_usd": 1800,
+        "annual_ownership_usd": 6000,
+        "annual_maintenance_usd": 750,
+        "expected_lifespan_miles": 195000,
+        "five_year_depreciation_percent": 56
+      },
+      {
+        "id": 3,
+        "is_demo": true,
+        "trim_id": 6,
+        "annual_fuel_usd": 850,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 850,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.8,
+        "annual_insurance_usd": 2500,
+        "annual_ownership_usd": 4850,
+        "annual_maintenance_usd": 650,
+        "expected_lifespan_miles": 195000,
+        "five_year_depreciation_percent": 49
+      },
+      {
+        "id": 4,
+        "is_demo": true,
+        "trim_id": 7,
+        "annual_fuel_usd": 700,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 700,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.8,
+        "annual_insurance_usd": 2300,
+        "annual_ownership_usd": 4300,
+        "annual_maintenance_usd": 600,
+        "expected_lifespan_miles": 200000,
+        "five_year_depreciation_percent": 47
+      },
+      {
+        "id": 5,
+        "is_demo": true,
+        "trim_id": 8,
+        "annual_fuel_usd": 2850,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1550,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 6.8,
+        "annual_insurance_usd": 2700,
+        "annual_ownership_usd": 8400,
+        "annual_maintenance_usd": 1300,
+        "expected_lifespan_miles": 190000,
+        "five_year_depreciation_percent": 58
+      },
+      {
+        "id": 6,
+        "is_demo": true,
+        "trim_id": 9,
+        "annual_fuel_usd": 2350,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1100,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.1,
+        "annual_insurance_usd": 1800,
+        "annual_ownership_usd": 6010,
+        "annual_maintenance_usd": 760,
+        "expected_lifespan_miles": 195000,
+        "five_year_depreciation_percent": 56
+      },
+      {
+        "id": 7,
+        "is_demo": true,
+        "trim_id": 10,
+        "annual_fuel_usd": 2100,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1150,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.3,
+        "annual_insurance_usd": 2050,
+        "annual_ownership_usd": 6150,
+        "annual_maintenance_usd": 850,
+        "expected_lifespan_miles": 190000,
+        "five_year_depreciation_percent": 55
+      },
+      {
+        "id": 8,
+        "is_demo": true,
+        "trim_id": 11,
+        "annual_fuel_usd": 2850,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1550,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 6.7,
+        "annual_insurance_usd": 2550,
+        "annual_ownership_usd": 8300,
+        "annual_maintenance_usd": 1350,
+        "expected_lifespan_miles": 185000,
+        "five_year_depreciation_percent": 59
+      },
+      {
+        "id": 9,
+        "is_demo": true,
+        "trim_id": 12,
+        "annual_fuel_usd": 2200,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1050,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.4,
+        "annual_insurance_usd": 1700,
+        "annual_ownership_usd": 5700,
+        "annual_maintenance_usd": 750,
+        "expected_lifespan_miles": 200000,
+        "five_year_depreciation_percent": 54
+      },
+      {
+        "id": 10,
+        "is_demo": true,
+        "trim_id": 13,
+        "annual_fuel_usd": 2200,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1200,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.4,
+        "annual_insurance_usd": 1900,
+        "annual_ownership_usd": 6120,
+        "annual_maintenance_usd": 820,
+        "expected_lifespan_miles": 200000,
+        "five_year_depreciation_percent": 54
+      },
+      {
+        "id": 11,
+        "is_demo": true,
+        "trim_id": 14,
+        "annual_fuel_usd": 2600,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1200,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.5,
+        "annual_insurance_usd": 2000,
+        "annual_ownership_usd": 6700,
+        "annual_maintenance_usd": 900,
+        "expected_lifespan_miles": 190000,
+        "five_year_depreciation_percent": 52
+      },
+      {
+        "id": 12,
+        "is_demo": true,
+        "trim_id": 15,
+        "annual_fuel_usd": 2600,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1000,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7.2,
+        "annual_insurance_usd": 1900,
+        "annual_ownership_usd": 6200,
+        "annual_maintenance_usd": 700,
+        "expected_lifespan_miles": 185000,
+        "five_year_depreciation_percent": 57
+      },
+      {
+        "id": 13,
+        "is_demo": true,
+        "trim_id": 16,
+        "annual_fuel_usd": 2500,
+        "reliability_note": "Sample estimate only; not a verified reliability rating.",
+        "annual_repair_usd": 1350,
+        "reliability_label": "Illustrative demo score",
+        "reliability_score": 7,
+        "annual_insurance_usd": 2200,
+        "annual_ownership_usd": 6950,
+        "annual_maintenance_usd": 900,
+        "expected_lifespan_miles": 180000,
+        "five_year_depreciation_percent": 57
+      }
+    ]
+  }
+}

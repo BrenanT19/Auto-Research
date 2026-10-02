@@ -29,7 +29,7 @@ The current schema is defined in [`lib/db/src/schema`](../../lib/db/src/schema/i
 - Vehicle DTOs expose the trim slug and require legacy reliability/cost fields; list/detail reads inner-join engine, transmission, and ownership estimates ([`automotive.ts`](../api-server/src/routes/automotive.ts), [`openapi.yaml`](../../lib/api-spec/openapi.yaml)).
 - The `@workspace/db` package currently exposes `push` and `push-force`, not a checked-in SQL migration history ([`package.json`](../../lib/db/package.json)). The config points Drizzle at the schema entry point but does not set an explicit migration output directory ([`drizzle.config.ts`](../../lib/db/drizzle.config.ts)).
 
-The development snapshot contains 13 demo trims, estimates, maintenance rows, and owner reports; 11 common-problem rows; no recall or safety-rating rows. The isolated runner currently seeds only the Ford F-150 XLT and Tesla Model Y Long Range into a disposable database. `TESTING.md` separately says all 13 seeded profiles should return, so fixture and guide scope must be reconciled before the migration can claim 13-profile automated parity. That fixture work is separate from this specification.
+The development snapshot contains 13 demo trims, estimates, maintenance rows, and owner reports; 11 common-problem rows; no recall or safety-rating rows. The isolated runner now seeds a checked-in baseline for all 13 profiles, retaining legacy IDs, slugs, demo flags, and child relationships. Automated API checks cover all profile list/detail routes and owner-report vehicle links. The repository fixture omits owner-report names and narrative text and supplies synthetic text only in its disposable test database. This repeatable fixture is not a database backup or migration restore baseline; the migration rehearsal still requires the protected artifacts described in §6.2.
 
 The existing browser/API contract must remain stable while the canonical schema is introduced. Browse uses manufacturer/model suggestions and cascading filters; Compare uses comma-separated public IDs; Calculator reads `?vehicle=<slug>` and requires explicit estimate prefill; vehicle detail and owner-report routes also use the slug. Do not replace these identifiers with new database IDs.
 
@@ -160,7 +160,7 @@ Before any authorized migration:
 
 1. Record the schema revision, table counts, indexes/constraints, exact integer IDs, FK relationships, slugs, `is_demo`/`is_verified` values, and values for all 13 profile rows and their children. Record the observed development counts (11 makes/models/generations/model years, 12 engines, 11 transmissions, 13 trims/estimates/maintenance/owner reports, 11 common problems, zero recalls, zero ratings) as snapshot facts, not catalog truth.
 2. Produce a consistent logical database backup and schema-only export from the approved environment. Store them encrypted and access-controlled outside the repository; calculate checksums and record tool/version/time/target. Do not put database URLs, credentials, or unrestricted owner-report data in a commit.
-3. Produce deterministic JSON baseline fixtures for the 13 legacy vehicle IDs and child relationships, explicitly labeled demo. The separate test-fixture work must reconcile `TESTING.md` with the two-record disposable runner before a 13/13 automated migration assertion is claimed. Do not treat this plan as that fixture implementation.
+3. A deterministic demo fixture now covers the 13 legacy vehicle IDs and structural/value child rows; `TESTING.md` and the disposable runner are reconciled, with automated checks for all 13 IDs, slugs, demo flags, and API relationships. This fixture is not a backup, a restore rehearsal, or a complete golden-response archive. Complete those protected migration-baseline artifacts separately before migration work.
 4. Capture stable JSON responses from the local AutoResearch API only: `/api/catalog/options`, `/api/vehicles?limit=100`, each `/api/vehicles/{slug}`, applicable `/api/owner-reports?vehicleId={slug}`, `/api/makes`, `/api/discovery/stats`, and current popular/trending routes. Include status, ordering, public IDs, `isDemo`, nullable fields, and error behavior. No external automotive endpoint is called.
 5. Record representative shopper URL behavior for `/vehicles/{slug}`, Browse query filters, Compare `?ids=...`, and Calculator `?vehicle=...`. This is a compatibility baseline, not a request to change UI.
 6. Restore the backup to a uniquely named disposable local database and verify its checksum, counts, keys, and API snapshot before using it as the migration rehearsal source. Never restore into a shared or production database as a test.
@@ -206,7 +206,7 @@ No API, OpenAPI, client, or UI changes are part of this planning task. The futur
 
 ## 10. Automated migration, data-integrity, and parity tests
 
-All tests run against a disposable local database. External provider endpoints are not used. The current temporary runner is safe for its two fixtures but is not sufficient evidence of the 13-profile baseline; the separate fixture task must close that gap.
+All tests run against a disposable local database. External provider endpoints are not used. The current temporary runner seeds and checks the 13-profile demo fixture, but that fixture is not a pre-migration backup or restore rehearsal and does not replace the protected artifacts in §6.2.
 
 | Test group | Required assertions |
 |---|---|
@@ -240,7 +240,7 @@ Do not rename legacy `makes` to `organizations`, change `trims.slug`, infer a ne
 
 This is the executor sequence to use only after the specification and migration window are approved:
 
-1. Confirm that the Stage 2A document is approved, source-use gates for any stored source content are settled, and the independent 13-profile fixture mismatch has a safe test plan. No real data is required for the foundation.
+1. Confirm that the Stage 2A document is approved, source-use gates for any stored source content are settled, and the reconciled 13-profile fixture checks still pass. No real data is required for the foundation.
 2. Verify the selected development/test database target and backup destination without exposing credentials. Take the approved baseline backup and schema/API snapshot; verify restore in a uniquely named disposable database.
 3. Add the explicit versioned Drizzle migration output and commands. Generate and review the initial SQL migration; do not run schema `push-force`.
 4. Add organization, brand, market, production, canonical hierarchy, component/version/fitment, and profile-alias tables in dependency order. Keep every legacy table and API query intact.
@@ -259,7 +259,7 @@ The following still require owner confirmation before implementation:
 1. Approval of this exact table set, alias/mapping semantics, and canonical-versus-legacy read boundary.
 2. Approval of the Drizzle versioned migration directory/commands and who may run them in each environment.
 3. Approval of baseline backup access, storage, retention, and restore ownership. Do not keep database backups in the repository.
-4. Completion of the separate 13-profile fixture reconciliation; the current test runner does not establish that all 13 demo profiles are repeatable.
+4. The separate 13-profile fixture reconciliation is complete; rerun its disposable-database checks before migration rehearsal. It verifies the demo test baseline only, not backup/restore readiness.
 5. Confirmation of `source_revisions` rights-state semantics and legal/procurement approvals before any source content is stored or displayed. This is separate from structural migrations and blocks ingestion/pilot work.
 6. Any future change to OpenAPI, client generation, route output, or UI needs its own acceptance after the legacy response parity review.
 

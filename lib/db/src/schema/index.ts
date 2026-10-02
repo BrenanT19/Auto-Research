@@ -4,3 +4,4 @@ export * from "./vehicles";
 export * from "./ownership";
 export * from "./research";
 export * from "./community";
+export * from "./stage2a";

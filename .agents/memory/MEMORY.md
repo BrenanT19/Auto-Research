@@ -6,3 +6,4 @@
 - [Local PostgreSQL sockets](local-postgres-sockets.md) — temporary clusters may need an explicit Unix-socket directory instead of the absent `/run/postgresql`.
 - [Embedded dropdown verification](embedded-dropdown-interactions.md) — native popup visibility is not proof of mouse selection; verify option clicks and resulting state.
 - [Report navigation coordination](report-navigation-coordination.md) — shared activation boundary; transient click feedback must survive stale completion events and hand back to manual tracking.
+- [Drizzle migration validation](drizzle-migration-validation.md) — apply generated SQL on disposable PostgreSQL; generation and type checks miss SQL syntax and dependency ordering errors.

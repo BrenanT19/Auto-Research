@@ -8,13 +8,21 @@ pnpm --filter @workspace/scripts test:auto-research
 
 The suite includes unit checks for optional calculator lookups, loan/fuel
 estimates, purchase taxes/fees, down-payment caps, cent-rounded amortization,
-browse filters and URL cleanup, and comparison limits/URL state. Its
-read-only API checks create a temporary database from fixed demo fixtures, start
-a local API server against it, and make `GET /api/vehicles` requests. The runner
-requires `AUTO_RESEARCH_TEST_DATABASE_URL`; it accepts only a local PostgreSQL
-URL whose database name is exactly `auto_research_test`, creates a uniquely
-named database for the run, and drops it afterward. It does not use
-`DATABASE_URL` or contact a running development or production API.
+browse filters and URL cleanup, and comparison limits/URL state. Its isolated
+API checks seed the frozen 13-profile demo baseline from
+`lib/db/fixtures/auto-research-demo-baseline.json`, start a local API server,
+and verify the legacy IDs, slugs, demo classifications, child links, and
+profile/list/report behavior. The fixture excludes owner-report names and
+narrative text; the test database uses clearly synthetic report text while
+retaining the baseline report IDs and vehicle links.
+
+The runner requires `AUTO_RESEARCH_TEST_DATABASE_URL`; it accepts only a local
+PostgreSQL URL whose database name is exactly `auto_research_test`, creates a
+uniquely named database for the run, applies only the current legacy schema,
+and drops the temporary database afterward. It does not use `DATABASE_URL` as
+the test target or contact a running development or production API. This
+repeatable demo fixture is not a database backup or authorization to begin the
+Stage 2A migration.
 
 For local use and CI, provision a local PostgreSQL service with an
 `auto_research_test` database and a role allowed to create databases, then run
