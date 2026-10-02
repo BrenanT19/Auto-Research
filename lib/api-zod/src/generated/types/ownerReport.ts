@@ -5,18 +5,24 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { OwnerReportFieldStates } from './ownerReportFieldStates';
 
 export interface OwnerReport {
   id: number;
   vehicleId: string;
   vehicleLabel: string;
   displayName: string;
-  ownershipMonths: number;
-  milesDriven: number;
-  rating: number;
+  /** @nullable */
+  ownershipMonths: number | null;
+  /** @nullable */
+  milesDriven: number | null;
+  /** @nullable */
+  rating: number | null;
   title: string;
   body: string;
   /** @nullable */
   reportedProblem: string | null;
   isDemo: boolean;
+  claimIds?: string[];
+  fieldStates?: OwnerReportFieldStates;
 }

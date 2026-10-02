@@ -11,5 +11,6 @@ export type CommonProblemApplicability = typeof CommonProblemApplicability[keyof
 
 export const CommonProblemApplicability = {
   applies: 'applies',
+  does_not_apply: 'does_not_apply',
   unknown: 'unknown',
 } as const;

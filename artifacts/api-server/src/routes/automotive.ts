@@ -29,6 +29,10 @@ import {
   transmissionsTable,
   trimsTable,
   consumerBrandsTable,
+  vehicleGenerationsTable,
+  vehicleModelYearsTable,
+  vehicleModelsTable,
+  vehicleTrimsTable,
 } from "@workspace/db";
 import {
   getLegacyPublicSlugs,
@@ -36,8 +40,12 @@ import {
   resolveLegacyFallbackTrimId,
   usesCatalogProfileReads,
 } from "../lib/vehicle-profile-source";
-
-const router: IRouter = Router();
+import {
+  CANONICAL_RELEASE_MANIFEST,
+  loadCanonicalVehicles,
+  type CanonicalManifestEntry,
+} from "../lib/canonical-vehicle-source";
+import { parseProfileKey } from "../lib/canonical-policy";
 
 const vehicleSelection = {
   id: trimsTable.slug,
@@ -84,13 +92,19 @@ const vehicleSelection = {
 } as const;
 
 type VehicleSort = "popular" | "reliability" | "ownership-cost";
+class InvalidVehicleFilterError extends Error {}
 
-async function loadVehicles(options: {
+function invalidVehicleFilter(error: unknown): InvalidVehicleFilterError {
+  return new InvalidVehicleFilterError(error instanceof Error ? error.message : "Invalid vehicle filter.");
+}
+
+async function loadLegacyVehicles(options: {
   q?: string;
   makeSlug?: string;
   model?: string;
   modelId?: number;
   generationId?: number;
+  modelYearId?: number;
   year?: number;
   trim?: string;
   trimId?: number;
@@ -119,6 +133,7 @@ async function loadVehicles(options: {
   if (options.model) conditions.push(ilike(modelsTable.name, `%${options.model}%`));
   if (options.modelId) conditions.push(eq(modelsTable.id, options.modelId));
   if (options.generationId) conditions.push(eq(generationsTable.id, options.generationId));
+  if (options.modelYearId) conditions.push(eq(modelYearsTable.id, options.modelYearId));
   if (options.year) conditions.push(eq(modelYearsTable.year, options.year));
   if (options.trim) conditions.push(ilike(trimsTable.name, `%${options.trim}%`));
   if (options.trimId) conditions.push(eq(trimsTable.id, options.trimId));
@@ -153,7 +168,7 @@ async function loadVehicles(options: {
     .innerJoin(ownershipEstimatesTable, eq(ownershipEstimatesTable.trimId, trimsTable.id))
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(order)
-    .limit(options.limit ?? 100);
+    .limit(options.limit ?? 1000);
   if (!usesCatalogProfileReads()) return rows;
 
   const publicSlugs = await getLegacyPublicSlugs(
@@ -166,7 +181,7 @@ async function loadVehicles(options: {
 }
 
 function toVehicleDetail(
-  row: Awaited<ReturnType<typeof loadVehicles>>[number],
+  row: Awaited<ReturnType<typeof loadLegacyVehicles>>[number],
   engines: Array<typeof enginesTable.$inferSelect>,
   transmissions: Array<typeof transmissionsTable.$inferSelect>,
   siblingTrims: string[],
@@ -226,6 +241,257 @@ function toVehicleDetail(
   };
 }
 
+async function loadVehicles(
+  options: {
+    q?: string;
+    makeSlug?: string;
+    model?: string;
+    modelId?: number;
+    generationId?: number;
+    year?: number;
+    trim?: string;
+    trimId?: number;
+    vehicleId?: string;
+    sort?: VehicleSort;
+    limit?: number;
+    modelKey?: string;
+    generationKey?: string;
+    modelYearKey?: string;
+    trimKey?: string;
+  },
+  releases: readonly CanonicalManifestEntry[],
+) {
+  const parseKey = (key: string | undefined, kind: "model" | "generation" | "model-year" | "trim") => {
+    if (!key) return undefined;
+    try {
+      return parseProfileKey(key, kind);
+    } catch (error) {
+      throw invalidVehicleFilter(error);
+    }
+  };
+  const modelKey = parseKey(options.modelKey, "model");
+  const generationKey = parseKey(options.generationKey, "generation");
+  const modelYearKey = parseKey(options.modelYearKey, "model-year");
+  const trimKey = parseKey(options.trimKey, "trim");
+  const keyNamespaces = new Set([modelKey, generationKey, modelYearKey, trimKey]
+    .filter((key): key is NonNullable<typeof key> => Boolean(key))
+    .map((key) => key.namespace));
+  const hasLegacyNumericSelector = options.modelId !== undefined ||
+    options.generationId !== undefined || options.trimId !== undefined;
+  if (keyNamespaces.size > 1 ||
+      (hasLegacyNumericSelector && keyNamespaces.has("canonical"))) {
+    throw new InvalidVehicleFilterError("Canonical and legacy selectors cannot be mixed.");
+  }
+  const selectedNamespace = keyNamespaces.values().next().value ??
+    (hasLegacyNumericSelector ? "legacy" : undefined);
+  if ((modelKey?.namespace === "legacy" && options.modelId !== undefined && modelKey.id !== options.modelId) ||
+      (generationKey?.namespace === "legacy" && options.generationId !== undefined && generationKey.id !== options.generationId) ||
+      (trimKey?.namespace === "legacy" && options.trimId !== undefined && trimKey.id !== options.trimId)) {
+    throw new InvalidVehicleFilterError("A namespaced key contradicts its numeric legacy filter.");
+  }
+  if (selectedNamespace === "legacy") {
+    const modelId = modelKey?.id ?? options.modelId;
+    const generationId = generationKey?.id ?? options.generationId;
+    const modelYearId = modelYearKey?.id;
+    const trimId = trimKey?.id ?? options.trimId;
+    const [modelRows, generationRows, modelYearRows, trimRows] = await Promise.all([
+      modelId === undefined ? [] : db.select({ id: modelsTable.id }).from(modelsTable).where(eq(modelsTable.id, modelId)),
+      generationId === undefined ? [] : db.select({ id: generationsTable.id, modelId: generationsTable.modelId }).from(generationsTable).where(eq(generationsTable.id, generationId)),
+      modelYearId === undefined ? [] : db.select({
+        id: modelYearsTable.id,
+        generationId: modelYearsTable.generationId,
+        modelId: generationsTable.modelId,
+      }).from(modelYearsTable)
+        .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
+        .where(eq(modelYearsTable.id, modelYearId)),
+      trimId === undefined ? [] : db.select({
+        id: trimsTable.id,
+        modelYearId: trimsTable.modelYearId,
+        generationId: modelYearsTable.generationId,
+        modelId: generationsTable.modelId,
+      }).from(trimsTable)
+        .innerJoin(modelYearsTable, eq(trimsTable.modelYearId, modelYearsTable.id))
+        .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
+        .where(eq(trimsTable.id, trimId)),
+    ]);
+    const generation = generationRows[0];
+    const modelYear = modelYearRows[0];
+    const trim = trimRows[0];
+    const contradiction =
+      (modelId !== undefined && generation && generation.modelId !== modelId) ||
+      (generationId !== undefined && modelYear && modelYear.generationId !== generationId) ||
+      (modelId !== undefined && modelYear && modelYear.modelId !== modelId) ||
+      (modelId !== undefined && trim && trim.modelId !== modelId) ||
+      (generationId !== undefined && trim && trim.generationId !== generationId) ||
+      (modelYearId !== undefined && trim && trim.modelYearId !== modelYearId);
+    // Unknown IDs remain ordinary empty searches; only known conflicting identities are invalid.
+    if (modelId !== undefined && modelRows.length && contradiction ||
+        generationId !== undefined && generationRows.length && contradiction ||
+        modelYearId !== undefined && modelYearRows.length && contradiction ||
+        trimId !== undefined && trimRows.length && contradiction) {
+      throw new InvalidVehicleFilterError("Namespaced selectors describe conflicting vehicle identities.");
+    }
+  }
+  if (selectedNamespace === "canonical" && (modelKey || generationKey || modelYearKey || trimKey)) {
+    const [modelRows, generationRows, modelYearRows, trimRows] = await Promise.all([
+      modelKey ? db.select({ id: vehicleModelsTable.id }).from(vehicleModelsTable).where(eq(vehicleModelsTable.id, modelKey.id)) : [],
+      generationKey ? db.select({ id: vehicleGenerationsTable.id, modelId: vehicleGenerationsTable.vehicleModelId }).from(vehicleGenerationsTable).where(eq(vehicleGenerationsTable.id, generationKey.id)) : [],
+      modelYearKey ? db.select({
+        id: vehicleModelYearsTable.id,
+        generationId: vehicleModelYearsTable.vehicleGenerationId,
+        modelId: vehicleGenerationsTable.vehicleModelId,
+      }).from(vehicleModelYearsTable)
+        .innerJoin(vehicleGenerationsTable, eq(vehicleModelYearsTable.vehicleGenerationId, vehicleGenerationsTable.id))
+        .where(eq(vehicleModelYearsTable.id, modelYearKey.id)) : [],
+      trimKey ? db.select({
+        id: vehicleTrimsTable.id,
+        modelYearId: vehicleTrimsTable.vehicleModelYearId,
+        generationId: vehicleModelYearsTable.vehicleGenerationId,
+        modelId: vehicleGenerationsTable.vehicleModelId,
+      }).from(vehicleTrimsTable)
+        .innerJoin(vehicleModelYearsTable, eq(vehicleTrimsTable.vehicleModelYearId, vehicleModelYearsTable.id))
+        .innerJoin(vehicleGenerationsTable, eq(vehicleModelYearsTable.vehicleGenerationId, vehicleGenerationsTable.id))
+        .where(eq(vehicleTrimsTable.id, trimKey.id)) : [],
+    ]);
+    const generation = generationRows[0];
+    const modelYear = modelYearRows[0];
+    const trim = trimRows[0];
+    const contradiction =
+      (modelKey && generation && generation.modelId !== modelKey.id) ||
+      (generationKey && modelYear && modelYear.generationId !== generationKey.id) ||
+      (modelKey && modelYear && modelYear.modelId !== modelKey.id) ||
+      (modelKey && trim && trim.modelId !== modelKey.id) ||
+      (generationKey && trim && trim.generationId !== generationKey.id) ||
+      (modelYearKey && trim && trim.modelYearId !== modelYearKey.id);
+    if (contradiction && (
+      (modelKey && modelRows.length) || (generationKey && generationRows.length) ||
+      (modelYearKey && modelYearRows.length) || (trimKey && trimRows.length)
+    )) {
+      throw new InvalidVehicleFilterError("Namespaced selectors describe conflicting vehicle identities.");
+    }
+  }
+  const canonicalFilters = {
+    q: options.q,
+    makeSlug: options.makeSlug,
+    model: options.model,
+    year: options.year,
+    trim: options.trim,
+    vehicleId: options.vehicleId,
+    modelYearKey: modelYearKey?.namespace === "canonical" ? `canonical:model-year:${modelYearKey.id}` : undefined,
+    modelKey: modelKey?.namespace === "canonical" ? `canonical:model:${modelKey.id}` : undefined,
+    generationKey: generationKey?.namespace === "canonical" ? `canonical:generation:${generationKey.id}` : undefined,
+    trimKey: trimKey?.namespace === "canonical" ? `canonical:trim:${trimKey.id}` : undefined,
+  };
+  const canonical = selectedNamespace === "legacy" ? [] : await loadCanonicalVehicles(canonicalFilters, releases);
+  const legacy = selectedNamespace === "canonical" ? [] : await loadLegacyVehicles({
+    ...options,
+    modelId: modelKey?.namespace === "legacy" ? modelKey.id : options.modelId,
+    generationId: generationKey?.namespace === "legacy" ? generationKey.id : options.generationId,
+    modelYearId: modelYearKey?.namespace === "legacy" ? modelYearKey.id : undefined,
+    trimId: trimKey?.namespace === "legacy" ? trimKey.id : options.trimId,
+    vehicleId: options.vehicleId,
+  });
+  const combined = options.vehicleId
+    ? canonical.length ? canonical : legacy
+    : [...legacy, ...canonical];
+  const sort = options.sort ?? "popular";
+  const metric = (row: (typeof combined)[number]): number | null =>
+    sort === "reliability" ? row.reliabilityEstimate :
+      sort === "ownership-cost" ? row.annualOwnershipEstimateUsd : row.researchRank;
+  combined.sort((left, right) => {
+    const a = metric(left);
+    const b = metric(right);
+    if (a === null && b !== null) return 1;
+    if (b === null && a !== null) return -1;
+    if (a !== null && b !== null && a !== b) return sort === "reliability" ? b - a : a - b;
+    // Preserve the legacy query's tie order, including the existing popular list.
+    const leftLegacy = "trimDbId" in left;
+    const rightLegacy = "trimDbId" in right;
+    if (leftLegacy && rightLegacy) return 0;
+    if (leftLegacy !== rightLegacy) return leftLegacy ? -1 : 1;
+    return left.make.localeCompare(right.make) || left.model.localeCompare(right.model) ||
+      left.year - right.year || left.trim.localeCompare(right.trim) || left.id.localeCompare(right.id);
+  });
+  return combined.slice(0, options.limit ?? 100);
+}
+
+export function createAutomotiveRouter(options: {
+  releases?: readonly CanonicalManifestEntry[];
+} = {}): IRouter {
+const router: IRouter = Router();
+const releases = options.releases ?? CANONICAL_RELEASE_MANIFEST;
+
+function routeNamespaceFilters(query: Record<string, unknown>): {
+  modelKey?: string;
+  generationKey?: string;
+  modelYearKey?: string;
+  trimKey?: string;
+} {
+  const result: { modelKey?: string; generationKey?: string; modelYearKey?: string; trimKey?: string } = {};
+  for (const key of ["modelKey", "generationKey", "modelYearKey", "trimKey"] as const) {
+    if (query[key] !== undefined) {
+      if (typeof query[key] !== "string") {
+        throw new InvalidVehicleFilterError(`${key} must be a single namespaced key.`);
+      }
+      result[key] = query[key];
+    }
+  }
+  return result;
+}
+
+function respondBadQuery(error: unknown, res: import("express").Response): void {
+  if (!(error instanceof InvalidVehicleFilterError)) throw error;
+  res.status(400).json({ error: error instanceof Error ? error.message : "Invalid vehicle filter." });
+}
+
+function toCanonicalSummary(vehicle: Awaited<ReturnType<typeof loadCanonicalVehicles>>[number]) {
+  const {
+    makeKey,
+    makeId,
+    modelId,
+    generationId,
+    modelYearId,
+    trimId,
+    modelKey,
+    generationKey,
+    modelYearKey,
+    trimKey,
+    commonProblems,
+    maintenance,
+    reliabilityClaimIds,
+    overview,
+    engineName,
+    transmissionName,
+    reliabilityLabel,
+    reliabilityNote,
+    insuranceEstimateUsd,
+    fiveYearDepreciationPercent,
+    expectedLifespanMiles,
+    recallStatus,
+    safetyStatus,
+    engines,
+    transmissions,
+    siblingTrims,
+    inspectionChecklist,
+    ownerReports,
+    ...summary
+  } = vehicle;
+  return {
+    ...summary,
+    claims: summary.claims.map(({ fieldCode, value, valueState, measurementBasis, unit, claimKind, ...claim }) => claim),
+  };
+}
+
+function serializeVehicleList(
+  vehicles: Awaited<ReturnType<typeof loadVehicles>>,
+  responseSchema: typeof ListVehiclesResponse | typeof ListPopularVehiclesResponse | typeof ListTrendingVehiclesResponse = ListVehiclesResponse,
+): unknown[] {
+  return vehicles.map((vehicle) => {
+    const dto = "profileKind" in vehicle ? toCanonicalSummary(vehicle) : vehicle;
+    return (responseSchema.parse([dto]) as unknown[])[0];
+  });
+}
+
 router.get("/makes", async (_req, res): Promise<void> => {
   const fallbackTrimIds = await getLegacyFallbackTrimIds();
   const visibleVehicleCount = count(
@@ -247,7 +513,28 @@ router.get("/makes", async (_req, res): Promise<void> => {
     .groupBy(makesTable.id)
     .orderBy(asc(makesTable.name));
 
-  res.json(ListMakesResponse.parse(makes));
+  const canonical = await loadCanonicalVehicles({}, releases);
+  const canonicalMakes = new Map<string, { id: number; name: string; slug: string; mark: string; vehicleCount: number; makeKey: string; profileKind: "canonical" }>();
+  for (const vehicle of canonical) {
+    const item = canonicalMakes.get(vehicle.makeKey);
+    if (item) item.vehicleCount += 1;
+    else canonicalMakes.set(vehicle.makeKey, {
+      id: vehicle.makeId,
+      name: vehicle.make,
+      slug: vehicle.makeSlug,
+      mark: "",
+      vehicleCount: 1,
+      makeKey: vehicle.makeKey,
+      profileKind: "canonical",
+    });
+  }
+  const makesBySlug = new Map(makes.map((make) => [make.slug, { ...make }]));
+  for (const canonicalMake of canonicalMakes.values()) {
+    const existing = makesBySlug.get(canonicalMake.slug);
+    if (existing) existing.vehicleCount += canonicalMake.vehicleCount;
+    else makesBySlug.set(canonicalMake.slug, canonicalMake);
+  }
+  res.json([...makesBySlug.values()].sort((left, right) => left.name.localeCompare(right.name) || left.slug.localeCompare(right.slug)));
 });
 
 router.get("/catalog/options", async (_req, res): Promise<void> => {
@@ -278,11 +565,38 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
   const publicSlugs = await getLegacyPublicSlugs(
     queriedOptions.map((option) => option.trimId),
   );
-  const options = queriedOptions.map((option) => ({
+  const legacyOptions = queriedOptions.map((option) => ({
     ...option,
     profileId: publicSlugs.get(option.trimId) ?? option.profileId,
+    makeKey: `legacy:make:${option.makeId}`,
+    modelKey: `legacy:model:${option.modelId}`,
+    generationKey: `legacy:generation:${option.generationId}`,
+    modelYearKey: `legacy:model-year:${option.modelYearId}`,
+    trimKey: `legacy:trim:${option.trimId}`,
+    profileKind: "legacy" as const,
   }));
-  res.json(GetCatalogOptionsResponse.parse(options));
+  const canonical = await loadCanonicalVehicles({}, releases);
+  const canonicalOptions = canonical.map((option) => ({
+    profileId: option.id,
+    makeId: option.makeId,
+    make: option.make,
+    makeSlug: option.makeSlug,
+    modelId: option.modelId,
+    model: option.model,
+    generationId: option.generationId,
+    generation: option.generation,
+    modelYearId: option.modelYearId,
+    year: option.year,
+    trimId: option.trimId,
+    trim: option.trim,
+    makeKey: option.makeKey,
+    modelKey: option.modelKey,
+    generationKey: option.generationKey,
+    modelYearKey: option.modelYearKey,
+    trimKey: option.trimKey,
+    profileKind: "canonical" as const,
+  }));
+  res.json([...legacyOptions, ...canonicalOptions]);
 });
 
 router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
@@ -312,18 +626,39 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     .groupBy(makesTable.id);
 
   if (!make) {
-    res.status(404).json({ error: "Manufacturer not found" });
+    const canonical = await loadCanonicalVehicles({ makeSlug: parsed.data.makeSlug }, releases);
+    const canonicalMake = canonical[0];
+    if (!canonicalMake) {
+      res.status(404).json({ error: "Manufacturer not found" });
+      return;
+    }
+    res.json({
+      make: {
+        id: canonicalMake.makeId,
+        name: canonicalMake.make,
+        slug: canonicalMake.makeSlug,
+        mark: "",
+        vehicleCount: canonical.length,
+        makeKey: canonicalMake.makeKey,
+        profileKind: "canonical",
+      },
+      description: "",
+      vehicles: serializeVehicleList(canonical),
+    });
     return;
   }
 
-  const vehicles = await loadVehicles({ makeSlug: make.slug, limit: 100 });
-  res.json(
-    GetMakeResponse.parse({
-      make,
+  const canonical = await loadCanonicalVehicles({ makeSlug: make.slug }, releases);
+  const combinedMake = {
+    ...make,
+    vehicleCount: make.vehicleCount + canonical.length,
+  };
+  const vehicles = await loadVehicles({ makeSlug: make.slug, limit: 100 }, releases);
+  res.json({
+      make: combinedMake,
       description: `${make.name} sample vehicle profiles for ownership research. All figures and problem descriptions in this demo are illustrative, not verified manufacturer or reliability data.`,
-      vehicles,
-    }),
-  );
+      vehicles: serializeVehicleList(vehicles),
+  });
 });
 
 router.get("/vehicles", async (req, res): Promise<void> => {
@@ -332,18 +667,27 @@ router.get("/vehicles", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const vehicles = await loadVehicles({ ...parsed.data, limit: parsed.data.limit });
-  res.json(ListVehiclesResponse.parse(vehicles));
+  let vehicles;
+  try {
+    vehicles = await loadVehicles(
+      { ...parsed.data, ...routeNamespaceFilters(req.query as Record<string, unknown>), limit: parsed.data.limit },
+      releases,
+    );
+  } catch (error) {
+    respondBadQuery(error, res);
+    return;
+  }
+  res.json(serializeVehicleList(vehicles));
 });
 
 router.get("/vehicles/popular", async (_req, res): Promise<void> => {
-  const vehicles = await loadVehicles({ sort: "reliability", limit: 8 });
-  res.json(ListPopularVehiclesResponse.parse(vehicles));
+  const vehicles = await loadVehicles({ sort: "reliability", limit: 8 }, releases);
+  res.json(serializeVehicleList(vehicles, ListPopularVehiclesResponse));
 });
 
 router.get("/vehicles/trending", async (_req, res): Promise<void> => {
-  const vehicles = await loadVehicles({ sort: "popular", limit: 8 });
-  res.json(ListTrendingVehiclesResponse.parse(vehicles));
+  const vehicles = await loadVehicles({ sort: "popular", limit: 8 }, releases);
+  res.json(serializeVehicleList(vehicles, ListTrendingVehiclesResponse));
 });
 
 router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
@@ -353,9 +697,48 @@ router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
     return;
   }
 
-  const [row] = await loadVehicles({ vehicleId: parsed.data.vehicleId, limit: 1 });
+  let row: Awaited<ReturnType<typeof loadVehicles>>[number] | undefined;
+  try {
+    [row] = await loadVehicles({ vehicleId: parsed.data.vehicleId, limit: 1 }, releases);
+  } catch (error) {
+    respondBadQuery(error, res);
+    return;
+  }
   if (!row) {
     res.status(404).json({ error: "Vehicle profile not found" });
+    return;
+  }
+
+  if (!("trimDbId" in row)) {
+    const detail = {
+      ...toCanonicalSummary(row),
+      overview: row.overview,
+      engineName: row.engineName,
+      transmissionName: row.transmissionName,
+      engines: row.engines,
+      transmissions: row.transmissions,
+      siblingTrims: row.siblingTrims,
+      reliability: {
+        score: row.reliabilityEstimate,
+        label: row.reliabilityLabel,
+        note: row.reliabilityNote,
+      },
+      fieldStates: {
+        ...row.fieldStates,
+        "reliability.score": row.fieldStates.reliabilityEstimate,
+        "reliability.label": row.fieldStates.reliabilityLabel,
+        "reliability.note": row.fieldStates.reliabilityNote,
+      },
+      commonProblems: row.commonProblems,
+      maintenance: row.maintenance,
+      insuranceEstimateUsd: row.insuranceEstimateUsd,
+      fiveYearDepreciationPercent: row.fiveYearDepreciationPercent,
+      expectedLifespanMiles: row.expectedLifespanMiles,
+      inspectionChecklist: row.inspectionChecklist,
+      recallStatus: row.recallStatus,
+      safetyStatus: row.safetyStatus,
+    };
+    res.json(GetVehicleResponse.parse(detail));
     return;
   }
 
@@ -436,19 +819,24 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
   const publicSlugs = await getLegacyPublicSlugs(
     reports.map((report) => report.trimDbId),
   );
+  const canonicalProfiles = await loadCanonicalVehicles(
+    parsed.data.vehicleId ? { vehicleId: parsed.data.vehicleId } : {},
+    releases,
+  );
+  const canonicalReports = canonicalProfiles.flatMap((profile) => profile.ownerReports);
   res.json(
     ListOwnerReportsResponse.parse(
-      reports.map(({ trimDbId, ...report }) => ({
+      [...reports.map(({ trimDbId, ...report }) => ({
         ...report,
         vehicleId: publicSlugs.get(trimDbId) ?? report.vehicleId,
-      })),
+      })), ...canonicalReports],
     ),
   );
 });
 
 router.get("/discovery/stats", async (_req, res): Promise<void> => {
   const fallbackTrimIds = await getLegacyFallbackTrimIds();
-  const [makeStats, vehicleStats, reportStats] = await Promise.all([
+  const [makeStats, vehicleStats, reportStats, canonicalVehicles] = await Promise.all([
     usesCatalogProfileReads()
       ? db.select({ value: count() }).from(consumerBrandsTable)
       : db.select({ value: count() }).from(makesTable),
@@ -457,14 +845,18 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
       .select({ value: count() })
       .from(ownerReportsTable)
       .where(inArray(ownerReportsTable.trimId, fallbackTrimIds)),
+    loadCanonicalVehicles({}, releases),
   ]);
   const stats = {
     makeCount: makeStats[0]?.value ?? 0,
-    vehicleCount: vehicleStats[0]?.value ?? 0,
-    reportCount: reportStats[0]?.value ?? 0,
+    vehicleCount: (vehicleStats[0]?.value ?? 0) + canonicalVehicles.length,
+    reportCount: (reportStats[0]?.value ?? 0) + canonicalVehicles.reduce((total, vehicle) => total + vehicle.ownerReports.length, 0),
     demoLabel: "Illustrative demo catalog",
   };
   res.json(GetDiscoveryStatsResponse.parse(stats));
 });
 
-export default router;
+return router;
+}
+
+export default createAutomotiveRouter();

@@ -7,7 +7,10 @@
  */
 
 export interface ReliabilityProfile {
-  score: number;
-  label: string;
-  note: string;
+  /** @nullable */
+  score: number | null;
+  /** @nullable */
+  label: string | null;
+  /** @nullable */
+  note: string | null;
 }

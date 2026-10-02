@@ -5,6 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ClaimProvenance } from './claimProvenance';
+import type { VehicleSummaryFieldStates } from './vehicleSummaryFieldStates';
+import type { VehicleSummaryProfileKind } from './vehicleSummaryProfileKind';
+import type { VehicleSummarySectionStates } from './vehicleSummarySectionStates';
 
 export interface VehicleSummary {
   id: string;
@@ -15,23 +19,39 @@ export interface VehicleSummary {
   year: number;
   generation: string;
   trim: string;
-  bodyType: string;
-  drivetrain: string;
-  fuelType: string;
+  /** @nullable */
+  bodyType: string | null;
+  /** @nullable */
+  drivetrain: string | null;
+  /** @nullable */
+  fuelType: string | null;
   /** @nullable */
   mpgCity: number | null;
   /** @nullable */
   mpgHighway: number | null;
   /** @nullable */
   mpgCombined: number | null;
-  horsepower: number;
-  priceUsd: number;
-  reliabilityEstimate: number;
-  annualOwnershipEstimateUsd: number;
-  annualMaintenanceEstimateUsd: number;
-  annualRepairEstimateUsd: number;
-  annualFuelEstimateUsd: number;
-  researchRank: number;
+  /** @nullable */
+  horsepower: number | null;
+  /** @nullable */
+  priceUsd: number | null;
+  /** @nullable */
+  reliabilityEstimate: number | null;
+  /** @nullable */
+  annualOwnershipEstimateUsd: number | null;
+  /** @nullable */
+  annualMaintenanceEstimateUsd: number | null;
+  /** @nullable */
+  annualRepairEstimateUsd: number | null;
+  /** @nullable */
+  annualFuelEstimateUsd: number | null;
+  /** @nullable */
+  researchRank: number | null;
   imageKey: string;
   isDemo: boolean;
+  profileKind?: VehicleSummaryProfileKind;
+  canonicalConfigurationId?: number;
+  fieldStates?: VehicleSummaryFieldStates;
+  sectionStates?: VehicleSummarySectionStates;
+  claims?: ClaimProvenance[];
 }

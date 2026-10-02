@@ -5,9 +5,14 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { MaintenanceItemFieldStates } from './maintenanceItemFieldStates';
 
 export interface MaintenanceItem {
   item: string;
-  intervalMiles: number;
-  estimatedCostUsd: number;
+  /** @nullable */
+  intervalMiles: number | null;
+  /** @nullable */
+  estimatedCostUsd: number | null;
+  claimIds?: string[];
+  fieldStates?: MaintenanceItemFieldStates;
 }

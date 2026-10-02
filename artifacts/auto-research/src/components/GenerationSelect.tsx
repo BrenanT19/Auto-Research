@@ -5,7 +5,7 @@ const ALL_GENERATIONS = "all-generations";
 
 type GenerationSelectProps = {
   value: string;
-  options: Array<{ id: number; name: string }>;
+  options: Array<{ id: number | string; name: string }>;
   disabled: boolean;
   describedBy?: string;
   onChange: (generationId: string) => void;

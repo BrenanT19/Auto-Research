@@ -1,5 +1,126 @@
 export type BrowseSort = "popular" | "reliability" | "ownership-cost";
 
+export type ResearchFieldState = {
+  state: "known" | "unknown" | "not_yet_researched" | "not_applicable";
+  reason?: string | null;
+  claimIds: string[];
+};
+
+export function researchStateLabel(state?: ResearchFieldState | null): string {
+  if (!state) return "Research state unavailable";
+  if (state.state === "known") return "Known";
+  if (state.state === "not_yet_researched") return "Not yet researched";
+  if (state.state === "not_applicable") return "Not applicable";
+  return "Unknown";
+}
+
+export type CanonicalPrefillProfile = {
+  profileKind?: string;
+  isDemo?: boolean;
+  fieldStates?: Record<string, ResearchFieldState | undefined>;
+  priceUsd?: number | null;
+  mpgCombined?: number | null;
+  annualMaintenanceEstimateUsd?: number | null;
+  annualRepairEstimateUsd?: number | null;
+  insuranceEstimateUsd?: number | null;
+};
+
+/** Only explicitly known canonical profile values may be copied into editable inputs. */
+export function buildCanonicalCalculatorPrefill(
+  profile: CanonicalPrefillProfile,
+): Partial<OwnershipDraft> {
+  if (profile.profileKind !== "canonical" || profile.isDemo !== false) return {};
+  const knownNumber = (field: string, value: number | null | undefined) =>
+    profile.fieldStates?.[field]?.state === "known" && typeof value === "number" && Number.isFinite(value)
+      ? value
+      : undefined;
+  const prefill: Partial<OwnershipDraft> = {};
+  const price = knownNumber("priceUsd", profile.priceUsd);
+  const mpg = knownNumber("mpgCombined", profile.mpgCombined);
+  const maintenance = knownNumber("annualMaintenanceEstimateUsd", profile.annualMaintenanceEstimateUsd);
+  const repairs = knownNumber("annualRepairEstimateUsd", profile.annualRepairEstimateUsd);
+  const insurance = knownNumber("insuranceEstimateUsd", profile.insuranceEstimateUsd);
+  if (price !== undefined) prefill.price = String(price);
+  if (mpg !== undefined) prefill.mpg = String(mpg);
+  if (maintenance !== undefined) prefill.maintenance = String(maintenance / 12);
+  if (repairs !== undefined) prefill.repairs = String(repairs / 12);
+  if (insurance !== undefined) prefill.insurance = String(insurance / 12);
+  return prefill;
+}
+
+export function mergeCanonicalCalculatorPrefill(
+  profile: CanonicalPrefillProfile,
+  draft: OwnershipDraft,
+  editedFields: Partial<Record<keyof OwnershipDraft, boolean>>,
+): { draft: OwnershipDraft; appliedFields: Array<keyof OwnershipDraft> } {
+  const available = buildCanonicalCalculatorPrefill(profile);
+  const appliedFields = (Object.keys(available) as Array<keyof OwnershipDraft>)
+    .filter((field) => available[field] !== undefined && !editedFields[field]);
+  return {
+    draft: { ...draft, ...Object.fromEntries(appliedFields.map((field) => [field, available[field]])) },
+    appliedFields,
+  };
+}
+
+export function resetUneditedCalculatorDraft(
+  draft: OwnershipDraft,
+  defaults: OwnershipDraft,
+  shopperEditedFields: Partial<Record<keyof OwnershipDraft, boolean>>,
+): OwnershipDraft {
+  return Object.fromEntries((Object.keys(draft) as Array<keyof OwnershipDraft>).map((field) => [
+    field,
+    shopperEditedFields[field] ? draft[field] : defaults[field],
+  ])) as OwnershipDraft;
+}
+
+export type CanonicalCalculatorAssumptions = {
+  draft: OwnershipDraft;
+  taxRate: string;
+  dealerFees: string;
+  fuelType: string | null | undefined;
+};
+
+export function isEnteredCalculatorValue(value: string): boolean {
+  return value.trim() !== "" && Number.isFinite(Number(value));
+}
+
+export function missingCanonicalFinancingInputs(assumptions: CanonicalCalculatorAssumptions): string[] {
+  const missing: string[] = [];
+  if (!isEnteredCalculatorValue(assumptions.draft.price)) missing.push("vehicle price");
+  if (!isEnteredCalculatorValue(assumptions.draft.down)) missing.push("down payment");
+  if (!isEnteredCalculatorValue(assumptions.draft.apr)) missing.push("APR");
+  if (!isEnteredCalculatorValue(assumptions.taxRate)) missing.push("sales tax rate");
+  if (!isEnteredCalculatorValue(assumptions.dealerFees)) missing.push("dealer fees");
+  return missing;
+}
+
+export function missingCanonicalOwnershipInputs(assumptions: CanonicalCalculatorAssumptions): string[] {
+  const missing = missingCanonicalFinancingInputs(assumptions);
+  if (!isEnteredCalculatorValue(assumptions.draft.miles)) missing.push("miles driven per year");
+  if (!isEnteredCalculatorValue(assumptions.draft.mpg)) missing.push("combined fuel economy");
+  const fuel = assumptions.fuelType?.trim().toLocaleLowerCase().replace(/[-_]/g, " ");
+  if (!fuel) missing.push("fuel type");
+  else if (["electric", "battery electric", "all electric", "bev"].includes(fuel)) {
+    if (!isEnteredCalculatorValue(assumptions.draft.electricity)) missing.push("electricity price");
+  } else if (!isEnteredCalculatorValue(assumptions.draft.gas)) {
+    missing.push("fuel price");
+  }
+  if (!isEnteredCalculatorValue(assumptions.draft.insurance)) missing.push("insurance");
+  if (!isEnteredCalculatorValue(assumptions.draft.maintenance)) missing.push("maintenance");
+  if (!isEnteredCalculatorValue(assumptions.draft.repairs)) missing.push("repairs reserve");
+  return missing;
+}
+
+export function safeCitationUrl(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export type BrowseFilters = {
   q: string;
   make: string;
@@ -10,6 +131,9 @@ export type BrowseFilters = {
   modelId: string;
   generationId: string;
   trimId: string;
+  modelKey: string;
+  generationKey: string;
+  trimKey: string;
 };
 
 export type CatalogOption = {
@@ -25,12 +149,34 @@ export type CatalogOption = {
   year: number;
   trimId: number;
   trim: string;
+  profileKind?: "canonical" | "legacy";
+  makeKey?: string;
+  modelKey?: string;
+  generationKey?: string;
+  modelYearKey?: string;
+  trimKey?: string;
 };
+
+export function catalogModelKey(option: CatalogOption): string {
+  return option.modelKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:model:${option.modelId}`;
+}
+
+export function catalogGenerationKey(option: CatalogOption): string {
+  return option.generationKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:generation:${option.generationId}`;
+}
+
+export function catalogTrimKey(option: CatalogOption): string {
+  return option.trimKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:trim:${option.trimId}`;
+}
 
 export function getBrowseGenerationOptions(options: CatalogOption[]) {
   return [...new Map(options.map((option) => [
-    option.generationId,
-    { id: option.generationId, name: option.generation },
+    catalogGenerationKey(option),
+    {
+      id: option.generationId,
+      ...(option.profileKind === "canonical" ? { key: catalogGenerationKey(option) } : {}),
+      name: option.generation,
+    },
   ])).values()];
 }
 
@@ -43,7 +189,7 @@ export function isGenerationFilterEnabled(options: {
 
 export type BrowseSuggestion =
   | { kind: "manufacturer"; label: string; makeSlug: string }
-  | { kind: "model"; label: string; makeSlug: string; modelId: number };
+  | { kind: "model"; label: string; makeSlug: string; modelId: number; modelKey?: string; profileKind?: string };
 
 export function getGenerationFilterHint(options: {
   catalogReady: boolean;
@@ -84,22 +230,28 @@ export function parseBrowseFilters(search: string): BrowseFilters {
     modelId: params.get("modelId") || "",
     generationId: params.get("generationId") || "",
     trimId: params.get("trimId") || "",
+    modelKey: params.get("modelKey") || "",
+    generationKey: params.get("generationKey") || "",
+    trimKey: params.get("trimKey") || "",
   };
 }
 
 export function clearBrowseFilters(): BrowseFilters {
-  return { q: "", make: "", model: "", trim: "", sort: "popular", year: "", modelId: "", generationId: "", trimId: "" };
+  return { q: "", make: "", model: "", trim: "", sort: "popular", year: "", modelId: "", generationId: "", trimId: "", modelKey: "", generationKey: "", trimKey: "" };
 }
 
 export function buildBrowseLocation(filters: BrowseFilters): string {
   const params = new URLSearchParams();
   if (filters.q.trim()) params.set("q", filters.q.trim());
   if (filters.make) params.set("make", filters.make);
-  if (filters.modelId) params.set("modelId", filters.modelId);
+  if (filters.modelKey) params.set("modelKey", filters.modelKey);
+  else if (filters.modelId) params.set("modelId", filters.modelId);
   else if (filters.model) params.set("model", filters.model);
-  if (filters.generationId) params.set("generationId", filters.generationId);
+  if (filters.generationKey) params.set("generationKey", filters.generationKey);
+  else if (filters.generationId) params.set("generationId", filters.generationId);
   if (filters.year) params.set("year", filters.year);
-  if (filters.trimId) params.set("trimId", filters.trimId);
+  if (filters.trimKey) params.set("trimKey", filters.trimKey);
+  else if (filters.trimId) params.set("trimId", filters.trimId);
   else if (filters.trim) params.set("trim", filters.trim);
   if (filters.sort !== "popular") params.set("sort", filters.sort);
   return `/browse${params.size ? `?${params.toString()}` : ""}`;
@@ -109,10 +261,10 @@ export function buildVehicleListParams(filters: BrowseFilters) {
   return {
     ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
     ...(filters.make ? { makeSlug: filters.make } : {}),
-    ...(filters.modelId ? { modelId: Number(filters.modelId) } : filters.model ? { model: filters.model } : {}),
-    ...(filters.generationId ? { generationId: Number(filters.generationId) } : {}),
+    ...(filters.modelKey ? { modelKey: filters.modelKey } : filters.modelId ? { modelId: Number(filters.modelId) } : filters.model ? { model: filters.model } : {}),
+    ...(filters.generationKey ? { generationKey: filters.generationKey } : filters.generationId ? { generationId: Number(filters.generationId) } : {}),
     ...(filters.year ? { year: Number(filters.year) } : {}),
-    ...(filters.trimId ? { trimId: Number(filters.trimId) } : filters.trim ? { trim: filters.trim } : {}),
+    ...(filters.trimKey ? { trimKey: filters.trimKey } : filters.trimId ? { trimId: Number(filters.trimId) } : filters.trim ? { trim: filters.trim } : {}),
     sort: filters.sort,
     limit: 60,
   };
@@ -121,20 +273,29 @@ export function buildVehicleListParams(filters: BrowseFilters) {
 export function hasActiveBrowseFilters(filters: BrowseFilters): boolean {
   return Boolean(
     filters.q.trim() || filters.make || filters.model || filters.trim || filters.year ||
-    filters.modelId || filters.generationId || filters.trimId || filters.sort !== "popular",
+    filters.modelId || filters.generationId || filters.trimId || filters.modelKey || filters.generationKey || filters.trimKey || filters.sort !== "popular",
   );
 }
 
 export function hasInvalidBrowseSelection(filters: BrowseFilters, options: CatalogOption[]): boolean {
   const selectedMake = options.filter((option) => !filters.make || option.makeSlug === filters.make);
   if (filters.make && !selectedMake.length) return true;
-  if (filters.modelId && !selectedMake.some((option) => String(option.modelId) === filters.modelId)) return true;
-  const selectedModel = selectedMake.filter((option) => !filters.modelId || String(option.modelId) === filters.modelId);
-  if (filters.generationId && !selectedModel.some((option) => String(option.generationId) === filters.generationId)) return true;
-  const selectedGeneration = selectedModel.filter((option) => !filters.generationId || String(option.generationId) === filters.generationId);
+  if (filters.modelId && !selectedMake.some((option) => option.profileKind !== "canonical" && String(option.modelId) === filters.modelId)) return true;
+  if (filters.modelKey && !selectedMake.some((option) => catalogModelKey(option) === filters.modelKey)) return true;
+  const selectedModel = selectedMake.filter((option) =>
+    (!filters.modelId || option.profileKind !== "canonical" && String(option.modelId) === filters.modelId) &&
+    (!filters.modelKey || catalogModelKey(option) === filters.modelKey));
+  if (filters.generationId && !selectedModel.some((option) => option.profileKind !== "canonical" && String(option.generationId) === filters.generationId)) return true;
+  if (filters.generationKey && !selectedModel.some((option) => catalogGenerationKey(option) === filters.generationKey)) return true;
+  const selectedGeneration = selectedModel.filter((option) =>
+    (!filters.generationId || option.profileKind !== "canonical" && String(option.generationId) === filters.generationId) &&
+    (!filters.generationKey || catalogGenerationKey(option) === filters.generationKey));
   if (filters.year && !selectedGeneration.some((option) => String(option.year) === filters.year)) return true;
   const selectedYear = selectedGeneration.filter((option) => !filters.year || String(option.year) === filters.year);
-  return Boolean(filters.trimId && !selectedYear.some((option) => String(option.trimId) === filters.trimId));
+  return Boolean(
+    (filters.trimId && !selectedYear.some((option) => option.profileKind !== "canonical" && String(option.trimId) === filters.trimId)) ||
+    (filters.trimKey && !selectedYear.some((option) => catalogTrimKey(option) === filters.trimKey)),
+  );
 }
 
 export function economyUnit(fuelType: string): "MPGe" | "mpg" {
@@ -155,26 +316,37 @@ export function resolveBrowseFilters(filters: BrowseFilters, options: CatalogOpt
 
   if (!next.modelId && next.model) {
     const matchingModels = unique(underMake.filter((option) =>
-      option.model.toLocaleLowerCase() === next.model.toLocaleLowerCase() ||
+      (option.profileKind !== "canonical" && option.model.toLocaleLowerCase() === next.model.toLocaleLowerCase()) ||
       option.modelId.toString() === next.model,
-    ).map((option) => String(option.modelId)));
+    ).map((option) => catalogModelKey(option)));
     if (matchingModels.length === 1) {
-      next = { ...next, modelId: matchingModels[0], model: "" };
+      const selected = underMake.find((option) => catalogModelKey(option) === matchingModels[0]);
+      next = selected?.profileKind === "canonical"
+        ? { ...next, modelKey: matchingModels[0], modelId: "", model: "" }
+        : { ...next, modelId: String(selected?.modelId ?? ""), modelKey: "", model: "" };
     }
   }
-  const underModel = underMake.filter((option) => !next.modelId || String(option.modelId) === next.modelId);
+  const underModel = underMake.filter((option) =>
+    (!next.modelId || String(option.modelId) === next.modelId) &&
+    (!next.modelKey || catalogModelKey(option) === next.modelKey));
 
   const underGeneration = underModel.filter((option) =>
-    !next.generationId || String(option.generationId) === next.generationId,
+    (!next.generationId || String(option.generationId) === next.generationId) &&
+    (!next.generationKey || catalogGenerationKey(option) === next.generationKey),
   );
 
   const underYear = underGeneration.filter((option) => !next.year || String(option.year) === next.year);
 
   if (!next.trimId && next.trim) {
     const matchingTrims = unique(underYear.filter((option) =>
-      option.trim.toLocaleLowerCase() === next.trim.toLocaleLowerCase(),
-    ).map((option) => String(option.trimId)));
-    if (matchingTrims.length === 1) next = { ...next, trimId: matchingTrims[0], trim: "" };
+      option.profileKind !== "canonical" && option.trim.toLocaleLowerCase() === next.trim.toLocaleLowerCase(),
+    ).map((option) => catalogTrimKey(option)));
+    if (matchingTrims.length === 1) {
+      const selected = underYear.find((option) => catalogTrimKey(option) === matchingTrims[0]);
+      next = selected?.profileKind === "canonical"
+        ? { ...next, trimKey: matchingTrims[0], trimId: "", trim: "" }
+        : { ...next, trimId: String(selected?.trimId ?? ""), trimKey: "", trim: "" };
+    }
   }
   return next;
 }
@@ -192,9 +364,11 @@ export function getBrowseSuggestions(query: string, options: CatalogOption[], li
     makes.set(option.makeSlug, {
       kind: "manufacturer", label: option.make, makeSlug: option.makeSlug,
     });
-    models.set(`${option.makeSlug}:${option.modelId}`, {
+    const modelKey = catalogModelKey(option);
+    models.set(`${option.makeSlug}:${modelKey}`, {
       kind: "model", label: `${option.make} ${option.model}`,
-      makeSlug: option.makeSlug, modelId: option.modelId,
+      makeSlug: option.makeSlug, modelId: option.modelId, modelKey,
+      profileKind: option.profileKind,
     });
   }
   const candidates = [...makes.values(), ...models.values()]

@@ -6,14 +6,22 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CommonProblemApplicability } from './commonProblemApplicability';
+import type { CommonProblemFieldStates } from './commonProblemFieldStates';
 
 export interface CommonProblem {
   title: string;
   description: string;
   applicability: CommonProblemApplicability;
-  typicalMileageStart: number;
-  typicalMileageEnd: number;
-  repairCostLowUsd: number;
-  repairCostHighUsd: number;
-  severity: string;
+  /** @nullable */
+  typicalMileageStart: number | null;
+  /** @nullable */
+  typicalMileageEnd: number | null;
+  /** @nullable */
+  repairCostLowUsd: number | null;
+  /** @nullable */
+  repairCostHighUsd: number | null;
+  /** @nullable */
+  severity: string | null;
+  claimIds?: string[];
+  fieldStates?: CommonProblemFieldStates;
 }

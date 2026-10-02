@@ -219,7 +219,7 @@ export const getGetCatalogOptionsUrl = () => {
 }
 
 /**
- * Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+ * Returns complete legacy trim options and manifest-released canonical configuration options. Results are not derived from capped vehicle search results. Qualified keys prevent cross-catalog identity collisions.
  * @summary List complete hierarchy options for the current catalog
  */
 export const getCatalogOptions = async ( options?: Parameters<typeof customFetch>[1]): Promise<CatalogOption[]> => {
@@ -405,7 +405,7 @@ export const getListVehiclesQueryKey = (params?: ListVehiclesParams,) => {
     }
 
 
-export const getListVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof listVehicles>>, TError = ErrorType<unknown>>(params?: ListVehiclesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listVehicles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof listVehicles>>, TError = ErrorType<void>>(params?: ListVehiclesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listVehicles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -424,14 +424,14 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListVehiclesQueryResult = NonNullable<Awaited<ReturnType<typeof listVehicles>>>
-export type ListVehiclesQueryError = ErrorType<unknown>
+export type ListVehiclesQueryError = ErrorType<void>
 
 
 /**
  * @summary Search and filter vehicle trims
  */
 
-export function useListVehicles<TData = Awaited<ReturnType<typeof listVehicles>>, TError = ErrorType<unknown>>(
+export function useListVehicles<TData = Awaited<ReturnType<typeof listVehicles>>, TError = ErrorType<void>>(
  params?: ListVehiclesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listVehicles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {

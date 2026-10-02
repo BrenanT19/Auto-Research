@@ -12,4 +12,5 @@ export interface Make {
   slug: string;
   vehicleCount: number;
   mark: string;
+  makeKey?: string;
 }

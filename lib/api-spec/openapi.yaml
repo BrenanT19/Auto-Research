@@ -45,7 +45,7 @@ paths:
       operationId: getCatalogOptions
       tags: [catalog]
       summary: List complete hierarchy options for the current catalog
-      description: Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+      description: Returns complete legacy trim options and manifest-released canonical configuration options. Results are not derived from capped vehicle search results. Qualified keys prevent cross-catalog identity collisions.
       responses:
         "200":
           description: Complete catalog hierarchy options
@@ -118,6 +118,27 @@ paths:
           schema:
             type: string
         - in: query
+          name: modelKey
+          description: Namespace-qualified model identity. Numeric modelId remains legacy-only.
+          schema:
+            type: string
+            pattern: '^(legacy|canonical):model:[1-9][0-9]*$'
+        - in: query
+          name: generationKey
+          schema:
+            type: string
+            pattern: '^(legacy|canonical):generation:[1-9][0-9]*$'
+        - in: query
+          name: modelYearKey
+          schema:
+            type: string
+            pattern: '^(legacy|canonical):model-year:[1-9][0-9]*$'
+        - in: query
+          name: trimKey
+          schema:
+            type: string
+            pattern: '^(legacy|canonical):trim:[1-9][0-9]*$'
+        - in: query
           name: sort
           schema:
             type: string
@@ -139,6 +160,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/VehicleSummary"
+        "400":
+          description: Invalid or contradictory namespace-qualified filters
   /vehicles/popular:
     get:
       operationId: listPopularVehicles
@@ -235,6 +258,7 @@ components:
         slug: { type: string }
         vehicleCount: { type: integer }
         mark: { type: string }
+        makeKey: { type: string }
       required: [id, name, slug, vehicleCount, mark]
     CatalogOption:
       type: object
@@ -251,6 +275,12 @@ components:
         year: { type: integer }
         trimId: { type: integer }
         trim: { type: string }
+        profileKind: { type: string, enum: [legacy, canonical] }
+        makeKey: { type: string }
+        modelKey: { type: string }
+        generationKey: { type: string }
+        modelYearKey: { type: string }
+        trimKey: { type: string }
       required: [profileId, makeId, make, makeSlug, modelId, model, generationId, generation, modelYearId, year, trimId, trim]
     ManufacturerProfile:
       type: object
@@ -272,22 +302,33 @@ components:
         year: { type: integer }
         generation: { type: string }
         trim: { type: string }
-        bodyType: { type: string }
-        drivetrain: { type: string }
-        fuelType: { type: string }
+        bodyType: { type: ["string", "null"] }
+        drivetrain: { type: ["string", "null"] }
+        fuelType: { type: ["string", "null"] }
         mpgCity: { type: ["number", "null"] }
         mpgHighway: { type: ["number", "null"] }
         mpgCombined: { type: ["number", "null"] }
-        horsepower: { type: integer }
-        priceUsd: { type: integer }
-        reliabilityEstimate: { type: number }
-        annualOwnershipEstimateUsd: { type: integer }
-        annualMaintenanceEstimateUsd: { type: integer }
-        annualRepairEstimateUsd: { type: integer }
-        annualFuelEstimateUsd: { type: integer }
-        researchRank: { type: integer }
+        horsepower: { type: ["number", "null"] }
+        priceUsd: { type: ["number", "null"] }
+        reliabilityEstimate: { type: ["number", "null"] }
+        annualOwnershipEstimateUsd: { type: ["number", "null"] }
+        annualMaintenanceEstimateUsd: { type: ["number", "null"] }
+        annualRepairEstimateUsd: { type: ["number", "null"] }
+        annualFuelEstimateUsd: { type: ["number", "null"] }
+        researchRank: { type: ["integer", "null"] }
         imageKey: { type: string }
         isDemo: { type: boolean }
+        profileKind: { type: string, enum: [legacy, canonical] }
+        canonicalConfigurationId: { type: integer }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
+        sectionStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
+        claims:
+          type: array
+          items: { $ref: "#/components/schemas/ClaimProvenance" }
       required:
         - id
         - make
@@ -318,9 +359,9 @@ components:
         - $ref: "#/components/schemas/VehicleSummary"
         - type: object
           properties:
-            overview: { type: string }
-            engineName: { type: string }
-            transmissionName: { type: string }
+            overview: { type: ["string", "null"] }
+            engineName: { type: ["string", "null"] }
+            transmissionName: { type: ["string", "null"] }
             engines:
               type: array
               items: { $ref: "#/components/schemas/Engine" }
@@ -338,14 +379,14 @@ components:
             maintenance:
               type: array
               items: { $ref: "#/components/schemas/MaintenanceItem" }
-            insuranceEstimateUsd: { type: integer }
-            fiveYearDepreciationPercent: { type: number }
-            expectedLifespanMiles: { type: integer }
+            insuranceEstimateUsd: { type: ["number", "null"] }
+            fiveYearDepreciationPercent: { type: ["number", "null"] }
+            expectedLifespanMiles: { type: ["number", "null"] }
             inspectionChecklist:
               type: array
               items: { type: string }
-            recallStatus: { type: string }
-            safetyStatus: { type: string }
+            recallStatus: { type: ["string", "null"] }
+            safetyStatus: { type: ["string", "null"] }
           required:
             - overview
             - engineName
@@ -366,35 +407,53 @@ components:
       type: object
       properties:
         name: { type: string }
-        horsepower: { type: integer }
-        fuelType: { type: string }
-        availability: { type: string }
+        horsepower: { type: ["number", "null"] }
+        fuelType: { type: ["string", "null"] }
+        availability: { type: ["string", "null"] }
+        claimIds:
+          type: array
+          items: { type: string }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required: [name, horsepower, fuelType, availability]
     Transmission:
       type: object
       properties:
         name: { type: string }
-        gears: { type: string }
-        availability: { type: string }
+        gears: { type: ["string", "null"] }
+        availability: { type: ["string", "null"] }
+        claimIds:
+          type: array
+          items: { type: string }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required: [name, gears, availability]
     ReliabilityProfile:
       type: object
       properties:
-        score: { type: number }
-        label: { type: string }
-        note: { type: string }
+        score: { type: ["number", "null"] }
+        label: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
       required: [score, label, note]
     CommonProblem:
       type: object
       properties:
         title: { type: string }
         description: { type: string }
-        applicability: { type: string, enum: [applies, unknown] }
-        typicalMileageStart: { type: integer }
-        typicalMileageEnd: { type: integer }
-        repairCostLowUsd: { type: integer }
-        repairCostHighUsd: { type: integer }
-        severity: { type: string }
+        applicability: { type: string, enum: [applies, does_not_apply, unknown] }
+        typicalMileageStart: { type: ["number", "null"] }
+        typicalMileageEnd: { type: ["number", "null"] }
+        repairCostLowUsd: { type: ["number", "null"] }
+        repairCostHighUsd: { type: ["number", "null"] }
+        severity: { type: ["string", "null"] }
+        claimIds:
+          type: array
+          items: { type: string }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required:
         - title
         - description
@@ -408,8 +467,14 @@ components:
       type: object
       properties:
         item: { type: string }
-        intervalMiles: { type: integer }
-        estimatedCostUsd: { type: integer }
+        intervalMiles: { type: ["number", "null"] }
+        estimatedCostUsd: { type: ["number", "null"] }
+        claimIds:
+          type: array
+          items: { type: string }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required: [item, intervalMiles, estimatedCostUsd]
     OwnerReport:
       type: object
@@ -418,13 +483,19 @@ components:
         vehicleId: { type: string }
         vehicleLabel: { type: string }
         displayName: { type: string }
-        ownershipMonths: { type: integer }
-        milesDriven: { type: integer }
-        rating: { type: integer }
+        ownershipMonths: { type: ["integer", "null"] }
+        milesDriven: { type: ["integer", "null"] }
+        rating: { type: ["number", "null"] }
         title: { type: string }
         body: { type: string }
         reportedProblem: { type: ["string", "null"] }
         isDemo: { type: boolean }
+        claimIds:
+          type: array
+          items: { type: string }
+        fieldStates:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required:
         - id
         - vehicleId
@@ -437,6 +508,49 @@ components:
         - body
         - reportedProblem
         - isDemo
+    ResearchState:
+      type: object
+      description: Missing research is not a zero or a negative finding. N/A requires supporting evidence.
+      properties:
+        state: { type: string, enum: [known, unknown, not_yet_researched, not_applicable] }
+        reason: { type: ["string", "null"] }
+        claimIds:
+          type: array
+          items: { type: string }
+      required: [state, claimIds]
+    SourceCitation:
+      type: object
+      properties:
+        sourceId: { type: string }
+        revisionId: { type: string }
+        publisher: { type: ["string", "null"] }
+        url: { type: ["string", "null"] }
+        documentIdentifier: { type: ["string", "null"] }
+        sourceVersion: { type: ["string", "null"] }
+        publishedAt: { type: ["string", "null"] }
+        retrievedAt: { type: string }
+        locator: { type: string }
+        measurementBasis: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+      required: [sourceId, revisionId, publisher, url, documentIdentifier, sourceVersion, publishedAt, retrievedAt, locator]
+    ClaimProvenance:
+      type: object
+      properties:
+        id: { type: string }
+        contentClass:
+          type: string
+          enum: [source_fact, estimate, calculation, editorial_synthesis, external_owner_pattern, direct_owner_experience]
+        reviewStatus: { type: string }
+        evidenceStrength: { type: string }
+        effectiveFrom: { type: ["string", "null"] }
+        effectiveTo: { type: ["string", "null"] }
+        applicability: { type: string, enum: [applies, does_not_apply, unknown] }
+        applicabilityVersion: { type: string }
+        scopeDescription: { type: string }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/SourceCitation" }
+      required: [id, contentClass, reviewStatus, evidenceStrength, applicability, applicabilityVersion, scopeDescription, sources]
     DiscoveryStats:
       type: object
       properties:

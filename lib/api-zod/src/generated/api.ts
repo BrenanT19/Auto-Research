@@ -25,13 +25,14 @@ export const ListMakesResponseItem = zod.object({
   "name": zod.string(),
   "slug": zod.string(),
   "vehicleCount": zod.number().int(),
-  "mark": zod.string()
+  "mark": zod.string(),
+  "makeKey": zod.string().optional()
 })
 export const ListMakesResponse = zod.array(ListMakesResponseItem)
 
 
 /**
- * Returns one row per existing trim in this catalog snapshot. Results are not derived from capped vehicle search results.
+ * Returns complete legacy trim options and manifest-released canonical configuration options. Results are not derived from capped vehicle search results. Qualified keys prevent cross-catalog identity collisions.
  * @summary List complete hierarchy options for the current catalog
  */
 export const GetCatalogOptionsResponseItem = zod.object({
@@ -46,7 +47,13 @@ export const GetCatalogOptionsResponseItem = zod.object({
   "modelYearId": zod.number().int(),
   "year": zod.number().int(),
   "trimId": zod.number().int(),
-  "trim": zod.string()
+  "trim": zod.string(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "makeKey": zod.string().optional(),
+  "modelKey": zod.string().optional(),
+  "generationKey": zod.string().optional(),
+  "modelYearKey": zod.string().optional(),
+  "trimKey": zod.string().optional()
 })
 export const GetCatalogOptionsResponse = zod.array(GetCatalogOptionsResponseItem)
 
@@ -64,7 +71,8 @@ export const GetMakeResponse = zod.object({
   "name": zod.string(),
   "slug": zod.string(),
   "vehicleCount": zod.number().int(),
-  "mark": zod.string()
+  "mark": zod.string(),
+  "makeKey": zod.string().optional()
 }),
   "description": zod.string(),
   "vehicles": zod.array(zod.object({
@@ -76,22 +84,58 @@ export const GetMakeResponse = zod.object({
   "year": zod.number().int(),
   "generation": zod.string(),
   "trim": zod.string(),
-  "bodyType": zod.string(),
-  "drivetrain": zod.string(),
-  "fuelType": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
   "mpgCity": zod.number().nullable(),
   "mpgHighway": zod.number().nullable(),
   "mpgCombined": zod.number().nullable(),
-  "horsepower": zod.number().int(),
-  "priceUsd": zod.number().int(),
-  "reliabilityEstimate": zod.number(),
-  "annualOwnershipEstimateUsd": zod.number().int(),
-  "annualMaintenanceEstimateUsd": zod.number().int(),
-  "annualRepairEstimateUsd": zod.number().int(),
-  "annualFuelEstimateUsd": zod.number().int(),
-  "researchRank": zod.number().int(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
   "imageKey": zod.string(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
 }))
 })
 
@@ -102,6 +146,10 @@ export const GetMakeResponse = zod.object({
 
 
 
+export const listVehiclesQueryModelKeyRegExp = new RegExp('^(legacy|canonical):model:[1-9][0-9]*$');
+export const listVehiclesQueryGenerationKeyRegExp = new RegExp('^(legacy|canonical):generation:[1-9][0-9]*$');
+export const listVehiclesQueryModelYearKeyRegExp = new RegExp('^(legacy|canonical):model-year:[1-9][0-9]*$');
+export const listVehiclesQueryTrimKeyRegExp = new RegExp('^(legacy|canonical):trim:[1-9][0-9]*$');
 export const listVehiclesQuerySortDefault = `popular`;
 export const listVehiclesQueryLimitDefault = 24;
 export const listVehiclesQueryLimitMax = 100;
@@ -117,6 +165,10 @@ export const ListVehiclesQueryParams = zod.object({
   "year": zod.coerce.number().int().optional(),
   "trimId": zod.coerce.number().int().min(1).optional().describe('Database identity of an existing trim. The legacy trim name filter remains supported.'),
   "trim": zod.coerce.string().optional(),
+  "modelKey": zod.coerce.string().regex(listVehiclesQueryModelKeyRegExp).optional().describe('Namespace-qualified model identity. Numeric modelId remains legacy-only.'),
+  "generationKey": zod.coerce.string().regex(listVehiclesQueryGenerationKeyRegExp).optional(),
+  "modelYearKey": zod.coerce.string().regex(listVehiclesQueryModelYearKeyRegExp).optional(),
+  "trimKey": zod.coerce.string().regex(listVehiclesQueryTrimKeyRegExp).optional(),
   "sort": zod.enum(['popular', 'reliability', 'ownership-cost']).default(listVehiclesQuerySortDefault),
   "limit": zod.coerce.number().int().min(1).max(listVehiclesQueryLimitMax).default(listVehiclesQueryLimitDefault)
 })
@@ -130,22 +182,58 @@ export const ListVehiclesResponseItem = zod.object({
   "year": zod.number().int(),
   "generation": zod.string(),
   "trim": zod.string(),
-  "bodyType": zod.string(),
-  "drivetrain": zod.string(),
-  "fuelType": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
   "mpgCity": zod.number().nullable(),
   "mpgHighway": zod.number().nullable(),
   "mpgCombined": zod.number().nullable(),
-  "horsepower": zod.number().int(),
-  "priceUsd": zod.number().int(),
-  "reliabilityEstimate": zod.number(),
-  "annualOwnershipEstimateUsd": zod.number().int(),
-  "annualMaintenanceEstimateUsd": zod.number().int(),
-  "annualRepairEstimateUsd": zod.number().int(),
-  "annualFuelEstimateUsd": zod.number().int(),
-  "researchRank": zod.number().int(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
   "imageKey": zod.string(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
 })
 export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem)
 
@@ -162,22 +250,58 @@ export const ListPopularVehiclesResponseItem = zod.object({
   "year": zod.number().int(),
   "generation": zod.string(),
   "trim": zod.string(),
-  "bodyType": zod.string(),
-  "drivetrain": zod.string(),
-  "fuelType": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
   "mpgCity": zod.number().nullable(),
   "mpgHighway": zod.number().nullable(),
   "mpgCombined": zod.number().nullable(),
-  "horsepower": zod.number().int(),
-  "priceUsd": zod.number().int(),
-  "reliabilityEstimate": zod.number(),
-  "annualOwnershipEstimateUsd": zod.number().int(),
-  "annualMaintenanceEstimateUsd": zod.number().int(),
-  "annualRepairEstimateUsd": zod.number().int(),
-  "annualFuelEstimateUsd": zod.number().int(),
-  "researchRank": zod.number().int(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
   "imageKey": zod.string(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
 })
 export const ListPopularVehiclesResponse = zod.array(ListPopularVehiclesResponseItem)
 
@@ -194,22 +318,58 @@ export const ListTrendingVehiclesResponseItem = zod.object({
   "year": zod.number().int(),
   "generation": zod.string(),
   "trim": zod.string(),
-  "bodyType": zod.string(),
-  "drivetrain": zod.string(),
-  "fuelType": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
   "mpgCity": zod.number().nullable(),
   "mpgHighway": zod.number().nullable(),
   "mpgCombined": zod.number().nullable(),
-  "horsepower": zod.number().int(),
-  "priceUsd": zod.number().int(),
-  "reliabilityEstimate": zod.number(),
-  "annualOwnershipEstimateUsd": zod.number().int(),
-  "annualMaintenanceEstimateUsd": zod.number().int(),
-  "annualRepairEstimateUsd": zod.number().int(),
-  "annualFuelEstimateUsd": zod.number().int(),
-  "researchRank": zod.number().int(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
   "imageKey": zod.string(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
 })
 export const ListTrendingVehiclesResponse = zod.array(ListTrendingVehiclesResponseItem)
 
@@ -230,64 +390,124 @@ export const GetVehicleResponse = zod.object({
   "year": zod.number().int(),
   "generation": zod.string(),
   "trim": zod.string(),
-  "bodyType": zod.string(),
-  "drivetrain": zod.string(),
-  "fuelType": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
   "mpgCity": zod.number().nullable(),
   "mpgHighway": zod.number().nullable(),
   "mpgCombined": zod.number().nullable(),
-  "horsepower": zod.number().int(),
-  "priceUsd": zod.number().int(),
-  "reliabilityEstimate": zod.number(),
-  "annualOwnershipEstimateUsd": zod.number().int(),
-  "annualMaintenanceEstimateUsd": zod.number().int(),
-  "annualRepairEstimateUsd": zod.number().int(),
-  "annualFuelEstimateUsd": zod.number().int(),
-  "researchRank": zod.number().int(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
   "imageKey": zod.string(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
 }).and(zod.object({
-  "overview": zod.string(),
-  "engineName": zod.string(),
-  "transmissionName": zod.string(),
+  "overview": zod.string().nullable(),
+  "engineName": zod.string().nullable(),
+  "transmissionName": zod.string().nullable(),
   "engines": zod.array(zod.object({
   "name": zod.string(),
-  "horsepower": zod.number().int(),
-  "fuelType": zod.string(),
-  "availability": zod.string()
+  "horsepower": zod.number().nullable(),
+  "fuelType": zod.string().nullable(),
+  "availability": zod.string().nullable(),
+  "claimIds": zod.array(zod.string()).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })),
   "transmissions": zod.array(zod.object({
   "name": zod.string(),
-  "gears": zod.string(),
-  "availability": zod.string()
+  "gears": zod.string().nullable(),
+  "availability": zod.string().nullable(),
+  "claimIds": zod.array(zod.string()).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })),
   "siblingTrims": zod.array(zod.string()),
   "reliability": zod.object({
-  "score": zod.number(),
-  "label": zod.string(),
-  "note": zod.string()
+  "score": zod.number().nullable(),
+  "label": zod.string().nullable(),
+  "note": zod.string().nullable()
 }),
   "commonProblems": zod.array(zod.object({
   "title": zod.string(),
   "description": zod.string(),
-  "applicability": zod.enum(['applies', 'unknown']),
-  "typicalMileageStart": zod.number().int(),
-  "typicalMileageEnd": zod.number().int(),
-  "repairCostLowUsd": zod.number().int(),
-  "repairCostHighUsd": zod.number().int(),
-  "severity": zod.string()
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "typicalMileageStart": zod.number().nullable(),
+  "typicalMileageEnd": zod.number().nullable(),
+  "repairCostLowUsd": zod.number().nullable(),
+  "repairCostHighUsd": zod.number().nullable(),
+  "severity": zod.string().nullable(),
+  "claimIds": zod.array(zod.string()).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })),
   "maintenance": zod.array(zod.object({
   "item": zod.string(),
-  "intervalMiles": zod.number().int(),
-  "estimatedCostUsd": zod.number().int()
+  "intervalMiles": zod.number().nullable(),
+  "estimatedCostUsd": zod.number().nullable(),
+  "claimIds": zod.array(zod.string()).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })),
-  "insuranceEstimateUsd": zod.number().int(),
-  "fiveYearDepreciationPercent": zod.number(),
-  "expectedLifespanMiles": zod.number().int(),
+  "insuranceEstimateUsd": zod.number().nullable(),
+  "fiveYearDepreciationPercent": zod.number().nullable(),
+  "expectedLifespanMiles": zod.number().nullable(),
   "inspectionChecklist": zod.array(zod.string()),
-  "recallStatus": zod.string(),
-  "safetyStatus": zod.string()
+  "recallStatus": zod.string().nullable(),
+  "safetyStatus": zod.string().nullable()
 }))
 
 
@@ -303,13 +523,19 @@ export const ListOwnerReportsResponseItem = zod.object({
   "vehicleId": zod.string(),
   "vehicleLabel": zod.string(),
   "displayName": zod.string(),
-  "ownershipMonths": zod.number().int(),
-  "milesDriven": zod.number().int(),
-  "rating": zod.number().int(),
+  "ownershipMonths": zod.number().int().nullable(),
+  "milesDriven": zod.number().int().nullable(),
+  "rating": zod.number().nullable(),
   "title": zod.string(),
   "body": zod.string(),
   "reportedProblem": zod.string().nullable(),
-  "isDemo": zod.boolean()
+  "isDemo": zod.boolean(),
+  "claimIds": zod.array(zod.string()).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })
 export const ListOwnerReportsResponse = zod.array(ListOwnerReportsResponseItem)
 

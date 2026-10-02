@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CatalogOptionProfileKind } from './catalogOptionProfileKind';
 
 export interface CatalogOption {
   profileId: string;
@@ -19,4 +20,10 @@ export interface CatalogOption {
   year: number;
   trimId: number;
   trim: string;
+  profileKind?: CatalogOptionProfileKind;
+  makeKey?: string;
+  modelKey?: string;
+  generationKey?: string;
+  modelYearKey?: string;
+  trimKey?: string;
 }

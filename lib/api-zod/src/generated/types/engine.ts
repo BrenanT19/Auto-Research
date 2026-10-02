@@ -5,10 +5,16 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { EngineFieldStates } from './engineFieldStates';
 
 export interface Engine {
   name: string;
-  horsepower: number;
-  fuelType: string;
-  availability: string;
+  /** @nullable */
+  horsepower: number | null;
+  /** @nullable */
+  fuelType: string | null;
+  /** @nullable */
+  availability: string | null;
+  claimIds?: string[];
+  fieldStates?: EngineFieldStates;
 }

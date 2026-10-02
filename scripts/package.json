@@ -10,6 +10,8 @@
     "test:auto-research:interrupted-migration-recovery": "node ../lib/db/scripts/auto-research-test-runner.mjs --interrupted-migration-recovery-only",
     "test:auto-research:checks": "tsx --test ../artifacts/auto-research/tests/shopper-tools.test.ts && node --test ./tests/auto-research-api-fixture.test.mjs",
     "test:auto-research:stage2a-unit": "tsx --test ./tests/auto-research-stage2a-applicability.test.ts",
+    "test:auto-research:canonical-policy": "tsx --test ./tests/task32-canonical-policy.test.ts",
+    "test:auto-research:canonical": "node ../lib/db/scripts/auto-research-task32-runner.mjs",
     "test:auto-research:safety": "node --test ./tests/auto-research-test-safety.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

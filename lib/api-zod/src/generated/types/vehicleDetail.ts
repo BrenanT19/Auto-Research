@@ -12,20 +12,28 @@ import type { ReliabilityProfile } from './reliabilityProfile';
 import type { Transmission } from './transmission';
 import type { VehicleSummary } from './vehicleSummary';
 
-export type VehicleDetail = VehicleSummary & {
-  overview: string;
-  engineName: string;
-  transmissionName: string;
+export type VehicleDetail = VehicleSummary & ({
+  /** @nullable */
+  overview: string | null;
+  /** @nullable */
+  engineName: string | null;
+  /** @nullable */
+  transmissionName: string | null;
   engines: Engine[];
   transmissions: Transmission[];
   siblingTrims: string[];
   reliability: ReliabilityProfile;
   commonProblems: CommonProblem[];
   maintenance: MaintenanceItem[];
-  insuranceEstimateUsd: number;
-  fiveYearDepreciationPercent: number;
-  expectedLifespanMiles: number;
+  /** @nullable */
+  insuranceEstimateUsd: number | null;
+  /** @nullable */
+  fiveYearDepreciationPercent: number | null;
+  /** @nullable */
+  expectedLifespanMiles: number | null;
   inspectionChecklist: string[];
-  recallStatus: string;
-  safetyStatus: string;
-};
+  /** @nullable */
+  recallStatus: string | null;
+  /** @nullable */
+  safetyStatus: string | null;
+});

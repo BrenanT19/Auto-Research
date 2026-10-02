@@ -15,7 +15,16 @@ export interface Make {
   slug: string;
   vehicleCount: number;
   mark: string;
+  makeKey?: string;
 }
+
+export type CatalogOptionProfileKind = typeof CatalogOptionProfileKind[keyof typeof CatalogOptionProfileKind];
+
+
+export const CatalogOptionProfileKind = {
+  legacy: 'legacy',
+  canonical: 'canonical',
+} as const;
 
 export interface CatalogOption {
   profileId: string;
@@ -30,7 +39,102 @@ export interface CatalogOption {
   year: number;
   trimId: number;
   trim: string;
+  profileKind?: CatalogOptionProfileKind;
+  makeKey?: string;
+  modelKey?: string;
+  generationKey?: string;
+  modelYearKey?: string;
+  trimKey?: string;
 }
+
+export type VehicleSummaryProfileKind = typeof VehicleSummaryProfileKind[keyof typeof VehicleSummaryProfileKind];
+
+
+export const VehicleSummaryProfileKind = {
+  legacy: 'legacy',
+  canonical: 'canonical',
+} as const;
+
+export type ResearchStateState = typeof ResearchStateState[keyof typeof ResearchStateState];
+
+
+export const ResearchStateState = {
+  known: 'known',
+  unknown: 'unknown',
+  not_yet_researched: 'not_yet_researched',
+  not_applicable: 'not_applicable',
+} as const;
+
+/**
+ * Missing research is not a zero or a negative finding. N/A requires supporting evidence.
+ */
+export interface ResearchState {
+  state: ResearchStateState;
+  /** @nullable */
+  reason?: string | null;
+  claimIds: string[];
+}
+
+export type ClaimProvenanceContentClass = typeof ClaimProvenanceContentClass[keyof typeof ClaimProvenanceContentClass];
+
+
+export const ClaimProvenanceContentClass = {
+  source_fact: 'source_fact',
+  estimate: 'estimate',
+  calculation: 'calculation',
+  editorial_synthesis: 'editorial_synthesis',
+  external_owner_pattern: 'external_owner_pattern',
+  direct_owner_experience: 'direct_owner_experience',
+} as const;
+
+export type ClaimProvenanceApplicability = typeof ClaimProvenanceApplicability[keyof typeof ClaimProvenanceApplicability];
+
+
+export const ClaimProvenanceApplicability = {
+  applies: 'applies',
+  does_not_apply: 'does_not_apply',
+  unknown: 'unknown',
+} as const;
+
+export interface SourceCitation {
+  sourceId: string;
+  revisionId: string;
+  /** @nullable */
+  publisher: string | null;
+  /** @nullable */
+  url: string | null;
+  /** @nullable */
+  documentIdentifier: string | null;
+  /** @nullable */
+  sourceVersion: string | null;
+  /** @nullable */
+  publishedAt: string | null;
+  retrievedAt: string;
+  locator: string;
+  /** @nullable */
+  measurementBasis?: string | null;
+  /** @nullable */
+  unit?: string | null;
+}
+
+export interface ClaimProvenance {
+  id: string;
+  contentClass: ClaimProvenanceContentClass;
+  reviewStatus: string;
+  evidenceStrength: string;
+  /** @nullable */
+  effectiveFrom?: string | null;
+  /** @nullable */
+  effectiveTo?: string | null;
+  applicability: ClaimProvenanceApplicability;
+  applicabilityVersion: string;
+  scopeDescription: string;
+  sources: SourceCitation[];
+}
+
+export type VehicleSummaryFieldStates = {[key: string]: ResearchState};
+
+export type VehicleSummarySectionStates = {[key: string]: ResearchState};
 
 export interface VehicleSummary {
   id: string;
@@ -41,25 +145,41 @@ export interface VehicleSummary {
   year: number;
   generation: string;
   trim: string;
-  bodyType: string;
-  drivetrain: string;
-  fuelType: string;
+  /** @nullable */
+  bodyType: string | null;
+  /** @nullable */
+  drivetrain: string | null;
+  /** @nullable */
+  fuelType: string | null;
   /** @nullable */
   mpgCity: number | null;
   /** @nullable */
   mpgHighway: number | null;
   /** @nullable */
   mpgCombined: number | null;
-  horsepower: number;
-  priceUsd: number;
-  reliabilityEstimate: number;
-  annualOwnershipEstimateUsd: number;
-  annualMaintenanceEstimateUsd: number;
-  annualRepairEstimateUsd: number;
-  annualFuelEstimateUsd: number;
-  researchRank: number;
+  /** @nullable */
+  horsepower: number | null;
+  /** @nullable */
+  priceUsd: number | null;
+  /** @nullable */
+  reliabilityEstimate: number | null;
+  /** @nullable */
+  annualOwnershipEstimateUsd: number | null;
+  /** @nullable */
+  annualMaintenanceEstimateUsd: number | null;
+  /** @nullable */
+  annualRepairEstimateUsd: number | null;
+  /** @nullable */
+  annualFuelEstimateUsd: number | null;
+  /** @nullable */
+  researchRank: number | null;
   imageKey: string;
   isDemo: boolean;
+  profileKind?: VehicleSummaryProfileKind;
+  canonicalConfigurationId?: number;
+  fieldStates?: VehicleSummaryFieldStates;
+  sectionStates?: VehicleSummarySectionStates;
+  claims?: ClaimProvenance[];
 }
 
 export interface ManufacturerProfile {
@@ -68,23 +188,39 @@ export interface ManufacturerProfile {
   vehicles: VehicleSummary[];
 }
 
+export type EngineFieldStates = {[key: string]: ResearchState};
+
 export interface Engine {
   name: string;
-  horsepower: number;
-  fuelType: string;
-  availability: string;
+  /** @nullable */
+  horsepower: number | null;
+  /** @nullable */
+  fuelType: string | null;
+  /** @nullable */
+  availability: string | null;
+  claimIds?: string[];
+  fieldStates?: EngineFieldStates;
 }
+
+export type TransmissionFieldStates = {[key: string]: ResearchState};
 
 export interface Transmission {
   name: string;
-  gears: string;
-  availability: string;
+  /** @nullable */
+  gears: string | null;
+  /** @nullable */
+  availability: string | null;
+  claimIds?: string[];
+  fieldStates?: TransmissionFieldStates;
 }
 
 export interface ReliabilityProfile {
-  score: number;
-  label: string;
-  note: string;
+  /** @nullable */
+  score: number | null;
+  /** @nullable */
+  label: string | null;
+  /** @nullable */
+  note: string | null;
 }
 
 export type CommonProblemApplicability = typeof CommonProblemApplicability[keyof typeof CommonProblemApplicability];
@@ -92,57 +228,88 @@ export type CommonProblemApplicability = typeof CommonProblemApplicability[keyof
 
 export const CommonProblemApplicability = {
   applies: 'applies',
+  does_not_apply: 'does_not_apply',
   unknown: 'unknown',
 } as const;
+
+export type CommonProblemFieldStates = {[key: string]: ResearchState};
 
 export interface CommonProblem {
   title: string;
   description: string;
   applicability: CommonProblemApplicability;
-  typicalMileageStart: number;
-  typicalMileageEnd: number;
-  repairCostLowUsd: number;
-  repairCostHighUsd: number;
-  severity: string;
+  /** @nullable */
+  typicalMileageStart: number | null;
+  /** @nullable */
+  typicalMileageEnd: number | null;
+  /** @nullable */
+  repairCostLowUsd: number | null;
+  /** @nullable */
+  repairCostHighUsd: number | null;
+  /** @nullable */
+  severity: string | null;
+  claimIds?: string[];
+  fieldStates?: CommonProblemFieldStates;
 }
+
+export type MaintenanceItemFieldStates = {[key: string]: ResearchState};
 
 export interface MaintenanceItem {
   item: string;
-  intervalMiles: number;
-  estimatedCostUsd: number;
+  /** @nullable */
+  intervalMiles: number | null;
+  /** @nullable */
+  estimatedCostUsd: number | null;
+  claimIds?: string[];
+  fieldStates?: MaintenanceItemFieldStates;
 }
 
-export type VehicleDetail = VehicleSummary & {
-  overview: string;
-  engineName: string;
-  transmissionName: string;
+export type VehicleDetail = VehicleSummary & ({
+  /** @nullable */
+  overview: string | null;
+  /** @nullable */
+  engineName: string | null;
+  /** @nullable */
+  transmissionName: string | null;
   engines: Engine[];
   transmissions: Transmission[];
   siblingTrims: string[];
   reliability: ReliabilityProfile;
   commonProblems: CommonProblem[];
   maintenance: MaintenanceItem[];
-  insuranceEstimateUsd: number;
-  fiveYearDepreciationPercent: number;
-  expectedLifespanMiles: number;
+  /** @nullable */
+  insuranceEstimateUsd: number | null;
+  /** @nullable */
+  fiveYearDepreciationPercent: number | null;
+  /** @nullable */
+  expectedLifespanMiles: number | null;
   inspectionChecklist: string[];
-  recallStatus: string;
-  safetyStatus: string;
-};
+  /** @nullable */
+  recallStatus: string | null;
+  /** @nullable */
+  safetyStatus: string | null;
+});
+
+export type OwnerReportFieldStates = {[key: string]: ResearchState};
 
 export interface OwnerReport {
   id: number;
   vehicleId: string;
   vehicleLabel: string;
   displayName: string;
-  ownershipMonths: number;
-  milesDriven: number;
-  rating: number;
+  /** @nullable */
+  ownershipMonths: number | null;
+  /** @nullable */
+  milesDriven: number | null;
+  /** @nullable */
+  rating: number | null;
   title: string;
   body: string;
   /** @nullable */
   reportedProblem: string | null;
   isDemo: boolean;
+  claimIds?: string[];
+  fieldStates?: OwnerReportFieldStates;
 }
 
 export interface DiscoveryStats {
@@ -171,6 +338,23 @@ year?: number;
  */
 trimId?: number;
 trim?: string;
+/**
+ * Namespace-qualified model identity. Numeric modelId remains legacy-only.
+ * @pattern ^(legacy|canonical):model:[1-9][0-9]*$
+ */
+modelKey?: string;
+/**
+ * @pattern ^(legacy|canonical):generation:[1-9][0-9]*$
+ */
+generationKey?: string;
+/**
+ * @pattern ^(legacy|canonical):model-year:[1-9][0-9]*$
+ */
+modelYearKey?: string;
+/**
+ * @pattern ^(legacy|canonical):trim:[1-9][0-9]*$
+ */
+trimKey?: string;
 sort?: ListVehiclesSort;
 /**
  * @minimum 1

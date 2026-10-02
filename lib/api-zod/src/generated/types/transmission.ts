@@ -5,9 +5,14 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { TransmissionFieldStates } from './transmissionFieldStates';
 
 export interface Transmission {
   name: string;
-  gears: string;
-  availability: string;
+  /** @nullable */
+  gears: string | null;
+  /** @nullable */
+  availability: string | null;
+  claimIds?: string[];
+  fieldStates?: TransmissionFieldStates;
 }

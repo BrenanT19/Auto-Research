@@ -5,8 +5,12 @@ import {
   addComparisonId,
   buildBrowseLocation,
   buildComparisonLocation,
+  buildCanonicalCalculatorPrefill,
   buildVehicleListParams,
   calculateOwnershipEstimate,
+  catalogGenerationKey,
+  catalogModelKey,
+  catalogTrimKey,
   clearBrowseFilters,
   economyUnit,
   getBrowseGenerationOptions,
@@ -15,15 +19,22 @@ import {
   getGenerationFilterHint,
   hasActiveBrowseFilters,
   hasInvalidBrowseSelection,
+  isEnteredCalculatorValue,
   isGenerationFilterEnabled,
+  missingCanonicalFinancingInputs,
+  missingCanonicalOwnershipInputs,
   normalizeCalculatorNumber,
   optionalVehicleQueryOptions,
+  mergeCanonicalCalculatorPrefill,
   parseCalculatorNumber,
   parseBrowseFilters,
   parseComparisonIds,
   readOwnershipDraft,
   removeComparisonId,
+  researchStateLabel,
+  resetUneditedCalculatorDraft,
   resolveBrowseFilters,
+  safeCitationUrl,
 } from "../src/shopper-tools.ts";
 import type { CatalogOption, OwnershipDraft } from "../src/shopper-tools.ts";
 import {
@@ -417,6 +428,9 @@ test("browse URL filters become search parameters and clear back to a clean URL"
     modelId: "",
     generationId: "",
     trimId: "",
+    modelKey: "",
+    generationKey: "",
+    trimKey: "",
   });
   assert.equal(buildBrowseLocation(cleared), "/browse");
 });
@@ -476,6 +490,177 @@ test("browse deep links resolve legacy names without broadening invalid hierarch
   assert.equal(invalid.generationId, "111");
   assert.equal(invalid.trimId, "11111");
   assert.equal(hasInvalidBrowseSelection(invalid, browseCatalog), true);
+});
+
+test("qualified browse keys round-trip and become namespaced API query parameters", () => {
+  const query = "?make=ford&modelKey=canonical%3Amodel%3A11&generationKey=canonical%3Ageneration%3A22&year=2024&trimKey=canonical%3Atrim%3A33";
+  const parsed = parseBrowseFilters(query);
+  assert.equal(buildBrowseLocation(parsed), `/browse${query}`);
+  assert.deepEqual(buildVehicleListParams(parsed), {
+    makeSlug: "ford",
+    modelKey: "canonical:model:11",
+    generationKey: "canonical:generation:22",
+    year: 2024,
+    trimKey: "canonical:trim:33",
+    sort: "popular",
+    limit: 60,
+  });
+});
+
+test("colliding legacy and canonical IDs stay scoped by qualified hierarchy keys", () => {
+  const colliding: CatalogOption[] = [
+    { ...browseCatalog[0]!, profileKind: "legacy" },
+    {
+      ...browseCatalog[0]!,
+      profileId: "canonical-ford-f150",
+      profileKind: "canonical",
+      model: "F-150 canonical",
+      generation: "Canonical generation",
+      trim: "Canonical XLT",
+      modelKey: "canonical:model:11",
+      generationKey: "canonical:generation:111",
+      modelYearKey: "canonical:model-year:1111",
+      trimKey: "canonical:trim:11111",
+    },
+  ];
+  assert.equal(catalogModelKey(colliding[0]!), "legacy:model:11");
+  assert.equal(catalogModelKey(colliding[1]!), "canonical:model:11");
+  assert.equal(catalogGenerationKey(colliding[1]!), "canonical:generation:111");
+  assert.equal(catalogTrimKey(colliding[1]!), "canonical:trim:11111");
+
+  const canonicalFilters = parseBrowseFilters(
+    "?make=ford&modelKey=canonical%3Amodel%3A11&generationKey=canonical%3Ageneration%3A111&year=2024&trimKey=canonical%3Atrim%3A11111",
+  );
+  assert.equal(hasInvalidBrowseSelection(canonicalFilters, colliding), false);
+  const legacyNumericFilters = parseBrowseFilters("?make=ford&modelId=11&generationId=111&year=2024&trimId=11111");
+  assert.equal(hasInvalidBrowseSelection(legacyNumericFilters, colliding), false);
+  const wrongGeneration = { ...canonicalFilters, generationKey: "canonical:generation:999" };
+  assert.equal(hasInvalidBrowseSelection(wrongGeneration, colliding), true);
+
+  const suggestions = getBrowseSuggestions("F-150", colliding).filter(item => item.kind === "model");
+  assert.deepEqual(suggestions.map(item => item.kind === "model" ? item.modelKey : undefined), [
+    "legacy:model:11",
+    "canonical:model:11",
+  ]);
+});
+
+test("canonical nulls display research state and never copy unknown values into calculator inputs", () => {
+  assert.equal(researchStateLabel({ state: "unknown", claimIds: [] }), "Unknown");
+  assert.equal(researchStateLabel({ state: "not_yet_researched", claimIds: [] }), "Not yet researched");
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: false,
+    priceUsd: null,
+    mpgCombined: null,
+    annualMaintenanceEstimateUsd: 1_200,
+    insuranceEstimateUsd: 2_400,
+    fieldStates: {
+      priceUsd: { state: "unknown", claimIds: [] },
+      mpgCombined: { state: "not_yet_researched", claimIds: [] },
+      annualMaintenanceEstimateUsd: { state: "known", claimIds: ["maintenance"] },
+      insuranceEstimateUsd: { state: "known", claimIds: ["insurance"] },
+    },
+  }), {
+    maintenance: "100",
+    insurance: "200",
+  });
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: false,
+    priceUsd: 0,
+    fieldStates: { priceUsd: { state: "known", claimIds: ["price"] } },
+  }), { price: "0" });
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: true,
+    priceUsd: 10_000,
+    fieldStates: { priceUsd: { state: "known", claimIds: [] } },
+  }), {});
+});
+
+test("canonical calculator prefill includes only known annual repair estimates", () => {
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: false,
+    annualRepairEstimateUsd: 1_800,
+    fieldStates: {
+      annualRepairEstimateUsd: { state: "known", claimIds: ["repairs"] },
+    },
+  }), { repairs: "150" });
+  assert.deepEqual(buildCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: false,
+    annualRepairEstimateUsd: 1_800,
+    fieldStates: {
+      annualRepairEstimateUsd: { state: "unknown", claimIds: [] },
+    },
+  }), {});
+});
+
+test("canonical source prefill never replaces shopper-edited calculator fields", () => {
+  const current: OwnershipDraft = {
+    price: "41000", down: "", apr: "", miles: "", mpg: "", gas: "", electricity: "",
+    insurance: "", maintenance: "", repairs: "",
+  };
+  const result = mergeCanonicalCalculatorPrefill({
+    profileKind: "canonical",
+    isDemo: false,
+    priceUsd: 30_000,
+    mpgCombined: 31,
+    fieldStates: {
+      priceUsd: { state: "known", claimIds: ["price"] },
+      mpgCombined: { state: "known", claimIds: ["economy"] },
+    },
+  }, current, { price: true });
+  assert.equal(result.draft.price, "41000");
+  assert.equal(result.draft.mpg, "31");
+  assert.deepEqual(result.appliedFields, ["mpg"]);
+});
+
+test("canonical calculator readiness distinguishes blank assumptions from explicit zero", () => {
+  const draft: OwnershipDraft = {
+    price: "", down: "", apr: "", miles: "", mpg: "", gas: "", electricity: "",
+    insurance: "", maintenance: "", repairs: "",
+  };
+  const assumptions = { draft, taxRate: "", dealerFees: "", fuelType: null };
+  assert.deepEqual(missingCanonicalFinancingInputs(assumptions), [
+    "vehicle price", "down payment", "APR", "sales tax rate", "dealer fees",
+  ]);
+  assert.ok(missingCanonicalOwnershipInputs(assumptions).includes("fuel type"));
+  assert.ok(!missingCanonicalOwnershipInputs(assumptions).includes("fuel price"));
+  const completed = {
+    draft: Object.fromEntries(Object.keys(draft).map(field => [field, "0"])) as OwnershipDraft,
+    taxRate: "0",
+    dealerFees: "0",
+    fuelType: "electric",
+  };
+  assert.deepEqual(missingCanonicalFinancingInputs(completed), []);
+  assert.deepEqual(missingCanonicalOwnershipInputs(completed), []);
+  assert.equal(isEnteredCalculatorValue("0"), true);
+  assert.equal(isEnteredCalculatorValue(""), false);
+});
+
+test("profile-sourced calculator values reset on vehicle change while shopper edits remain", () => {
+  const draft: OwnershipDraft = {
+    price: "41000", down: "5000", apr: "6", miles: "12000", mpg: "31", gas: "3.50",
+    electricity: "0.15", insurance: "200", maintenance: "100", repairs: "150",
+  };
+  const defaults: OwnershipDraft = {
+    price: "32000", down: "5000", apr: "6.4", miles: "12000", mpg: "28", gas: "3.65",
+    electricity: "0.16", insurance: "145", maintenance: "110", repairs: "55",
+  };
+  assert.deepEqual(resetUneditedCalculatorDraft(draft, defaults, { price: true, down: true }), {
+    ...defaults,
+    price: "41000",
+    down: "5000",
+  });
+});
+
+test("canonical citations reject unsafe URL schemes", () => {
+  assert.equal(safeCitationUrl("javascript:alert(1)"), undefined);
+  assert.equal(safeCitationUrl("data:text/html,unsafe"), undefined);
+  assert.equal(safeCitationUrl("https://example.com/evidence"), "https://example.com/evidence");
+  assert.equal(safeCitationUrl("http://example.com/evidence"), "http://example.com/evidence");
 });
 
 test("Browse generation stays enabled and unselected for single-generation models", () => {
