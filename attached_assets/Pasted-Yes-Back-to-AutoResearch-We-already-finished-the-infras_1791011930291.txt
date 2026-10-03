@@ -1,0 +1,27 @@
+Yes. Back to AutoResearch.
+We already finished the infrastructure work through Task #32. The next milestone is still Stage 2B: getting our first real vehicle into the system. But we're changing the sourcing approach: we're not waiting for Ford's permission just to use factual vehicle information, and we're not dealing with pictures yet.
+Put Replit in Build mode and paste this:
+Continue Stage 2B — Real Vehicle Pilot #1
+Continue development of AutoResearch with the first real canonical vehicle:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD.
+Task #32 and the canonical vehicle-profile infrastructure are complete. Continue from the existing project state; do not redo prior architecture or migration work.
+Important sourcing correction: Do not require Ford's permission merely because factual information concerns a Ford vehicle. Do not use the Ford Brand Licensing process as a blocker for ordinary factual vehicle specifications. Instead, evaluate the actual source from which data is obtained and its applicable terms/license.
+Research and verify the exact vehicle configuration using legally usable sources. Prefer authoritative structured/public data where available, including relevant U.S. government sources such as EPA/FuelEconomy.gov and NHTSA. Ford materials may be used for factual cross-checking where appropriate, but do not copy Ford prose, photographs, illustrations, manuals, webpages, or other copyrighted creative material into AutoResearch.
+Do not use Consumer Reports, scrape proprietary databases, bypass access restrictions, or copy another site's proprietary descriptions/data presentation.
+For each source actually used, record its identity/URL, retrieval date, what facts it supports, and any applicable licensing/usage restrictions. If a particular source's commercial storage/display rights are genuinely unclear, flag that source as needing rights verification rather than blocking unrelated facts obtainable from other lawful sources.
+First verify the exact configuration: U.S. market, MY2024, Ford Mustang, EcoBoost trim, Fastback body, 2.3L EcoBoost engine, 10-speed automatic, RWD, and any material package/build-date distinctions needed to prevent mixing configurations.
+Once sufficiently verified, create Vehicle #1 as a real canonical development draft using the Stage 2A/Task #32 architecture. Keep it separate from all demo records. Populate only facts supported by appropriate evidence. Unsupported information must remain unknown, not_yet_researched, or not_applicable as appropriate—never guess or fill gaps with demo data.
+Do not invent a reliability score, ownership cost, repair cost, lifespan, issue frequency, maintenance recommendation, safety rating, or recall status merely to make the page look complete. NHTSA complaints are owner-reported signals, not confirmed defects or prevalence estimates. Recall campaigns must not be represented as VIN-specific open-recall status.
+Keep Vehicle #1 unpublished/private. Do not add it to the public release manifest yet.
+Then run the existing canonical API, provenance/applicability, sparse-state, migration/regression, and demo-parity tests. Confirm that all 13 existing demo profiles remain unchanged and that no demo data leaks into the real profile.
+Stop after Vehicle #1 is created and validated as an unpublished development draft. Do not start Vehicle #2, bulk-import Ford vehicles, expand to other brands, implement owner submissions/Task #43, redesign the UI, or publish Vehicle #1.
+At completion, give me a concise report showing:
+- exact canonical configuration created
+- factual fields populated
+- fields still unknown/not researched
+- sources used and what each supported
+- any genuinely unresolved source-rights questions
+- test results
+- confirmation that all 13 demo profiles are unchanged
+- anything that needs my approval before publication
+If a necessary source-rights issue actually prevents creation of the private draft, stop and explain the specific source and specific use that is blocked rather than starting unrelated work.
