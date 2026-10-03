@@ -19,7 +19,13 @@ Multiple independently usable sources may establish different identity attribute
 
 **Why:** The user explicitly requires independent gate decisions for the first real-data pilot, rather than allowing one blocker to substitute for evaluating the other.
 
-**How to apply:** Follow the latest explicit scope authorization: private-draft creation and public publication are separate approvals. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or substitute snippets, other markets, or later years for the required configuration.
+**How to apply:** Follow the latest explicit scope authorization: private-draft creation and public publication are separate approvals. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or silently substitute snippets, other markets, or later years for the required configuration.
+
+For the first Mustang private pilot, the user explicitly accepted indexed preliminary MY2024 Ford specification evidence for the configuration relationship, combined with independently verified EPA joined powertrain/drivetrain records. This is not authorization to treat preliminary specifications as final production values, or to publish the draft.
+
+**Why:** The official PDF URL returned unrelated HTML in the agent's retrieval path, while the user confirmed the indexed official document content and specifically authorized proceeding with that evidence limitation recorded.
+
+**How to apply:** Preserve the preliminary date, subject-to-change limitation, indexed evidence basis, and direct-retrieval failure in provenance. Never report direct PDF inspection when only indexed content was available. Do not extend this pilot's authorization to other records or optional specifications.
 
 Treat direct EPA test-car data separately from FuelEconomy.gov/ORNL documents and label data. Test-car rows can corroborate joined powertrain attributes, but test results and rated horsepower are not automatically retail specifications or window-sticker MPG. They may lack retail trim/body distinctions.
 

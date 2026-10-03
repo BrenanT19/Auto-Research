@@ -1,0 +1,25 @@
+Continue Stage 2B Vehicle #1 using the indexed official Ford MY2024 technical-specification evidence plus the already verified EPA MY2024 Test Car List.
+The former Ford Media PDF URL now redirects when fetched directly, but the indexed official document content is still available and identifies:
+- 2024 Ford Mustang
+- Mustang EcoBoost model
+- EcoBoost and EcoBoost Premium as distinct trim levels
+- Fastback coupe and convertible body styles for Mustang EcoBoost
+- front-engine, rear-wheel drive
+- 2.3-liter EcoBoost turbocharged I-4
+- 10-speed automatic as standard for Mustang EcoBoost
+Treat the Ford source as preliminary MY2024 specifications dated September 22, 2022 and subject to change. Use it only to establish the configuration relationship, not to automatically import every specification.
+Combine that with the already verified EPA MY2024 Test Car List rows that corroborate MY2024 Ford Mustang + 2.3L + four cylinders + automatic + ten gears + RWD.
+If there is no contradictory evidence, treat the exact-identity gate for:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD
+as satisfied.
+Create Vehicle #1 as an unpublished canonical development draft.
+Populate only those supported identity/powertrain fields. Leave unsupported fields unknown or not_yet_researched.
+Do not import MPG, horsepower, torque, weight, axle ratio, packages, reliability, maintenance, ownership costs, safety, recalls, or issue data yet unless separately supported and scoped.
+Store provenance noting that:
+- Ford MY2024 technical specifications were preliminary and subject to change.
+- EPA independently corroborates the MY2024 powertrain/drivetrain combination.
+- the old Ford Media URL currently redirects on fresh retrieval.
+Then run the existing canonical API, sparse-state, provenance, fail-closed applicability, regression, and 13-demo parity tests.
+Keep the profile unpublished.
+Stop after Vehicle #1 is created and validated.
+Do not start Vehicle #2, owner submissions, bulk imports, UI redesign, migration recovery work, or unrelated tasks.
