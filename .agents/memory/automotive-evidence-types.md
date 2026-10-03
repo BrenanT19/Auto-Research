@@ -14,3 +14,9 @@ Firsthand ownership is configuration-specific. A reviewed broader model, model-y
 **Why:** Vehicle labels can coincide across demo and canonical identities, and externally collected stories do not establish a direct submission to this product.
 
 **How to apply:** Require an exact canonical configuration and reviewed applicability for direct experiences. Use the separately classified, documented scope for external patterns; keep original demo links and sample labels intact. Mixed community lists must label individual records rather than call every report fictional.
+
+Owner-submission implementation is deferred until the first real canonical pilot vehicle is successfully created and reviewed, followed by a separate review of the preserved owner-submission plan. Do not add owner-submission schema, authentication, submission APIs, or change the Community action during the pilot.
+
+**Why:** The user explicitly prioritized the first pilot's source-rights and exact-configuration gates over owner-submission functionality.
+
+**How to apply:** Preserve the existing plan without implementing it. Completing the pilot is a prerequisite for later plan review, not automatic authorization to start owner-submission work.
