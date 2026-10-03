@@ -223,8 +223,11 @@ main { min-height: 60vh; }
 .trend-name { display: flex; flex-direction: column; }
 .trend-name small { color: #777f86; font-size: 9px; }
 .trend-name b { font: 600 15px var(--font-display); }
-.trend-cost { font: 700 13px var(--font-display); }
-.trend-cost small { display: block; color: #7b8289; font: 9px var(--font-body); }
+.trend-cost { display: flex; flex-direction: column; gap: 2px; font: 700 13px var(--font-display); }
+.trend-cost small, .trend-reliability > small { display: block; color: #7b8289; font: 9px/1.35 var(--font-body); }
+.trend-reliability { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
+.trend-reliability > b { color: var(--ink); font: 700 15px var(--font-display); }
+.trend-reliability .reliability { min-height: 20px; }
 .trend-row > svg:last-child { color: #848b92; }
 .makes-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 9%; padding: 38px 0; border-top: 1px solid var(--line); }
 .makes-intro h2 { margin: 12px 0; font-size: 35px; line-height: 1.04; }
@@ -364,7 +367,7 @@ main { min-height: 60vh; }
   .vehicle-grid, .browse-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }.car-art { height: 115px; }.vehicle-card-body { padding: 10px; }.vehicle-title { font-size: 15px; }.vehicle-card-foot b { font-size: 15px; }
   .split-feature { grid-template-columns: 1fr; margin: 22px 0; }.feature-note { padding: 27px 22px; }.feature-note h2 { font-size: 33px; }.cost-visual { min-height: 235px; }
   .reliability-explainer { grid-template-columns: 1fr; gap: 13px; padding: 24px 0; }.reliability-explainer h2 { font-size: 23px; }
-  .trend-row { grid-template-columns: 25px 1fr 86px 24px; gap: 8px; padding: 9px 5px; }.trend-row .reliability { display: none; }.trend-cost { font-size: 11px; }.trend-name b { font-size: 13px; }
+  .trend-row { grid-template-columns: 25px 1fr 86px 24px; gap: 8px; padding: 9px 5px; }.trend-row .trend-reliability { display: none; }.trend-cost { font-size: 11px; }.trend-cost small { font-size: 8px; }.trend-name b { font-size: 13px; }
   .makes-section { grid-template-columns: 1fr; gap: 12px; }.makes-intro h2 { font-size: 30px; }.make-list { grid-template-columns: 1fr 1fr; column-gap: 12px; }.make-row { grid-template-columns: 30px 1fr 14px; gap: 7px; }.make-row .make-index { display: none; }.make-mark { width: 27px; height: 27px; font-size: 8px; }.make-row b { font-size: 11px; }.make-row small { font-size: 8px; }
   .closing-cta { align-items: flex-start; flex-direction: column; margin-bottom: 28px; padding: 22px; }.closing-cta h2 { font-size: 23px; }
   .browse-layout { grid-template-columns: 1fr; gap: 15px; }.filter-panel { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 0 11px; padding: 13px; }.filter-title, .clear-filters, .filter-foot { grid-column: 1/-1; }.filter-title { margin-bottom: 10px; }.filter-panel .field-label { margin-bottom: 8px; }

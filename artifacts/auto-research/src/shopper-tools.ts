@@ -27,6 +27,37 @@ export function profileResearchState(
     (section ? profile.sectionStates?.[section] ?? profile.fieldStates?.[section] : undefined);
 }
 
+export type HomeTrendEvidence = {
+  kind: "canonical" | "demo" | "unclassified";
+  state?: ResearchFieldState;
+  value: number | null;
+};
+
+/** Canonical trend values are shown only when that specific field is known. */
+export function homeTrendEvidence(
+  profile: {
+    profileKind?: string;
+    isDemo?: boolean;
+    fieldStates?: Record<string, ResearchFieldState | undefined>;
+    sectionStates?: Record<string, ResearchFieldState | undefined>;
+  },
+  field: string,
+  value: number | null | undefined,
+): HomeTrendEvidence {
+  if (profile.profileKind === "canonical" && profile.isDemo === false) {
+    const state = profileResearchState(profile, field);
+    return {
+      kind: "canonical",
+      ...(state ? { state } : {}),
+      value: state?.state === "known" && value != null ? value : null,
+    };
+  }
+  return {
+    kind: profile.isDemo === true ? "demo" : "unclassified",
+    value: value ?? null,
+  };
+}
+
 export type CanonicalPrefillProfile = {
   profileKind?: string;
   isDemo?: boolean;

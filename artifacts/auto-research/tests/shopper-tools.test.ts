@@ -17,6 +17,7 @@ import {
   getActiveReportSection,
   getBrowseSuggestions,
   getGenerationFilterHint,
+  homeTrendEvidence,
   hasActiveBrowseFilters,
   hasInvalidBrowseSelection,
   isEnteredCalculatorValue,
@@ -577,6 +578,60 @@ test("canonical nulls display research state and never copy unknown values into 
     priceUsd: 10_000,
     fieldStates: { priceUsd: { state: "known", claimIds: [] } },
   }), {});
+});
+
+test("Home trend evidence shows canonical numbers only for known fields and keeps demo values illustrative", () => {
+  const known = { state: "known" as const, claimIds: ["synthetic-claim"] };
+  const unknown = { state: "unknown" as const, claimIds: ["synthetic-withheld-claim"] };
+  const canonical = {
+    profileKind: "canonical",
+    isDemo: false,
+    fieldStates: { annualOwnershipEstimateUsd: known, reliabilityEstimate: unknown },
+  };
+  assert.deepEqual(homeTrendEvidence(canonical, "annualOwnershipEstimateUsd", 4_250), {
+    kind: "canonical",
+    state: known,
+    value: 4_250,
+  });
+  assert.deepEqual(homeTrendEvidence(canonical, "reliabilityEstimate", 7.8), {
+    kind: "canonical",
+    state: unknown,
+    value: null,
+  });
+  assert.deepEqual(homeTrendEvidence(canonical, "annualMaintenanceEstimateUsd", 900), {
+    kind: "canonical",
+    value: null,
+  });
+  assert.deepEqual(homeTrendEvidence({
+    profileKind: "canonical",
+    isDemo: false,
+    fieldStates: { annualOwnershipEstimateUsd: known },
+  }, "annualOwnershipEstimateUsd", null), {
+    kind: "canonical",
+    state: known,
+    value: null,
+  });
+  assert.deepEqual(homeTrendEvidence({
+    profileKind: "legacy",
+    isDemo: true,
+  }, "annualOwnershipEstimateUsd", 0), {
+    kind: "demo",
+    value: 0,
+  });
+  assert.deepEqual(homeTrendEvidence({
+    profileKind: "legacy",
+    isDemo: true,
+  }, "annualOwnershipEstimateUsd", null), {
+    kind: "demo",
+    value: null,
+  });
+  assert.deepEqual(homeTrendEvidence({
+    profileKind: "legacy",
+    isDemo: false,
+  }, "annualOwnershipEstimateUsd", 3_000), {
+    kind: "unclassified",
+    value: 3_000,
+  });
 });
 
 test("partial sections never override a missing field's explicit research state", () => {
