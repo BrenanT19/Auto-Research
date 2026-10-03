@@ -54,3 +54,6 @@ jobs:
 
       - name: Check interrupted migration recovery
         run: pnpm --filter @workspace/scripts test:auto-research:interrupted-migration-recovery
+
+      - name: Check failed migration recovery
+        run: pnpm --filter @workspace/scripts test:auto-research:failed-migration-recovery

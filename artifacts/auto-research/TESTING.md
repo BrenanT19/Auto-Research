@@ -41,12 +41,13 @@ Use the latest minor release of either supported major version. When changing
 this list, update the CI matrix in
 `.github/workflows/auto-research-migration-recovery.yml` at the same time.
 
-That GitHub Actions workflow runs the focused interruption recovery command
-once per supported major version, using the corresponding `postgres:16` or
+That GitHub Actions workflow runs both focused migration-recovery commands once
+per supported major version, using the corresponding `postgres:16` or
 `postgres:17` service image. Each matrix job has its own runner, local PostgreSQL
-service, and `auto_research_test` database; the test creates and drops its own
+service, and `auto_research_test` database; each mode creates and drops its own
 uniquely named disposable database within that service. Matrix jobs do not
-cancel one another when a version fails, so every supported version is checked.
+cancel one another when a version fails, so both recovery modes are checked on
+every supported version.
 
 Each job sets the test URL to its service at `127.0.0.1` and deliberately does
 not define `DATABASE_URL`. The runner requires the explicit test URL, rejects
@@ -70,7 +71,8 @@ that failure leaves schema, journal, and all seeded legacy data unchanged, then
 retries the checked-in migrations and checks the full legacy data again. It
 verifies all 13 demo-profile aliases and database constraints without starting
 the API server or calling vehicle endpoints. The temporary database is dropped
-when the check exits.
+when the check exits. CI runs this check alongside interruption recovery on
+PostgreSQL 16 and 17.
 
 To test recovery when the migration process is interrupted:
 
