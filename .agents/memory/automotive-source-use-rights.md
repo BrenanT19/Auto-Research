@@ -19,7 +19,7 @@ Multiple independently usable sources may establish different identity attribute
 
 **Why:** The user explicitly requires independent gate decisions for the first real-data pilot, rather than allowing one blocker to substitute for evaluating the other.
 
-**How to apply:** Follow the latest explicit scope authorization: private-draft creation and public publication are separate approvals. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or silently substitute snippets, other markets, or later years for the required configuration.
+**How to apply:** Follow the latest explicit scope authorization: private-draft creation, development-site visibility, and public publication are separate approvals. The user authorized development browsing of the first real Mustang without public release; preview visibility must not implicitly grant publication or owner-submission eligibility. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or silently substitute snippets, other markets, or later years for the required configuration.
 
 For the first Mustang private pilot, the user explicitly accepted indexed preliminary MY2024 Ford specification evidence for the configuration relationship, combined with independently verified EPA joined powertrain/drivetrain records. This is not authorization to treat preliminary specifications as final production values, or to publish the draft.
 

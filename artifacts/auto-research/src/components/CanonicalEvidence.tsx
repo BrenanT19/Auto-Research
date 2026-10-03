@@ -26,6 +26,7 @@ export function CanonicalEvidence({
           {source.locator ? ` · ${source.locator}` : ""}
           {source.unit ? ` · Unit: ${source.unit}` : ""}
           {source.measurementBasis ? ` · Basis: ${source.measurementBasis}` : ""}
+          {source.sourceVersion ? ` · Version: ${source.sourceVersion}` : ""}
           {` · Retrieved: ${source.retrievedAt}`}
         </div>)}
       </li>)}</ul>

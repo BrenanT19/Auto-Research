@@ -102,6 +102,7 @@ export const GetMakeResponse = zod.object({
   "imageKey": zod.string(),
   "isDemo": zod.boolean(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
@@ -200,6 +201,7 @@ export const ListVehiclesResponseItem = zod.object({
   "imageKey": zod.string(),
   "isDemo": zod.boolean(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
@@ -268,6 +270,7 @@ export const ListPopularVehiclesResponseItem = zod.object({
   "imageKey": zod.string(),
   "isDemo": zod.boolean(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
@@ -336,6 +339,7 @@ export const ListTrendingVehiclesResponseItem = zod.object({
   "imageKey": zod.string(),
   "isDemo": zod.boolean(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
@@ -408,6 +412,7 @@ export const GetVehicleResponse = zod.object({
   "imageKey": zod.string(),
   "isDemo": zod.boolean(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),

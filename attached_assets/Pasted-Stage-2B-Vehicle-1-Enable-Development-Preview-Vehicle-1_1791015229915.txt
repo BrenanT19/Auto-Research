@@ -1,0 +1,27 @@
+Stage 2B Vehicle #1 — Enable Development Preview
+Vehicle #1 has been successfully created and validated:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD
+Canonical configuration ID: 2
+Private identifier: ford-mustang-2024-ecoboost-fastback-us-23l-10at-rwd
+I now want to see and use this real vehicle profile in the AutoResearch development website.
+Make Vehicle #1 visible in the development/preview environment only so I can open it through the normal AutoResearch UI and inspect its Vehicle Research page.
+Do not publish it to the production/public release manifest yet.
+Preserve the distinction between:
+- development-preview canonical vehicles
+- publicly released canonical vehicles
+- the existing demo vehicles
+The development preview should allow me to find/open the Mustang through the normal site flow where practical, including Browse Cars/search and its Vehicle Research page.
+Render the real canonical profile using the existing site design. Do not redesign the website.
+Because this is a sparse real profile, the UI must handle missing research honestly:
+- supported real values should display normally
+- not_yet_researched should display as Not yet researched where appropriate
+- unknown should display as Unknown
+- not_applicable should display as Not applicable
+- never replace missing real data with demo data, zeroes, generic estimates, or fabricated values
+Clearly identify this as a real research profile in development, not a demo profile.
+Keep its provenance/evidence accessible through the existing research architecture where appropriate, but don't clutter the page with internal database/debug information.
+Verify that opening and browsing the real Mustang does not break Browse Cars, Vehicle Research, Compare, Calculator, or the 13 existing demos.
+Run relevant regression and demo-parity tests.
+STOP once I can visibly open Vehicle #1 in the development website.
+Do not start additional vehicle research, Vehicle #2, bulk imports, owner submissions, image sourcing, UI redesign, unrelated migrations, or publication.
+At completion, give me the exact path/steps I should use in the Replit preview to open the real Mustang profile.

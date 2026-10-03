@@ -42,4 +42,5 @@ export * from './vehicleDetail';
 export * from './vehicleSummary';
 export * from './vehicleSummaryFieldStates';
 export * from './vehicleSummaryProfileKind';
+export * from './vehicleSummaryPublicationStatus';
 export * from './vehicleSummarySectionStates';

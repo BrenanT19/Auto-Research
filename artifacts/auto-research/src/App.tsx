@@ -18,6 +18,7 @@ import { GenerationSelect } from './components/GenerationSelect';
 import { useBrowseResetScroll } from './hooks/use-browse-reset-scroll';
 import { useReportNavigation } from './hooks/use-report-navigation';
 import { CanonicalEvidence } from './components/CanonicalEvidence';
+import { CanonicalProfileStatus } from './components/CanonicalProfileStatus';
 import { ExternalOwnerPatterns } from './components/ExternalOwnerPatterns';
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ function VehicleCard({ vehicle, onCompare, selected = false }: { vehicle: Vehicl
   return <article className="vehicle-card">
     <div className={`car-art art-${(vehicle.imageKey || 'sedan').replace(/[^a-z0-9]/gi, '').toLowerCase()}`} aria-label={`Vehicle photo placeholder for ${label(vehicle)}`}><span className="art-caption">{vehicle.bodyType || (canonical ? 'BODY TYPE NOT LISTED' : 'OWNERSHIP PROFILE')}</span></div>
     <div className="vehicle-card-body"><div className="card-overline">{vehicle.year} · {vehicle.generation || 'MODEL YEAR'}</div><Link href={`/vehicles/${vehicle.id}`} className="vehicle-title serif">{vehicle.make} {vehicle.model}</Link><div className="trim-line">{vehicle.trim} <span>·</span> {vehicle.drivetrain || (canonical ? "—" : "")}</div>
+      <CanonicalProfileStatus vehicle={vehicle}/>
       <div className="vehicle-score-row">{canonical ? <><CanonicalEvidence state={vehicle.fieldStates?.reliabilityEstimate || vehicle.fieldStates?.reliability} claims={vehicle.claims}/>{vehicle.reliabilityEstimate != null && <span>{vehicle.reliabilityEstimate} / 10</span>}</> : <><Reliability score={vehicle.reliabilityEstimate}/><span className="estimate-caption">estimated reliability</span></>}</div>
       <div className="vehicle-card-foot"><span><b>{money(vehicle.annualOwnershipEstimateUsd)}</b><small>annual ownership est.</small></span></div>
       {canonical && <CanonicalEvidence state={vehicle.fieldStates?.annualOwnershipEstimateUsd || vehicle.fieldStates?.ownership} claims={vehicle.claims}/>}
@@ -378,6 +380,8 @@ function DetailPage() {
   ];
   return <Shell><div className="content-wrap page-wrap">
     <div className="crumbs"><Link href="/">Home</Link><span>/</span><Link href={`/manufacturers/${v.makeSlug}`}>{v.make}</Link><span>/</span><span>{v.model}</span></div>
+    <CanonicalProfileStatus vehicle={v} explain/>
+    {canonical && <CanonicalEvidence state={v.fieldStates?.identity} claims={v.claims}/>}
     <div className="detail-hero"><div><span className="eyebrow">{v.year} · {v.generation} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>Compare this trim <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
     {!canonical && <DemoNotice/>}
     <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType || "")}`, 'COMBINED EST.'], [v.drivetrain || "—", 'DRIVETRAIN'], [v.fuelType || "—", 'FUEL'], [v.horsepower == null ? "—" : `${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{canonical ? caption === "STARTING EST." ? "PRICE" : caption === "COMBINED EST." ? "COMBINED ECONOMY" : caption : caption}</small>{canonical && <CanonicalEvidence state={researchState(caption === "STARTING EST." ? "priceUsd" : caption === "COMBINED EST." ? "mpgCombined" : caption === "DRIVETRAIN" ? "drivetrain" : caption === "FUEL" ? "fuelType" : "horsepower", "specifications")} claims={v.claims}/>}</div>)}</div>
@@ -437,7 +441,7 @@ function ComparePage() {
 
 function CompareColumn({ id, onRemove }: { id: string; onRemove: (id: string) => void }) {
   const v = useGetVehicle(id);
-  return <th>{v.isLoading ? <span className="skeleton compact-skeleton"/> : v.isError || !v.data ? <span>Profile unavailable</span> : <div className="compare-vehicle"><Link href={`/vehicles/${id}`} className="serif">{v.data.make} {v.data.model}</Link><small>{v.data.year} · {v.data.trim}</small><button onClick={() => onRemove(id)} aria-label="Remove vehicle"><X size={14}/> Remove</button></div>}</th>;
+  return <th>{v.isLoading ? <span className="skeleton compact-skeleton"/> : v.isError || !v.data ? <span>Profile unavailable</span> : <div className="compare-vehicle"><Link href={`/vehicles/${id}`} className="serif">{v.data.make} {v.data.model}</Link><small>{v.data.year} · {v.data.trim}</small><CanonicalProfileStatus vehicle={v.data}/><button onClick={() => onRemove(id)} aria-label="Remove vehicle"><X size={14}/> Remove</button></div>}</th>;
 }
 function CompareRow({ label: rowLabel, field, render }: { label: string; field?: string; render: (d: VehicleDetail) => string }) {
   const ids = new URLSearchParams(window.location.search).get('ids')?.split(',').filter(Boolean) || [];
@@ -564,6 +568,7 @@ function CalculatorPage() {
     setDraft(merged.draft);
   };
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="OWNERSHIP ESTIMATOR" title="Put your own numbers in." sub="A transparent estimate for monthly and yearly costs. Change any assumption to see the whole picture move."/>{!canonicalCalculatorMode && <DemoNotice/>}
+    {vehicleProfile && <CanonicalProfileStatus vehicle={vehicleProfile}/>}
     {vehicleId && vehicleProfile && <div className="prefill-banner"><Check size={15}/> Starting with {canonical ? "known profile data for" : "estimates for"} <b>{vehicleProfile.year} {vehicleProfile.make} {vehicleProfile.model} {vehicleProfile.trim}</b><button disabled={canonical && !canonicalPrefill?.appliedFields.length} onClick={() => {
       const profile = vehicleProfile;
       if (profile.profileKind === "canonical" && !profile.isDemo) {
@@ -625,7 +630,9 @@ function CommunityPage() {
   const reports = useListOwnerReports({});
   const submission = useSubmitOwnerExperience();
   const canonicalConfigurations = (catalogOptions.data || []).filter(option =>
-    option.profileKind === "canonical" && typeof option.canonicalConfigurationId === "number",
+    option.profileKind === "canonical" && typeof option.canonicalConfigurationId === "number" &&
+    vehicles.data?.some(vehicle => vehicle.canonicalConfigurationId === option.canonicalConfigurationId &&
+      vehicle.publicationStatus === "publicly_released"),
   );
   // Vehicle id is the hook for future vehicle-specific linking (e.g. /community?vehicle=<id>).
   const filtered = (reports.data || []).filter(r => !make || vehicles.data?.some(v => v.id === r.vehicleId));

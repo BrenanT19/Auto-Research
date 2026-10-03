@@ -47,7 +47,7 @@ async function main() {
   const app = express();
   app.use("/api", createAutomotiveRouter());
   app.use("/public", createAutomotiveRouter());
-  app.use("/private", createAutomotiveRouter({ releases: [release] }));
+  app.use("/private", createAutomotiveRouter({ developmentPreviews: [release] }));
   app.use("/wrong-scope", createAutomotiveRouter({ releases: [
     { ...release, identityClaimId: identity.year_claim_id },
   ] }));
@@ -69,6 +69,7 @@ async function main() {
   assert.equal(result.status, 200);
   const profile = result.body;
   assert.equal(profile.profileKind, "canonical");
+  assert.equal(profile.publicationStatus, "development_preview");
   assert.equal(profile.isDemo, false);
   assert.equal(profile.canonicalConfigurationId, release.configurationId);
   assert.equal(profile.make, "Ford");

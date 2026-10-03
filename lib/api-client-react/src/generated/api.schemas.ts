@@ -56,6 +56,17 @@ export const VehicleSummaryProfileKind = {
   canonical: 'canonical',
 } as const;
 
+/**
+ * Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.
+ */
+export type VehicleSummaryPublicationStatus = typeof VehicleSummaryPublicationStatus[keyof typeof VehicleSummaryPublicationStatus];
+
+
+export const VehicleSummaryPublicationStatus = {
+  development_preview: 'development_preview',
+  publicly_released: 'publicly_released',
+} as const;
+
 export type ResearchStateState = typeof ResearchStateState[keyof typeof ResearchStateState];
 
 
@@ -183,6 +194,8 @@ export interface VehicleSummary {
   imageKey: string;
   isDemo: boolean;
   profileKind?: VehicleSummaryProfileKind;
+  /** Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles. */
+  publicationStatus?: VehicleSummaryPublicationStatus;
   canonicalConfigurationId?: number;
   fieldStates?: VehicleSummaryFieldStates;
   sectionStates?: VehicleSummarySectionStates;

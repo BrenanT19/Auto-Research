@@ -55,6 +55,7 @@ import {
   type CanonicalManifestEntry,
 } from "../lib/canonical-vehicle-source";
 import { parseProfileKey } from "../lib/canonical-policy";
+import { getDevelopmentPreviewManifest } from "../lib/canonical-development-preview";
 
 const vehicleSelection = {
   id: trimsTable.slug,
@@ -427,9 +428,15 @@ async function loadVehicles(
 
 export function createAutomotiveRouter(options: {
   releases?: readonly CanonicalManifestEntry[];
+  developmentPreviews?: readonly CanonicalManifestEntry[];
 } = {}): IRouter {
 const router: IRouter = Router();
-const releases = options.releases ?? CANONICAL_RELEASE_MANIFEST;
+const publicReleases = options.releases ?? CANONICAL_RELEASE_MANIFEST;
+const publicConfigurationIds = new Set(publicReleases.map((entry) => entry.configurationId));
+const developmentPreviews = (options.developmentPreviews ?? [])
+  .filter((entry) => !publicConfigurationIds.has(entry.configurationId));
+const previewConfigurationIds = new Set(developmentPreviews.map((entry) => entry.configurationId));
+const releases = [...publicReleases, ...developmentPreviews];
 const OWNER_EXPERIENCE_CONSENT_VERSION = "owner-experience-v1";
 const OWNER_EXPERIENCE_FIRSTHAND_TEXT =
   "I confirm this is my firsthand experience with the exact configuration selected.";
@@ -494,6 +501,9 @@ function toCanonicalSummary(vehicle: Awaited<ReturnType<typeof loadCanonicalVehi
   } = vehicle;
   return {
     ...summary,
+    publicationStatus: previewConfigurationIds.has(vehicle.canonicalConfigurationId)
+      ? "development_preview" as const
+      : "publicly_released" as const,
     claims: summary.claims.map(({ fieldCode, value, valueState, measurementBasis, unit, claimKind, ...claim }) => claim),
   };
 }
@@ -870,7 +880,9 @@ router.post("/owner-submissions", async (req, res): Promise<void> => {
 
   // Accept only a configuration exposed by the canonical release, never a
   // make/model label or a caller-supplied vehicle description.
-  const publishedConfigurations = await loadCanonicalVehicles({}, releases);
+  // Development browsing does not make an unpublished draft eligible for
+  // owner submissions. Keep the existing public-release write boundary.
+  const publishedConfigurations = await loadCanonicalVehicles({}, publicReleases);
   const selectedConfiguration = publishedConfigurations.find(
     (profile) => profile.canonicalConfigurationId === parsed.data.configurationId,
   );
@@ -962,4 +974,6 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
 return router;
 }
 
-export default createAutomotiveRouter();
+export default createAutomotiveRouter({
+  developmentPreviews: getDevelopmentPreviewManifest(),
+});
