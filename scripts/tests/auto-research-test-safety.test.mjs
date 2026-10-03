@@ -113,20 +113,35 @@ test("temporary database metadata must match the runner name and run ID", () => 
   );
 });
 
+test("committed SQL-error databases require matching runner ownership metadata", () => {
+  const createdAt = new Date("2026-10-01T12:00:00.000Z");
+  const comment = formatTemporaryDatabaseComment(runnerRunId, createdAt);
+  const databaseName = `auto_research_stage2a_sql_resumed_${runnerRunId}`;
+  assert.equal(parseRunnerOwnedTemporaryDatabase(databaseName, comment)?.runId, runnerRunId);
+  assert.equal(parseRunnerOwnedTemporaryDatabase(databaseName, null), null);
+  assert.equal(parseRunnerOwnedTemporaryDatabase(
+    databaseName,
+    formatTemporaryDatabaseComment("5678_a1b2c3d4", createdAt),
+  ), null);
+  assert.equal(parseRunnerOwnedTemporaryDatabase("auto_research_stage2a_sql_resumed_shared", comment), null);
+});
+
 test("stale cleanup removes only inactive runner-owned temporary databases", async () => {
   const now = Date.parse("2026-10-02T12:00:00.000Z");
   const staleCreatedAt = new Date(now - 48 * 60 * 60 * 1000);
   const recentCreatedAt = new Date(now - 30 * 60 * 1000);
   const staleName = `auto_research_stage2a_baseline_${runnerRunId}`;
+  const sqlStaleName = `auto_research_stage2a_sql_resumed_${runnerRunId}`;
   const activeName = `auto_research_stage2a_migrated_${runnerRunId}`;
-  const recentName = `auto_research_stage2a_failure_${runnerRunId}`;
+  const recentName = `auto_research_stage2a_sql_resumed_5678_1234abcd`;
   const unmarkedName = "auto_research_stage2a_interrupted_5678_1234abcd";
   const nameRunMismatch = "auto_research_stage2a_baseline_9876_87654321";
   const otherOwnerName = "auto_research_stage2a_interrupted_2468_2468abcd";
   const comments = new Map([
     [staleName, formatTemporaryDatabaseComment(runnerRunId, staleCreatedAt)],
+    [sqlStaleName, formatTemporaryDatabaseComment(runnerRunId, staleCreatedAt)],
     [activeName, formatTemporaryDatabaseComment(runnerRunId, staleCreatedAt)],
-    [recentName, formatTemporaryDatabaseComment(runnerRunId, recentCreatedAt)],
+    [recentName, formatTemporaryDatabaseComment("5678_1234abcd", recentCreatedAt)],
     [unmarkedName, null],
     [
       nameRunMismatch,
@@ -176,8 +191,8 @@ test("stale cleanup removes only inactive runner-owned temporary databases", asy
     retentionMs: 24 * 60 * 60 * 1000,
   });
 
-  assert.deepEqual(result, { removed: [staleName], active: [activeName] });
-  assert.deepEqual(removedByQuery, [staleName]);
+  assert.deepEqual(result, { removed: [staleName, sqlStaleName], active: [activeName] });
+  assert.deepEqual(removedByQuery, [staleName, sqlStaleName]);
   assert.ok(comments.has(activeName), "A stale database with open sessions must be preserved");
   assert.ok(comments.has(recentName), "A recent runner database must not be removed");
   assert.ok(comments.has(unmarkedName), "A database without ownership metadata must be preserved");
