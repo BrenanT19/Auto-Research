@@ -14,3 +14,15 @@ Evaluate exact-configuration evidence and reuse rights independently. A verified
 **Why:** The user explicitly requires independent gate decisions for the first real-data pilot, rather than allowing one blocker to substitute for evaluating the other.
 
 **How to apply:** Follow the latest explicit scope authorization: private-draft creation and public publication are separate approvals. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or substitute snippets, other markets, or later years for the required configuration.
+
+Treat direct EPA test-car data separately from FuelEconomy.gov/ORNL documents and label data. Test-car rows can corroborate joined powertrain attributes, but test results and rated horsepower are not automatically retail specifications or window-sticker MPG. They may lack retail trim/body distinctions.
+
+**Why:** The pilot found direct EPA test-car rows with useful powertrain evidence but without the requested retail trim/body identity; their measurements must not be substituted for marketing output or label economy.
+
+**How to apply:** Evaluate the direct EPA dataset's own reuse basis, retain exact row/test identifiers when used, and leave optional output/economy fields unknown unless their retail applicability is separately established.
+
+Keep the first real-vehicle pilot narrowly scoped: do not redo completed architecture/migrations, start unrelated CI/recovery work, redesign the UI, or expand owner-submission functionality while resolving the pilot.
+
+**Why:** The user repeated these exclusions to keep the effort focused on one private real-data draft.
+
+**How to apply:** Run relevant existing canonical/provenance/applicability/sparse/demo-parity checks only when the draft reaches validation; do not treat background task updates as new implementation assignments.

@@ -1,0 +1,66 @@
+Continue Stage 2B — Real Vehicle Pilot #1
+Continue AutoResearch with the first real canonical vehicle:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD.
+Task #32 and the canonical vehicle-profile infrastructure are complete. Continue from the existing project state. Do not redo prior architecture, migrations, recovery tests, or unrelated CI work.
+1. Research and sourcing
+Research and verify this exact configuration using legally usable sources. Prefer authoritative structured/public sources such as EPA/FuelEconomy.gov and NHTSA where applicable.
+Do not require Ford's permission merely because factual information concerns a Ford vehicle. Evaluate the terms/license of the source actually supplying the data. Ford materials may be used for factual verification where appropriate, but do not copy Ford prose, photographs, illustrations, manuals, webpages, or other copyrighted creative material into AutoResearch.
+Do not use Consumer Reports, scrape proprietary databases, bypass access restrictions, or copy another site's proprietary descriptions/data presentation.
+For each source actually used, record:
+- source/URL
+- retrieval date
+- exact facts it supports
+- applicable licensing/use restrictions
+If commercial storage/display rights for a particular source are genuinely unclear, flag that specific source for rights verification rather than blocking unrelated facts available from other lawful sources.
+2. Exact configuration verification
+Positively verify:
+- U.S. market
+- 2024 model year
+- Ford Mustang
+- EcoBoost trim
+- Fastback body
+- 2.3L EcoBoost turbo I-4
+- 10-speed automatic
+- RWD
+- any material package, configuration, or production-date distinctions necessary to avoid combining incompatible specifications
+Do not generate configurations through Cartesian combinations or assume applicability when evidence is incomplete.
+3. Create the real canonical draft
+Once sufficiently verified, create Vehicle #1 as a real canonical development draft using the existing Stage 2A/Task #32 architecture.
+Keep it completely separate from the existing demo records. Do not convert, overwrite, redirect, or attach real evidence to a demo profile.
+Populate only individually supported facts. Missing information must remain unknown, not_yet_researched, or not_applicable as appropriate.
+Never fill missing real data using demo values or guesses.
+Do not invent a reliability score, ownership cost, repair cost, lifespan, issue frequency, maintenance recommendation, safety rating, recall status, or other information merely to make the profile complete.
+NHTSA complaints must be treated as owner-reported signals, not confirmed defects or prevalence estimates. Recall campaigns must remain separate from VIN-specific open-recall status.
+4. Keep it private
+Vehicle #1 must remain unpublished/private.
+Do not add it to the public release manifest.
+5. Validate
+Run the existing relevant:
+- canonical API tests
+- sparse-state tests
+- provenance/evidence tests
+- fail-closed applicability tests
+- regression tests
+- demo-parity tests
+Confirm all 13 existing demo profiles remain unchanged, including their IDs, slugs, URLs, classifications, and existing behavior.
+Confirm no demo data leaks into the real Mustang profile and no unknown value is silently converted to zero/default/N/A.
+STOP CONDITION
+Stop after Vehicle #1 exists and is validated as an unpublished canonical development draft.
+Do NOT:
+- publish Vehicle #1
+- start Vehicle #2
+- bulk-import Ford vehicles
+- expand to other brands
+- start Task #43/owner submissions
+- redesign the UI
+- start unrelated migration/CI/recovery tasks
+At completion, give me a concise report containing:
+1. Exact canonical configuration created
+2. Fields populated
+3. Fields still unknown/not researched
+4. Every source used and what it supports
+5. Any genuinely unresolved source-rights issue
+6. Test results
+7. Confirmation all 13 demos are unchanged
+8. Anything requiring my approval before publication
+If a genuine source-rights problem prevents creation of the private draft, stop and identify the specific source, specific data, and specific proposed use that is blocked. Do not switch to unrelated work.
