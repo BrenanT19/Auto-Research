@@ -9,6 +9,7 @@ import type { CatalogOptionProfileKind } from './catalogOptionProfileKind';
 
 export interface CatalogOption {
   profileId: string;
+  canonicalConfigurationId?: number;
   makeId: number;
   make: string;
   makeSlug: string;

@@ -10,3 +10,4 @@
 - [Report navigation coordination](report-navigation-coordination.md) — shared activation boundary; transient click feedback must survive stale completion events and hand back to manual tracking.
 - [Drizzle migration validation](drizzle-migration-validation.md) — apply generated SQL on disposable PostgreSQL; generation and type checks miss SQL syntax and dependency ordering errors.
 - [Browser runtime constraints](browser-runtime-constraints.md) — prefer the installed Chromium wrapper; downloaded Playwright browsers may lack Linux runtime libraries.
+- [Generated Fetch typings](generated-fetch-typings.md) — generated clients using iterable Headers APIs need the DOM iterable library enabled in TypeScript.

@@ -37,6 +37,7 @@ export const ListMakesResponse = zod.array(ListMakesResponseItem)
  */
 export const GetCatalogOptionsResponseItem = zod.object({
   "profileId": zod.string(),
+  "canonicalConfigurationId": zod.number().int().optional(),
   "makeId": zod.number().int(),
   "make": zod.string(),
   "makeSlug": zod.string(),
@@ -538,6 +539,33 @@ export const ListOwnerReportsResponseItem = zod.object({
 }).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional()
 })
 export const ListOwnerReportsResponse = zod.array(ListOwnerReportsResponseItem)
+
+
+/**
+ * Stores a pending firsthand account against one released canonical vehicle configuration. Pending submissions are not publicly displayed.
+ * @summary Submit a firsthand owner experience for review
+ */
+
+export const submitOwnerExperienceBodyTitleMin = 5;
+export const submitOwnerExperienceBodyTitleMax = 120;
+
+export const submitOwnerExperienceBodyBodyMin = 30;
+export const submitOwnerExperienceBodyBodyMax = 4000;
+
+
+
+export const SubmitOwnerExperienceBody = zod.object({
+  "configurationId": zod.number().int().min(1),
+  "title": zod.string().min(submitOwnerExperienceBodyTitleMin).max(submitOwnerExperienceBodyTitleMax),
+  "body": zod.string().min(submitOwnerExperienceBodyBodyMin).max(submitOwnerExperienceBodyBodyMax),
+  "firsthandAttestation": zod.literal(true),
+  "publicationConsent": zod.literal(true)
+})
+
+export const SubmitOwnerExperienceResponse = zod.object({
+  "status": zod.enum(['pending_review']),
+  "message": zod.string()
+})
 
 
 /**

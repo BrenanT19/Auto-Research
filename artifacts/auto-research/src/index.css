@@ -406,9 +406,24 @@ main { min-height: 60vh; }
 .community-cta .eyebrow { color: #4d3a10; }
 .community-cta h2 { margin: 8px 0; font-size: 28px; line-height: 1.1; }
 .community-cta p { margin: 0; max-width: 560px; font-size: 12px; color: #3c2f10; }
-.community-cta-button { flex: 0 0 auto; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; cursor: default; }
-.community-cta-button svg { display: none; }
+.community-cta-button { flex: 0 0 auto; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; border: 0; background: var(--ink); color: #fff; text-align: left; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .18s ease, transform .18s ease; }
+.community-cta-button:hover { background: #303b43; transform: translateY(-1px); }
+.community-cta-button svg { display: inline; width: 14px; height: 14px; }
 .community-cta-button small { color: #f0b64f; font: 700 8px var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
+.owner-submission-form { display: grid; gap: 16px; margin: 14px 0 26px; padding: 24px; border: 1px solid var(--line); background: #fff; }
+.owner-submission-form h2 { margin: 7px 0; font-size: 23px; }
+.owner-submission-form > div:first-child p { max-width: 620px; margin: 0; color: #69717a; font-size: 11px; line-height: 1.6; }
+.submission-field { display: grid; gap: 6px; color: #424a51; font-size: 11px; font-weight: 600; }
+.submission-field input, .submission-field select, .submission-field textarea { width: 100%; min-height: 39px; padding: 9px 10px; border: 1px solid #d6dade; border-radius: 0; background: #fff; color: #262c32; font: 400 12px var(--font-body); }
+.submission-field textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+.submission-field small, .submission-note { color: #69717a; font-size: 10px; line-height: 1.55; }
+.submission-note { margin: 0; padding: 12px; background: #f7f5ef; }
+.submission-note .text-link { padding: 0; border: 0; background: transparent; text-decoration: underline; cursor: pointer; }
+.submission-consent { display: flex; align-items: flex-start; gap: 9px; color: #515a62; font-size: 10px; line-height: 1.6; }
+.submission-consent input { flex: 0 0 auto; width: 15px; height: 15px; margin: 1px 0 0; accent-color: var(--ink); }
+.submission-error { margin: 0; color: #8f332d; font-size: 11px; }
+.submission-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; margin-top: 2px; }
+.submission-success { margin: 14px 0 0; padding: 12px 15px; border-left: 3px solid #4d775e; background: #f1f6f1; color: #34523e; font-size: 11px; line-height: 1.6; }
 .community-kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
 .community-kinds > div { padding: 14px 16px; border: 1px solid var(--line); background: #fff; }
 .community-kinds p { margin: 6px 0 0; color: #69717a; font-size: 11px; line-height: 1.6; }
@@ -421,7 +436,7 @@ main { min-height: 60vh; }
 .about-covers li b { font: 600 14px var(--font-display); }
 .about-covers li span { color: #69717a; font-size: 11px; }
 .about-note { margin: 14px 0 0; max-width: 720px; color: #69717a; font-size: 12px; }
-@media (max-width: 760px) { .community-cta { flex-direction: column; align-items: flex-start; } .community-kinds, .about-covers ul, .preview-fields { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .community-cta { flex-direction: column; align-items: flex-start; } .community-kinds, .about-covers ul, .preview-fields { grid-template-columns: 1fr; } .owner-submission-form { padding: 18px; } .submission-actions > button { flex: 1; justify-content: center; } }
 .fiction-note { margin: 0 0 18px; color: #5d666e; font-size: 11px; }
 .preview-block { margin-top: 12px; }
 .preview-label { display: block; color: #775b1b; font: 700 8px var(--font-body); letter-spacing: .1em; }

@@ -229,6 +229,29 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/OwnerReport"
+  /owner-submissions:
+    post:
+      operationId: submitOwnerExperience
+      tags: [community]
+      summary: Submit a firsthand owner experience for review
+      description: Stores a pending firsthand account against one released canonical vehicle configuration. Pending submissions are not publicly displayed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OwnerExperienceSubmissionInput"
+      responses:
+        "201":
+          description: Received and awaiting review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerExperienceSubmissionReceipt"
+        "400":
+          description: Invalid submission
+        "422":
+          description: The selected canonical configuration is not open for submissions
   /discovery/stats:
     get:
       operationId: getDiscoveryStats
@@ -264,6 +287,7 @@ components:
       type: object
       properties:
         profileId: { type: string }
+        canonicalConfigurationId: { type: integer }
         makeId: { type: integer }
         make: { type: string }
         makeSlug: { type: string }
@@ -518,6 +542,22 @@ components:
         - body
         - reportedProblem
         - isDemo
+    OwnerExperienceSubmissionInput:
+      type: object
+      additionalProperties: false
+      properties:
+        configurationId: { type: integer, minimum: 1 }
+        title: { type: string, minLength: 5, maxLength: 120 }
+        body: { type: string, minLength: 30, maxLength: 4000 }
+        firsthandAttestation: { type: boolean, enum: [true] }
+        publicationConsent: { type: boolean, enum: [true] }
+      required: [configurationId, title, body, firsthandAttestation, publicationConsent]
+    OwnerExperienceSubmissionReceipt:
+      type: object
+      properties:
+        status: { type: string, enum: [pending_review] }
+        message: { type: string }
+      required: [status, message]
     ResearchState:
       type: object
       description: Missing research is not a zero or a negative finding. N/A requires supporting evidence.

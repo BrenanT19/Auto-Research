@@ -1,4 +1,5 @@
 import { and, asc, count, desc, eq, ilike, inArray, isNull, or, type SQL, sql } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
 import {
   GetDiscoveryStatsResponse,
@@ -14,11 +15,16 @@ import {
   ListTrendingVehiclesResponse,
   ListVehiclesQueryParams,
   ListVehiclesResponse,
+  SubmitOwnerExperienceBody,
+  SubmitOwnerExperienceResponse,
 } from "@workspace/api-zod";
 import {
+  claimEvidenceTable,
+  claimSubjectsTable,
   commonProblemsTable,
   db,
   enginesTable,
+  evidenceItemsTable,
   generationsTable,
   makesTable,
   maintenanceItemsTable,
@@ -26,6 +32,9 @@ import {
   modelsTable,
   ownerReportsTable,
   ownershipEstimatesTable,
+  researchClaimsTable,
+  researchSourcesTable,
+  sourceRevisionsTable,
   transmissionsTable,
   trimsTable,
   consumerBrandsTable,
@@ -420,6 +429,11 @@ export function createAutomotiveRouter(options: {
 } = {}): IRouter {
 const router: IRouter = Router();
 const releases = options.releases ?? CANONICAL_RELEASE_MANIFEST;
+const OWNER_EXPERIENCE_CONSENT_VERSION = "owner-experience-v1";
+const OWNER_EXPERIENCE_FIRSTHAND_TEXT =
+  "I confirm this is my firsthand experience with the exact configuration selected.";
+const OWNER_EXPERIENCE_PUBLICATION_TEXT =
+  "I consent to AutoResearch reviewing and, if approved, publishing this experience for that exact configuration. I understand pending submissions stay private.";
 
 function routeNamespaceFilters(query: Record<string, unknown>): {
   modelKey?: string;
@@ -578,6 +592,7 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
   const canonical = await loadCanonicalVehicles({}, releases);
   const canonicalOptions = canonical.map((option) => ({
     profileId: option.id,
+    canonicalConfigurationId: option.canonicalConfigurationId,
     makeId: option.makeId,
     make: option.make,
     makeSlug: option.makeSlug,
@@ -834,6 +849,89 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
       })), ...canonicalReports],
     ),
   );
+});
+
+router.post("/owner-submissions", async (req, res): Promise<void> => {
+  const parsed = SubmitOwnerExperienceBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const title = parsed.data.title.trim();
+  const body = parsed.data.body.trim();
+  if (title.length < 5 || body.length < 30) {
+    res.status(400).json({ error: "Add a title and a firsthand experience with enough detail to review." });
+    return;
+  }
+
+  // Accept only a configuration exposed by the canonical release, never a
+  // make/model label or a caller-supplied vehicle description.
+  const publishedConfigurations = await loadCanonicalVehicles({}, releases);
+  const selectedConfiguration = publishedConfigurations.find(
+    (profile) => profile.canonicalConfigurationId === parsed.data.configurationId,
+  );
+  if (!selectedConfiguration) {
+    res.status(422).json({ error: "That exact canonical configuration is not currently open for submissions." });
+    return;
+  }
+
+  const acceptedAt = new Date();
+  const locatorNote = [
+    `consent_version=${OWNER_EXPERIENCE_CONSENT_VERSION}`,
+    `accepted_at=${acceptedAt.toISOString()}`,
+    `firsthand_attestation=${OWNER_EXPERIENCE_FIRSTHAND_TEXT}`,
+    `publication_consent=${OWNER_EXPERIENCE_PUBLICATION_TEXT}`,
+  ].join("\n");
+  const sourceKey = `owner-experience-submission:${randomUUID()}`;
+
+  await db.transaction(async (tx) => {
+    const [source] = await tx.insert(researchSourcesTable).values({
+      sourceKey,
+      sourceKind: "survey",
+    }).returning({ id: researchSourcesTable.id });
+    const [revision] = await tx.insert(sourceRevisionsTable).values({
+      researchSourceId: source.id,
+      documentIdentifier: title,
+      sourceVersion: OWNER_EXPERIENCE_CONSENT_VERSION,
+      retrievedAt: acceptedAt,
+      format: "owner-experience-submission",
+      updateBehavior: "immutable",
+      termsVersion: OWNER_EXPERIENCE_CONSENT_VERSION,
+      termsReviewedAt: acceptedAt,
+      storageRightsStatus: "allowed",
+      derivativeUseRightsStatus: "allowed",
+      displayRightsStatus: "allowed",
+    }).returning({ id: sourceRevisionsTable.id });
+    const [claim] = await tx.insert(researchClaimsTable).values({
+      claimKind: "owner_experience",
+      contentClass: "direct_owner_experience",
+      researchStatus: "researching",
+      reviewStatus: "not_reviewed",
+    }).returning({ id: researchClaimsTable.id });
+    const [evidence] = await tx.insert(evidenceItemsTable).values({
+      sourceRevisionId: revision.id,
+      locator: "owner-experience-submission",
+      excerpt: body,
+      evidenceKind: "other_reviewed",
+    }).returning({ id: evidenceItemsTable.id });
+
+    await tx.insert(claimSubjectsTable).values({
+      researchClaimId: claim.id,
+      vehicleConfigurationId: selectedConfiguration.canonicalConfigurationId,
+    });
+    await tx.insert(claimEvidenceTable).values({
+      researchClaimId: claim.id,
+      evidenceItemId: evidence.id,
+      evidenceRelation: "supports",
+      locatorNote,
+    });
+  });
+
+  res.status(201).json(SubmitOwnerExperienceResponse.parse({
+    status: "pending_review",
+    message: "Your experience was received. It will stay private until its content and exact-vehicle applicability are reviewed.",
+  }));
 });
 
 router.get("/discovery/stats", async (_req, res): Promise<void> => {

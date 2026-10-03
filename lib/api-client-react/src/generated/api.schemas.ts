@@ -28,6 +28,7 @@ export const CatalogOptionProfileKind = {
 
 export interface CatalogOption {
   profileId: string;
+  canonicalConfigurationId?: number;
   makeId: number;
   make: string;
   makeSlug: string;
@@ -322,6 +323,35 @@ export interface OwnerReport {
   isDemo: boolean;
   claimIds?: string[];
   fieldStates?: OwnerReportFieldStates;
+}
+
+export interface OwnerExperienceSubmissionInput {
+  /** @minimum 1 */
+  configurationId: number;
+  /**
+     * @minLength 5
+     * @maxLength 120
+     */
+  title: string;
+  /**
+     * @minLength 30
+     * @maxLength 4000
+     */
+  body: string;
+  firsthandAttestation: true;
+  publicationConsent: true;
+}
+
+export type OwnerExperienceSubmissionReceiptStatus = typeof OwnerExperienceSubmissionReceiptStatus[keyof typeof OwnerExperienceSubmissionReceiptStatus];
+
+
+export const OwnerExperienceSubmissionReceiptStatus = {
+  pending_review: 'pending_review',
+} as const;
+
+export interface OwnerExperienceSubmissionReceipt {
+  status: OwnerExperienceSubmissionReceiptStatus;
+  message: string;
 }
 
 export interface DiscoveryStats {

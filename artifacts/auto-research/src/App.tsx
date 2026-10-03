@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } from 'wouter';
-import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles } from '@workspace/api-client-react';
+import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
 import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, homeTrendEvidence, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, missingCanonicalOwnershipInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters, researchStateLabel } from './shopper-tools';
@@ -610,16 +610,85 @@ const PREVIEW_SCENARIOS = [
 
 function CommunityPage() {
   const [make, setMake] = useState('');
+  const [showSubmissionForm, setShowSubmissionForm] = useState(false);
+  const [configurationId, setConfigurationId] = useState('');
+  const [submissionTitle, setSubmissionTitle] = useState('');
+  const [submissionBody, setSubmissionBody] = useState('');
+  const [attestsFirsthand, setAttestsFirsthand] = useState(false);
+  const [consentsToPublication, setConsentsToPublication] = useState(false);
   const makes = useListMakes();
   const vehicles = useListVehicles({ ...(make ? { makeSlug: make } : {}), limit: 100 });
+  const catalogOptions = useGetCatalogOptions();
   const reports = useListOwnerReports({});
+  const submission = useSubmitOwnerExperience();
+  const canonicalConfigurations = (catalogOptions.data || []).filter(option =>
+    option.profileKind === "canonical" && typeof option.canonicalConfigurationId === "number",
+  );
   // Vehicle id is the hook for future vehicle-specific linking (e.g. /community?vehicle=<id>).
   const filtered = (reports.data || []).filter(r => !make || vehicles.data?.some(v => v.id === r.vehicleId));
   const hasReviewedExperiences = filtered.some(r => !r.isDemo);
+  const submissionAvailability = catalogOptions.isLoading
+    ? "Checking which canonical vehicle configurations are open for submissions."
+    : catalogOptions.isError
+      ? "The canonical vehicle list is unavailable right now. You can retry after opening the form."
+      : canonicalConfigurations.length === 0
+        ? "No canonical configurations are currently released for owner submissions. Fictional demo profiles are not eligible."
+        : "Submit an account for one exact canonical configuration. Every submission stays private until reviewers check the content and vehicle applicability.";
+  const submitExperience = (event: FormEvent) => {
+    event.preventDefault();
+    if (!configurationId || !attestsFirsthand || !consentsToPublication) return;
+    submission.mutate({
+      data: {
+        configurationId: Number(configurationId),
+        title: submissionTitle,
+        body: submissionBody,
+        firsthandAttestation: true,
+        publicationConsent: true,
+      },
+    }, {
+      onSuccess: () => {
+        setShowSubmissionForm(false);
+        setConfigurationId('');
+        setSubmissionTitle('');
+        setSubmissionBody('');
+        setAttestsFirsthand(false);
+        setConsentsToPublication(false);
+      },
+    });
+  };
   return <Shell><div className="content-wrap page-wrap community-page"><PageIntro eyebrow="COMMUNITY" title="Owner experiences, kept honest." sub="This is where owners will describe what a car was like after the purchase: reliability, running costs, repairs and whether they would buy it again."/>
-    <section className="community-cta" data-testid="community-share-cta"><div><span className="eyebrow">COMING SOON</span><h2 className="serif">Share your ownership experience.</h2><p>{hasReviewedExperiences ? "New owner submissions are not open yet. Reviewed experiences and clearly labeled fictional samples appear below." : "Owner submissions are not open yet. Nothing can be submitted today; the sample experiences below show a layout reports could use."}</p></div><span className="community-cta-button" role="note" aria-disabled="true">Share Your Ownership Experience <ArrowRight size={15}/><small>Preview only</small></span></section>
+    <section className="community-cta" data-testid="community-share-cta"><div><span className="eyebrow">FIRSTHAND SUBMISSIONS</span><h2 className="serif">Share your ownership experience.</h2><p>{submissionAvailability}</p></div><button type="button" className="community-cta-button" aria-expanded={showSubmissionForm} aria-controls="owner-submission-form" onClick={() => { submission.reset(); setShowSubmissionForm(open => !open); }}>Share Your Ownership Experience <ArrowRight size={15}/><small>Reviewed before publication</small></button></section>
+    {submission.data && !showSubmissionForm && <p className="submission-success" role="status">{submission.data.message}</p>}
+    {showSubmissionForm && <form id="owner-submission-form" className="owner-submission-form" onSubmit={submitExperience}>
+      <div><span className="eyebrow">SUBMIT FOR REVIEW</span><h2 className="serif">Start with the exact vehicle.</h2><p>Your report will not be public while it is pending. We do not ask for your name or contact information here.</p></div>
+      {catalogOptions.isLoading ? <p className="submission-note" role="status">Loading canonical configurations…</p> :
+        catalogOptions.isError ? <div className="submission-note" role="alert">We couldn’t load the canonical vehicle list. <button type="button" className="text-link" onClick={() => catalogOptions.refetch()}>Try again</button></div> :
+        canonicalConfigurations.length === 0 ? <p className="submission-note" role="status">No canonical configurations are currently open for owner submissions. Demo profiles are not eligible.</p> :
+        <>
+        <label className="submission-field">Exact vehicle configuration
+          <select required value={configurationId} onChange={event => setConfigurationId(event.target.value)}>
+            <option value="">Choose a canonical configuration</option>
+            {canonicalConfigurations.map(option => <option key={option.canonicalConfigurationId} value={option.canonicalConfigurationId}>
+              {option.year} {option.make} {option.model} · {option.generation} · {option.trim}
+            </option>)}
+          </select>
+          <small>This selection is saved as a canonical configuration ID; similar make/model names are not treated as a match.</small>
+        </label>
+      <label className="submission-field">Title
+        <input required minLength={5} maxLength={120} value={submissionTitle} onChange={event => setSubmissionTitle(event.target.value)} placeholder="What should readers know about this experience?"/>
+      </label>
+      <label className="submission-field">Your firsthand experience
+        <textarea required minLength={30} maxLength={4000} rows={6} value={submissionBody} onChange={event => setSubmissionBody(event.target.value)} placeholder="Describe what you experienced with this exact configuration. Avoid including personal or sensitive information."/>
+        <small>{submissionBody.length}/4000 characters</small>
+      </label>
+      <label className="submission-consent"><input type="checkbox" required checked={attestsFirsthand} onChange={event => setAttestsFirsthand(event.target.checked)}/><span>I confirm this is my firsthand experience with the exact configuration selected.</span></label>
+      <label className="submission-consent"><input type="checkbox" required checked={consentsToPublication} onChange={event => setConsentsToPublication(event.target.checked)}/><span>I consent to AutoResearch reviewing and, if approved, publishing this experience for that exact configuration. I understand pending submissions stay private.</span></label>
+      </>}
+      {submission.isError && <p className="submission-error" role="alert">We couldn’t submit this experience. Check the selected vehicle and try again.</p>}
+      <div className="submission-actions"><button type="button" className="button secondary" onClick={() => setShowSubmissionForm(false)}>Close</button>{canonicalConfigurations.length > 0 && !catalogOptions.isLoading && !catalogOptions.isError && <button type="submit" className="button dark" disabled={submission.isPending}>{submission.isPending ? "Sending…" : "Submit for review"} <ArrowRight size={15}/></button>}</div>
+    </form>}
     {!hasReviewedExperiences && <DemoNotice/>}
-    <div className="community-kinds"><div><span className="eyebrow">OWNER REPORTS</span><p>{hasReviewedExperiences ? "Reviewed firsthand ownership experiences linked to exact vehicle profiles. New user submissions are coming soon." : "Experiences written by AutoResearch users about the car they own. Coming soon."}</p></div><div><span className="eyebrow">RESEARCHED OWNER-REPORTED ISSUES</span><p>Patterns we may identify from external sources, always labeled with where they came from. Not shown here, and separate from owner reports.</p></div></div>
+    <div className="community-kinds"><div><span className="eyebrow">OWNER REPORTS</span><p>{hasReviewedExperiences ? "Reviewed firsthand ownership experiences linked to exact vehicle profiles. New submissions are checked for content and vehicle applicability before publication." : "No reviewed firsthand experiences are published yet. Eligible submissions are tied to an exact canonical configuration and stay private during review."}</p></div><div><span className="eyebrow">RESEARCHED OWNER-REPORTED ISSUES</span><p>Patterns we may identify from external sources, always labeled with where they came from. Not shown here, and separate from owner reports.</p></div></div>
     <p className="fiction-note" data-testid="text-fiction-note">{hasReviewedExperiences ? "Reviewed owner experiences apply only to the exact vehicle profiles identified on each report. Records marked as fictional samples only illustrate the report format and are not evidence. Externally researched patterns are separate from firsthand experiences." : "The scenarios below are fictional and only illustrate report format. They are not evidence or claims about the vehicles named."}</p>
     <div className="community-toolbar"><div><span className="eyebrow">{hasReviewedExperiences ? "FILTER OWNER EXPERIENCES" : "FILTER SAMPLE EXPERIENCES"}</span><label className="select-inline"><span className="sr-only">Filter by manufacturer</span><select value={make} onChange={e => setMake(e.target.value)}><option value="">All manufacturers</option>{(makes.data || []).map(m => <option key={m.makeKey || `legacy:make:${m.id}`} value={m.slug}>{m.name}</option>)}</select><ChevronDown size={15}/></label></div><span className="report-count">{filtered.length} {hasReviewedExperiences ? "owner experiences and samples" : "sample experiences"}</span></div>
     {reports.isLoading ? <LoadingBlock/> : reports.isError ? <ErrorBlock retry={() => reports.refetch()}/> : filtered.length ? <div className="community-grid">{filtered.map((r, i) => {
@@ -636,7 +705,7 @@ function CommunityPage() {
 }
 
 function AboutPage() {
-  const covers = [['Reliability research', 'Estimated reliability and the questions behind a score.'], ['Maintenance expectations', 'What routine care may involve over the years.'], ['Ownership costs', 'Fuel, insurance, repairs and depreciation beyond the price.'], ['Specifications', 'Powertrains, trims and the numbers that differ between them.'], ['Known and reported issues', 'Problems worth asking about before you buy.'], ['Owner perspectives', 'Experiences from people who live with the car. Owner submissions are coming soon.'], ['Comparison tools', 'Up to four vehicles side by side.']];
+  const covers = [['Reliability research', 'Estimated reliability and the questions behind a score.'], ['Maintenance expectations', 'What routine care may involve over the years.'], ['Ownership costs', 'Fuel, insurance, repairs and depreciation beyond the price.'], ['Specifications', 'Powertrains, trims and the numbers that differ between them.'], ['Known and reported issues', 'Problems worth asking about before you buy.'], ['Owner perspectives', 'Firsthand accounts linked to an exact vehicle configuration and reviewed before publication.'], ['Comparison tools', 'Up to four vehicles side by side.']];
   return <Shell>
     <div className="content-wrap page-wrap about-page">
       <PageIntro eyebrow="WHY AUTORESEARCH" title="Better questions make better ownership." sub="A car is a purchase. Ownership is the relationship that follows. Auto Research is designed to help shoppers look beyond the purchase price and the first day."/>
@@ -647,7 +716,7 @@ function AboutPage() {
         <article><span className="eyebrow">CANONICAL PROFILES</span><h3 className="serif">Identity is not a complete report.</h3><p>A canonical profile verifies the identity of an exact vehicle configuration. That does not verify every specification, estimate or issue. Canonical research fields carry their own status: Known, Unknown, Not yet researched or Not applicable. A missing value stays missing, not zero.</p></article>
         <article><span className="eyebrow">OPTIONAL CLAIMS</span><h3 className="serif">Read the field, not just the profile.</h3><p>A Known status applies only to that specific researched field. Where available, its provenance identifies the supporting claim, review status and source. It is not a guarantee or official guidance; check the evidence and confirm important details with the manufacturer or appropriate authority.</p></article>
         <article><span className="eyebrow">ILLUSTRATIVE RECORDS</span><h3 className="serif">Demo data stays labeled.</h3><p>Legacy demo vehicle records, estimates and fictional sample owner reports are illustrative examples, not verified automotive facts or firsthand submissions. A catalog may contain canonical profiles and demo records together, so check the status shown for each vehicle and field.</p></article>
-        <article><span className="eyebrow">OWNER REPORTS AND RESEARCHED ISSUES</span><h3 className="serif">Two different evidence types.</h3><p>Owner reports are firsthand experiences submitted by AutoResearch users; new submissions are not open yet. Researched owner-reported issues are patterns from external sources, not AutoResearch submissions, and must be labeled with their source and applicable scope.</p></article>
+        <article><span className="eyebrow">OWNER REPORTS AND RESEARCHED ISSUES</span><h3 className="serif">Two different evidence types.</h3><p>Owner reports are firsthand experiences submitted by AutoResearch users and stay private until reviewers check their content and exact-vehicle applicability. Researched owner-reported issues are patterns from external sources, not AutoResearch submissions, and must be labeled with their source and applicable scope.</p></article>
       </div>
       <section className="official-sources"><span className="eyebrow">FOR THE THINGS THAT MUST BE CURRENT</span><h2 className="serif">Go to the authoritative source.</h2><p>Recall and safety status can change by vehicle and VIN. Check recalls and safety information directly with NHTSA and the vehicle manufacturer; consult fueleconomy.gov for EPA fuel-economy figures.</p><div><a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noreferrer"><Shield size={18}/> NHTSA recalls by VIN <ArrowUpRight size={15}/></a><a href="https://www.nhtsa.gov/ratings" target="_blank" rel="noreferrer"><BadgeCheck size={18}/> NHTSA safety ratings <ArrowUpRight size={15}/></a><a href="https://www.fueleconomy.gov/" target="_blank" rel="noreferrer"><Fuel size={18}/> EPA fuel economy <ArrowUpRight size={15}/></a></div></section>
       <div className="about-bottom"><span className="eyebrow">BE CURIOUS. VERIFY. THEN DECIDE.</span><Link href="/browse" className="button dark">Explore the vehicle index <ArrowRight size={15}/></Link></div>
