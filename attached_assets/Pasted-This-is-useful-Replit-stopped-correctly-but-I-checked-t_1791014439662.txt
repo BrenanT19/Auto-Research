@@ -1,0 +1,37 @@
+This is useful. Replit stopped correctly, but I checked the source it said it couldn't retrieve, and I can retrieve it now.
+Ford's official 2024 Mustang Preliminary Technical Specifications PDF is currently accessible through Ford Media. It explicitly identifies the MY2024 Mustang EcoBoost, lists EcoBoost and EcoBoost Premium as its trim levels, Fastback coupe and convertible as body styles, rear-wheel drive, the 2.3-liter EcoBoost turbocharged I-4, and the 10-speed automatic as standard. Ford From the Road
+Combined with the EPA evidence Replit already found, that appears to resolve the factual identity problem. The Ford document is preliminary (dated September 22, 2022), so Replit should record that limitation rather than treating every specification as final production data. Ford From the Road
+Give Replit this prompt
+Stage 2B Vehicle #1 — Use Retrieved Official Ford MY2024 Specification Source
+Continue only Vehicle #1. Do not start unrelated tasks.
+The official Ford Media MY2024 Mustang technical-specification PDF that the previous research attempt could not retrieve is currently accessible:
+https://media.ford.com/content/dam/fordmedia/North%20America/US/2022/09/14/2024-mustang-technical-specifications.pdf
+Re-fetch and independently inspect this exact official Ford Media source.
+It is titled 2024 FORD MUSTANG — PRELIMINARY TECHNICAL SPECIFICATIONS and states that specifications are preliminary as of September 22, 2022 and subject to change.
+Verify directly from the document whether it establishes:
+- MY2024 Ford Mustang
+- Mustang EcoBoost model
+- EcoBoost and EcoBoost Premium as distinct trim levels
+- Fastback coupe as an available EcoBoost body style
+- front-engine / rear-wheel drive
+- 2.3-liter EcoBoost turbocharged I-4
+- 10-speed automatic as standard for Mustang EcoBoost
+Combine this evidence with the already independently retrieved EPA MY2024 Test Car List evidence, which corroborates MY2024 Ford Mustang + 2.3L + four cylinders + automatic + ten gears + RWD in the same test-vehicle records.
+Do not require the excluded third-party-hosted order guide.
+Do not copy or store Ford's PDF, prose, images, page layout, or other creative material in AutoResearch. Use the Ford document as evidence supporting independently normalized factual vehicle attributes and retain only minimal provenance metadata necessary to audit the source.
+Because the Ford document labels itself preliminary, preserve that limitation in provenance. Do not automatically use every value in the document. Populate only fields whose applicability to the target configuration is sufficiently supported and corroborate final-production-sensitive values elsewhere when appropriate.
+Target canonical configuration:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD.
+If your fresh retrieval confirms the facts above and there is no contradictory evidence, treat the exact-identity gate as satisfied and create Vehicle #1 as an unpublished/private canonical development draft using the existing Stage 2A/Task #32 architecture.
+Populate only supported fields. All other research remains unknown, not_yet_researched, or not_applicable.
+Do not invent or import unsupported MPG, horsepower, torque, ownership costs, reliability scores, lifespan, maintenance, repair costs, issue frequency, safety ratings, recall status, package applicability, or other values.
+Then run the existing canonical API, sparse-state, provenance/evidence, fail-closed applicability, regression, and 13-demo parity tests.
+Confirm:
+- Vehicle #1 is canonical and real, not a converted demo
+- it remains unpublished
+- no demo data is used as fallback
+- all 13 demos remain unchanged
+- unknown values remain genuinely unknown
+STOP after Vehicle #1 is created and validated.
+Do not start Vehicle #2, bulk Ford imports, Task #43, UI redesign, migration/recovery/CI improvements, or any other suggested task.
+If the Ford URL again fails from your environment, do not declare the evidence nonexistent. Report the retrieval failure specifically and stop so we can provide the source another way.
