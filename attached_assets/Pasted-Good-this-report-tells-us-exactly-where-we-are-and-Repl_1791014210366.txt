@@ -1,0 +1,29 @@
+Good — this report tells us exactly where we are, and Replit did the right thing by stopping instead of inventing the missing mapping.
+I also checked the current public sources myself this time. There is an important path forward: Ford's own current U.S. shopping interface explicitly distinguishes EcoBoost Fastback from EcoBoost Premium Fastback and separately lists the 2.3L EcoBoost engine and 10-speed automatic transmission. https://www.ford.com/ Ford also publishes an official 2024 Mustang technical-specification PDF through Ford Media that distinguishes Mustang EcoBoost and fastback/convertible specifications. Ford From the Road
+That means I do not want Replit stuck on that third-party-hosted Ford order guide anymore. We should see whether the combination of official Ford public factual information + EPA/NHTSA evidence can establish the canonical identity without storing data extracted from the problematic guide.
+Also, those migration Tasks #45/#46 are exactly the unrelated work we told it not to start. Don't authorize more of those.
+Give Replit this next prompt
+Stage 2B Vehicle #1 — Resolve Exact Configuration Using Alternative Sources
+Continue only the 2024 Ford Mustang EcoBoost Fastback pilot. Do not start or continue unrelated migration-recovery, CI, schema-hardening, Task #43, or Vehicle #2 work.
+The previous attempt correctly stopped because the third-party-hosted Ford MY2024 order guide had unresolved commercial-use terms. Do not use that order guide as a required source and do not seek Ford Brand Licensing permission at this stage.
+Instead, determine whether Vehicle #1's exact canonical identity can be established using a combination of independently usable factual sources.
+Re-fetch and evaluate the current official Ford U.S. sources, including:
+- Ford's official U.S. Mustang shopping/configuration pages that distinguish EcoBoost Fastback from EcoBoost Premium Fastback
+- Ford's official 2024 Mustang technical-specification material hosted on Ford Media
+- the already identified EPA 2024 Test Car List evidence
+- relevant NHTSA/vPIC manufacturer-reported identity information
+Treat these sources according to what each actually proves. Do not require one source to prove every field if multiple independent sources can establish different parts of the configuration without contradiction.
+The target remains:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo four-cylinder — 10-speed automatic — RWD.
+Separate two questions:
+1. Does the evidence establish the factual identity/configuration?
+2. Are we actually copying/storing protected source material, or merely recording independently normalized factual attributes supported by the evidence?
+Do not copy Ford prose, photographs, illustrations, page layouts, manuals, PDFs, or large portions of Ford material into AutoResearch. Store only independently normalized factual fields plus minimal provenance/evidence metadata necessary to identify and audit the source.
+Do not treat the Ford order guide's restrictive host terms as applying to facts independently established through EPA, NHTSA, or other sources.
+Do not import MPG, horsepower, curb weight, axle ratio, package applicability, or other specifications merely because they appear near the applicable configuration. Each field needs its own supported applicability.
+If the combined evidence now sufficiently establishes the target identity, create the unpublished canonical Vehicle #1 development draft and populate only supported fields. Everything else remains unknown, not_yet_researched, or not_applicable.
+Then run the previously required canonical API, sparse-state, provenance, fail-closed applicability, regression, and 13-demo parity tests.
+Do not publish it.
+Stop after Vehicle #1 is created and validated.
+If the exact identity still genuinely cannot be established, stop again and report the single exact factual link still missing, the sources checked, and why none establishes it. Do not switch to another task.
+Do not start Vehicle #2, bulk imports, owner submissions, UI redesign, migration recovery improvements, or any unrelated suggested task.

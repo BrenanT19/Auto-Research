@@ -11,6 +11,12 @@ For automotive research, evaluate the actual source and its terms for access, co
 
 Evaluate exact-configuration evidence and reuse rights independently. A verified configuration does not establish reuse permission, and unresolved reuse permission is not evidence that the configuration is invalid. Report each gate separately, including the missing evidence needed to resolve it.
 
+Multiple independently usable sources may establish different identity attributes; do not require one document to prove every field. The cross-source mapping must still be defensible for the exact model year and retail trim/body, without contradiction or invented combinations. Current shopping pages cannot establish an older model year's availability merely because names and powertrains appear unchanged.
+
+**Why:** The user explicitly authorized combined official factual evidence and minimal provenance, while rejecting copied creative material and carryover of an excluded source's terms to unrelated sources.
+
+**How to apply:** Record what each source actually proves and the crosswalk between them. If research stops, identify the single missing factual relationship rather than repeatedly requiring a blanket manufacturer license.
+
 **Why:** The user explicitly requires independent gate decisions for the first real-data pilot, rather than allowing one blocker to substitute for evaluating the other.
 
 **How to apply:** Follow the latest explicit scope authorization: private-draft creation and public publication are separate approvals. Verify the exact market/year/trim/body/powertrain combination and material package predicates, using appropriately scoped lawful evidence. Do not invent combinations from independent option lists, generalize incomplete VIN decodes, or substitute snippets, other markets, or later years for the required configuration.
