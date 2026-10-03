@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getActiveReportSection, type ReportSectionId } from "../shopper-tools";
 
-const sectionIds: ReportSectionId[] = ["overview", "reliability", "costs", "reports"];
+const sectionIds: ReportSectionId[] = ["overview", "reliability", "external-owner-patterns", "costs", "reports"];
 
 export function useReportNavigation(vehicleId: string, ready: boolean, reportsLoading: boolean) {
   const [activeSection, setActiveSection] = useState<ReportSectionId>("overview");

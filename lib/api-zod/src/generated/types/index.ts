@@ -17,6 +17,8 @@ export * from './commonProblemFieldStates';
 export * from './discoveryStats';
 export * from './engine';
 export * from './engineFieldStates';
+export * from './externalOwnerPattern';
+export * from './externalOwnerPatternApplicability';
 export * from './healthStatus';
 export * from './listOwnerReportsParams';
 export * from './listVehiclesParams';

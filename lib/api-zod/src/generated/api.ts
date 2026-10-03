@@ -508,7 +508,34 @@ export const GetVehicleResponse = zod.object({
   "expectedLifespanMiles": zod.number().nullable(),
   "inspectionChecklist": zod.array(zod.string()),
   "recallStatus": zod.string().nullable(),
-  "safetyStatus": zod.string().nullable()
+  "safetyStatus": zod.string().nullable(),
+  "externalOwnerPatterns": zod.array(zod.object({
+  "claimId": zod.string(),
+  "claimIds": zod.array(zod.string()),
+  "patternText": zod.string(),
+  "sourcePopulation": zod.string(),
+  "geography": zod.string().nullable(),
+  "observationWindow": zod.string(),
+  "sampleSize": zod.number().int().nullable(),
+  "collectionMethod": zod.string(),
+  "knownBias": zod.string().nullable(),
+  "limitations": zod.string(),
+  "applicability": zod.enum(['applies']),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+}).describe('A reviewed, externally researched owner-reported pattern with evaluated scope and source limitations.')).describe('Reviewed external research only; never a firsthand AutoResearch owner submission.')
 })).describe('Details for the same stable public ID used by Browse and Compare.\nEmpty research collections do not establish that no issues, maintenance,\nrecalls, or safety concerns exist; consult canonical sectionStates.\nCalculator values are suggestions only and require an explicit shopper prefill action.\n')
 
 

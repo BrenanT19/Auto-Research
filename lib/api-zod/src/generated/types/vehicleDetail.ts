@@ -7,6 +7,7 @@
  */
 import type { CommonProblem } from './commonProblem';
 import type { Engine } from './engine';
+import type { ExternalOwnerPattern } from './externalOwnerPattern';
 import type { MaintenanceItem } from './maintenanceItem';
 import type { ReliabilityProfile } from './reliabilityProfile';
 import type { Transmission } from './transmission';
@@ -42,4 +43,6 @@ export type VehicleDetail = VehicleSummary & ({
   recallStatus: string | null;
   /** @nullable */
   safetyStatus: string | null;
+  /** Reviewed external research only; never a firsthand AutoResearch owner submission. */
+  externalOwnerPatterns: ExternalOwnerPattern[];
 });

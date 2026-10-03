@@ -271,6 +271,35 @@ export interface MaintenanceItem {
   fieldStates?: MaintenanceItemFieldStates;
 }
 
+export type ExternalOwnerPatternApplicability = typeof ExternalOwnerPatternApplicability[keyof typeof ExternalOwnerPatternApplicability];
+
+
+export const ExternalOwnerPatternApplicability = {
+  applies: 'applies',
+} as const;
+
+/**
+ * A reviewed, externally researched owner-reported pattern with evaluated scope and source limitations.
+ */
+export interface ExternalOwnerPattern {
+  claimId: string;
+  claimIds: string[];
+  patternText: string;
+  sourcePopulation: string;
+  /** @nullable */
+  geography: string | null;
+  observationWindow: string;
+  /** @nullable */
+  sampleSize: number | null;
+  collectionMethod: string;
+  /** @nullable */
+  knownBias: string | null;
+  limitations: string;
+  applicability: ExternalOwnerPatternApplicability;
+  scopeDescription: string;
+  sources: SourceCitation[];
+}
+
 /**
  * Details for the same stable public ID used by Browse and Compare.
  * Empty research collections do not establish that no issues, maintenance,
@@ -301,6 +330,8 @@ export type VehicleDetail = VehicleSummary & ({
   recallStatus: string | null;
   /** @nullable */
   safetyStatus: string | null;
+  /** Reviewed external research only; never a firsthand AutoResearch owner submission. */
+  externalOwnerPatterns: ExternalOwnerPattern[];
 });
 
 export type OwnerReportFieldStates = {[key: string]: ResearchState};

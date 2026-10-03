@@ -247,6 +247,7 @@ function toVehicleDetail(
     ],
     recallStatus: "Not verified — check the VIN with NHTSA",
     safetyStatus: "Official rating not loaded in this demo",
+    externalOwnerPatterns: [],
   };
 }
 
@@ -488,6 +489,7 @@ function toCanonicalSummary(vehicle: Awaited<ReturnType<typeof loadCanonicalVehi
     siblingTrims,
     inspectionChecklist,
     ownerReports,
+    externalOwnerPatterns,
     ...summary
   } = vehicle;
   return {
@@ -752,6 +754,7 @@ router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
       inspectionChecklist: row.inspectionChecklist,
       recallStatus: row.recallStatus,
       safetyStatus: row.safetyStatus,
+      externalOwnerPatterns: row.externalOwnerPatterns,
     };
     res.json(GetVehicleResponse.parse(detail));
     return;

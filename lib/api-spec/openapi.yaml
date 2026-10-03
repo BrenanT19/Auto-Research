@@ -421,6 +421,10 @@ components:
               items: { type: string }
             recallStatus: { type: ["string", "null"] }
             safetyStatus: { type: ["string", "null"] }
+            externalOwnerPatterns:
+              type: array
+              description: Reviewed external research only; never a firsthand AutoResearch owner submission.
+              items: { $ref: "#/components/schemas/ExternalOwnerPattern" }
           required:
             - overview
             - engineName
@@ -437,6 +441,7 @@ components:
             - inspectionChecklist
             - recallStatus
             - safetyStatus
+            - externalOwnerPatterns
     Engine:
       type: object
       properties:
@@ -510,6 +515,41 @@ components:
           type: object
           additionalProperties: { $ref: "#/components/schemas/ResearchState" }
       required: [item, intervalMiles, estimatedCostUsd]
+    ExternalOwnerPattern:
+      type: object
+      description: A reviewed, externally researched owner-reported pattern with evaluated scope and source limitations.
+      properties:
+        claimId: { type: string }
+        claimIds:
+          type: array
+          items: { type: string }
+        patternText: { type: string }
+        sourcePopulation: { type: string }
+        geography: { type: ["string", "null"] }
+        observationWindow: { type: string }
+        sampleSize: { type: ["integer", "null"] }
+        collectionMethod: { type: string }
+        knownBias: { type: ["string", "null"] }
+        limitations: { type: string }
+        applicability: { type: string, enum: [applies] }
+        scopeDescription: { type: string }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/SourceCitation" }
+      required:
+        - claimId
+        - claimIds
+        - patternText
+        - sourcePopulation
+        - geography
+        - observationWindow
+        - sampleSize
+        - collectionMethod
+        - knownBias
+        - limitations
+        - applicability
+        - scopeDescription
+        - sources
     OwnerReport:
       type: object
       properties:

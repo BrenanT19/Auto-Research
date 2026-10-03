@@ -246,7 +246,7 @@ export function getGenerationFilterHint(options: {
   return undefined;
 }
 
-export type ReportSectionId = "overview" | "reliability" | "costs" | "reports";
+export type ReportSectionId = "overview" | "reliability" | "external-owner-patterns" | "costs" | "reports";
 
 export function getActiveReportSection(
   positions: Array<{ id: ReportSectionId; top: number }>,

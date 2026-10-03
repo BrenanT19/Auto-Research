@@ -2,6 +2,7 @@ import { expect, test, type Page, type Route } from "@playwright/test";
 
 const canonicalSlug = "task32-synthetic-alpha";
 const knownValuesSlug = "task32-synthetic-known-values";
+const externalOwnerPatternSlug = "task32-synthetic-external-pattern";
 
 const sourceCitation = {
   sourceId: "synthetic-source-32001",
@@ -122,6 +123,36 @@ const canonicalVehicle = {
   fieldStates: sparseFieldStates,
   sectionStates: sparseSectionStates,
   claims: sparseClaims,
+  externalOwnerPatterns: [],
+};
+
+const externalOwnerPatternVehicle = {
+  ...canonicalVehicle,
+  id: externalOwnerPatternSlug,
+  claims: [...sparseClaims, claim("44001", null, "external_owner_pattern")],
+  sectionStates: {
+    ...sparseSectionStates,
+    externalOwnerPatterns: { state: "known", claimIds: ["44001"] },
+  },
+  externalOwnerPatterns: [{
+    claimId: "44001",
+    claimIds: ["44001"],
+    patternText: "Synthetic pattern text from an outside source.",
+    sourcePopulation: "Synthetic public owner survey participants",
+    geography: "Synthetic region",
+    observationWindow: "Synthetic 2024–2025 collection window",
+    sampleSize: 23,
+    collectionMethod: "Synthetic opt-in questionnaire",
+    knownBias: "Synthetic self-selection bias",
+    limitations: "Synthetic fixture only; not a population-wide estimate.",
+    applicability: "applies",
+    scopeDescription: "Synthetic scope evaluated against this exact configuration.",
+    sources: [{
+      ...sourceCitation,
+      publisher: "Synthetic pattern publisher",
+      documentIdentifier: "Synthetic external-pattern source",
+    }],
+  }],
 };
 
 const knownClaims = [
@@ -204,11 +235,19 @@ async function routeTask32Api(page: Page, options: { detailDelayMs?: number } = 
       await route.fulfill({ json: [canonicalVehicle, knownValuesVehicle] });
     } else if (path === "/catalog/options") {
       await route.fulfill({ json: catalogOptions });
-    } else if (path === `/vehicles/${canonicalSlug}` || path === `/vehicles/${knownValuesSlug}`) {
+    } else if (
+      path === `/vehicles/${canonicalSlug}` ||
+      path === `/vehicles/${knownValuesSlug}` ||
+      path === `/vehicles/${externalOwnerPatternSlug}`
+    ) {
       if (options.detailDelayMs) {
         await new Promise((resolve) => setTimeout(resolve, options.detailDelayMs));
       }
-      const detail = path.endsWith(canonicalSlug) ? canonicalVehicle : knownValuesVehicle;
+      const detail = path.endsWith(canonicalSlug)
+        ? canonicalVehicle
+        : path.endsWith(externalOwnerPatternSlug)
+          ? externalOwnerPatternVehicle
+          : knownValuesVehicle;
       await route.fulfill({ json: detail });
     } else if (path === "/owner-reports" || path.startsWith("/owner-reports?")) {
       await route.fulfill({ json: [] });
@@ -248,6 +287,26 @@ test("canonical detail communicates Unknown and NotYet without demo research or 
   await expect(page.getByText(/\$0\.00/)).toHaveCount(0);
   await expect(page.getByText(/DEMO \/ ESTIMATE DATA/)).toHaveCount(0);
   await expect(page.locator(".report-card")).toHaveCount(0);
+});
+
+test("external owner patterns show source, scope, and sample limits outside owner reports", async ({ page }) => {
+  await routeTask32Api(page);
+  await page.goto(`/vehicles/${externalOwnerPatternSlug}`);
+
+  const patternSection = page.locator("#external-owner-patterns");
+  await expect(patternSection.getByRole("heading", { name: "External owner patterns." })).toBeVisible();
+  await expect(patternSection.getByText("EXTERNAL RESEARCH · NOT A USER SUBMISSION")).toBeVisible();
+  await expect(patternSection.getByText("Synthetic pattern text from an outside source.")).toBeVisible();
+  await expect(patternSection.getByText("n = 23")).toBeVisible();
+  await expect(patternSection.getByText(/self-selection bias/)).toBeVisible();
+  await expect(patternSection.getByText(/not a population-wide estimate/)).toBeVisible();
+  await expect(patternSection.getByText(/evaluated against this exact configuration/)).toBeVisible();
+  await expect(patternSection.getByRole("link", { name: "Synthetic pattern publisher" })).toHaveAttribute(
+    "href",
+    sourceCitation.url,
+  );
+  await expect(page.locator("#reports")).not.toContainText("Synthetic pattern text from an outside source.");
+  await expect(page.getByRole("link", { name: "External patterns" })).toBeVisible();
 });
 
 test("Compare renders missing canonical research as unavailable rather than fabricated zeroes", async ({ page }) => {

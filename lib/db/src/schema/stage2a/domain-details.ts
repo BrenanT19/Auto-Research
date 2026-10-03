@@ -250,3 +250,5 @@ export const externalOwnerPatternDetailsTable = pgTable(
     check("external_owner_pattern_sample_size_check", sql`${table.sampleSize} IS NULL OR ${table.sampleSize} > 0`),
   ],
 );
+
+export type ExternalOwnerPatternDetails = typeof externalOwnerPatternDetailsTable.$inferSelect;

@@ -33,13 +33,19 @@ import {
   ownershipEstimateDetailsTable,
   recallCampaignDetailsTable,
   safetyRatingDetailsTable,
+  externalOwnerPatternDetailsTable,
   trimsTable,
   evaluateApplicability,
   type ApplicabilityAlternative,
+  type ExternalOwnerPatternDetails,
   knownIssueDetailsTable,
   maintenanceScheduleDetailsTable,
   reliabilityAssessmentDetailsTable,
 } from "@workspace/db";
+import {
+  projectExternalOwnerPattern,
+  type ExternalOwnerPatternProfile,
+} from "./canonical-external-owner-pattern";
 
 // Production canonical publication is deliberately opt-in by code review, not env configuration.
 export const CANONICAL_RELEASE_MANIFEST: readonly CanonicalManifestEntry[] = [];
@@ -75,6 +81,10 @@ export type CanonicalClaim = {
   measurementBasis?: string | null;
   unit?: string | null;
   claimKind?: string;
+};
+
+export type CanonicalExternalOwnerPattern = ExternalOwnerPatternProfile & {
+  sources: CanonicalClaimSource[];
 };
 
 export type CanonicalVehicle = {
@@ -135,6 +145,7 @@ export type CanonicalVehicle = {
   siblingTrims: string[];
   inspectionChecklist: string[];
   ownerReports: Array<Record<string, unknown>>;
+  externalOwnerPatterns: CanonicalExternalOwnerPattern[];
 };
 
 export type CanonicalFilters = {
@@ -541,7 +552,15 @@ export async function loadCanonicalVehicles(
       .from(researchClaimsTable)
       .where(inArray(researchClaimsTable.supersedesClaimId, claimIds))
     : [];
-  const [issueDetails, maintenanceDetails, reliabilityDetails, estimateDetails, recallDetails, safetyDetails] = claimIds.length
+  const [
+    issueDetails,
+    maintenanceDetails,
+    reliabilityDetails,
+    estimateDetails,
+    recallDetails,
+    safetyDetails,
+    externalOwnerPatternDetails,
+  ] = claimIds.length
     ? await Promise.all([
         db.select().from(knownIssueDetailsTable).where(inArray(knownIssueDetailsTable.researchClaimId, claimIds)),
         db.select().from(maintenanceScheduleDetailsTable).where(inArray(maintenanceScheduleDetailsTable.researchClaimId, claimIds)),
@@ -549,8 +568,9 @@ export async function loadCanonicalVehicles(
         db.select().from(ownershipEstimateDetailsTable).where(inArray(ownershipEstimateDetailsTable.researchClaimId, claimIds)),
         db.select().from(recallCampaignDetailsTable).where(inArray(recallCampaignDetailsTable.researchClaimId, claimIds)),
         db.select().from(safetyRatingDetailsTable).where(inArray(safetyRatingDetailsTable.researchClaimId, claimIds)),
+        db.select().from(externalOwnerPatternDetailsTable).where(inArray(externalOwnerPatternDetailsTable.researchClaimId, claimIds)),
       ])
-    : [[], [], [], [], [], []];
+    : [[], [], [], [], [], [], []];
   const alternatives = applicabilitySets.length
     ? await db.select().from(applicabilityAlternativesTable)
       .where(inArray(applicabilityAlternativesTable.applicabilitySetId, applicabilitySets.map((set) => set.id)))
@@ -571,6 +591,17 @@ export async function loadCanonicalVehicles(
   const estimatesByClaim = new Map(estimateDetails.map((detail) => [detail.researchClaimId, detail]));
   const recallsByClaim = new Map(recallDetails.map((detail) => [detail.researchClaimId, detail]));
   const safetyByClaim = new Map(safetyDetails.map((detail) => [detail.researchClaimId, detail]));
+  const externalOwnerPatternsByClaim = new Map<number, ExternalOwnerPatternDetails>(
+    externalOwnerPatternDetails.map((detail) => [detail.researchClaimId, detail]),
+  );
+  const isDisplayableEvidence = (item: (typeof evidences)[number]) =>
+    item.relation !== "contradicts" &&
+    ["government", "oem_document", "standards_body", "peer_reviewed_research", "insurer", "survey", "internal_calculation", "other_reviewed", "owner_forum"].includes(item.sourceKind) &&
+    item.storageRightsStatus === "allowed" &&
+    item.derivativeUseRightsStatus === "allowed" &&
+    item.displayRightsStatus === "allowed" &&
+    item.termsReviewedAt !== null &&
+    item.termsVersion !== null;
   const setByClaim = new Map(applicabilitySets.map((set) => [set.researchClaimId, set]));
   const alternativesBySet = new Map<number, typeof alternatives>();
   for (const alternative of alternatives) {
@@ -588,15 +619,7 @@ export async function loadCanonicalVehicles(
     const participatingEvidence = claimEvidence.filter((item) =>
       item.relation === "supports" || item.relation === "qualifies" || item.relation === "derived_from",
     );
-    const evidence = (evidenceByClaim.get(claim.id) ?? []).filter((item) =>
-      item.relation !== "contradicts" &&
-      ["government", "oem_document", "standards_body", "peer_reviewed_research", "insurer", "survey", "internal_calculation", "other_reviewed", "owner_forum"].includes(item.sourceKind) &&
-      item.storageRightsStatus === "allowed" &&
-      item.derivativeUseRightsStatus === "allowed" &&
-      item.displayRightsStatus === "allowed" &&
-      item.termsReviewedAt !== null &&
-      item.termsVersion !== null,
-    );
+    const evidence = claimEvidence.filter(isDisplayableEvidence);
     const hasConflict = claimEvidence.some((item) => item.relation === "contradicts");
     const hasSupportingEvidence = evidence.some((item) => item.relation === "supports" || item.relation === "derived_from");
     const effectiveClaim = claim;
@@ -1068,6 +1091,26 @@ export async function loadCanonicalVehicles(
         },
       }];
     });
+    const externalOwnerPatterns: CanonicalExternalOwnerPattern[] = applicable.flatMap((claim) => {
+      const detail = externalOwnerPatternsByClaim.get(Number(claim.id));
+      const sourceClaim = claimsById.get(Number(claim.id));
+      if (!detail || !sourceClaim) return [];
+      const evidence = (evidenceByClaim.get(Number(claim.id)) ?? [])
+        .filter((item) => isDisplayableEvidence(item) &&
+          (item.relation === "supports" || item.relation === "derived_from"));
+      const projected = projectExternalOwnerPattern(
+        {
+          id: claim.id,
+          claimKind: sourceClaim.claimKind,
+          contentClass: sourceClaim.contentClass,
+          applicability: claim.applicability,
+          scopeDescription: claim.scopeDescription,
+        },
+        detail,
+        evidence.map((item) => ({ relation: item.relation, excerpt: item.excerpt })),
+      );
+      return projected ? [{ ...projected, sources: claim.sources }] : [];
+    });
     const recallClaims = applicable.filter((claim) =>
       claimsById.get(Number(claim.id))?.claimKind === "recall" &&
       claimsById.get(Number(claim.id))?.contentClass === "source_fact" &&
@@ -1190,7 +1233,8 @@ export async function loadCanonicalVehicles(
     updateSection("recalls", recallAttempts, recallClaims.map((claim) => claim.id));
     updateSection("safety", safetyAttempts, safetyClaims.map((claim) => claim.id));
     updateSection("externalOwnerPatterns",
-      attemptedClaims.filter((claim) => claim.contentClass === "external_owner_pattern"), []);
+      attemptedClaims.filter((claim) => claim.contentClass === "external_owner_pattern"),
+      externalOwnerPatterns.flatMap((pattern) => pattern.claimIds));
     const displayedReliability = fieldStates.reliabilityEstimate.state === "known" ||
       fieldStates.reliabilityLabel.state === "known" ||
       fieldStates.reliabilityNote.state === "known";
@@ -1263,6 +1307,7 @@ export async function loadCanonicalVehicles(
       siblingTrims: [] as string[],
       inspectionChecklist: [],
       ownerReports,
+      externalOwnerPatterns,
     }];
   });
   for (const vehicle of projectedVehicles) {
