@@ -740,6 +740,8 @@ router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
     const detail = {
       ...toCanonicalSummary(row),
       overview: row.overview,
+      fuelRequirement: row.fuelRequirement,
+      fuelTankCapacityGallons: row.fuelTankCapacityGallons,
       engineName: row.engineName,
       transmissionName: row.transmissionName,
       engines: row.engines,

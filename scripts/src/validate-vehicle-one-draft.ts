@@ -91,14 +91,18 @@ async function main() {
     "fiveYearDepreciationPercent", "expectedLifespanMiles", "recallStatus", "safetyStatus",
   ]) {
     assert.equal(profile[field], null, `${field} must not invent a value.`);
-    assert.equal(profile.fieldStates[field].state, "not_yet_researched");
+    assert.equal(profile.fieldStates[field].state,
+      ["mpgCity", "mpgHighway", "mpgCombined", "horsepower", "fuelType", "recallStatus", "safetyStatus"].includes(field)
+        ? "unknown" : "not_yet_researched");
   }
   assert.deepEqual(profile.reliability, { score: null, label: null, note: null });
   for (const field of ["commonProblems", "maintenance", "inspectionChecklist", "externalOwnerPatterns"]) {
     assert.deepEqual(profile[field], [], `${field} must not inherit demo research.`);
   }
   assert.ok(profile.claims.length >= 5);
-  assert.ok(profile.claims.every((claim: any) => claim.contentClass === "source_fact"));
+  assert.ok(profile.claims.every((claim: any) =>
+    claim.contentClass === "source_fact" || (claim.contentClass === "editorial_synthesis" &&
+      profile.fieldStates.overview.claimIds.includes(claim.id))));
   const sources = profile.claims.flatMap((claim: any) => claim.sources);
   assert.ok(sources.some((source: any) => /media\.ford\.com/.test(source.url) &&
     /preliminary.*2022-09-22.*subject to change/i.test(source.sourceVersion)));
@@ -141,9 +145,9 @@ async function main() {
   });
   console.log(JSON.stringify({
     result: "PASS", slug, ...release, unpublished: true,
-    demoApiParity: "13/13", normalizedSupportedSpecFields: 4,
-    unsupportedResearch: "null / not_yet_researched",
-    provenance: "preliminary indexed Ford + directly corroborated EPA; redirect recorded; no excerpts retained",
+    demoApiParity: "13/13", originalNormalizedIdentitySpecFields: 4,
+    unsupportedResearch: "null / unknown or not_yet_researched",
+    provenance: "Original identity evidence remains preliminary indexed Ford + corroborated EPA; enrichment has separate validation",
     applicability: "exact-configuration gate passes; wrong-scope identity fails closed",
   }, null, 2));
 }

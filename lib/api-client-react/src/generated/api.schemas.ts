@@ -323,6 +323,13 @@ export type VehicleDetail = VehicleSummary & ({
   /** @nullable */
   overview: string | null;
   /** @nullable */
+  fuelRequirement?: string | null;
+  /**
+     * Source-backed capacity in U.S. gallons; absent from legacy fixtures.
+     * @nullable
+     */
+  fuelTankCapacityGallons?: number | null;
+  /** @nullable */
   engineName: string | null;
   /** @nullable */
   transmissionName: string | null;

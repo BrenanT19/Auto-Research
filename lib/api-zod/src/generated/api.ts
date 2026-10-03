@@ -450,6 +450,8 @@ export const GetVehicleResponse = zod.object({
 })).optional()
 }).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n').and(zod.object({
   "overview": zod.string().nullable(),
+  "fuelRequirement": zod.string().nullish(),
+  "fuelTankCapacityGallons": zod.number().nullish().describe('Source-backed capacity in U.S. gallons; absent from legacy fixtures.'),
   "engineName": zod.string().nullable(),
   "transmissionName": zod.string().nullable(),
   "engines": zod.array(zod.object({

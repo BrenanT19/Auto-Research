@@ -398,6 +398,10 @@ components:
         - type: object
           properties:
             overview: { type: ["string", "null"] }
+            fuelRequirement: { type: ["string", "null"] }
+            fuelTankCapacityGallons:
+              type: ["number", "null"]
+              description: Source-backed capacity in U.S. gallons; absent from legacy fixtures.
             engineName: { type: ["string", "null"] }
             transmissionName: { type: ["string", "null"] }
             engines:

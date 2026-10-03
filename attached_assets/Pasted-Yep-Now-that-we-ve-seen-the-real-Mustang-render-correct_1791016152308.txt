@@ -1,0 +1,84 @@
+Yep. Now that we've seen the real Mustang render correctly, we're ready to actually fill it with useful research.
+Put Replit in Build mode and paste this:
+Stage 2B Vehicle #1 — Research Enrichment Pass #1
+Continue working only on the existing unpublished canonical Vehicle #1:
+2024 Ford Mustang EcoBoost Fastback — U.S. market — 2.3L EcoBoost turbo I-4 — 10-speed automatic — RWD
+Canonical configuration ID: 2
+The canonical identity and development-preview integration are already complete and validated. Do not recreate the vehicle or redo those tasks.
+Goal
+Begin turning this sparse real profile into a useful AutoResearch report by researching and adding real, source-backed vehicle information.
+Research these categories:
+1. Fuel economy and emissions
+Find an exact applicable EPA/FuelEconomy.gov configuration match before assigning MPG, fuel type, or emissions-related values.
+Do not use a nearby Mustang record merely because it has a similar engine.
+2. Recalls
+Research official NHTSA recall campaigns applicable to the 2024 Mustang.
+Apply a recall to this configuration only when model/configuration/build-date applicability is supported.
+Keep:
+- recall campaign existence
+- applicability to this configuration
+- VIN-specific open recall status
+as separate concepts. AutoResearch must not imply that every example of this vehicle currently has an open recall.
+3. NHTSA complaints and investigations
+Research applicable official NHTSA complaint and investigation data.
+Complaints must remain owner-reported allegations/signals, not confirmed defects or prevalence statistics.
+Do not turn complaint counts into failure rates or claim that an issue is common without evidence supporting that conclusion.
+4. Safety
+Research official NHTSA safety-test information.
+Attach ratings/results only when the tested vehicle/variant can defensibly apply to this exact configuration. Do not generalize ratings from an incompatible Mustang variant.
+5. Technical specifications
+Research useful ownership/research specifications such as:
+- horsepower
+- torque
+- fuel requirement
+- fuel-tank capacity
+- seating capacity
+- passenger capacity
+- dimensions
+- cargo capacity
+- curb weight
+- wheelbase
+- other meaningful specifications supported for this configuration
+Do not assume that a specification applies merely because it appears on a general Mustang specification sheet. Respect trim/body/powertrain/package applicability.
+Evidence and sourcing
+Prefer authoritative government and primary sources.
+Evaluate the terms of the actual source being used, rather than requiring manufacturer permission simply because the facts concern a Ford vehicle.
+Store normalized factual values and appropriate provenance/evidence metadata.
+Do not copy or reproduce copyrighted prose, photographs, illustrations, tables, page layouts, manuals, or proprietary database presentation.
+Every populated field must have defensible evidence and applicability.
+If evidence is insufficient, preserve the field as:
+- unknown
+- not_yet_researched
+- or not_applicable
+as appropriate.
+Sparse is better than wrong.
+Do not invent estimates yet
+Do not create an AutoResearch reliability score, issue-frequency percentage, expected lifespan, repair-cost estimate, annual maintenance estimate, depreciation estimate, ownership-cost estimate, inspection recommendation, or other synthesized estimate simply to fill the page.
+Those require separate methodologies that we will design later.
+Development preview
+Update the existing real Mustang development profile with every newly approved fact so I can see the results in the current development-preview Vehicle Research page.
+Preserve the existing honest missing-data behavior for everything that remains unresearched.
+Do not redesign the UI during this task.
+Validation
+After adding approved research:
+- validate provenance/evidence
+- validate fail-closed applicability
+- validate sparse-state behavior
+- run canonical API/regression tests
+- run 13-demo parity tests
+- verify no demo values leak into Vehicle #1
+- verify the development Vehicle Research page still renders correctly
+Keep Vehicle #1 unpublished and outside the public production release manifest.
+STOP CONDITION
+Stop after this research/enrichment pass and report:
+1. New factual fields added
+2. Fields researched but intentionally left unknown
+3. Recall campaigns found and their applicability decisions
+4. Complaint/investigation information found and how it was classified
+5. Safety results and applicability decisions
+6. Every source actually used and what it supports
+7. Any source-rights or applicability blockers
+8. Test results
+9. Confirmation all 13 demos remain unchanged
+10. Confirmation Vehicle #1 remains unpublished
+Do not start Vehicle #2, bulk imports, Task #43/owner submissions, image sourcing, UI redesign, ownership-cost methodology, reliability scoring, migration/recovery improvements, CI work, or any unrelated suggested task.

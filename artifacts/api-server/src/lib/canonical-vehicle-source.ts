@@ -113,6 +113,8 @@ export type CanonicalVehicle = {
   mpgHighway: number | null;
   mpgCombined: number | null;
   horsepower: number | null;
+  fuelRequirement: string | null;
+  fuelTankCapacityGallons: number | null;
   priceUsd: number | null;
   reliabilityEstimate: number | null;
   annualOwnershipEstimateUsd: number | null;
@@ -174,6 +176,8 @@ const FIELD_TO_OUTPUT: Record<string, keyof CanonicalVehicle> = {
   mpg_highway: "mpgHighway",
   mpg_combined: "mpgCombined",
   horsepower: "horsepower",
+  fuel_requirement: "fuelRequirement",
+  fuel_tank_capacity_gallons: "fuelTankCapacityGallons",
   price_usd: "priceUsd",
   overview: "overview",
   engine_name: "engineName",
@@ -204,6 +208,8 @@ const FIELD_VALUE_CONTRACT: Record<string, { valueType: "numeric" | "text" | "bo
   mpg_highway: { valueType: "numeric", unit: "mpg" },
   mpg_combined: { valueType: "numeric", unit: "mpg" },
   horsepower: { valueType: "numeric", unit: "hp" },
+  fuel_requirement: { valueType: "text", unit: null },
+  fuel_tank_capacity_gallons: { valueType: "numeric", unit: "US gal" },
   price_usd: { valueType: "numeric", unit: "USD" },
   overview: { valueType: "text", unit: null },
   engine_name: { valueType: "text", unit: null },
@@ -319,6 +325,7 @@ const FIELD_STATE_CODES = [
   "overview", "engineName", "transmissionName", "reliabilityLabel", "reliabilityNote",
   "insuranceEstimateUsd", "fiveYearDepreciationPercent", "expectedLifespanMiles",
   "recallStatus", "safetyStatus",
+  "fuelRequirement", "fuelTankCapacityGallons",
 ];
 const SECTION_STATE_CODES = [
   "engines", "transmissions", "siblingTrims", "commonProblems", "maintenance",
@@ -1213,6 +1220,18 @@ export async function loadCanonicalVehicles(
     const ownerAttempts = attemptedClaims.filter((claim) => claim.contentClass === "direct_owner_experience");
     const recallAttempts = attemptedClaims.filter((claim) => claim.claimKind === "recall");
     const safetyAttempts = attemptedClaims.filter((claim) => claim.claimKind === "safety_rating");
+    // A researched-but-unresolved population is not an unresearched status.
+    // Keep null values, while making the scalar's sparse state honest.
+    if (!recallStatus && recallAttempts.length) fieldStates.recallStatus = {
+      state: "unknown",
+      reason: "Campaigns were researched, but applicability to this configuration is unresolved; VIN-open status is not established.",
+      claimIds: recallAttempts.map((claim) => String(claim.id)),
+    };
+    if (!safetyStatus && safetyAttempts.length) fieldStates.safetyStatus = {
+      state: "unknown",
+      reason: "Published results were researched, but tested-variant applicability to this configuration is unresolved.",
+      claimIds: safetyAttempts.map((claim) => String(claim.id)),
+    };
     const componentAttempts = attemptedClaims.filter((claim) => claim.claimKind === "fitment");
     const engineClaimIds = engines.flatMap((engine) => engine.claimIds as string[]);
     const transmissionClaimIds = transmissions.flatMap((item) => item.claimIds as string[]);
@@ -1293,6 +1312,8 @@ export async function loadCanonicalVehicles(
       maintenance,
       reliabilityClaimIds,
       overview: (output.overview as string | null | undefined) ?? null,
+      fuelRequirement: (output.fuelRequirement as string | null | undefined) ?? null,
+      fuelTankCapacityGallons: (output.fuelTankCapacityGallons as number | null | undefined) ?? null,
       engineName: (output.engineName as string | null | undefined) ?? null,
       transmissionName: (output.transmissionName as string | null | undefined) ?? null,
       reliabilityLabel: (output.reliabilityLabel as string | null | undefined) ?? null,
