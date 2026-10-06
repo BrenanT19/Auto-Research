@@ -15,6 +15,27 @@ and remaining coverage. Do not treat existing illustrative demos as real
 coverage. Establish year-specific retail trims rather than deriving them from
 engines, batteries, wheels, drivetrain options, or current shopping pages.
 
+Each model/year must have its own discoverable vehicle card and dedicated
+profile, using the established Mustang card styling and report layout.
+
+**Why:** The user reiterated that every model year must be represented, not
+just MY2024, and explicitly requested individual cards and profiles that look
+like the Mustang presentation.
+
+**How to apply:** Treat verified batches as incremental progress toward the
+all-history catalog, never as fulfillment of the entire request. Preserve
+year-specific identities and the established presentation.
+
+Owner reviews, maintenance issues, and other detailed vehicle research are
+future work requiring an explicit user command.
+
+**Why:** The user wants these capabilities eventually but explicitly said not
+to add or pull that information now.
+
+**How to apply:** Keep catalog identity work separate from research ingestion.
+Leave unresearched sections empty or labeled Not yet researched until the user
+authorizes that research phase.
+
 Retire an illustrative profile from discovery only behind valid source-backed
 identity gates. Preserve its records and relationships; do not transfer its
 research or owner evidence to a real profile. Saved links may resolve to an
