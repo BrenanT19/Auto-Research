@@ -519,14 +519,18 @@ function CalculatorPage() {
   const numbers = readOwnershipDraft(displayDraft);
   const { insurance, maintenance, repairs } = numbers;
   const normalizedFuelType = vehicleProfile?.fuelType?.trim().toLocaleLowerCase();
-  const fuelTypeKnown = !canonicalCalculatorMode || Boolean(
+  const fuelTypeKnown = Boolean(
     normalizedFuelType &&
-    vehicleProfile?.fieldStates?.fuelType?.state === "known" &&
-    !["unknown", "not known", "unspecified"].includes(normalizedFuelType),
+    !["unknown", "not known", "unspecified"].includes(normalizedFuelType) &&
+    (!canonicalCalculatorMode || vehicleProfile?.fieldStates?.fuelType?.state === "known"),
   );
-  const calculationEnergyBasis = fuelTypeKnown ? vehicleProfile?.fuelType : shopperEnergyBasis;
-  const energyBasisSelected = fuelTypeKnown || Boolean(shopperEnergyBasis);
-  const vehicleIsElectric = Boolean(vehicleId) && energyBasisSelected && economyUnit(calculationEnergyBasis || "") === "MPGe";
+  const calculationEnergyBasis = fuelTypeKnown
+    ? vehicleProfile?.fuelType
+    : shopperEnergyBasis || (!vehicleId ? "gasoline" : "");
+  const energyBasisSelected = Boolean(calculationEnergyBasis);
+  const energyBasisValue = shopperEnergyBasis || (!vehicleId ? "gasoline" : "");
+  const energyBasisFieldLabel = canonicalCalculatorMode && vehicleId ? "Your energy basis" : "Energy source";
+  const vehicleIsElectric = energyBasisSelected && economyUnit(calculationEnergyBasis || "") === "MPGe";
   const financing = calculateFinancingEstimate({ price: numbers.price, down: numbers.down, apr: numbers.apr, term, salesTaxRate: parseCalculatorNumber(displayTaxRate), dealerFees: parseCalculatorNumber(displayDealerFees), taxesAndFeesPayment: taxMode });
   const { fuel } = calculateOwnershipEstimate({ ...numbers, mpg: energyBasisSelected ? numbers.mpg : 0, price: financing.amountFinanced, down: 0, term, vehicleIsElectric });
   const calculatorAssumptions = { draft: displayDraft, taxRate: displayTaxRate, dealerFees: displayDealerFees, fuelType: calculationEnergyBasis };
@@ -630,7 +634,7 @@ function CalculatorPage() {
         <fieldset className="segmented" data-testid="group-taxes-fees"><legend>Taxes &amp; fees payment</legend><button type="button" className={taxMode === 'financed' ? 'on' : ''} aria-pressed={taxMode === 'financed'} onClick={() => setTaxMode('financed')}>Include taxes &amp; fees in loan</button><button type="button" className={taxMode === 'upfront' ? 'on' : ''} aria-pressed={taxMode === 'upfront'} onClick={() => setTaxMode('upfront')}>Pay taxes &amp; fees upfront</button></fieldset>
          {financingReady ? <PurchaseBreakdown f={financing}/> : <p className="field-hint" role="status">Add {missingFinance.join(", ")} to calculate the purchase breakdown.</p>}</section>
       <section className="calc-group"><span className="eyebrow">02 / YOUR DRIVING</span><h2 className="serif">Fuel assumptions</h2><div className="input-grid">
-        {canonicalCalculatorMode && !fuelTypeKnown && <label className="field-label">Your energy basis<select aria-label="Your energy basis" value={shopperEnergyBasis} onChange={event => setShopperEnergyBasis(event.target.value)}><option value="">Choose an assumption</option><option value="gasoline">Fuel (MPG)</option><option value="electric">Electricity (MPGe)</option></select><small>This is your calculation assumption, not a researched vehicle fact.</small></label>}
+        {!fuelTypeKnown && <label className="field-label">{energyBasisFieldLabel}<select aria-label={energyBasisFieldLabel} value={energyBasisValue} onChange={event => setShopperEnergyBasis(event.target.value)}><option value="">Choose an assumption</option><option value="gasoline">Gasoline (MPG)</option><option value="electric">Electricity (MPGe)</option></select>{canonicalCalculatorMode && <small>This is your calculation assumption, not a researched vehicle fact.</small>}</label>}
         <NumberField label="Miles driven per year" value={displayDraft.miles} set={setField('miles')} suffix="mi" normalizeOnBlur={!canonicalCalculatorMode}/>
         <NumberField label={canonicalCalculatorMode && !energyBasisSelected ? "Combined fuel economy (unit unknown)" : "Combined fuel economy"} value={displayDraft.mpg} set={setField('mpg')} suffix={canonicalCalculatorMode && !energyBasisSelected ? undefined : vehicleIsElectric ? 'MPGe' : 'mpg'} normalizeOnBlur={!canonicalCalculatorMode}/>
         {canonicalCalculatorMode && !fuelTypeKnown && <CanonicalEvidence state={vehicleProfile?.fieldStates?.fuelType} claims={vehicleProfile?.claims}/>}

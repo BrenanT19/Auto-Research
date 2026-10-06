@@ -22,10 +22,15 @@ test("financing and a clearly labeled partial total survive missing energy input
 });
 
 test("electricity input is labeled in cents and calculates 32¢/kWh for 50 kWh as $16", async ({ page }) => {
-  await page.goto("/calculator?vehicle=ford-mustang-2024-ecoboost-fastback-us-23l-10at-rwd");
-  await page.getByLabel("Your energy basis").selectOption("electric");
+  await page.goto("/calculator");
+  const energySource = page.getByLabel("Energy source");
+  await expect(energySource).toHaveValue("gasoline");
+  await expect(page.getByLabel("Fuel price")).toBeVisible();
+  await energySource.selectOption("electric");
 
   const price = page.getByLabel("Electricity price");
+  await expect(page.getByLabel("Fuel price")).not.toBeVisible();
+  await expect(price).toBeVisible();
   await expect(page.getByText("¢/kWh", { exact: true })).toBeVisible();
   await expect(page.getByText("32¢/kWh is $0.32/kWh.")).toBeVisible();
   await page.getByLabel("Miles driven per year").fill("600");
