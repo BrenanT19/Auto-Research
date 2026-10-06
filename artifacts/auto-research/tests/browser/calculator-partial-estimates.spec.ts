@@ -23,6 +23,7 @@ test("financing and a clearly labeled partial total survive missing energy input
 
 test("electricity input is labeled in cents and calculates 32¢/kWh for 50 kWh as $16", async ({ page }) => {
   await page.goto("/calculator");
+  await expect(page.getByRole("heading", { name: "Energy assumptions" })).toBeVisible();
   const energySource = page.getByLabel("Energy source");
   await expect(energySource).toHaveValue("gasoline");
   await expect(page.getByLabel("Fuel price")).toBeVisible();
