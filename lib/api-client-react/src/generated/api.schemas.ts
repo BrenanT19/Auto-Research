@@ -35,6 +35,89 @@ export interface CatalogCoverage {
   brands: CatalogBrandCoverage[];
 }
 
+export interface GenerationHistoryCoverage {
+  totalModels: number;
+  modelsWithHistory: number;
+  modelsWithoutHistory: number;
+  generationCount: number;
+  refreshCount: number;
+  completeHistoricalCoverage: false;
+  note: string;
+}
+
+export type GenerationHistoryModelSummaryHistoryStatus = typeof GenerationHistoryModelSummaryHistoryStatus[keyof typeof GenerationHistoryModelSummaryHistoryStatus];
+
+
+export const GenerationHistoryModelSummaryHistoryStatus = {
+  partial: 'partial',
+  not_yet_researched: 'not_yet_researched',
+} as const;
+
+export interface GenerationHistoryModelSummary {
+  make: string;
+  makeSlug: string;
+  model: string;
+  modelSlug: string;
+  firstCatalogYear: number;
+  lastCatalogYear: number;
+  modelYearCount: number;
+  generationCount: number;
+  refreshCount: number;
+  historyStatus: GenerationHistoryModelSummaryHistoryStatus;
+}
+
+export type GenerationHistoryEventKind = typeof GenerationHistoryEventKind[keyof typeof GenerationHistoryEventKind];
+
+
+export const GenerationHistoryEventKind = {
+  generation: 'generation',
+  refresh: 'refresh',
+} as const;
+
+export interface GenerationHistoryEvent {
+  id: number;
+  name: string;
+  kind: GenerationHistoryEventKind;
+  startYear: number;
+  endYear: number;
+  sourceUrl: string;
+  locator: string;
+  note: string;
+}
+
+export interface GenerationHistoryGeneration {
+  event: GenerationHistoryEvent;
+  refreshes: GenerationHistoryEvent[];
+}
+
+export type UnassignedGenerationRefreshReason = typeof UnassignedGenerationRefreshReason[keyof typeof UnassignedGenerationRefreshReason];
+
+
+export const UnassignedGenerationRefreshReason = {
+  overlaps_multiple_generations: 'overlaps_multiple_generations',
+  no_generation_range: 'no_generation_range',
+} as const;
+
+export interface UnassignedGenerationRefresh {
+  event: GenerationHistoryEvent;
+  reason: UnassignedGenerationRefreshReason;
+}
+
+export interface GenerationHistoryIndex {
+  reviewedAt: string;
+  publicationStatus: 'development_preview_only';
+  rightsUrl: string;
+  coverage: GenerationHistoryCoverage;
+  models: GenerationHistoryModelSummary[];
+}
+
+export interface GenerationHistoryDetail {
+  model: GenerationHistoryModelSummary;
+  generations: GenerationHistoryGeneration[];
+  unassignedRefreshes: UnassignedGenerationRefresh[];
+  rightsUrl: string;
+}
+
 export type VehicleSummaryProfileKind = typeof VehicleSummaryProfileKind[keyof typeof VehicleSummaryProfileKind];
 
 

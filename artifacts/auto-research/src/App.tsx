@@ -6,10 +6,10 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } from 'wouter';
-import { getGetVehicleQueryKey, useGetCatalogOptions, useGetCatalogCoverage, useSearchVehicles, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience } from '@workspace/api-client-react';
+import { getGetVehicleQueryKey, useGetCatalogOptions, useGetCatalogCoverage, useSearchVehicles, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience, useListGenerationHistories } from '@workspace/api-client-react';
 import { CatalogPagination } from './components/CatalogPagination';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
-import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, History, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
 import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, homeTrendEvidence, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters, researchStateLabel, summarizeMonthlyOwnershipCosts } from './shopper-tools';
 import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId, ResearchFieldState } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
@@ -21,6 +21,7 @@ import { useReportNavigation } from './hooks/use-report-navigation';
 import { CanonicalEvidence } from './components/CanonicalEvidence';
 import { CanonicalProfileStatus } from './components/CanonicalProfileStatus';
 import { ExternalOwnerPatterns } from './components/ExternalOwnerPatterns';
+import { GenerationHistoryDetailPage, GenerationHistoryIndexPage } from './pages/GenerationHistory';
 
 const queryClient = new QueryClient();
 const money = (n?: number | null) => n == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -33,7 +34,7 @@ function DemoNotice({ compact = false }: { compact?: boolean }) {
 
 function Header() {
   const [open, setOpen] = useState(false);
-  const nav = [['Home', '/'], ['Browse cars', '/browse'], ['Compare', '/compare'], ['Calculator', '/calculator'], ['Community', '/community'], ['About', '/about']];
+  const nav = [['Home', '/'], ['Browse cars', '/browse'], ['Generation history', '/generation-history'], ['Compare', '/compare'], ['Calculator', '/calculator'], ['Community', '/community'], ['About', '/about']];
   return <header className="site-header">
     <Link href="/" className="brand"><span className="brand-mark">ar</span><span>auto<span className="brand-light">research</span><small>THE LONG VIEW ON CARS</small></span></Link>
     <button className="mobile-menu" aria-label="Toggle navigation" onClick={() => setOpen(!open)}><Menu size={21}/></button>
@@ -398,6 +399,7 @@ function ManufacturerPage() {
 function DetailPage() {
   const { vehicleId = '' } = useParams();
   const vehicle = useGetVehicle(vehicleId);
+  const generationHistories = useListGenerationHistories();
   const reports = useListOwnerReports({ vehicleId });
   const { activeSection, detailNavRef, navigateToSection } = useReportNavigation(vehicleId, Boolean(vehicle.data), reports.isLoading);
   const [loc, setLoc] = useLocation();
@@ -405,6 +407,7 @@ function DetailPage() {
   if (vehicle.isError || !vehicle.data) return <Shell><div className="content-wrap page-wrap"><ErrorBlock retry={() => vehicle.refetch()}/></div></Shell>;
   const v = vehicle.data;
   const canonical = v.profileKind === "canonical" && !v.isDemo;
+  const hasGenerationHistory = generationHistories.data?.models.some(model => model.makeSlug === v.makeSlug && model.modelSlug === v.modelSlug) ?? false;
   const visibleReports = (reports.data || []).filter(report => !report.isDemo);
   const researchState = (field: string, category?: string) => profileResearchState(v, field, category);
   const sectionState = (section: string) => v.sectionStates?.[section];
@@ -419,6 +422,7 @@ function DetailPage() {
     <div className="crumbs"><Link href="/">Home</Link><span>/</span><Link href={`/manufacturers/${v.makeSlug}`}>{v.make}</Link><span>/</span><span>{v.model}</span></div>
     <CanonicalProfileStatus vehicle={v} explain/>
     {canonical && <CanonicalEvidence state={v.fieldStates?.identity} claims={v.claims}/>}
+    {hasGenerationHistory && <div className="generation-history-vehicle-link"><span><History size={15}/> MODEL LINEAGE</span><Link href={`/generation-history/${v.makeSlug}/${v.modelSlug}`}>View sourced generation history <ArrowRight size={15}/></Link></div>}
     <div className="detail-hero"><div><span className="eyebrow">{v.year}{v.generation && ` · ${v.generation}`} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>{v.identityLevel === "model_year" ? "Compare this model year" : "Compare this trim"} <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
     {!canonical && <DemoNotice/>}
     <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType || "")}`, 'COMBINED EST.'], [v.drivetrain || "—", 'DRIVETRAIN'], [v.fuelType || "—", 'FUEL'], [v.horsepower == null ? "—" : `${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{canonical ? caption === "STARTING EST." ? "PRICE" : caption === "COMBINED EST." ? "COMBINED ECONOMY" : caption : caption}</small>{canonical && <CanonicalEvidence state={researchState(caption === "STARTING EST." ? "priceUsd" : caption === "COMBINED EST." ? "mpgCombined" : caption === "DRIVETRAIN" ? "drivetrain" : caption === "FUEL" ? "fuelType" : "horsepower", "specifications")} claims={v.claims}/>}</div>)}</div>
@@ -841,9 +845,19 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
+function GenerationHistoryIndexRoute() {
+  return <Shell><GenerationHistoryIndexPage/></Shell>;
+}
+
+function GenerationHistoryDetailRoute() {
+  return <Shell><GenerationHistoryDetailPage/></Shell>;
+}
+
 function Router() {
   return <RoutedErrorBoundary><Switch>
     <Route path="/" component={HomePage}/><Route path="/browse" component={BrowsePage}/>
+    <Route path="/generation-history" component={GenerationHistoryIndexRoute}/>
+    <Route path="/generation-history/:makeSlug/:modelSlug" component={GenerationHistoryDetailRoute}/>
     <Route path="/manufacturers/:makeSlug" component={ManufacturerPage}/><Route path="/vehicles/:vehicleId" component={DetailPage}/>
     <Route path="/compare" component={ComparePage}/><Route path="/calculator" component={CalculatorPage}/>
     <Route path="/community" component={CommunityPage}/><Route path="/about" component={AboutPage}/>

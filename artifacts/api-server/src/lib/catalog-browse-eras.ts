@@ -31,6 +31,10 @@ export function getCatalogBrowseEras(subject: Subject): BrowseEra[] {
     subject.year >= era.startYear && subject.year <= era.endYear);
 }
 
+export function getCatalogBrowseErasForModel(subject: Pick<Subject, "make" | "model">): BrowseEra[] {
+  return byModel.get(modelIdentity(subject)) ?? [];
+}
+
 export function getCatalogBrowseEra(key: string): BrowseEra | undefined {
   const match = /^catalog:generation:([1-9]\d*)$/.exec(key);
   return match ? byId.get(Number(match[1])) : undefined;

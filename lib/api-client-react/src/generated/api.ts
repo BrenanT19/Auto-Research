@@ -23,6 +23,8 @@ import type {
   CatalogCoverage,
   CatalogOption,
   DiscoveryStats,
+  GenerationHistoryDetail,
+  GenerationHistoryIndex,
   HealthStatus,
   ListOwnerReportsParams,
   ListVehiclesParams,
@@ -362,6 +364,167 @@ export function useGetCatalogCoverage<TData = Awaited<ReturnType<typeof getCatal
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetCatalogCoverageQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListGenerationHistoriesUrl = () => {
+
+
+
+
+  return `/api/catalog/generation-histories`
+}
+
+/**
+ * Development-preview research only. Models without entries are explicitly marked not yet researched.
+ * @summary List sourced generation and refresh histories for catalog models
+ */
+export const listGenerationHistories = async ( options?: Parameters<typeof customFetch>[1]): Promise<GenerationHistoryIndex> => {
+
+  return customFetch<GenerationHistoryIndex>(getListGenerationHistoriesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListGenerationHistoriesQueryKey = () => {
+    return [
+    `/api/catalog/generation-histories`
+    ] as const;
+    }
+
+
+export const getListGenerationHistoriesQueryOptions = <TData = Awaited<ReturnType<typeof listGenerationHistories>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listGenerationHistories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListGenerationHistoriesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listGenerationHistories>>> = ({ signal }) => listGenerationHistories({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listGenerationHistories>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListGenerationHistoriesQueryResult = NonNullable<Awaited<ReturnType<typeof listGenerationHistories>>>
+export type ListGenerationHistoriesQueryError = ErrorType<void>
+
+
+/**
+ * @summary List sourced generation and refresh histories for catalog models
+ */
+
+export function useListGenerationHistories<TData = Awaited<ReturnType<typeof listGenerationHistories>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listGenerationHistories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListGenerationHistoriesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetGenerationHistoryUrl = (makeSlug: string,
+    modelSlug: string,) => {
+
+
+
+
+  return `/api/catalog/generation-histories/${makeSlug}/${modelSlug}`
+}
+
+/**
+ * Development-preview research only; missing years are not inferred.
+ * @summary Get sourced generation and refresh history for one catalog model
+ */
+export const getGenerationHistory = async (makeSlug: string,
+    modelSlug: string, options?: Parameters<typeof customFetch>[1]): Promise<GenerationHistoryDetail> => {
+
+  return customFetch<GenerationHistoryDetail>(getGetGenerationHistoryUrl(makeSlug,modelSlug),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetGenerationHistoryQueryKey = (makeSlug: string,
+    modelSlug: string,) => {
+    return [
+    `/api/catalog/generation-histories/${makeSlug}/${modelSlug}`
+    ] as const;
+    }
+
+
+export const getGetGenerationHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getGenerationHistory>>, TError = ErrorType<void>>(makeSlug: string,
+    modelSlug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getGenerationHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetGenerationHistoryQueryKey(makeSlug,modelSlug);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGenerationHistory>>> = ({ signal }) => getGenerationHistory(makeSlug,modelSlug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: makeSlug !== null && makeSlug !== undefined && modelSlug !== null && modelSlug !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getGenerationHistory>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetGenerationHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof getGenerationHistory>>>
+export type GetGenerationHistoryQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get sourced generation and refresh history for one catalog model
+ */
+
+export function useGetGenerationHistory<TData = Awaited<ReturnType<typeof getGenerationHistory>>, TError = ErrorType<void>>(
+ makeSlug: string,
+    modelSlug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getGenerationHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetGenerationHistoryQueryOptions(makeSlug,modelSlug,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

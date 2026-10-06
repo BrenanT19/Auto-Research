@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-10-06T06:18:37.476Z",
+  "reviewedAt": "2026-10-06T23:41:12Z",
   "market": "US",
   "publicationStatus": "development_preview_only",
   "coverage": "Partial verified batch; not all catalog models or every refresh has been reviewed.",
@@ -619,12 +619,12 @@
       "make": "Chrysler",
       "model": "Pacifica",
       "startYear": 2017,
-      "endYear": 2020,
-      "name": "Minivan original design",
+      "endYear": 2027,
+      "name": "Pacifica minivan line (RU; MY2017 introduction)",
       "kind": "generation",
       "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(minivan)",
-      "locator": "Model-year infoboxes, generation sections and named design-update sections; United States scope.",
-      "note": "Broad model-year browse grouping, not an exact trim or build-date identification."
+      "locator": "Overview infobox: model years 2017–present; model-year history identifies the new minivan and its distinct platform.",
+      "note": "A separate product line from the 2004–2008 crossover. The source describes it as the sixth Chrysler minivan generation; the displayed endpoint follows reviewed catalog years through MY2027."
     },
     {
       "id": 8000902,
@@ -632,11 +632,11 @@
       "model": "Pacifica",
       "startYear": 2021,
       "endYear": 2026,
-      "name": "Minivan 2021 refresh",
+      "name": "2021 exterior and interior-technology refresh",
       "kind": "refresh",
       "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(minivan)",
-      "locator": "Model-year infoboxes, generation sections and named design-update sections; United States scope.",
-      "note": "Broad model-year browse grouping, not an exact trim or build-date identification."
+      "locator": "2021 refresh section: new exterior styling and Uconnect 5 infotainment with a 10.1-inch touchscreen; applies to the refreshed minivan before MY2027.",
+      "note": "Major exterior restyle with cabin technology changes; the source does not establish a wholesale interior redesign."
     },
     {
       "id": 8001001,
@@ -1333,6 +1333,54 @@
       "sourceUrl": "https://en.wikipedia.org/wiki/Jeep_Grand_Cherokee",
       "locator": "2026 Model Changes section; U.S. model-year refresh details.",
       "note": "The documented 2026 changes are represented within the fifth generation, not as a new generation."
+    },
+    {
+      "id": 8002009,
+      "make": "Chrysler",
+      "model": "Pacifica",
+      "startYear": 2004,
+      "endYear": 2008,
+      "name": "Pacifica crossover (CS; 2004–2008)",
+      "kind": "generation",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(crossover)",
+      "locator": "Overview infobox: U.S. model years 2004–2008; the article identifies this as a mid-size crossover.",
+      "note": "A distinct crossover product line; it is not the predecessor generation of the 2017 minivan."
+    },
+    {
+      "id": 8002010,
+      "make": "Chrysler",
+      "model": "Pacifica",
+      "startYear": 2005,
+      "endYear": 2006,
+      "name": "2005 interior restyle (minor)",
+      "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(crossover)",
+      "locator": "Model year changes, 2005 and 2006: the interior was slightly restyled.",
+      "note": "Minor interior styling update; the source does not describe a major interior redesign."
+    },
+    {
+      "id": 8002011,
+      "make": "Chrysler",
+      "model": "Pacifica",
+      "startYear": 2007,
+      "endYear": 2008,
+      "name": "2007 front-fascia facelift",
+      "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(crossover)",
+      "locator": "Model year changes, 2007: exterior restyle included headlights, hood, fenders, grille, front fascia and wheels.",
+      "note": "Introduced for MY2007 and carried through the final MY2008 model year."
+    },
+    {
+      "id": 8002014,
+      "make": "Chrysler",
+      "model": "Pacifica",
+      "startYear": 2027,
+      "endYear": 2027,
+      "name": "2027 second front-fascia refresh",
+      "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chrysler_Pacifica_(minivan)",
+      "locator": "2027 refresh section: new front fascia with an LED light bar, Chrysler logo and inverted-L headlights; the updated model became available in 2026.",
+      "note": "Exterior change is documented for MY2027. A major interior redesign is not established by this source."
     }
   ]
 }

@@ -80,6 +80,99 @@ export const GetCatalogCoverageResponse = zod.object({
 
 
 /**
+ * Development-preview research only. Models without entries are explicitly marked not yet researched.
+ * @summary List sourced generation and refresh histories for catalog models
+ */
+export const ListGenerationHistoriesResponse = zod.object({
+  "reviewedAt": zod.coerce.date(),
+  "publicationStatus": zod.literal("development_preview_only"),
+  "rightsUrl": zod.string().url(),
+  "coverage": zod.object({
+  "totalModels": zod.number().int(),
+  "modelsWithHistory": zod.number().int(),
+  "modelsWithoutHistory": zod.number().int(),
+  "generationCount": zod.number().int(),
+  "refreshCount": zod.number().int(),
+  "completeHistoricalCoverage": zod.literal(false),
+  "note": zod.string()
+}),
+  "models": zod.array(zod.object({
+  "make": zod.string(),
+  "makeSlug": zod.string(),
+  "model": zod.string(),
+  "modelSlug": zod.string(),
+  "firstCatalogYear": zod.number().int(),
+  "lastCatalogYear": zod.number().int(),
+  "modelYearCount": zod.number().int(),
+  "generationCount": zod.number().int(),
+  "refreshCount": zod.number().int(),
+  "historyStatus": zod.enum(['partial', 'not_yet_researched'])
+}))
+})
+
+
+/**
+ * Development-preview research only; missing years are not inferred.
+ * @summary Get sourced generation and refresh history for one catalog model
+ */
+export const GetGenerationHistoryParams = zod.object({
+  "makeSlug": zod.coerce.string(),
+  "modelSlug": zod.coerce.string()
+})
+
+export const GetGenerationHistoryResponse = zod.object({
+  "model": zod.object({
+  "make": zod.string(),
+  "makeSlug": zod.string(),
+  "model": zod.string(),
+  "modelSlug": zod.string(),
+  "firstCatalogYear": zod.number().int(),
+  "lastCatalogYear": zod.number().int(),
+  "modelYearCount": zod.number().int(),
+  "generationCount": zod.number().int(),
+  "refreshCount": zod.number().int(),
+  "historyStatus": zod.enum(['partial', 'not_yet_researched'])
+}),
+  "generations": zod.array(zod.object({
+  "event": zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "kind": zod.enum(['generation', 'refresh']),
+  "startYear": zod.number().int(),
+  "endYear": zod.number().int(),
+  "sourceUrl": zod.string().url(),
+  "locator": zod.string(),
+  "note": zod.string()
+}),
+  "refreshes": zod.array(zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "kind": zod.enum(['generation', 'refresh']),
+  "startYear": zod.number().int(),
+  "endYear": zod.number().int(),
+  "sourceUrl": zod.string().url(),
+  "locator": zod.string(),
+  "note": zod.string()
+}))
+})),
+  "unassignedRefreshes": zod.array(zod.object({
+  "event": zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "kind": zod.enum(['generation', 'refresh']),
+  "startYear": zod.number().int(),
+  "endYear": zod.number().int(),
+  "sourceUrl": zod.string().url(),
+  "locator": zod.string(),
+  "note": zod.string()
+}),
+  "reason": zod.enum(['overlaps_multiple_generations', 'no_generation_range'])
+})),
+  "rightsUrl": zod.string().url()
+})
+
+
+/**
  * @summary Search vehicle profiles with an exact result count and pagination
  */
 

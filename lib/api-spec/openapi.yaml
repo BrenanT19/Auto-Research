@@ -69,6 +69,39 @@ paths:
                 $ref: "#/components/schemas/CatalogCoverage"
         "404":
           description: Catalog is not publicly released
+  /catalog/generation-histories:
+    get:
+      operationId: listGenerationHistories
+      tags: [catalog]
+      summary: List sourced generation and refresh histories for catalog models
+      description: Development-preview research only. Models without entries are explicitly marked not yet researched.
+      responses:
+        "200":
+          description: Generation-history coverage and model index
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerationHistoryIndex"
+        "404":
+          description: Research catalog is not publicly released
+  /catalog/generation-histories/{makeSlug}/{modelSlug}:
+    get:
+      operationId: getGenerationHistory
+      tags: [catalog]
+      summary: Get sourced generation and refresh history for one catalog model
+      description: Development-preview research only; missing years are not inferred.
+      parameters:
+        - { in: path, name: makeSlug, required: true, schema: { type: string } }
+        - { in: path, name: modelSlug, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Model generation history with source links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerationHistoryDetail"
+        "404":
+          description: Research catalog or requested model is unavailable
   /vehicles/search:
     get:
       operationId: searchVehicles
@@ -354,6 +387,80 @@ components:
         firstYear: { type: integer }
         lastYear: { type: integer }
       required: [make, profileCount, firstYear, lastYear]
+    GenerationHistoryCoverage:
+      type: object
+      properties:
+        totalModels: { type: integer }
+        modelsWithHistory: { type: integer }
+        modelsWithoutHistory: { type: integer }
+        generationCount: { type: integer }
+        refreshCount: { type: integer }
+        completeHistoricalCoverage: { type: boolean, const: false }
+        note: { type: string }
+      required: [totalModels, modelsWithHistory, modelsWithoutHistory, generationCount, refreshCount, completeHistoricalCoverage, note]
+    GenerationHistoryModelSummary:
+      type: object
+      properties:
+        make: { type: string }
+        makeSlug: { type: string }
+        model: { type: string }
+        modelSlug: { type: string }
+        firstCatalogYear: { type: integer }
+        lastCatalogYear: { type: integer }
+        modelYearCount: { type: integer }
+        generationCount: { type: integer }
+        refreshCount: { type: integer }
+        historyStatus: { type: string, enum: [partial, not_yet_researched] }
+      required: [make, makeSlug, model, modelSlug, firstCatalogYear, lastCatalogYear, modelYearCount, generationCount, refreshCount, historyStatus]
+    GenerationHistoryEvent:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        kind: { type: string, enum: [generation, refresh] }
+        startYear: { type: integer }
+        endYear: { type: integer }
+        sourceUrl: { type: string, format: uri }
+        locator: { type: string }
+        note: { type: string }
+      required: [id, name, kind, startYear, endYear, sourceUrl, locator, note]
+    GenerationHistoryGeneration:
+      type: object
+      properties:
+        event: { $ref: "#/components/schemas/GenerationHistoryEvent" }
+        refreshes:
+          type: array
+          items: { $ref: "#/components/schemas/GenerationHistoryEvent" }
+      required: [event, refreshes]
+    UnassignedGenerationRefresh:
+      type: object
+      properties:
+        event: { $ref: "#/components/schemas/GenerationHistoryEvent" }
+        reason: { type: string, enum: [overlaps_multiple_generations, no_generation_range] }
+      required: [event, reason]
+    GenerationHistoryIndex:
+      type: object
+      properties:
+        reviewedAt: { type: string, format: date-time }
+        publicationStatus: { type: string, const: development_preview_only }
+        rightsUrl: { type: string, format: uri }
+        coverage: { $ref: "#/components/schemas/GenerationHistoryCoverage" }
+        models:
+          type: array
+          items: { $ref: "#/components/schemas/GenerationHistoryModelSummary" }
+      required: [reviewedAt, publicationStatus, rightsUrl, coverage, models]
+    GenerationHistoryDetail:
+      type: object
+      properties:
+        model: { $ref: "#/components/schemas/GenerationHistoryModelSummary" }
+        generations:
+          type: array
+          items: { $ref: "#/components/schemas/GenerationHistoryGeneration" }
+        unassignedRefreshes:
+          type: array
+          items: { $ref: "#/components/schemas/UnassignedGenerationRefresh" }
+        rightsUrl: { type: string, format: uri }
+      required: [model, generations, unassignedRefreshes, rightsUrl]
     VehicleSearchResults:
       type: object
       properties:
