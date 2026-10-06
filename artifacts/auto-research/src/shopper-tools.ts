@@ -408,7 +408,7 @@ export function resolveBrowseFilters(filters: BrowseFilters, options: CatalogOpt
 }
 
 function normalized(value: string): string {
-  return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+  return value.trim().toLocaleLowerCase().replace(/[-‐‑–]/g, "").replace(/\s+/g, " ");
 }
 
 export function getBrowseSuggestions(query: string, options: CatalogOption[], limit = 8): BrowseSuggestion[] {
@@ -421,7 +421,11 @@ export function getBrowseSuggestions(query: string, options: CatalogOption[], li
       kind: "manufacturer", label: option.make, makeSlug: option.makeSlug,
     });
     const modelKey = catalogModelKey(option);
-    models.set(`${option.makeSlug}:${modelKey}`, {
+    // Prefer the year catalog over a recent trim-only subset for the same
+    // name. This is discovery only; configuration identities stay separate.
+    const nameKey = `${option.makeSlug}:${normalized(option.model)}`;
+    if (models.has(nameKey) && option.identityLevel !== "model_year") continue;
+    models.set(nameKey, {
       kind: "model", label: `${option.make} ${option.model}`,
       makeSlug: option.makeSlug, modelId: option.modelId, modelKey,
       profileKind: option.profileKind,

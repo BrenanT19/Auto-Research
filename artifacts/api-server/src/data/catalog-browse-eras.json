@@ -7,6 +7,62 @@
   "rightsBasis": "Independently normalized chronological facts and original labels, with linked Wikipedia provenance. No copied prose, photographs or documents.",
   "eras": [
     {
+      "id": 8001614, "make": "Ford", "model": "F150",
+      "startYear": 1982, "endYear": 1986,
+      "name": "1982 front-fascia facelift", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(seventh_generation)",
+      "locator": "1982–1983 model history: MY1982 grille, Blue Oval emblem and fender-badge revision.",
+      "note": "Exterior facelift within the seventh generation."
+    },
+    {
+      "id": 8001615, "make": "Ford", "model": "F150",
+      "startYear": 1999, "endYear": 2004,
+      "name": "1999 exterior / interior facelift", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(tenth_generation)",
+      "locator": "Model history dates the facelift introduced in September 1998 to the 1999 model, including instrument cluster and door panels.",
+      "note": "Includes carryover tenth-generation candidates in 2004, not all 2004 trucks."
+    },
+    {
+      "id": 8001616, "make": "Ford", "model": "F150",
+      "startYear": 2006, "endYear": 2008,
+      "name": "2006 bumper / interior refresh", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(eleventh_generation)",
+      "locator": "2006 model-year section: refreshed bumper and fog lamps, revised seats and mid-cycle revisions.",
+      "note": "Refresh within the eleventh generation; optional equipment remains configuration-specific."
+    },
+    {
+      "id": 8001617, "make": "Ford", "model": "F150",
+      "startYear": 2013, "endYear": 2014,
+      "name": "2013 grille / equipment refresh", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(twelfth_generation)",
+      "locator": "Model history: MY2013 revised grille, lighting and interior equipment.",
+      "note": "Refresh within the twelfth generation; optional features are not asserted for every trim."
+    },
+    {
+      "id": 8001611, "make": "Ford", "model": "F150",
+      "startYear": 1975, "endYear": 1979,
+      "name": "Sixth F-Series generation / F-150 introduction", "kind": "generation",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(sixth_generation)",
+      "locator": "Model history: F-150 introduced for MY1975; generation ends MY1979.",
+      "note": "F-150 starts in 1975, not the earlier F-Series generation launch. Broad model-year scope."
+    },
+    {
+      "id": 8001612, "make": "Ford", "model": "F150",
+      "startYear": 1976, "endYear": 1977,
+      "name": "1976 grille facelift", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(sixth_generation)",
+      "locator": "1976–1977 section explicitly dates the split-grille facelift to model year 1976.",
+      "note": "Exterior refresh within the sixth generation, not a new generation."
+    },
+    {
+      "id": 8001613, "make": "Ford", "model": "F150",
+      "startYear": 1978, "endYear": 1979,
+      "name": "1978 front-end refresh", "kind": "refresh",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series_(sixth_generation)",
+      "locator": "1978–1979 section: revised single-piece grille and outboard headlamp housings.",
+      "note": "Broad exterior refresh; headlamp shape varied by trim in MY1978. Source section has citation limitations."
+    },
+    {
       "id": 8000001,
       "make": "Tesla",
       "model": "Model S",
@@ -814,13 +870,13 @@
       "id": 8001601,
       "make": "Ford",
       "model": "F150",
-      "startYear": 1984,
+      "startYear": 1980,
       "endYear": 1986,
       "name": "Seventh generation",
       "kind": "generation",
       "sourceUrl": "https://en.wikipedia.org/wiki/Ford_F-Series",
-      "locator": "F-Series generation sections; earliest matching U.S. F-150 catalog year is 1984.",
-      "note": "The F-Series generation began in 1980; this grouping starts at the catalog's first F-150 model year. Broad candidate, not exact build identification."
+      "locator": "Seventh-generation F-Series section, U.S. model years 1980–1986.",
+      "note": "Broad F-150 generation candidate, not exact build identification."
     },
     {
       "id": 8001602,

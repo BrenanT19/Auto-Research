@@ -290,6 +290,13 @@ function BrowsePage() {
   const selectedModelOptions = scoped.filter((option) =>
     (!browse.modelId || String(option.modelId) === browse.modelId) &&
     (!browse.modelKey || catalogModelKey(option) === browse.modelKey));
+  const modelNameMatch = (name: string) => name.toLocaleLowerCase().replace(/[-‐‑–]/g, "").trim();
+  const historicalAlternatives = (browse.modelKey || browse.modelId) &&
+    !selectedModelOptions.some(option => option.identityLevel === "model_year")
+    ? scoped.filter(option => option.identityLevel === "model_year" &&
+        selectedModelOptions.some(selected => selected.makeSlug === option.makeSlug &&
+          modelNameMatch(selected.model) === modelNameMatch(option.model)))
+    : [];
   const generationOptions = getBrowseGenerationOptions(selectedModelOptions);
   const generationFilterEnabled = isGenerationFilterEnabled({
     catalogReady,
@@ -353,6 +360,14 @@ function BrowsePage() {
       <label className="field-label">Order by<select value={browse.sort} onChange={event => updateFilters({ sort: event.target.value as BrowseFilters["sort"] })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label>
        {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={clearAllFilters} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Source-backed model/year entries have explicit provenance. Reviews, maintenance, specifications and other detailed research have not been added.</p></aside>
     <div className="results-area" ref={resultsAreaRef}>
+      {historicalAlternatives.length > 0 && <div className="catalog-coverage-note" role="status">
+        <p>You’re viewing exact trims, not the full model-year history. The historical catalog includes {Math.min(...historicalAlternatives.map(option => option.year))}–{Math.max(...historicalAlternatives.map(option => option.year))}.</p>
+        <button className="button secondary" onClick={() => updateFilters({
+          q: "", make: historicalAlternatives[0].makeSlug,
+          model: "", modelId: "", modelKey: catalogModelKey(historicalAlternatives[0]),
+          generationId: "", generationKey: "", year: "", trim: "", trimId: "", trimKey: "",
+        })}>Browse all cataloged model years <ArrowRight size={15}/></button>
+      </div>}
       {coverage.data && <p className="body-copy catalog-coverage-note">{coverage.data.profileCount.toLocaleString()} source-backed model/year profiles across all 13 target brands, spanning {coverage.data.earliestYear}–{coverage.data.latestYear}. EPA listings and reviewed supplemental sources provide identity coverage; pre-1978 coverage includes a limited classic supplement. Historical coverage and exact trims are not yet complete. 2027 listings may be preliminary.</p>}
       <div className="results-top"><span>{total.toLocaleString()} matching profiles{total > 0 ? ` · ${page * 24 + 1}–${Math.min((page + 1) * 24, total)} shown` : ""}</span><span className="mono">SORT: {browse.sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}

@@ -20,7 +20,7 @@ test("catalog publication fails closed outside an unpublished development server
 test("every reviewed model/year gets a unique sparse profile, not an invented configuration", () => {
   process.env.NODE_ENV = "development";
   const profiles = loadModelYearVehicles();
-  assert.equal(profiles.length, 4661);
+  assert.equal(profiles.length, 4670);
   assert.equal(new Set(profiles.map(profile => profile.id)).size, profiles.length);
   assert.equal(new Set(profiles.map(profile => profile.makeSlug)).size, 13);
   for (const profile of profiles) {

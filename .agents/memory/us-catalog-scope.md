@@ -7,6 +7,15 @@ The catalog target is **all U.S. model years** for Ford, Lincoln, Chevrolet,
 Buick, GMC, Cadillac, Chrysler, Dodge, Jeep, Ram, Tesla, Rivian, and Lucid.
 Verified batches are allowed; a recent-years-only catalog is not a substitute.
 
+The user reiterated that **every vehicle must reach its first model year and
+include every refresh year**. Do not ask again whether to continue that already
+authorized scope, or report a small batch as fulfilling it.
+
+**Why:** The user saw F-150 results stopping at 2021 after being told a batch was finished.
+
+**How to apply:** Verify shopper-visible historical reach, not just data-file
+membership; distinguish recent exact-trim subsets from the full nameplate history.
+
 **Why:** The user explicitly selected all U.S. model years and allowed verified
 batches, without authorizing a silent reduction of historical coverage.
 

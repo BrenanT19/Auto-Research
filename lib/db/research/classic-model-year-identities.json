@@ -1,5 +1,19 @@
 [
   {
+    "make": "Ford", "model": "F150", "ranges": [[1975, 1979]],
+    "sourceKey": "classic-ford-f150-sixth",
+    "url": "https://en.wikipedia.org/wiki/Ford_F-Series_(sixth_generation)",
+    "locator": "U.S. model history: MY1975 F-150 introduction, 1976–1977 and 1978–1979 sections; Models table explicitly identifies F150.",
+    "limitations": "F-150 nameplate only, beginning MY1975 rather than the F-Series MY1973 generation start. No earlier F-100 or non-U.S. production years are inferred."
+  },
+  {
+    "make": "Ford", "model": "F150", "ranges": [[1980, 1983]],
+    "sourceKey": "classic-ford-f150-seventh",
+    "url": "https://en.wikipedia.org/wiki/Ford_F-Series_(seventh_generation)",
+    "locator": "U.S. model-year history and design overview identify F-150 throughout 1980–1986; supplement supplies 1980–1983 before existing EPA F150 coverage.",
+    "limitations": "Model/year identity only. Separate combined EPA F100/F150 labels remain intact and are not treated as exact F-150 configurations."
+  },
+  {
     "make": "Ford", "model": "Mustang", "ranges": [[1965, 1977]],
     "url": "https://en.wikipedia.org/wiki/Ford_Mustang",
     "locator": "Model-years infobox: 1965–present; first-generation introduction explains that 1964½ production cars were advertised, VIN-coded and titled as MY1965. First and second generation descriptions establish continuous 1965–1977 model-year coverage.",

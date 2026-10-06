@@ -6,7 +6,7 @@ import { catalogEraKey, getCatalogBrowseEras } from "../../artifacts/api-server/
 import { loadModelYearVehicles, validateModelYearSelectors } from "../../artifacts/api-server/src/lib/model-year-catalog";
 import {
   buildVehicleListParams, clearBrowseFilters, getBrowseGenerationOptions,
-  hasInvalidBrowseSelection, isGenerationFilterEnabled,
+  hasInvalidBrowseSelection, isGenerationFilterEnabled, getBrowseSuggestions,
 } from "../../artifacts/auto-research/src/shopper-tools";
 
 process.env.NODE_ENV = "development";
@@ -59,6 +59,30 @@ test("Model S refreshes narrow years and transition years remain candidates in b
     assert.match(profile.generation, /transition/);
     assert.equal(getCatalogBrowseEras(profile).length, 2);
     assert.ok(profile.claims.slice(1).every(claim => claim.sources[0].url && claim.sources[0].locator));
+  }
+});
+
+test("F-150 spelling finds every catalog year from its 1975 introduction", () => {
+  const f150 = profiles.filter(v => v.make === "Ford" && v.model === "F150");
+  assert.deepEqual(f150.map(v => v.year).sort((a,b) => a-b),
+    Array.from({ length: 52 }, (_, i) => 1975 + i));
+  for (const q of ["Ford F-150", "Ford F150", "Ford F‑150"]) {
+    const found = loadModelYearVehicles({ q });
+    assert.ok(f150.every(v => found.some(row => row.id === v.id)), q);
+    assert.ok(getBrowseSuggestions(q, options).some(s => s.modelKey === f150[0].modelKey), q);
+  }
+  assert.ok(getCatalogBrowseEras(f150.find(v => v.year === 1976)!).some(e => e.kind === "refresh"));
+  assert.ok(getCatalogBrowseEras(f150.find(v => v.year === 1978)!).some(e => e.kind === "refresh"));
+  for (const year of [1982, 1999, 2006, 2013, 2018, 2024]) {
+    assert.ok(getCatalogBrowseEras(f150.find(v => v.year === year)!).some(e => e.kind === "refresh"), String(year));
+  }
+  const historical = options.find(v => v.make === "Ford" && v.model === "F150")!;
+  const recent = { ...historical, identityLevel: "configuration" as const,
+    model: "F-150", modelKey: "canonical:model:999", modelId: 999 };
+  for (const mixed of [[historical, recent], [recent, historical]]) {
+    const suggestions = getBrowseSuggestions("Ford F-150", mixed);
+    assert.equal(suggestions[0].modelKey, historical.modelKey);
+    assert.equal(suggestions.length, 1);
   }
 });
 

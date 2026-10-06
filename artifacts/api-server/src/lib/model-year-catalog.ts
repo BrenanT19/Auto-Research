@@ -128,7 +128,8 @@ export function validateModelYearSelectors(filters: CanonicalFilters): void {
 
 export function loadModelYearVehicles(filters: CanonicalFilters = {}): ModelYearVehicle[] {
   if (!catalogPreviewEnabled()) return [];
-  const query = filters.q?.trim().toLocaleLowerCase();
+  const normalizeSearch = (text: string) => text.toLocaleLowerCase().replace(/[-‐‑–]/g, "");
+  const query = filters.q?.trim() && normalizeSearch(filters.q.trim());
   return vehicles.filter(vehicle =>
     (!filters.vehicleId || vehicle.id === filters.vehicleId) &&
     (!filters.makeSlug || vehicle.makeSlug === filters.makeSlug) &&
@@ -139,7 +140,7 @@ export function loadModelYearVehicles(filters: CanonicalFilters = {}): ModelYear
     (!filters.generationKey || getCatalogBrowseEras(vehicle).some(era => catalogEraKey(era) === filters.generationKey)) &&
     !filters.trimKey && !filters.trim &&
     (!query || query.split(/\s+/).every(term =>
-      `${vehicle.make} ${vehicle.model} ${vehicle.year}`.toLocaleLowerCase().includes(term))),
+      normalizeSearch(`${vehicle.make} ${vehicle.model} ${vehicle.year}`).includes(term))),
   );
 }
 
