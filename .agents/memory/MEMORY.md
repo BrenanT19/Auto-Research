@@ -12,3 +12,4 @@
 - [Browser runtime constraints](browser-runtime-constraints.md) — prefer the installed Chromium wrapper; downloaded Playwright browsers may lack Linux runtime libraries.
 - [Generated Fetch typings](generated-fetch-typings.md) — generated clients using iterable Headers APIs need the DOM iterable library enabled in TypeScript.
 - [Dynamic OEM manuals](oem-manual-rendering.md) — text extraction can return navigation or fallback content; verify the selected chapter and model year in the rendered source.
+- [U.S. catalog scope](us-catalog-scope.md) — all U.S. model years for 13 target brands; verified batches must report remaining coverage and preserve archived demo relationships.

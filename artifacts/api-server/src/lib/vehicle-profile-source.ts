@@ -43,10 +43,10 @@ function disableCatalogReadsUntilRestart(): void {
  * attached. Exact-supported non-demo profiles stay excluded until an approved,
  * complete source can satisfy the existing shopper API contract.
  */
-export async function getLegacyFallbackTrimIds(): Promise<number[]> {
+export async function getLegacyFallbackTrimIds(excludedSlugs: ReadonlySet<string> = new Set()): Promise<number[]> {
   if (!usesCatalogProfileReads()) {
-    const trims = await db.select({ id: trimsTable.id }).from(trimsTable);
-    return trims.map(({ id }) => id);
+    const trims = await db.select({ id: trimsTable.id, slug: trimsTable.slug }).from(trimsTable);
+    return trims.filter((trim) => !excludedSlugs.has(trim.slug)).map(({ id }) => id);
   }
 
   let aliases: Array<{
@@ -75,8 +75,8 @@ export async function getLegacyFallbackTrimIds(): Promise<number[]> {
   } catch (error) {
     if (!isMissingAliasTable(error)) throw error;
     disableCatalogReadsUntilRestart();
-    const legacyTrims = await db.select({ id: trimsTable.id }).from(trimsTable);
-    return legacyTrims.map(({ id }) => id);
+    const legacyTrims = await db.select({ id: trimsTable.id, slug: trimsTable.slug }).from(trimsTable);
+    return legacyTrims.filter((trim) => !excludedSlugs.has(trim.slug)).map(({ id }) => id);
   }
 
   const aliasesByLegacyId = new Map<number, typeof aliases>();
@@ -92,6 +92,7 @@ export async function getLegacyFallbackTrimIds(): Promise<number[]> {
 
   return trims
     .filter((trim) => {
+      if (excludedSlugs.has(trim.slug)) return false;
       const matches = [
         ...(aliasesByLegacyId.get(trim.id) ?? []),
         ...(aliasesBySlug.has(trim.slug) ? [aliasesBySlug.get(trim.slug)!] : []),

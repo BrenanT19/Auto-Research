@@ -56,6 +56,11 @@ import {
 } from "../lib/canonical-vehicle-source";
 import { parseProfileKey } from "../lib/canonical-policy";
 import { getDevelopmentPreviewManifest } from "../lib/canonical-development-preview";
+import {
+  getEligibleReplacement,
+  getReplacementCandidate,
+  getRetiredDemoSlugs,
+} from "../lib/catalog-demo-retirement";
 
 const vehicleSelection = {
   id: trimsTable.slug,
@@ -387,13 +392,15 @@ async function loadVehicles(
     model: options.model,
     year: options.year,
     trim: options.trim,
-    vehicleId: options.vehicleId,
+    vehicleId: getReplacementCandidate(options.vehicleId)?.canonicalId ?? options.vehicleId,
     modelYearKey: modelYearKey?.namespace === "canonical" ? `canonical:model-year:${modelYearKey.id}` : undefined,
     modelKey: modelKey?.namespace === "canonical" ? `canonical:model:${modelKey.id}` : undefined,
     generationKey: generationKey?.namespace === "canonical" ? `canonical:generation:${generationKey.id}` : undefined,
     trimKey: trimKey?.namespace === "canonical" ? `canonical:trim:${trimKey.id}` : undefined,
   };
-  const canonical = selectedNamespace === "legacy" ? [] : await loadCanonicalVehicles(canonicalFilters, releases);
+  const loadedCanonical = selectedNamespace === "legacy" ? [] : await loadCanonicalVehicles(canonicalFilters, releases);
+  const canonical = getReplacementCandidate(options.vehicleId) &&
+    !getEligibleReplacement(options.vehicleId, loadedCanonical) ? [] : loadedCanonical;
   const legacy = selectedNamespace === "canonical" ? [] : await loadLegacyVehicles({
     ...options,
     modelId: modelKey?.namespace === "legacy" ? modelKey.id : options.modelId,
@@ -402,9 +409,19 @@ async function loadVehicles(
     trimId: trimKey?.namespace === "legacy" ? trimKey.id : options.trimId,
     vehicleId: options.vehicleId,
   });
+  let retired = getRetiredDemoSlugs(canonical);
+  if (!options.vehicleId && legacy.some((vehicle) =>
+    (getReplacementCandidate(vehicle.id) || vehicle.id === "buick-enclave-2024-preferred") &&
+    !retired.has(vehicle.id),
+  )) {
+    // A text search (e.g. "Preferred") or saved legacy selector can omit its
+    // replacement from the filtered result. Retirement depends on the complete
+    // eligible catalog, not on whether that replacement matched this query.
+    retired = getRetiredDemoSlugs(await loadCanonicalVehicles({}, releases));
+  }
   const combined = options.vehicleId
     ? canonical.length ? canonical : legacy
-    : [...legacy, ...canonical];
+    : [...legacy.filter((vehicle) => !retired.has(vehicle.id)), ...canonical];
   const sort = options.sort ?? "popular";
   const metric = (row: (typeof combined)[number]): number | null =>
     sort === "reliability" ? row.reliabilityEstimate :
@@ -437,6 +454,13 @@ const developmentPreviews = (options.developmentPreviews ?? [])
   .filter((entry) => !publicConfigurationIds.has(entry.configurationId));
 const previewConfigurationIds = new Set(developmentPreviews.map((entry) => entry.configurationId));
 const releases = [...publicReleases, ...developmentPreviews];
+async function getDiscoveryLegacyTrimIds(
+  eligible?: Awaited<ReturnType<typeof loadCanonicalVehicles>>,
+): Promise<number[]> {
+  return getLegacyFallbackTrimIds(getRetiredDemoSlugs(
+    eligible ?? await loadCanonicalVehicles({}, releases),
+  ));
+}
 const OWNER_EXPERIENCE_CONSENT_VERSION = "owner-experience-v1";
 const OWNER_EXPERIENCE_FIRSTHAND_TEXT =
   "I confirm this is my firsthand experience with the exact configuration selected.";
@@ -519,7 +543,8 @@ function serializeVehicleList(
 }
 
 router.get("/makes", async (_req, res): Promise<void> => {
-  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const canonical = await loadCanonicalVehicles({}, releases);
+  const fallbackTrimIds = await getDiscoveryLegacyTrimIds(canonical);
   const visibleVehicleCount = count(
     sql`CASE WHEN ${inArray(trimsTable.id, fallbackTrimIds)} THEN ${trimsTable.id} END`,
   );
@@ -539,7 +564,6 @@ router.get("/makes", async (_req, res): Promise<void> => {
     .groupBy(makesTable.id)
     .orderBy(asc(makesTable.name));
 
-  const canonical = await loadCanonicalVehicles({}, releases);
   const canonicalMakes = new Map<string, { id: number; name: string; slug: string; mark: string; vehicleCount: number; makeKey: string; profileKind: "canonical" }>();
   for (const vehicle of canonical) {
     const item = canonicalMakes.get(vehicle.makeKey);
@@ -564,7 +588,8 @@ router.get("/makes", async (_req, res): Promise<void> => {
 });
 
 router.get("/catalog/options", async (_req, res): Promise<void> => {
-  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const canonical = await loadCanonicalVehicles({}, releases);
+  const fallbackTrimIds = await getDiscoveryLegacyTrimIds(canonical);
   const queriedOptions = await db
     .select({
       profileId: trimsTable.slug,
@@ -601,7 +626,6 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
     trimKey: `legacy:trim:${option.trimId}`,
     profileKind: "legacy" as const,
   }));
-  const canonical = await loadCanonicalVehicles({}, releases);
   const canonicalOptions = canonical.map((option) => ({
     profileId: option.id,
     canonicalConfigurationId: option.canonicalConfigurationId,
@@ -633,7 +657,7 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     return;
   }
 
-  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const fallbackTrimIds = await getDiscoveryLegacyTrimIds();
   const [make] = await db
     .select({
       id: makesTable.id,
@@ -669,7 +693,7 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
         makeKey: canonicalMake.makeKey,
         profileKind: "canonical",
       },
-      description: "",
+      description: `${canonicalMake.make} U.S. catalog: ${canonical.length} source-backed vehicle identities. Optional research is not inferred from vehicle identity.`,
       vehicles: serializeVehicleList(canonical),
     });
     return;
@@ -681,9 +705,12 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     vehicleCount: make.vehicleCount + canonical.length,
   };
   const vehicles = await loadVehicles({ makeSlug: make.slug, limit: 100 }, releases);
+  const demoCount = vehicles.filter((vehicle) => vehicle.isDemo).length;
   res.json({
       make: combinedMake,
-      description: `${make.name} sample vehicle profiles for ownership research. All figures and problem descriptions in this demo are illustrative, not verified manufacturer or reliability data.`,
+      description: canonical.length === 0
+        ? `${make.name} sample vehicle profiles for ownership research. All figures and problem descriptions in this demo are illustrative, not verified manufacturer or reliability data.`
+        : `${make.name} U.S. catalog: ${canonical.length} source-backed vehicle identities${demoCount ? ` and ${demoCount} separately labeled illustrative demo profiles` : ""}. Optional research is not inferred from vehicle identity.`,
       vehicles: serializeVehicleList(vehicles),
   });
 });
@@ -804,8 +831,19 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     return;
   }
 
-  let reportFilter: SQL | undefined;
-  if (usesCatalogProfileReads()) {
+  const replacementCandidate = getReplacementCandidate(parsed.data.vehicleId);
+  const loadedProfiles = await loadCanonicalVehicles(
+    parsed.data.vehicleId
+      ? { vehicleId: replacementCandidate?.canonicalId ?? parsed.data.vehicleId }
+      : {},
+    releases,
+  );
+  const replacement = getEligibleReplacement(parsed.data.vehicleId, loadedProfiles);
+  const canonicalProfiles = replacementCandidate && !replacement ? [] : loadedProfiles;
+  // A saved demo slug may now display an exact real trim identity, but its
+  // illustrative owner reports must never be attached to that real profile.
+  let reportFilter: SQL | undefined = replacement ? sql`false` : undefined;
+  if (!replacement && usesCatalogProfileReads()) {
     if (parsed.data.vehicleId) {
       const legacyTrimId = await resolveLegacyFallbackTrimId(parsed.data.vehicleId);
       reportFilter =
@@ -815,10 +853,10 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     } else {
       reportFilter = inArray(
         ownerReportsTable.trimId,
-        await getLegacyFallbackTrimIds(),
+        await getDiscoveryLegacyTrimIds(),
       );
     }
-  } else if (parsed.data.vehicleId) {
+  } else if (!replacement && parsed.data.vehicleId) {
     reportFilter = eq(trimsTable.slug, parsed.data.vehicleId);
   }
 
@@ -850,10 +888,6 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
 
   const publicSlugs = await getLegacyPublicSlugs(
     reports.map((report) => report.trimDbId),
-  );
-  const canonicalProfiles = await loadCanonicalVehicles(
-    parsed.data.vehicleId ? { vehicleId: parsed.data.vehicleId } : {},
-    releases,
   );
   const canonicalReports = canonicalProfiles.flatMap((profile) => profile.ownerReports);
   res.json(
@@ -952,7 +986,8 @@ router.post("/owner-submissions", async (req, res): Promise<void> => {
 });
 
 router.get("/discovery/stats", async (_req, res): Promise<void> => {
-  const fallbackTrimIds = await getLegacyFallbackTrimIds();
+  const eligible = await loadCanonicalVehicles({}, releases);
+  const fallbackTrimIds = await getDiscoveryLegacyTrimIds(eligible);
   const [makeStats, vehicleStats, reportStats, canonicalVehicles] = await Promise.all([
     usesCatalogProfileReads()
       ? db.select({ value: count() }).from(consumerBrandsTable)
@@ -962,13 +997,15 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
       .select({ value: count() })
       .from(ownerReportsTable)
       .where(and(eq(ownerReportsTable.isDemo, true), inArray(ownerReportsTable.trimId, fallbackTrimIds))),
-    loadCanonicalVehicles({}, releases),
+    Promise.resolve(eligible),
   ]);
   const stats = {
     makeCount: makeStats[0]?.value ?? 0,
     vehicleCount: (vehicleStats[0]?.value ?? 0) + canonicalVehicles.length,
     reportCount: (reportStats[0]?.value ?? 0) + canonicalVehicles.reduce((total, vehicle) => total + vehicle.ownerReports.length, 0),
-    demoLabel: "Illustrative demo catalog",
+    demoLabel: canonicalVehicles.length
+      ? `Development catalog: ${canonicalVehicles.length} source-backed identities and ${fallbackTrimIds.length} illustrative demo profiles`
+      : "Illustrative demo catalog",
   };
   res.json(GetDiscoveryStatsResponse.parse(stats));
 });

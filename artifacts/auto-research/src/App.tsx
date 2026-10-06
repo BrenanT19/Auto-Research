@@ -278,9 +278,11 @@ function BrowsePage() {
 
   const makeOptions = [...new Map(catalog.map((option) => [option.makeSlug, { slug: option.makeSlug, name: option.make }])).values()];
   const scoped = catalog.filter((option) => !browse.make || option.makeSlug === browse.make);
+  const realModelNames = new Set(scoped.filter((option) => option.profileKind === "canonical").map((option) => option.model));
   const modelOptions = [...new Map(scoped.map((option) => {
     const key = catalogModelKey(option);
-    return [key, { value: option.profileKind === "canonical" ? key : String(option.modelId), name: option.model }];
+    const name = option.profileKind !== "canonical" && realModelNames.has(option.model) ? `${option.model} (Demo)` : option.model;
+    return [key, { value: option.profileKind === "canonical" ? key : String(option.modelId), name }];
   })).values()];
   const selectedModelOptions = scoped.filter((option) =>
     (!browse.modelId || String(option.modelId) === browse.modelId) &&
