@@ -125,7 +125,8 @@ export type CanonicalCalculatorAssumptions = {
 };
 
 export function isEnteredCalculatorValue(value: string): boolean {
-  return value.trim() !== "" && Number.isFinite(Number(value));
+  const parsed = Number(value);
+  return value.trim() !== "" && Number.isFinite(parsed) && parsed >= 0;
 }
 
 export function missingCanonicalFinancingInputs(assumptions: CanonicalCalculatorAssumptions): string[] {
@@ -461,12 +462,42 @@ export type OwnershipDraft = {
   [Field in Exclude<keyof OwnershipInputs, "term" | "vehicleIsElectric">]: string;
 };
 
+/** Convert the shopper-facing ¢/kWh input to the $/kWh used by calculations. */
+export function centsPerKwhToDollars(value: number): number {
+  return Number.isFinite(value) && value >= 0 ? value / 100 : 0;
+}
+
+export type MonthlyOwnershipCost = {
+  label: string;
+  monthlyAmount: number | null;
+};
+
+/** Sum only calculations that are actually available; zero is an included result. */
+export function summarizeMonthlyOwnershipCosts(costs: readonly MonthlyOwnershipCost[]) {
+  const included = costs.filter(({ monthlyAmount }) =>
+    monthlyAmount !== null && Number.isFinite(monthlyAmount) && monthlyAmount >= 0,
+  );
+  const excluded = costs.filter(({ monthlyAmount }) =>
+    monthlyAmount === null || !Number.isFinite(monthlyAmount) || monthlyAmount < 0,
+  );
+  return {
+    total: included.length
+      ? included.reduce((sum, cost) => sum + cost.monthlyAmount!, 0)
+      : null,
+    includedLabels: included.map(({ label }) => label),
+    excludedLabels: excluded.map(({ label }) => label),
+    isPartial: included.length > 0 && excluded.length > 0,
+    isComplete: included.length > 0 && excluded.length === 0,
+  };
+}
+
 export function parseCalculatorNumber(value: string): number {
   const number = Number(value);
   return Number.isFinite(number) ? Math.max(0, number) : 0;
 }
 
 export function normalizeCalculatorNumber(value: string): string {
+  if (value.trim() === "") return "";
   return String(parseCalculatorNumber(value));
 }
 
@@ -479,7 +510,7 @@ export function readOwnershipDraft(draft: OwnershipDraft) {
     miles: parseCalculatorNumber(draft.miles),
     mpg: parseCalculatorNumber(draft.mpg),
     gas: parseCalculatorNumber(draft.gas),
-    electricity: parseCalculatorNumber(draft.electricity),
+    electricity: centsPerKwhToDollars(parseCalculatorNumber(draft.electricity)),
     insurance: parseCalculatorNumber(draft.insurance),
     maintenance: parseCalculatorNumber(draft.maintenance),
     repairs: parseCalculatorNumber(draft.repairs),

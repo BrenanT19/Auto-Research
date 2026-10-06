@@ -1,0 +1,40 @@
+Since you want to keep costs down, I wouldn't start another big vehicle-data task yet. The best next prompt is the two calculator fixes you already found, because they're concrete user-facing problems and should be much cheaper than another research pass.
+Once Replit isn't running another task, use Build mode and paste:
+Focused Calculator Fix — Electricity Units + Partial Estimates
+Make only these two fixes to the existing AutoResearch Ownership Calculator. Keep this task tightly scoped to minimize unnecessary work. Do not redesign the calculator or start unrelated tasks.
+1. Electricity price input
+Change electricity pricing from dollars per kWh to cents per kWh (¢/kWh) in the user interface.
+Examples:
+- 15 = 15¢/kWh = $0.15/kWh internally
+- 32 = 32¢/kWh = $0.32/kWh internally
+- 45.5 = 45.5¢/kWh = $0.455/kWh internally
+Gasoline must remain $/gal, such as $5.50/gal.
+Update the label, unit, helper text, defaults, validation and calculations. Test against a known example:
+32¢/kWh × 50 kWh = $16.00
+Ensure there is no 100× conversion error.
+2. Allow useful calculations when some fields are blank
+Remove the behavior where the calculator broadly displays “Enter remaining assumptions” just because some inputs are missing.
+Use progressive calculations instead. Each calculator section should calculate whenever the inputs required for that particular calculation are available.
+Examples:
+- Financing/payment calculations should work without energy inputs.
+- Purchase/tax/fee calculations should work without annual mileage.
+- Fuel cost should calculate when mileage + MPG + fuel price are available.
+- Electricity cost should calculate when mileage + the required efficiency value + electricity price are available.
+- A missing maintenance or energy assumption must not suppress unrelated valid results.
+Never interpret a blank field as zero. Preserve the distinction between blank/missing, an actual user-entered 0, and unavailable/not calculated.
+If a calculation cannot be performed, show a short message only for that affected result, such as:
+Add annual mileage to estimate energy cost.
+Do not replace otherwise calculable results with a generic incomplete-form message.
+If a total excludes missing components, clearly label it as a partial estimate and identify that some components are not included. Never make a partial total look like a complete ownership-cost estimate.
+Preserve all existing financing, taxes, fees, amortization, purchase breakdown, print/disclosure, gasoline, EV and other working calculator behavior.
+Run focused tests for:
+- gasoline calculations
+- EV calculations
+- cents/kWh conversion
+- partially completed forms
+- blank versus zero inputs
+- partial-total labeling
+- existing calculator regressions
+STOP after these two issues are fixed and tested.
+Do not start vehicle research, Vehicle #2, migrations, CI/recovery improvements, owner submissions, UI redesign, or any automatically suggested follow-up task.
+Give me a concise completion report with what changed and the tests that passed.
