@@ -7,6 +7,7 @@ import {
   buildComparisonLocation,
   buildCanonicalCalculatorPrefill,
   buildVehicleListParams,
+  centsPerKwhToDollars,
   calculateOwnershipEstimate,
   catalogGenerationKey,
   catalogModelKey,
@@ -36,6 +37,7 @@ import {
   researchStateLabel,
   resetUneditedCalculatorDraft,
   resolveBrowseFilters,
+  summarizeMonthlyOwnershipCosts,
   safeCitationUrl,
 } from "../src/shopper-tools.ts";
 import type { CatalogOption, OwnershipDraft } from "../src/shopper-tools.ts";
@@ -376,10 +378,51 @@ test("calculator keeps zero-APR gas and EV electricity estimates finite and corr
   assert.ok(Math.abs(evEstimate.annual - 9_650.360655737705) < 1e-9);
 });
 
+test("electricity drafts use cents per kWh without a 100x conversion error", () => {
+  for (const [cents, dollars] of [[15, 0.15], [32, 0.32], [45.5, 0.455]]) {
+    assert.equal(centsPerKwhToDollars(cents), dollars);
+  }
+  const draft: OwnershipDraft = {
+    price: "", down: "", apr: "", miles: "600", mpg: "33.7",
+    gas: "", electricity: "32", insurance: "", maintenance: "", repairs: "",
+  };
+  const values = readOwnershipDraft(draft);
+  assert.equal(values.electricity, 0.32);
+  assert.equal(50 * values.electricity, 16, "50 kWh at 32¢/kWh costs $16");
+  const monthlyElectricity = calculateOwnershipEstimate({
+    ...values, term: 60, vehicleIsElectric: true,
+  });
+  assert.ok(Math.abs(monthlyElectricity.fuel - 16) < 1e-9);
+});
+
+test("partial monthly estimates sum available costs and preserve zero versus blank", () => {
+  const partial = summarizeMonthlyOwnershipCosts([
+    { label: "Loan payment", monthlyAmount: 450 },
+    { label: "Fuel cost", monthlyAmount: null },
+    { label: "Insurance", monthlyAmount: 0 },
+    { label: "Maintenance", monthlyAmount: null },
+    { label: "Repair reserve", monthlyAmount: 55 },
+  ]);
+  assert.equal(partial.total, 505);
+  assert.deepEqual(partial.includedLabels, ["Loan payment", "Insurance", "Repair reserve"]);
+  assert.deepEqual(partial.excludedLabels, ["Fuel cost", "Maintenance"]);
+  assert.equal(partial.isPartial, true);
+  assert.equal(partial.isComplete, false);
+
+  const explicitZero = summarizeMonthlyOwnershipCosts([
+    { label: "Fuel cost", monthlyAmount: 0 },
+  ]);
+  assert.equal(explicitZero.total, 0);
+  assert.equal(explicitZero.isComplete, true);
+  assert.equal(summarizeMonthlyOwnershipCosts([
+    { label: "Fuel cost", monthlyAmount: null },
+  ]).total, null);
+});
+
 test("calculator drafts allow blank editing without mutating the visible value", () => {
   const draft: OwnershipDraft = {
     price: "32000", down: "5000", apr: "6.4", miles: "12000", mpg: "28",
-    gas: "3.65", electricity: "0.16", insurance: "145", maintenance: "110", repairs: "55",
+    gas: "3.65", electricity: "16", insurance: "145", maintenance: "110", repairs: "55",
   };
   for (const field of Object.keys(draft) as Array<keyof OwnershipDraft>) {
     const editing = { ...draft, [field]: "" };
@@ -391,12 +434,15 @@ test("calculator drafts allow blank editing without mutating the visible value",
       assert.ok(Number.isFinite(estimate.monthly));
       assert.ok(Number.isFinite(estimate.annual));
     }
-    assert.equal(readOwnershipDraft({ ...editing, [field]: "500" })[field], 500);
+    assert.equal(
+      readOwnershipDraft({ ...editing, [field]: "500" })[field],
+      field === "electricity" ? 5 : 500,
+    );
   }
 });
 
 test("calculator normalizes numeric drafts only on blur and keeps decimals valid", () => {
-  assert.equal(normalizeCalculatorNumber(""), "0");
+  assert.equal(normalizeCalculatorNumber(""), "");
   assert.equal(normalizeCalculatorNumber("0500"), "500");
   assert.equal(normalizeCalculatorNumber("3.65"), "3.65");
   assert.equal(parseCalculatorNumber("0"), 0);
@@ -729,16 +775,17 @@ test("canonical calculator readiness distinguishes blank assumptions from explic
   assert.deepEqual(missingCanonicalOwnershipInputs(completed), []);
   assert.equal(isEnteredCalculatorValue("0"), true);
   assert.equal(isEnteredCalculatorValue(""), false);
+  assert.equal(isEnteredCalculatorValue("-0.01"), false);
 });
 
 test("profile-sourced calculator values reset on vehicle change while shopper edits remain", () => {
   const draft: OwnershipDraft = {
     price: "41000", down: "5000", apr: "6", miles: "12000", mpg: "31", gas: "3.50",
-    electricity: "0.15", insurance: "200", maintenance: "100", repairs: "150",
+    electricity: "15", insurance: "200", maintenance: "100", repairs: "150",
   };
   const defaults: OwnershipDraft = {
     price: "32000", down: "5000", apr: "6.4", miles: "12000", mpg: "28", gas: "3.65",
-    electricity: "0.16", insurance: "145", maintenance: "110", repairs: "55",
+    electricity: "16", insurance: "145", maintenance: "110", repairs: "55",
   };
   assert.deepEqual(resetUneditedCalculatorDraft(draft, defaults, { price: true, down: true }), {
     ...defaults,

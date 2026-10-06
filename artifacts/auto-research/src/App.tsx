@@ -9,7 +9,7 @@ import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } f
 import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience } from '@workspace/api-client-react';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
-import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, homeTrendEvidence, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, missingCanonicalOwnershipInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters, researchStateLabel } from './shopper-tools';
+import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, homeTrendEvidence, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters, researchStateLabel, summarizeMonthlyOwnershipCosts } from './shopper-tools';
 import type { BrowseFilters, BrowseSuggestion, OwnershipDraft, ReportSectionId, ResearchFieldState } from './shopper-tools';
 import { calculateFinancingEstimate } from './financing';
 import { STATE_TAX_ESTIMATES } from './state-tax-estimates';
@@ -478,7 +478,7 @@ function CalculatorPage() {
   const vehicle = useGetVehicle(vehicleId, { query: optionalVehicleQueryOptions(vehicleId, getGetVehicleQueryKey(vehicleId)) });
   const defaults: OwnershipDraft = {
     price: '32000', down: '5000', apr: '6.4', miles: '12000', mpg: '28',
-    gas: '3.65', electricity: '0.16', insurance: '145', maintenance: '110', repairs: '55',
+    gas: '3.65', electricity: '16', insurance: '145', maintenance: '110', repairs: '55',
   };
   const [draft, setDraft] = useState<OwnershipDraft>({
     ...defaults,
@@ -529,15 +529,34 @@ function CalculatorPage() {
   const vehicleIsElectric = Boolean(vehicleId) && energyBasisSelected && economyUnit(calculationEnergyBasis || "") === "MPGe";
   const financing = calculateFinancingEstimate({ price: numbers.price, down: numbers.down, apr: numbers.apr, term, salesTaxRate: parseCalculatorNumber(displayTaxRate), dealerFees: parseCalculatorNumber(displayDealerFees), taxesAndFeesPayment: taxMode });
   const { fuel } = calculateOwnershipEstimate({ ...numbers, mpg: energyBasisSelected ? numbers.mpg : 0, price: financing.amountFinanced, down: 0, term, vehicleIsElectric });
-  const canonicalAssumptions = { draft: displayDraft, taxRate: displayTaxRate, dealerFees: displayDealerFees, fuelType: calculationEnergyBasis };
-  const missingFinance = missingCanonicalFinancingInputs(canonicalAssumptions);
-  const missingOwnership = missingCanonicalOwnershipInputs(canonicalAssumptions);
-  const financingReady = !canonicalCalculatorMode || missingFinance.length === 0;
-  const ownershipReady = !canonicalCalculatorMode || missingOwnership.length === 0;
-  const fuelInputsReady = energyBasisSelected && isEnteredCalculatorValue(displayDraft.miles) && isEnteredCalculatorValue(displayDraft.mpg) &&
+  const calculatorAssumptions = { draft: displayDraft, taxRate: displayTaxRate, dealerFees: displayDealerFees, fuelType: calculationEnergyBasis };
+  const missingFinance = missingCanonicalFinancingInputs(calculatorAssumptions);
+  const financingReady = missingFinance.length === 0;
+  const fuelInputsReady = energyBasisSelected && isEnteredCalculatorValue(displayDraft.miles) &&
+    isEnteredCalculatorValue(displayDraft.mpg) && numbers.mpg > 0 &&
     (vehicleIsElectric ? isEnteredCalculatorValue(displayDraft.electricity) : isEnteredCalculatorValue(displayDraft.gas));
   const payment = financing.monthlyLoanPayment;
-  const monthly = payment + fuel + insurance + maintenance + repairs;
+  const energyLabel = vehicleIsElectric ? "Electricity cost" : "Fuel cost";
+  const energyMissingMessage = !energyBasisSelected
+    ? "Choose an energy basis to estimate energy cost."
+    : !isEnteredCalculatorValue(displayDraft.miles)
+      ? "Add annual mileage to estimate energy cost."
+      : !isEnteredCalculatorValue(displayDraft.mpg)
+        ? "Add combined fuel economy to estimate energy cost."
+        : numbers.mpg === 0
+          ? "Enter fuel economy greater than 0 to estimate energy cost."
+          : vehicleIsElectric
+            ? "Add electricity price to estimate energy cost."
+            : "Add fuel price to estimate energy cost.";
+  const monthlyCosts = summarizeMonthlyOwnershipCosts([
+    { label: "Loan payment", monthlyAmount: financingReady ? payment : null },
+    { label: energyLabel, monthlyAmount: fuelInputsReady ? fuel : null },
+    { label: "Insurance", monthlyAmount: isEnteredCalculatorValue(displayDraft.insurance) ? insurance : null },
+    { label: "Maintenance", monthlyAmount: isEnteredCalculatorValue(displayDraft.maintenance) ? maintenance : null },
+    { label: "Repair reserve", monthlyAmount: isEnteredCalculatorValue(displayDraft.repairs) ? repairs : null },
+  ]);
+  const hasMonthlyEstimate = monthlyCosts.total !== null;
+  const monthly = monthlyCosts.total ?? 0;
   const chooseState = (code: string) => { setStateCode(code); setTaxRateEdited(Boolean(code)); setTaxRate(code ? String(STATE_TAX_ESTIMATES.find(x => x.code === code)?.rate ?? 0) : canonicalCalculatorMode ? "" : "0"); };
   const currency = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
   const setField = (field: keyof OwnershipDraft) => (value: string) => {
@@ -562,10 +581,20 @@ function CalculatorPage() {
   const canonicalPrefill = canonical && vehicleProfile
     ? mergeCanonicalCalculatorPrefill(vehicleProfile, draft, canonicalPrefillFields)
     : undefined;
-  const displayedMonthly = ownershipReady ? currency(monthly) : "Enter remaining assumptions";
-  const monthlyLine = (field: keyof OwnershipDraft, value: number) =>
-    !canonicalCalculatorMode || isEnteredCalculatorValue(displayDraft[field]) ? currency(value) : "—";
-  const fuelLine = !canonicalCalculatorMode || fuelInputsReady ? currency(fuel) : "—";
+  const displayedMonthly = hasMonthlyEstimate ? currency(monthly) : "Not calculated";
+  const monthlyLine = (field: keyof OwnershipDraft, value: number, label: string) =>
+    isEnteredCalculatorValue(displayDraft[field]) ? currency(value) : `Add monthly ${label}.`;
+  const paymentLine = financingReady
+    ? currency(payment)
+    : `Add ${missingFinance.join(", ")} to calculate loan payment.`;
+  const energyLine = fuelInputsReady ? currency(fuel) : energyMissingMessage;
+  const resultLines: Array<[string, string]> = [
+    ["Loan payment", paymentLine],
+    [energyLabel, energyLine],
+    ["Insurance", monthlyLine("insurance", insurance, "insurance")],
+    ["Maintenance", monthlyLine("maintenance", maintenance, "maintenance")],
+    ["Repair reserve", monthlyLine("repairs", repairs, "repairs reserve")],
+  ];
   const prefillCanonical = () => {
     const profile = vehicleProfile;
     if (!profile || !canonical) return;
@@ -599,17 +628,28 @@ function CalculatorPage() {
       <section className="calc-group"><span className="eyebrow">01 / FINANCING</span><h2 className="serif">Purchase assumptions</h2><div className="input-grid"><NumberField label="Vehicle price" value={displayDraft.price} set={setField('price')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Down payment" value={displayDraft.down} set={setField('down')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="APR" value={displayDraft.apr} set={setField('apr')} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Loan term<select value={term} onChange={e => setTerm(Number(e.target.value))}><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></label><label className="field-label">State (for sales tax estimate)<select aria-label="State" data-testid="select-state" value={stateCode} onChange={e => chooseState(e.target.value)}><option value="">Select a state</option>{STATE_TAX_ESTIMATES.map(x => <option key={x.code} value={x.code}>{x.name}</option>)}</select></label><NumberField label="Estimated sales tax rate (editable)" value={displayTaxRate} set={setTaxRateField} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Estimated dealer fees" value={displayDealerFees} set={setDealerFeesField} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/></div>
         <p className="field-hint">Prototype state-level estimates, not official. Local taxes, trade-ins, exemptions and registration location change the real rate. Dealer fees vary by dealer.</p>
         <fieldset className="segmented" data-testid="group-taxes-fees"><legend>Taxes &amp; fees payment</legend><button type="button" className={taxMode === 'financed' ? 'on' : ''} aria-pressed={taxMode === 'financed'} onClick={() => setTaxMode('financed')}>Include taxes &amp; fees in loan</button><button type="button" className={taxMode === 'upfront' ? 'on' : ''} aria-pressed={taxMode === 'upfront'} onClick={() => setTaxMode('upfront')}>Pay taxes &amp; fees upfront</button></fieldset>
-         {financingReady ? <PurchaseBreakdown f={financing}/> : <p className="field-hint" role="status">Enter the remaining financing assumptions: {missingFinance.join(", ")}.</p>}</section>
+         {financingReady ? <PurchaseBreakdown f={financing}/> : <p className="field-hint" role="status">Add {missingFinance.join(", ")} to calculate the purchase breakdown.</p>}</section>
       <section className="calc-group"><span className="eyebrow">02 / YOUR DRIVING</span><h2 className="serif">Fuel assumptions</h2><div className="input-grid">
         {canonicalCalculatorMode && !fuelTypeKnown && <label className="field-label">Your energy basis<select aria-label="Your energy basis" value={shopperEnergyBasis} onChange={event => setShopperEnergyBasis(event.target.value)}><option value="">Choose an assumption</option><option value="gasoline">Fuel (MPG)</option><option value="electric">Electricity (MPGe)</option></select><small>This is your calculation assumption, not a researched vehicle fact.</small></label>}
         <NumberField label="Miles driven per year" value={displayDraft.miles} set={setField('miles')} suffix="mi" normalizeOnBlur={!canonicalCalculatorMode}/>
         <NumberField label={canonicalCalculatorMode && !energyBasisSelected ? "Combined fuel economy (unit unknown)" : "Combined fuel economy"} value={displayDraft.mpg} set={setField('mpg')} suffix={canonicalCalculatorMode && !energyBasisSelected ? undefined : vehicleIsElectric ? 'MPGe' : 'mpg'} normalizeOnBlur={!canonicalCalculatorMode}/>
         {canonicalCalculatorMode && !fuelTypeKnown && <CanonicalEvidence state={vehicleProfile?.fieldStates?.fuelType} claims={vehicleProfile?.claims}/>}
-        {energyBasisSelected && (vehicleIsElectric ? <NumberField label="Electricity price" value={displayDraft.electricity} set={setField('electricity')} prefix="$" suffix="/ kWh" normalizeOnBlur={!canonicalCalculatorMode}/> : <NumberField label="Fuel price" value={displayDraft.gas} set={setField('gas')} prefix="$" suffix="/ gal" normalizeOnBlur={!canonicalCalculatorMode}/>)}
-      </div></section>
+        {energyBasisSelected && (vehicleIsElectric ? <NumberField label="Electricity price" value={displayDraft.electricity} set={setField('electricity')} suffix="¢/kWh" normalizeOnBlur={!canonicalCalculatorMode}/> : <NumberField label="Fuel price" value={displayDraft.gas} set={setField('gas')} prefix="$" suffix="/ gal" normalizeOnBlur={!canonicalCalculatorMode}/>)}
+      </div>{energyBasisSelected && vehicleIsElectric && <p className="field-hint">Enter cents per kilowatt-hour. For example, 32¢/kWh is $0.32/kWh.</p>}</section>
       <section className="calc-group"><span className="eyebrow">03 / ONGOING COSTS</span><h2 className="serif">What you set aside monthly</h2><div className="input-grid"><NumberField label="Insurance" value={displayDraft.insurance} set={setField('insurance')} prefix="$" suffix="/ mo" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Maintenance" value={displayDraft.maintenance} set={setField('maintenance')} prefix="$" suffix="/ mo" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Repairs reserve" value={displayDraft.repairs} set={setField('repairs')} prefix="$" suffix="/ mo" normalizeOnBlur={!canonicalCalculatorMode}/></div></section>
-      {financingReady ? <FinancingAnalysis f={financing}/> : <div className="calc-group" role="status">Financing analysis will appear after the required financing assumptions are entered.</div>}
-    </div><aside className="calc-result"><span className="eyebrow">ESTIMATED MONTHLY OWNERSHIP{canonicalCalculatorMode ? "" : " · DEMO"}</span><strong className="serif">{displayedMonthly}{ownershipReady && <small>/ month</small>}</strong><div className="annual-total">{ownershipReady ? currency(monthly * 12) : "—"} <span>{ownershipReady ? "per year" : ""}</span></div><div className="result-breakdown">{[['Loan payment', financingReady ? currency(payment) : "—"], ['Fuel', fuelLine], ['Insurance', monthlyLine('insurance', insurance)], ['Maintenance', monthlyLine('maintenance', maintenance)], ['Repair reserve', monthlyLine('repairs', repairs)]].map(([name, value]) => <div key={name as string}><span>{name}</span><b>{value as string}</b></div>)}</div>{ownershipReady ? <div className="result-bar" aria-label="Estimated monthly costs"><i style={{ width: `${monthly ? payment / monthly * 100 : 0}%` }}/><i style={{ width: `${monthly ? fuel / monthly * 100 : 0}%` }}/><i style={{ width: `${monthly ? insurance / monthly * 100 : 0}%` }}/><i style={{ width: `${monthly ? (maintenance + repairs) / monthly * 100 : 0}%` }}/></div> : null}{canonicalCalculatorMode && !ownershipReady && <small className="calc-demo-note" role="status">Complete remaining assumptions: {missingOwnership.join(", ")}.</small>}{canonicalCalculatorMode && ownershipReady && <small className="calc-demo-note">Only entered inputs and known profile values you explicitly selected are included.</small>}{!canonicalCalculatorMode && <small className="calc-demo-note">Demo estimate using your inputs and prototype tax rates. Not a quote or offer.</small>}<small className="calc-disclaimer">{canonicalCalculatorMode ? "Financing uses a standard fixed-rate amortization formula. Sales tax and dealer fees use the assumptions entered above and are not official figures. Registration fees and depreciation are not included. Verify final figures with the dealer, lender, DMV or tax authority, and other appropriate sources." : "Financing uses a standard fixed-rate amortization formula. Sales tax (prototype state estimates, not official data) and dealer fees are estimates. Registration fees and depreciation are not included. Actual taxes, registration costs, dealer charges, lender terms, insurance, maintenance and other ownership costs may differ. Verify final figures with the dealer, lender, DMV or tax authority, and other appropriate sources."}</small><button className="button light full" onClick={() => window.print()}>Print this estimate <ArrowUpRight size={15}/></button></aside></div>
+      {financingReady ? <FinancingAnalysis f={financing}/> : <div className="calc-group" role="status">Add {missingFinance.join(", ")} to view loan analysis.</div>}
+    </div><aside className="calc-result">
+      <span className="eyebrow">{monthlyCosts.isPartial ? "PARTIAL MONTHLY ESTIMATE" : hasMonthlyEstimate ? "ESTIMATED MONTHLY OWNERSHIP" : "MONTHLY OWNERSHIP ESTIMATE"}{canonicalCalculatorMode ? "" : " · DEMO"}</span>
+      <strong className="serif">{displayedMonthly}{hasMonthlyEstimate && <small>/ month</small>}</strong>
+      <div className="annual-total">{hasMonthlyEstimate ? currency(monthly * 12) : "—"} <span>{hasMonthlyEstimate ? monthlyCosts.isPartial ? "partial per year" : "per year" : ""}</span></div>
+      <div className="result-breakdown">{resultLines.map(([name, value]) => <div key={name}><span>{name}</span><b>{value}</b></div>)}</div>
+      {hasMonthlyEstimate && monthly > 0 && <div className="result-bar" aria-label={monthlyCosts.isPartial ? "Partial estimate breakdown" : "Estimated monthly costs"}><i style={{ width: `${payment / monthly * 100}%` }}/><i style={{ width: `${fuel / monthly * 100}%` }}/><i style={{ width: `${insurance / monthly * 100}%` }}/><i style={{ width: `${(maintenance + repairs) / monthly * 100}%` }}/></div>}
+      {monthlyCosts.isPartial && <small className="calc-demo-note" role="status">Partial estimate. Not included: {monthlyCosts.excludedLabels.join(", ")}.</small>}
+      {canonicalCalculatorMode && monthlyCosts.isComplete && <small className="calc-demo-note">Only entered inputs and known profile values you explicitly selected are included.</small>}
+      {!canonicalCalculatorMode && <small className="calc-demo-note">Demo estimate using your inputs and prototype tax rates. Not a quote or offer.</small>}
+      <small className="calc-disclaimer">{canonicalCalculatorMode ? "Financing uses a standard fixed-rate amortization formula. Sales tax and dealer fees use the assumptions entered above and are not official figures. Registration fees and depreciation are not included. Verify final figures with the dealer, lender, DMV or tax authority, and other appropriate sources." : "Financing uses a standard fixed-rate amortization formula. Sales tax (prototype state estimates, not official data) and dealer fees are estimates. Registration fees and depreciation are not included. Actual taxes, registration costs, dealer charges, lender terms, insurance, maintenance and other ownership costs may differ. Verify final figures with the dealer, lender, DMV or tax authority, and other appropriate sources."}</small>
+      <button className="button light full" onClick={() => window.print()}>Print this estimate <ArrowUpRight size={15}/></button>
+    </aside></div>
   </div></Shell>;
 }
 function NumberField({ label: fieldLabel, value, set, prefix, suffix, normalizeOnBlur = true }: { label: string; value: string; set: (value: string) => void; prefix?: string; suffix?: string; normalizeOnBlur?: boolean }) {

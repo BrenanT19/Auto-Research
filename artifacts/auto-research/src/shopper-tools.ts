@@ -451,6 +451,7 @@ export type OwnershipInputs = {
   miles: number;
   mpg: number;
   gas: number;
+  /** Internal calculation unit: dollars per kWh. The editable draft uses cents. */
   electricity: number;
   insurance: number;
   maintenance: number;
@@ -458,6 +459,7 @@ export type OwnershipInputs = {
   vehicleIsElectric: boolean;
 };
 
+/** Editable drafts use displayed units; electricity is stored in cents per kWh. */
 export type OwnershipDraft = {
   [Field in Exclude<keyof OwnershipInputs, "term" | "vehicleIsElectric">]: string;
 };
