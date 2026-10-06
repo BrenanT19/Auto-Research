@@ -105,34 +105,40 @@ def build():
                 "source": source, "records": [],
             })
             group["records"].append({"line": index + 1, "model": model})
-    # Manually reviewed historical model-year facts, not production-date guesses.
-    classic = json.loads(pathlib.Path("lib/db/research/classic-model-year-identities.json").read_text())
-    for item in classic:
-        if item["make"] not in BRANDS or not item.get("locator") or not item.get("limitations"):
-            raise ValueError("Supplement needs a target brand and reviewed scope")
-        source = item.get("sourceKey", f"classic-{slug(item['make'])}-{slug(item['model'])}")
-        if any(existing["id"] == source for existing in sources):
-            raise ValueError("Duplicate source key requires a distinct reviewed source")
-        publisher = item.get("publisher", "Wikipedia contributors")
-        sources.append({
-            "id": source, "url": item["url"], "publisher": publisher,
-            "rightsUrl": item.get("rightsUrl", "https://creativecommons.org/licenses/by-sa/4.0/"),
-            "rightsStatus": "allowed", "checksumScope": "normalized factual review",
-            "sha256": hashlib.sha256(json.dumps(item, sort_keys=True).encode()).hexdigest(),
-            "document": f"{item['make']} {item['model']} historical model-year identity review",
-            "limitations": item["limitations"] + " Only independently normalized names/year relationships and original review notes are retained, with source attribution; no article prose or images are copied.",
-        })
-        for start, end in item["ranges"]:
-            if not 1900 <= start <= end <= 2027:
-                raise ValueError("Supplement must contain explicitly reviewed model years")
-            for year in range(start, end + 1):
-                key = (item["make"], item["model"], year)
-                if key in groups:
-                    raise ValueError("Classic supplement overlaps an existing identity")
-                groups[key] = {
-                    "make": item["make"], "model": item["model"], "year": year,
-                    "source": source, "records": [{"model": item["model"], "locator": item["locator"]}],
-                }
+    # Reviewed model-year facts omitted from the broad EPA snapshot or older
+    # model-year tables. Each file keeps its own source-specific review.
+    supplements = [
+        ("classic", "lib/db/research/classic-model-year-identities.json"),
+        ("nhtsa", "lib/db/research/nhtsa-model-year-identity-supplements.json"),
+    ]
+    for kind, path in supplements:
+        reviewed = json.loads(pathlib.Path(path).read_text())
+        for item in reviewed:
+            if item["make"] not in BRANDS or not item.get("locator") or not item.get("limitations"):
+                raise ValueError("Supplement needs a target brand and reviewed scope")
+            source = item.get("sourceKey", f"{kind}-{slug(item['make'])}-{slug(item['model'])}")
+            if any(existing["id"] == source for existing in sources):
+                raise ValueError("Duplicate source key requires a distinct reviewed source")
+            publisher = item.get("publisher", "Wikipedia contributors")
+            sources.append({
+                "id": source, "url": item["url"], "publisher": publisher,
+                "rightsUrl": item.get("rightsUrl", "https://creativecommons.org/licenses/by-sa/4.0/"),
+                "rightsStatus": "allowed", "checksumScope": "normalized factual review",
+                "sha256": hashlib.sha256(json.dumps(item, sort_keys=True).encode()).hexdigest(),
+                "document": item.get("document", f"{item['make']} {item['model']} model-year identity review"),
+                "limitations": item["limitations"] + " Only independently normalized names/year relationships and minimal review notes are retained, with source attribution; no source prose, tables, or images are copied.",
+            })
+            for start, end in item["ranges"]:
+                if not 1900 <= start <= end <= 2027:
+                    raise ValueError("Supplement must contain explicitly reviewed model years")
+                for year in range(start, end + 1):
+                    key = (item["make"], item["model"], year)
+                    if key in groups:
+                        raise ValueError("Reviewed supplement overlaps an existing identity")
+                    groups[key] = {
+                        "make": item["make"], "model": item["model"], "year": year,
+                        "source": source, "records": [{"model": item["model"], "locator": item["locator"]}],
+                    }
     entries = []
     for (make, model, year), group in sorted(groups.items()):
         group["id"] = f"{slug(make)}-{slug(model)}-{year}-model-year"

@@ -138,7 +138,7 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <div className="hero-visual"><div className="hero-stamp">High confidence<br/>starts with good research</div><div className="hero-art" role="img" aria-label="Vehicle photography placeholder. No licensed demo vehicle photography is available."/><div className="hero-facts"><span><b>{stats.data?.vehicleCount ?? '—'}</b> vehicle trims</span><span><b>{stats.data?.makeCount ?? '—'}</b> manufacturers</span><span className="mono">RESEARCH STATUS VARIES</span></div></div>
+      <div className="hero-visual"><div className="hero-stamp">High confidence<br/>starts with good research</div><div className="hero-art" role="img" aria-label="Vehicle photography placeholder. No licensed demo vehicle photography is available."/><div className="hero-facts"><span><b>{stats.data?.vehicleCount ?? '—'}</b> vehicle profiles</span><span><b>{stats.data?.makeCount ?? '—'}</b> manufacturers</span><span className="mono">RESEARCH STATUS VARIES</span></div></div>
       <div className="hero-bottom"><span>01 / START WITH THE LONG VIEW</span><a href="#explore">Scroll to explore <ArrowDown size={14}/></a></div>
     </section>
     <div className="content-wrap">
@@ -169,7 +169,7 @@ function HomePage() {
           </Link>;
         })}</div> : <EmptyBlock/>}
       </section>
-       <section className="makes-section"><div className="makes-intro"><span className="eyebrow">EXPLORE THE FIELD</span><h2 className="serif">Start with<br/>a name you know.</h2><p>Browse manufacturer profiles and compare the vehicles in their lineup.</p></div><div className="make-list">{makes.isLoading ? <div className="skeleton"/> : makes.isError ? <button className="button secondary" onClick={() => makes.refetch()}>Retry manufacturers</button> : (makes.data || []).map((m: Make, i) => <Link href={`/manufacturers/${m.slug}`} className="make-row" key={m.makeKey || `legacy:make:${m.id}`}><span className="make-mark">{m.mark}</span><span><b>{m.name}</b><small>{m.vehicleCount} researched trims</small></span><span className="make-index mono">{String(i + 1).padStart(2, '0')}</span><ArrowUpRight size={16}/></Link>)}</div></section>
+       <section className="makes-section"><div className="makes-intro"><span className="eyebrow">EXPLORE THE FIELD</span><h2 className="serif">Start with<br/>a name you know.</h2><p>Browse manufacturer profiles and compare the vehicles in their lineup.</p></div><div className="make-list">{makes.isLoading ? <div className="skeleton"/> : makes.isError ? <button className="button secondary" onClick={() => makes.refetch()}>Retry manufacturers</button> : (makes.data || []).map((m: Make, i) => <Link href={`/manufacturers/${m.slug}`} className="make-row" key={m.makeKey || `legacy:make:${m.id}`}><span className="make-mark">{m.mark}</span><span><b>{m.name}</b><small>{m.vehicleCount} vehicle profiles</small></span><span className="make-index mono">{String(i + 1).padStart(2, '0')}</span><ArrowUpRight size={16}/></Link>)}</div></section>
       <section className="closing-cta"><div><span className="eyebrow">A GOOD DECISION TAKES CONTEXT</span><h2 className="serif">Compare the things<br/>that matter after day one.</h2></div><Link href="/compare" className="button light">Build a comparison <ArrowRight size={16}/></Link></section>
     </div>
   </Shell>;

@@ -18,11 +18,25 @@ async function get(path, status = 200) {
 const [options, makes, stats] = await Promise.all([
   get("/catalog/options"), get("/makes"), get("/discovery/stats"),
 ]);
-assert.equal(options.length, stats.vehicleCount, "Discovery and options counts agree");
-assert.equal(makes.reduce((sum, make) => sum + make.vehicleCount, 0), options.length);
+const optionProfiles = new Map();
+for (const option of options) {
+  const candidates = optionProfiles.get(option.profileId) ?? [];
+  candidates.push(option);
+  optionProfiles.set(option.profileId, candidates);
+}
+const distinctProfileCount = optionProfiles.size;
+assert.equal(distinctProfileCount, stats.vehicleCount, "Discovery stats count unique profiles");
+assert.equal(makes.reduce((sum, make) => sum + make.vehicleCount, 0), distinctProfileCount);
 assert.equal(makes.length, stats.makeCount, "Manufacturer count agrees with discovery");
+for (const [profileId, candidates] of optionProfiles) {
+  if (candidates.length < 2) continue;
+  assert.ok(candidates.every((option) => option.identityLevel === "model_year"),
+    `${profileId}: only broad model/year profiles may have overlapping generation candidates`);
+  assert.equal(new Set(candidates.map((option) => option.generationKey)).size, candidates.length,
+    `${profileId}: each overlapping generation candidate stays distinct`);
+}
 const expected = groups.flatMap((group) => group.trims.map((trim) => ({ group, trim, id: slug(group, trim) })));
-assert.equal(expected.length, 30);
+assert.equal(expected.length, 42);
 for (const id of [
   "chevrolet-silverado-1500-2024-lt", "gmc-sierra-1500-2024-elevation", "buick-enclave-2024-preferred",
 ]) assert.ok(!options.some((option) => option.profileId === id), `${id} is retired from discovery`);
@@ -93,8 +107,9 @@ for (const [oldId, newId] of [
   assert.equal(profile.isDemo, false);
   assert.deepEqual(await get(`/owner-reports?vehicleId=${oldId}`), [], "Archived demo reports cannot leak through the saved alias");
 }
-const archive = await get("/vehicles/buick-enclave-2024-preferred");
-assert.equal(archive.isDemo, true);
-assert.equal(archive.trim, "Preferred", "Invalid demo is never relabeled as Essence");
-assert.equal(archive.id, "buick-enclave-2024-preferred");
-console.log("PASS: all 30 identities, cascading and contradictory filters, sparse fields, discovery counts, saved links, and demo-report separation.");
+const retiredDemo = await get("/vehicles/buick-enclave-2024-preferred", 404);
+assert.equal(retiredDemo.error, "Vehicle profile not found",
+  "Retired illustrative trim stays out of the shopper detail route");
+assert.deepEqual(await get("/owner-reports?vehicleId=buick-enclave-2024-preferred"), [],
+  "The retained illustrative report is not exposed through the shopper route");
+console.log("PASS: all 42 identities, cascading and contradictory filters, sparse fields, discovery counts, saved links, and demo-report separation.");

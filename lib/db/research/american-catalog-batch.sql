@@ -1,4 +1,4 @@
--- Development catalog batch: 30 documented U.S. trim/year identities.
+-- Development catalog batches: 42 documented U.S. trim/year identities.
 -- Not a schema migration, exhaustive catalog, powertrain import, or public release.
 -- Idempotent and atomic. No legacy records, aliases, reports, or relationships are deleted.
 BEGIN;
@@ -10,6 +10,8 @@ DECLARE
   year_id_ integer; trim_id_ integer; configuration_id_ integer; existing_configuration_ integer;
   source_id_ integer; revision_id_ integer; evidence_id_ integer;
   generation_source_ integer; generation_revision_ integer; generation_evidence_ integer;
+  matrix_source_ integer; matrix_revision_ integer; matrix_evidence_ integer;
+  special_source_ integer; special_revision_ integer; special_evidence_ integer;
   epa_source_ integer; epa_revision_ integer; epa_evidence_ integer;
   claim_id_ integer; set_id_ integer; subject_kind_ text;
 BEGIN
@@ -23,9 +25,13 @@ BEGIN
     {"brand":"Chevrolet","brandSlug":"chevrolet","model":"Silverado 1500","modelSlug":"silverado-1500","generation":"Fourth generation (T1XX, 2019 redesign)","generationSlug":"us-fourth-generation-t1xx-2019","startYear":2019,"endYear":null,"year":2024,"trims":["WT","Custom","Custom Trail Boss","LT","RST","LT Trail Boss","ZR2","LTZ","High Country"],"url":"https://media.chevrolet.com/content/dam/Media/images/US/Vehicles/Chevrolet/Trucks/Silverado/2024/2024-Chevrolet-Silverado-033023.pdf","title":"MY2024 Chevrolet Silverado 1500 U.S. facts","locator":"MY2024 US fast-facts document: Available in ... trims list. Cab, bed, engine, drive layout and packages are not inferred.","generationUrl":"https://en.wikipedia.org/wiki/Chevrolet_Silverado","generationLocator":"Fourth-generation Silverado / fifth-generation Sierra (GMT T1XX; 2019) section; light-duty 1500, not HD or Silverado LD."},
     {"brand":"Buick","brandSlug":"buick","model":"Enclave","modelSlug":"enclave","generation":"Second generation (2018–2024)","generationSlug":"us-second-generation-2018","startYear":2018,"endYear":2024,"year":2024,"trims":["Essence","Premium","Avenir"],"url":"https://www.buick.com/content/dam/buick/na/us/en/index/shopping-tools/download-catalog/02-pdfs/GMBE23CT100-2024-ENCLAVE-FO_050924.pdf","title":"2024 Buick Enclave U.S. catalog","locator":"Enclave trim overview and equipment columns: Essence, Premium, Avenir. Preferred is not listed and is not an alias for Essence.","generationUrl":"https://en.wikipedia.org/wiki/Buick_Enclave","generationLocator":"Second generation / North America model-years infobox: MY2018–2024. Excludes the separate Chinese-market Enclave."},
     {"brand":"GMC","brandSlug":"gmc","model":"Sierra 1500","modelSlug":"sierra-1500","generation":"Fifth generation (T1XX, 2019 redesign)","generationSlug":"us-fifth-generation-t1xx-2019","startYear":2019,"endYear":null,"year":2024,"trims":["Pro","SLE","Elevation","SLT","AT4","AT4X","Denali","Denali Ultimate"],"url":"https://media.gmc.com/content/dam/Media/images/US/Vehicles/GMC/Sierra/2024/2024-GMC-Sierra-1500.pdf","title":"MY2024 GMC Sierra 1500 U.S. facts","locator":"MY2024 US fast-facts document: Available in ... trims list. AT4X AEV Edition is an edition, not an extra base trim.","generationUrl":"https://en.wikipedia.org/wiki/Chevrolet_Silverado","generationLocator":"Fourth-generation Silverado / fifth-generation Sierra (GMT T1XX; 2019) section. Sierra generation numbering differs from Silverado; excludes HD and Sierra Limited."},
-    {"brand":"Lucid","brandSlug":"lucid","model":"Air","modelSlug":"air","generation":"First generation (2022 model-year introduction)","generationSlug":"us-first-generation-2022","startYear":2022,"endYear":null,"year":2024,"trims":["Pure","Touring","Grand Touring","Sapphire"],"url":"https://ir.lucidmotors.com/news-releases/news-release-details/lucid-air-model-line-updates-offer-customers-more-freedom-power","title":"Lucid Air model-line update, December 5, 2023","locator":"Four-model retail lineup and MY2024 footnotes, independently matched to MY2024 EPA named-model records. Outgoing Grand Touring Performance and Pure AWD are not extrapolated into this year.","generationUrl":"https://en.wikipedia.org/wiki/Lucid_Air","generationLocator":"Model-years infobox: MY2022–present; production started in calendar 2021. Model year is not the production calendar year."}
-  ]$identities$::jsonb)
+    {"brand":"Lucid","brandSlug":"lucid","model":"Air","modelSlug":"air","generation":"First generation (2022 model-year introduction)","generationSlug":"us-first-generation-2022","startYear":2022,"endYear":null,"year":2024,"trims":["Pure","Touring","Grand Touring","Sapphire"],"url":"https://ir.lucidmotors.com/news-releases/news-release-details/lucid-air-model-line-updates-offer-customers-more-freedom-power","title":"Lucid Air model-line update, December 5, 2023","locator":"Four-model retail lineup and MY2024 footnotes, independently matched to MY2024 EPA named-model records. Outgoing Grand Touring Performance and Pure AWD are not extrapolated into this year.","generationUrl":"https://en.wikipedia.org/wiki/Lucid_Air","generationLocator":"Model-years infobox: MY2022–present; production started in calendar 2021. Model year is not the production calendar year."},
+     {"brand":"Ram","brandSlug":"ram","model":"2500","modelSlug":"2500","generation":"Fifth-generation Ram Heavy Duty (2019 introduction)","generationSlug":"us-fifth-generation-ram-heavy-duty-2019","startYear":2019,"endYear":null,"year":2024,"batchDate":"2026-10-06","trims":["Tradesman","Big Horn/Lone Star","Power Wagon","Rebel","Laramie","Limited Longhorn","Limited"],"url":"https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&mid=69","title":"2024 Ram 2500 & 3500 Heavy Duty official press kit","locator":"The MY2024 official Heavy Duty press kit lists seven retail grade names. Manufacturer feature-availability matrix provides separate 2500 and 3500 columns. Trim names only; no cab, bed, powertrain, drivetrain, wheel, or package variants inferred.","termsUrl":"https://media.stellantisnorthamerica.com/page.do?file=legal","matrixUrl":"https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2024_RAM_2500_3500_HD_FA.pdf","matrixTitle":"2024 Ram 2500 and 3500 Heavy Duty feature-availability matrix","matrixLocator":"Manufacturer MY2024 feature-availability matrix: Ram 2500 model columns and retail-grade headings, read with the seven-name official Heavy Duty lineup.","specialTrimUrl":"https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&fIId=25845&mid=69","specialTrimTitle":"2024 Ram 2500 off-road lineup announcement","specialTrimLocator":"Official MY2024 announcement explicitly names the Ram 2500 Power Wagon and Ram 2500 Heavy Duty Rebel as 2500 models.","generationUrl":"https://en.wikipedia.org/wiki/Ram_Heavy_Duty_(fifth_generation)","generationLocator":"Overview: fifth-generation Ram Heavy Duty; model-years and production 2019–present; introduction in January 2019. Used only for the broad generation grouping."},
+     {"brand":"Ram","brandSlug":"ram","model":"3500","modelSlug":"3500","generation":"Fifth-generation Ram Heavy Duty (2019 introduction)","generationSlug":"us-fifth-generation-ram-heavy-duty-2019","startYear":2019,"endYear":null,"year":2024,"batchDate":"2026-10-06","trims":["Tradesman","Big Horn/Lone Star","Laramie","Limited Longhorn","Limited"],"url":"https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&mid=69","title":"2024 Ram 2500 & 3500 Heavy Duty official press kit","locator":"The MY2024 official Heavy Duty press kit lists seven retail grade names. Manufacturer feature-availability matrix provides separate 2500 and 3500 columns. The two specialized off-road grades are explicitly named as Ram 2500 models in the manufacturer year-specific announcement; the 3500 profile retains the five core grades shown for 3500. Big Horn/Lone Star is one regional grade name, not two trims.","termsUrl":"https://media.stellantisnorthamerica.com/page.do?file=legal","matrixUrl":"https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2024_RAM_2500_3500_HD_FA.pdf","matrixTitle":"2024 Ram 2500 and 3500 Heavy Duty feature-availability matrix","matrixLocator":"Manufacturer MY2024 feature-availability matrix: Ram 3500 model columns and retail-grade headings, read with the seven-name official Heavy Duty lineup and model-specific 2500 off-road announcement.","generationUrl":"https://en.wikipedia.org/wiki/Ram_Heavy_Duty_(fifth_generation)","generationLocator":"Overview: fifth-generation Ram Heavy Duty; model-years and production 2019–present; introduction in January 2019. Used only for the broad generation grouping."}
+   ]$identities$::jsonb)
   LOOP
+    matrix_evidence_ := NULL;
+    special_evidence_ := NULL;
     INSERT INTO consumer_brands(canonical_name,slug,lifecycle_status)
       VALUES (item->>'brand',item->>'brandSlug','active')
       ON CONFLICT (slug) DO NOTHING;
@@ -46,7 +52,7 @@ BEGIN
     IF generation_id_ IS NULL THEN RAISE EXCEPTION 'Conflicting generation: %',item->>'generationSlug'; END IF;
     INSERT INTO vehicle_model_years(vehicle_generation_id,market_id,model_year,source_identifier,identity_status)
       VALUES (generation_id_,market_id_,(item->>'year')::integer,
-        'american-catalog-identity-batch-2026-10-05','supported')
+        'american-catalog-identity-batch-'||coalesce(item->>'batchDate','2026-10-05'),'supported')
       ON CONFLICT (vehicle_generation_id,market_id,model_year) DO NOTHING;
     SELECT id INTO year_id_ FROM vehicle_model_years
       WHERE vehicle_generation_id=generation_id_ AND market_id=market_id_
@@ -59,17 +65,19 @@ BEGIN
     SELECT id INTO source_id_ FROM research_sources
       WHERE source_key='american-catalog-'||(item->>'brandSlug')||'-'||(item->>'modelSlug')||'-my'||(item->>'year');
     INSERT INTO source_revisions(research_source_id,document_identifier,source_version,retrieved_at,
-      format,update_behavior,terms_version,terms_reviewed_at,
+      format,update_behavior,terms_url,terms_version,terms_reviewed_at,
       storage_rights_status,derivative_use_rights_status,display_rights_status)
-      VALUES (source_id_,item->>'title','Normalized identity review 2026-10-05',now(),
+      VALUES (source_id_,item->>'title','Normalized identity review '||coalesce(item->>'batchDate','2026-10-05'),now(),
         'Manually inspected published document; normalized factual identifiers only',
         'Year-specific factual snapshot; no current-year carryover or automatic scraping',
+        item->>'termsUrl',
         'Rights decision limited to independent factual names/year relationships and minimal provenance in a private development catalog. No prose, images, logos, tables, document copies or other expressive material retained or licensed. Copyright notices do not grant a document-republication license; no such license is asserted. Public release requires separate opt-in.',
         now(),'allowed','allowed','allowed')
       ON CONFLICT (research_source_id,document_identifier,source_version)
         WHERE document_identifier IS NOT NULL AND source_version IS NOT NULL DO NOTHING;
     SELECT id INTO revision_id_ FROM source_revisions WHERE research_source_id=source_id_
-      AND document_identifier=item->>'title' AND source_version='Normalized identity review 2026-10-05';
+      AND document_identifier=item->>'title'
+      AND source_version='Normalized identity review '||coalesce(item->>'batchDate','2026-10-05');
     SELECT id INTO evidence_id_ FROM evidence_items
       WHERE source_revision_id=revision_id_ AND locator=item->>'locator' LIMIT 1;
     IF evidence_id_ IS NULL THEN
@@ -85,7 +93,7 @@ BEGIN
     INSERT INTO source_revisions(research_source_id,document_identifier,source_version,retrieved_at,
       format,update_behavior,terms_url,terms_version,terms_reviewed_at,
       storage_rights_status,derivative_use_rights_status,display_rights_status)
-      VALUES (generation_source_,'U.S. generation grouping','Normalized identity review 2026-10-05',now(),
+      VALUES (generation_source_,'U.S. generation grouping','Normalized identity review '||coalesce(item->>'batchDate','2026-10-05'),now(),
         'Wikipedia factual generation metadata; no article prose or images copied',
         'Manually reviewed snapshot; model-year and market distinctions retained',
         'https://creativecommons.org/licenses/by-sa/4.0/',
@@ -94,12 +102,71 @@ BEGIN
       ON CONFLICT (research_source_id,document_identifier,source_version)
         WHERE document_identifier IS NOT NULL AND source_version IS NOT NULL DO NOTHING;
     SELECT id INTO generation_revision_ FROM source_revisions WHERE research_source_id=generation_source_
-      AND document_identifier='U.S. generation grouping' AND source_version='Normalized identity review 2026-10-05';
+      AND document_identifier='U.S. generation grouping'
+      AND source_version='Normalized identity review '||coalesce(item->>'batchDate','2026-10-05');
     SELECT id INTO generation_evidence_ FROM evidence_items
       WHERE source_revision_id=generation_revision_ AND locator=item->>'generationLocator' LIMIT 1;
     IF generation_evidence_ IS NULL THEN
       INSERT INTO evidence_items(source_revision_id,locator,evidence_kind)
         VALUES (generation_revision_,item->>'generationLocator','document_section') RETURNING id INTO generation_evidence_;
+    END IF;
+
+    IF item ? 'matrixUrl' THEN
+      INSERT INTO research_sources(source_key,source_kind,canonical_url,market_id)
+        VALUES ('american-catalog-matrix-'||(item->>'brandSlug')||'-'||(item->>'modelSlug')||'-my'||(item->>'year'),
+          'oem_document',item->>'matrixUrl',market_id_) ON CONFLICT (source_key) DO NOTHING;
+      SELECT id INTO matrix_source_ FROM research_sources
+        WHERE source_key='american-catalog-matrix-'||(item->>'brandSlug')||'-'||(item->>'modelSlug')||'-my'||(item->>'year');
+      INSERT INTO source_revisions(research_source_id,document_identifier,source_version,retrieved_at,
+        format,update_behavior,terms_url,terms_version,terms_reviewed_at,
+        storage_rights_status,derivative_use_rights_status,display_rights_status)
+        VALUES (matrix_source_,item->>'matrixTitle',
+          'Normalized identity review '||coalesce(item->>'batchDate','2026-10-05'),now(),
+          'Manufacturer model-specific feature-availability matrix; no document or expressive content stored',
+          'Reviewed against the exact model year; no automated extraction or year carryover',
+          item->>'termsUrl',
+          'Source material reuse is not licensed. Only normalized factual retail-grade names and model-year relationships with minimal locators are retained; no prose, images, table layout, or document copy is retained.',
+          now(),'allowed','allowed','allowed')
+        ON CONFLICT (research_source_id,document_identifier,source_version)
+          WHERE document_identifier IS NOT NULL AND source_version IS NOT NULL DO NOTHING;
+      SELECT id INTO matrix_revision_ FROM source_revisions
+        WHERE research_source_id=matrix_source_ AND document_identifier=item->>'matrixTitle'
+          AND source_version='Normalized identity review '||coalesce(item->>'batchDate','2026-10-05');
+      SELECT id INTO matrix_evidence_ FROM evidence_items
+        WHERE source_revision_id=matrix_revision_ AND locator=item->>'matrixLocator' LIMIT 1;
+      IF matrix_evidence_ IS NULL THEN
+        INSERT INTO evidence_items(source_revision_id,locator,evidence_kind)
+          VALUES (matrix_revision_,item->>'matrixLocator','document_section') RETURNING id INTO matrix_evidence_;
+      END IF;
+    END IF;
+
+    IF item ? 'specialTrimUrl' THEN
+      INSERT INTO research_sources(source_key,source_kind,canonical_url,market_id)
+        VALUES ('american-catalog-special-trims-'||(item->>'brandSlug')||'-'||(item->>'modelSlug')||'-my'||(item->>'year'),
+          'oem_document',item->>'specialTrimUrl',market_id_) ON CONFLICT (source_key) DO NOTHING;
+      SELECT id INTO special_source_ FROM research_sources
+        WHERE source_key='american-catalog-special-trims-'||(item->>'brandSlug')||'-'||(item->>'modelSlug')||'-my'||(item->>'year');
+      INSERT INTO source_revisions(research_source_id,document_identifier,source_version,retrieved_at,
+        format,update_behavior,terms_url,terms_version,terms_reviewed_at,
+        storage_rights_status,derivative_use_rights_status,display_rights_status)
+        VALUES (special_source_,item->>'specialTrimTitle',
+          'Normalized identity review '||coalesce(item->>'batchDate','2026-10-05'),now(),
+          'Manufacturer model-specific release; no release text or media stored',
+          'Reviewed against the exact model year; no automated extraction or year carryover',
+          item->>'termsUrl',
+          'Source material reuse is not licensed. Only the factual model/trim relationship and a minimal locator are retained; no prose, images, or document copy is retained.',
+          now(),'allowed','allowed','allowed')
+        ON CONFLICT (research_source_id,document_identifier,source_version)
+          WHERE document_identifier IS NOT NULL AND source_version IS NOT NULL DO NOTHING;
+      SELECT id INTO special_revision_ FROM source_revisions
+        WHERE research_source_id=special_source_ AND document_identifier=item->>'specialTrimTitle'
+          AND source_version='Normalized identity review '||coalesce(item->>'batchDate','2026-10-05');
+      SELECT id INTO special_evidence_ FROM evidence_items
+        WHERE source_revision_id=special_revision_ AND locator=item->>'specialTrimLocator' LIMIT 1;
+      IF special_evidence_ IS NULL THEN
+        INSERT INTO evidence_items(source_revision_id,locator,evidence_kind)
+          VALUES (special_revision_,item->>'specialTrimLocator','document_section') RETURNING id INTO special_evidence_;
+      END IF;
     END IF;
 
     epa_evidence_ := NULL;
@@ -176,6 +243,15 @@ BEGIN
         INSERT INTO claim_evidence(research_claim_id,evidence_item_id,evidence_relation,locator_note)
           VALUES (claim_id_,evidence_id_,'supports','Exact U.S. year and retail trim name: '||trim_name),
             (claim_id_,generation_evidence_,'supports','Generation grouping only; not a source for retail trim availability or optional research.');
+        IF matrix_evidence_ IS NOT NULL THEN
+          INSERT INTO claim_evidence(research_claim_id,evidence_item_id,evidence_relation,locator_note)
+            VALUES (claim_id_,matrix_evidence_,'supports','Manufacturer MY2024 model-specific Heavy Duty feature-availability evidence.');
+        END IF;
+        IF subject_kind_='configuration' AND special_evidence_ IS NOT NULL
+          AND trim_name IN ('Power Wagon','Rebel') THEN
+          INSERT INTO claim_evidence(research_claim_id,evidence_item_id,evidence_relation,locator_note)
+            VALUES (claim_id_,special_evidence_,'supports','Manufacturer announcement identifies this off-road trim as a MY2024 Ram 2500.');
+        END IF;
         IF epa_evidence_ IS NOT NULL THEN
           INSERT INTO claim_evidence(research_claim_id,evidence_item_id,evidence_relation,locator_note)
             VALUES (claim_id_,epa_evidence_,'supports','MY2024 named-model corroboration; retail naming relies on the dated Lucid lineup.');
@@ -203,6 +279,6 @@ JOIN vehicle_trims t ON t.id=c.vehicle_trim_id
 JOIN vehicle_model_years y ON y.id=t.vehicle_model_year_id
 JOIN claim_subjects s ON s.vehicle_configuration_id=c.id
 JOIN research_claims r ON r.id=s.research_claim_id AND r.claim_kind='identity' AND r.content_class='source_fact'
-WHERE y.source_identifier='american-catalog-identity-batch-2026-10-05'
+WHERE y.source_identifier IN ('american-catalog-identity-batch-2026-10-05','american-catalog-identity-batch-2026-10-06')
   AND a.alias_kind='canonical_profile' AND r.review_status='accepted'
 ORDER BY c.id;

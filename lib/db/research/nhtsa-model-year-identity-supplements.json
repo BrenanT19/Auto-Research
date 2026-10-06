@@ -1,0 +1,26 @@
+[
+  {
+    "make": "Ram",
+    "model": "2500",
+    "ranges": [[2024, 2024]],
+    "sourceKey": "nhtsa-vpic-ram-2500-my2024",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/RAM?format=json&modelYear=2024",
+    "publisher": "NHTSA vPIC",
+    "rightsUrl": "https://vpic.nhtsa.dot.gov/api/",
+    "document": "2024 U.S. RAM model-year records, vPIC",
+    "locator": "JSON results for make=RAM and modelYear=2024 include Model_Name=2500.",
+    "limitations": "NHTSA vPIC establishes the U.S. make/model/model-year identity, not retail trims or exhaustive sales availability. EPA fuel-economy listings omit these heavy-duty models. This supplement adds only the 2024 2500 model-year identity; trims are recorded separately from year-specific manufacturer evidence."
+  },
+  {
+    "make": "Ram",
+    "model": "3500",
+    "ranges": [[2024, 2024]],
+    "sourceKey": "nhtsa-vpic-ram-3500-my2024",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/RAM?format=json&modelYear=2024",
+    "publisher": "NHTSA vPIC",
+    "rightsUrl": "https://vpic.nhtsa.dot.gov/api/",
+    "document": "2024 U.S. RAM model-year records, vPIC",
+    "locator": "JSON results for make=RAM and modelYear=2024 include Model_Name=3500.",
+    "limitations": "NHTSA vPIC establishes the U.S. make/model/model-year identity, not retail trims or exhaustive sales availability. EPA fuel-economy listings omit these heavy-duty models. This supplement adds only the 2024 3500 model-year identity; trims are recorded separately from year-specific manufacturer evidence."
+  }
+]

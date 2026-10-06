@@ -36,6 +36,20 @@ export const DEVELOPMENT_PREVIEW_MANIFEST: readonly CanonicalManifestEntry[] = [
   { configurationId: 30, identityClaimId: 65 },
   { configurationId: 31, identityClaimId: 66 },
   { configurationId: 32, identityClaimId: 67 },
+  // Manually reviewed 2024 U.S. Ram Heavy Duty trim identities.
+  // Development allowlist only; no public release or owner-submission eligibility.
+  { configurationId: 33, identityClaimId: 69 },
+  { configurationId: 34, identityClaimId: 70 },
+  { configurationId: 35, identityClaimId: 71 },
+  { configurationId: 36, identityClaimId: 72 },
+  { configurationId: 37, identityClaimId: 73 },
+  { configurationId: 38, identityClaimId: 74 },
+  { configurationId: 39, identityClaimId: 75 },
+  { configurationId: 40, identityClaimId: 77 },
+  { configurationId: 41, identityClaimId: 78 },
+  { configurationId: 42, identityClaimId: 79 },
+  { configurationId: 43, identityClaimId: 80 },
+  { configurationId: 44, identityClaimId: 81 },
 ];
 
 export function getDevelopmentPreviewManifest(

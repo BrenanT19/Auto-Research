@@ -30,7 +30,7 @@ const sections = [
 ];
 const unresearched = {
   state: "not_yet_researched" as const,
-  reason: "Only the model/year identity has been cataloged. Detailed research awaits authorization.",
+  reason: "Only the model/year identity has been verified. Retail trims and detailed research remain unverified.",
   claimIds: [] as string[],
 };
 const sources = new Map(snapshot.sources.map(source => [source.id, source]));

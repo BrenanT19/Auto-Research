@@ -14,3 +14,4 @@
 - [Dynamic OEM manuals](oem-manual-rendering.md) — text extraction can return navigation or fallback content; verify the selected chapter and model year in the rendered source.
 - [U.S. catalog scope](us-catalog-scope.md) — all U.S. model years for 13 target brands; verified batches must report remaining coverage and preserve archived demo relationships.
 - [Generation and refresh scope](catalog-era-scope.md) — approved across all models, not Tesla-only; disclose partial mappings and preserve overlapping-year candidates.
+- [FCA site access terms](fca-site-access-terms.md) — Chrysler/FCA website terms prohibit automated extraction; use a source with compatible access rights.

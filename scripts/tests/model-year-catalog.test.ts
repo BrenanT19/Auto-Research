@@ -20,7 +20,7 @@ test("catalog publication fails closed outside an unpublished development server
 test("every reviewed model/year gets a unique sparse profile, not an invented configuration", () => {
   process.env.NODE_ENV = "development";
   const profiles = loadModelYearVehicles();
-  assert.equal(profiles.length, 4670);
+  assert.equal(profiles.length, 4672);
   assert.equal(new Set(profiles.map(profile => profile.id)).size, profiles.length);
   assert.equal(new Set(profiles.map(profile => profile.makeSlug)).size, 13);
   for (const profile of profiles) {
@@ -132,6 +132,25 @@ test("shared C/K family names retain distinct Chevrolet and GMC identities", () 
     modelKey: chevrolet.modelKey, modelYearKey: gmc.modelYearKey,
   }));
   assert.equal(modelYearCoverage().earliestYear, 1928);
+});
+
+test("NHTSA vPIC omissions add only the exact U.S. 2024 Ram Heavy Duty model/year identities", () => {
+  process.env.NODE_ENV = "development";
+  for (const model of ["2500", "3500"]) {
+    const id = `ram-${model}-2024-model-year`;
+    const [profile] = loadModelYearVehicles({ vehicleId: id });
+    assert.ok(profile, id);
+    assert.equal(profile.make, "Ram");
+    assert.equal(profile.model, model);
+    assert.equal(profile.year, 2024);
+    assert.equal(profile.trim, "");
+    assert.equal(profile.canonicalConfigurationId, undefined);
+    assert.equal(profile.fieldStates.trim.state, "not_yet_researched");
+    assert.equal(profile.claims[0].sources[0].publisher, "NHTSA vPIC");
+    assert.equal(profile.claims[0].sources[0].url,
+      "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/RAM?format=json&modelYear=2024");
+    assert.match(profile.claims[0].sources[0].locator, new RegExp(`Model_Name=${model}`));
+  }
 });
 
 test("catalog selectors cannot impersonate database trims or cross models", () => {
