@@ -204,6 +204,50 @@ test("cash purchase has meaningful purchase cost and no loan schedule or interes
   assert.deepEqual(cash.schedule, []);
 });
 
+test("trade-in value reduces financed principal without changing estimated sales tax", () => {
+  const base = financingEstimate();
+  const withTradeIn = financingEstimate({ tradeInValue: 5_000 });
+  assert.equal(withTradeIn.salesTax, base.salesTax);
+  assert.equal(withTradeIn.purchaseTotal, base.purchaseTotal);
+  assert.equal(withTradeIn.financingBase, base.financingBase);
+  assert.equal(withTradeIn.effectiveDownPayment, base.effectiveDownPayment);
+  assert.equal(withTradeIn.enteredTradeInValue, 5_000);
+  assert.equal(withTradeIn.effectiveTradeInValue, 5_000);
+  assert.equal(withTradeIn.amountFinanced, base.amountFinanced - 5_000);
+  assert.equal(
+    withTradeIn.totalPurchaseCost,
+    Math.round(
+      (withTradeIn.effectiveDownPayment +
+        withTradeIn.effectiveTradeInValue +
+        withTradeIn.totalLoanPayments) *
+        100,
+    ) / 100,
+  );
+
+  const upfront = financingEstimate({
+    tradeInValue: 5_000,
+    taxesAndFeesPayment: "upfront",
+  });
+  assert.equal(upfront.amountFinanced, 22_000);
+  assert.equal(upfront.salesTax, base.salesTax);
+  assert.equal(
+    upfront.totalPurchaseCost,
+    Math.round(
+      (upfront.effectiveDownPayment +
+        upfront.effectiveTradeInValue +
+        upfront.upfrontTaxesAndFees +
+        upfront.totalLoanPayments) *
+        100,
+    ) / 100,
+  );
+
+  const excess = financingEstimate({ tradeInValue: 50_000 });
+  assert.equal(excess.amountFinanced, 0);
+  assert.equal(excess.effectiveTradeInValue, excess.financingBase - excess.effectiveDownPayment);
+  assert.equal(excess.tradeInExceedsAmountDue, true);
+  assert.equal(excess.financingCoveredByContributions, true);
+});
+
 test("tax and dealer fee edits affect loan principal only when financed", () => {
   const baseFinanced = financingEstimate();
   const changedFinanced = financingEstimate({
@@ -240,7 +284,9 @@ test("financing calculations do not mutate entered down-payment drafts and stay 
     estimate.purchaseTotal,
     estimate.financingBase,
     estimate.enteredDownPayment,
+    estimate.enteredTradeInValue,
     estimate.effectiveDownPayment,
+    estimate.effectiveTradeInValue,
     estimate.upfrontTaxesAndFees,
     estimate.amountFinanced,
     estimate.apr,

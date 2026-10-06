@@ -3,6 +3,7 @@ export type TaxesAndFeesPayment = "financed" | "upfront";
 export type FinancingInputs = {
   price: number;
   down: number;
+  tradeInValue?: number;
   apr: number;
   term: number;
   salesTaxRate: number;
@@ -44,6 +45,9 @@ function calculateMonthlyPayment(
 export function calculateFinancingEstimate(inputs: FinancingInputs) {
   const vehiclePrice = roundMoney(nonNegativeFinite(inputs.price));
   const enteredDownPayment = roundMoney(nonNegativeFinite(inputs.down));
+  const enteredTradeInValue = roundMoney(
+    nonNegativeFinite(inputs.tradeInValue ?? 0),
+  );
   const apr = nonNegativeFinite(inputs.apr);
   const term = Number.isFinite(inputs.term)
     ? Math.max(0, Math.floor(inputs.term))
@@ -62,14 +66,28 @@ export function calculateFinancingEstimate(inputs: FinancingInputs) {
   const effectiveDownPayment = roundMoney(
     Math.min(enteredDownPayment, financingBase),
   );
+  const remainingAfterDownPayment = roundMoney(
+    Math.max(0, financingBase - effectiveDownPayment),
+  );
+  const effectiveTradeInValue = roundMoney(
+    Math.min(enteredTradeInValue, remainingAfterDownPayment),
+  );
   const downPaymentCoversFinancing =
     enteredDownPayment >= financingBase;
   const downPaymentExceedsAmountDue =
     enteredDownPayment > financingBase;
+  const tradeInExceedsAmountDue =
+    enteredTradeInValue > remainingAfterDownPayment;
+  const financingCoveredByContributions =
+    downPaymentCoversFinancing ||
+    enteredTradeInValue >= remainingAfterDownPayment;
   const upfrontTaxesAndFees =
     inputs.taxesAndFeesPayment === "upfront" ? taxesAndFees : 0;
   const amountFinanced = roundMoney(
-    Math.max(0, financingBase - effectiveDownPayment),
+    Math.max(
+      0,
+      financingBase - effectiveDownPayment - effectiveTradeInValue,
+    ),
   );
   const monthlyRate = apr / 100 / 12;
   const monthlyLoanPayment =
@@ -117,7 +135,10 @@ export function calculateFinancingEstimate(inputs: FinancingInputs) {
     schedule.reduce((total, row) => total + row.paymentAmount, 0),
   );
   const totalPurchaseCost = roundMoney(
-    effectiveDownPayment + upfrontTaxesAndFees + totalLoanPayments,
+    effectiveDownPayment +
+      effectiveTradeInValue +
+      upfrontTaxesAndFees +
+      totalLoanPayments,
   );
 
   return {
@@ -129,9 +150,13 @@ export function calculateFinancingEstimate(inputs: FinancingInputs) {
     purchaseTotal,
     financingBase,
     enteredDownPayment,
+    enteredTradeInValue,
     effectiveDownPayment,
+    effectiveTradeInValue,
     downPaymentCoversFinancing,
     downPaymentExceedsAmountDue,
+    tradeInExceedsAmountDue,
+    financingCoveredByContributions,
     upfrontTaxesAndFees,
     amountFinanced,
     apr,

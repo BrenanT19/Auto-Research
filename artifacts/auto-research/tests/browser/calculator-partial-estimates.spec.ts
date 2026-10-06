@@ -41,3 +41,26 @@ test("electricity input is labeled in cents and calculates 32¢/kWh for 50 kWh a
   await expect(page.locator(".calc-result .result-breakdown > div").nth(1).locator("b"))
     .toHaveText("$16");
 });
+
+test("trade-in dropdown presets and custom amounts reduce the financed balance", async ({ page }) => {
+  await page.goto("/calculator");
+  const tradeIn = page.getByLabel("Trade-in value");
+  const purchase = page.getByTestId("purchase-breakdown");
+  const financedAmount = purchase.locator(".strong").last().locator("b");
+
+  await expect(tradeIn).toHaveValue("0");
+  await expect(financedAmount).toHaveText("$27,000.00");
+
+  await tradeIn.selectOption("5000");
+  await expect(financedAmount).toHaveText("$22,000.00");
+
+  await tradeIn.selectOption("custom");
+  await expect(page.getByLabel("Custom trade-in value")).toBeVisible();
+  await expect(purchase).not.toBeVisible();
+  await expect(page.getByText("Add trade-in value to calculate the purchase breakdown.")).toBeVisible();
+
+  await page.getByLabel("Custom trade-in value").fill("6500");
+  await expect(purchase).toBeVisible();
+  await expect(financedAmount).toHaveText("$20,500.00");
+  await expect(purchase.getByText("Trade-in value applied")).toBeVisible();
+});

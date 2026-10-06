@@ -24,6 +24,7 @@ import { ExternalOwnerPatterns } from './components/ExternalOwnerPatterns';
 const queryClient = new QueryClient();
 const money = (n?: number | null) => n == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const label = (v: VehicleSummary) => `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ''}`;
+const TRADE_IN_PRESET_AMOUNTS = [0, 2_500, 5_000, 7_500, 10_000, 15_000, 20_000, 25_000, 30_000, 40_000];
 
 function DemoNotice({ compact = false }: { compact?: boolean }) {
   return <div className={`demo-notice ${compact ? 'compact' : ''}`}><Info size={15} /><span><b>RESEARCH STATUS VARIES BY VEHICLE AND FIELD</b> — Canonical profiles verify exact vehicle identity, not every optional claim. Demo profiles and estimates are illustrative, not verified automotive guidance. Confirm recalls and safety information with <a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noreferrer">NHTSA</a> and the vehicle manufacturer.</span></div>;
@@ -493,6 +494,8 @@ function CalculatorPage() {
   const [taxRateEdited, setTaxRateEdited] = useState(false);
   const [dealerFees, setDealerFees] = useState('0');
   const [dealerFeesEdited, setDealerFeesEdited] = useState(false);
+  const [tradeInSelection, setTradeInSelection] = useState('0');
+  const [customTradeInValue, setCustomTradeInValue] = useState('');
   const [taxMode, setTaxMode] = useState<'financed' | 'upfront'>('financed');
   const vehicleProfile = vehicle.data?.id === vehicleId ? vehicle.data : undefined;
   const canonical = vehicleProfile?.profileKind === "canonical" && !vehicleProfile.isDemo;
@@ -516,6 +519,10 @@ function CalculatorPage() {
   ])) as OwnershipDraft;
   const displayTaxRate = canonicalCalculatorMode && !taxRateEdited ? "" : taxRate;
   const displayDealerFees = canonicalCalculatorMode && !dealerFeesEdited ? "" : dealerFees;
+  const tradeInValueReady = tradeInSelection !== "custom" || isEnteredCalculatorValue(customTradeInValue);
+  const tradeInValue = tradeInSelection === "custom"
+    ? parseCalculatorNumber(customTradeInValue)
+    : parseCalculatorNumber(tradeInSelection);
   const numbers = readOwnershipDraft(displayDraft);
   const { insurance, maintenance, repairs } = numbers;
   const normalizedFuelType = vehicleProfile?.fuelType?.trim().toLocaleLowerCase();
@@ -531,10 +538,13 @@ function CalculatorPage() {
   const energyBasisValue = shopperEnergyBasis || (!vehicleId ? "gasoline" : "");
   const energyBasisFieldLabel = canonicalCalculatorMode && vehicleId ? "Your energy basis" : "Energy source";
   const vehicleIsElectric = energyBasisSelected && economyUnit(calculationEnergyBasis || "") === "MPGe";
-  const financing = calculateFinancingEstimate({ price: numbers.price, down: numbers.down, apr: numbers.apr, term, salesTaxRate: parseCalculatorNumber(displayTaxRate), dealerFees: parseCalculatorNumber(displayDealerFees), taxesAndFeesPayment: taxMode });
+  const financing = calculateFinancingEstimate({ price: numbers.price, down: numbers.down, tradeInValue, apr: numbers.apr, term, salesTaxRate: parseCalculatorNumber(displayTaxRate), dealerFees: parseCalculatorNumber(displayDealerFees), taxesAndFeesPayment: taxMode });
   const { fuel } = calculateOwnershipEstimate({ ...numbers, mpg: energyBasisSelected ? numbers.mpg : 0, price: financing.amountFinanced, down: 0, term, vehicleIsElectric });
   const calculatorAssumptions = { draft: displayDraft, taxRate: displayTaxRate, dealerFees: displayDealerFees, fuelType: calculationEnergyBasis };
-  const missingFinance = missingCanonicalFinancingInputs(calculatorAssumptions);
+  const missingFinance = [
+    ...missingCanonicalFinancingInputs(calculatorAssumptions),
+    ...(!tradeInValueReady ? ["trade-in value"] : []),
+  ];
   const financingReady = missingFinance.length === 0;
   const fuelInputsReady = energyBasisSelected && isEnteredCalculatorValue(displayDraft.miles) &&
     isEnteredCalculatorValue(displayDraft.mpg) && numbers.mpg > 0 &&
@@ -629,7 +639,7 @@ function CalculatorPage() {
       }
     }}>{canonical ? "Use known profile values" : "Use vehicle profile estimates"}</button></div>}
     <div className="calculator-layout"><div className="calculator-form">
-      <section className="calc-group"><span className="eyebrow">01 / FINANCING</span><h2 className="serif">Purchase assumptions</h2><div className="input-grid"><NumberField label="Vehicle price" value={displayDraft.price} set={setField('price')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Down payment" value={displayDraft.down} set={setField('down')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="APR" value={displayDraft.apr} set={setField('apr')} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Loan term<select value={term} onChange={e => setTerm(Number(e.target.value))}><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></label><label className="field-label">State (for sales tax estimate)<select aria-label="State" data-testid="select-state" value={stateCode} onChange={e => chooseState(e.target.value)}><option value="">Select a state</option>{STATE_TAX_ESTIMATES.map(x => <option key={x.code} value={x.code}>{x.name}</option>)}</select></label><NumberField label="Estimated sales tax rate (editable)" value={displayTaxRate} set={setTaxRateField} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Estimated dealer fees" value={displayDealerFees} set={setDealerFeesField} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/></div>
+      <section className="calc-group"><span className="eyebrow">01 / FINANCING</span><h2 className="serif">Purchase assumptions</h2><div className="input-grid"><NumberField label="Vehicle price" value={displayDraft.price} set={setField('price')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Down payment" value={displayDraft.down} set={setField('down')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Trade-in value<select aria-label="Trade-in value" data-testid="select-trade-in" value={tradeInSelection} onChange={event => setTradeInSelection(event.target.value)}>{TRADE_IN_PRESET_AMOUNTS.map(amount => <option key={amount} value={amount}>{amount === 0 ? "No trade-in ($0)" : money(amount)}</option>)}<option value="custom">Custom amount…</option></select></label>{tradeInSelection === "custom" && <NumberField label="Custom trade-in value" value={customTradeInValue} set={setCustomTradeInValue} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/>}<NumberField label="APR" value={displayDraft.apr} set={setField('apr')} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Loan term<select value={term} onChange={e => setTerm(Number(e.target.value))}><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></label><label className="field-label">State (for sales tax estimate)<select aria-label="State" data-testid="select-state" value={stateCode} onChange={e => chooseState(e.target.value)}><option value="">Select a state</option>{STATE_TAX_ESTIMATES.map(x => <option key={x.code} value={x.code}>{x.name}</option>)}</select></label><NumberField label="Estimated sales tax rate (editable)" value={displayTaxRate} set={setTaxRateField} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Estimated dealer fees" value={displayDealerFees} set={setDealerFeesField} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/></div>
         <p className="field-hint">Prototype state-level estimates, not official. Local taxes, trade-ins, exemptions and registration location change the real rate. Dealer fees vary by dealer.</p>
         <fieldset className="segmented" data-testid="group-taxes-fees"><legend>Taxes &amp; fees payment</legend><button type="button" className={taxMode === 'financed' ? 'on' : ''} aria-pressed={taxMode === 'financed'} onClick={() => setTaxMode('financed')}>Include taxes &amp; fees in loan</button><button type="button" className={taxMode === 'upfront' ? 'on' : ''} aria-pressed={taxMode === 'upfront'} onClick={() => setTaxMode('upfront')}>Pay taxes &amp; fees upfront</button></fieldset>
          {financingReady ? <PurchaseBreakdown f={financing}/> : <p className="field-hint" role="status">Add {missingFinance.join(", ")} to calculate the purchase breakdown.</p>}</section>
