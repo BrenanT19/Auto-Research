@@ -130,7 +130,7 @@ export function modelYearCoverage() {
     latestYear: Math.max(...vehicles.map(v => v.year)),
     completeHistoricalCatalog: false,
     scope: snapshot.identityScope,
-    missingCoverage: "Pre-1978 coverage is limited to the reviewed classic supplement. Vehicles absent from EPA guides and exact retail trims remain unverified. Historical guide coverage is partial. MY2027 may be preliminary.",
+    missingCoverage: "Pre-1978 coverage is limited to the reviewed classic supplement. Selected EPA omissions have separately reviewed NHTSA identity listings. Other unlisted vehicles and exact retail trims remain unverified. Historical guide coverage is partial. MY2027 may be preliminary.",
     brands: [...new Set(vehicles.map(v => v.make))].map(make => {
       const entries = vehicles.filter(v => v.make === make);
       return { make, profileCount: entries.length,

@@ -22,5 +22,203 @@
     "url": "https://en.wikipedia.org/wiki/Dodge_Dart",
     "locator": "Model-years infobox: 1960–1976 (North America); introduction and first-generation section identify the US-market MY1960 launch and subsequent model years.",
     "limitations": "Original US Dart nameplate only; foreign-market production after MY1976 and later unrelated Dart model years are not inferred."
+  },
+  {
+    "make": "Ford", "model": "Model A", "ranges": [[1928, 1931]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Model_A_(1927%E2%80%9331)",
+    "locator": "Model-years infobox includes 1928–1932; reviewed subset is MY1928–1931. Introduction distinguishes October/December 1927 production and launch from the first model year; US assembly sites are identified.",
+    "limitations": "Only the uncontested MY1928–1931 subset is retained. MY1927 is not inferred from launch; the disputed MY1932 endpoint requires separate corroboration."
+  },
+  {
+    "make": "Ford", "model": "Falcon", "ranges": [[1960, 1970]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Falcon_(North_America)",
+    "locator": "Introduction explicitly describes the North American model line as MY1960–1970; final-generation model-years infobox identifies the 1970 half-year version.",
+    "limitations": "North American nameplate only. Later Australian and South American Falcons are excluded; the 1970 half-year version does not become a fractional or extra model-year profile."
+  },
+  {
+    "make": "Ford", "model": "Thunderbird", "ranges": [[1955, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Thunderbird",
+    "locator": "Model-years infobox explicitly lists 1955–1997 and 2002–2005. This historical supplement retains only MY1955–1977, before the EPA guide snapshot.",
+    "limitations": "Historical nameplate identity only; October 1954 production does not establish MY1954. Later EPA-listed profiles remain unchanged."
+  },
+  {
+    "make": "Ford", "model": "Galaxie", "ranges": [[1959, 1974]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Galaxie",
+    "locator": "Model-years infobox lists 1959–1974 and production infobox explicitly distinguishes the United States from Australia and Brazil.",
+    "limitations": "U.S. Galaxie nameplate only, including its original named subseries. Later Brazilian production through 1983 is not U.S. model-year coverage."
+  },
+  {
+    "make": "Ford", "model": "Fairlane", "ranges": [[1955, 1970]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Fairlane_(Americas)",
+    "locator": "Introduction explicitly identifies North American sales for the 1955–1970 model years and distinguishes later South American and Australian vehicles.",
+    "limitations": "U.S./North American nameplate only; later foreign-market Fairlanes are excluded. No named retail trim or equipment is inferred."
+  },
+  {
+    "make": "Ford", "model": "Torino", "ranges": [[1968, 1976]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Torino",
+    "locator": "US model line description and year-specific sections cover 1968–1969, 1970–1971 and 1972–1976; introduction explicitly identifies Torino in the 1968 and 1969 model years.",
+    "limitations": "Torino nameplate only, including its early named subseries. Fairlane, Cobra and Gran Torino trims or configurations are not inferred."
+  },
+  {
+    "make": "Lincoln", "model": "Capri", "ranges": [[1952, 1959]],
+    "url": "https://en.wikipedia.org/wiki/Lincoln_Capri",
+    "locator": "Three model-years infoboxes explicitly list 1952–1955, 1956–1957 and 1958–1959; introduction and assembly information identify the Lincoln US-market line.",
+    "limitations": "Lincoln Capri only, not later Ford/Mercury Capri vehicles. No trim or generation identity is created."
+  },
+  {
+    "make": "Lincoln", "model": "Premiere", "ranges": [[1956, 1960]],
+    "url": "https://en.wikipedia.org/wiki/Lincoln_Premiere",
+    "locator": "Model-years infoboxes explicitly list 1956–1957 and 1958–1960. Calendar production beginning in 1955 is distinguished from the first model year.",
+    "limitations": "U.S. nameplate only. MY1955 is not inferred from a calendar-year production date."
+  },
+  {
+    "make": "Chevrolet", "model": "Corvette", "ranges": [[1953, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Corvette",
+    "locator": "Model-years infobox and first three historical series explicitly cover MY1953–1962, 1963–1967 and 1968–1982. Only MY1953–1977 is retained in this supplement.",
+    "limitations": "Historical nameplate only. Later model years, including the exceptional MY1983 retail gap, are not inferred from a present-day production range."
+  },
+  {
+    "make": "Chevrolet", "model": "Camaro", "ranges": [[1967, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Camaro",
+    "locator": "Model-years infobox lists 1967–2002 and 2010–2024; introduction explicitly identifies the September 1966 launch as MY1967. Retained subset is MY1967–1977.",
+    "limitations": "Historical nameplate only. MY1966 is not inferred from launch, nor are the later 2003–2009 hiatus or post-2024 years filled."
+  },
+  {
+    "make": "Chevrolet", "model": "Chevelle", "ranges": [[1964, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Chevelle",
+    "locator": "Model-years infobox and introduction explicitly identify the Chevelle line for MY1964–1977.",
+    "limitations": "Chevelle nameplate only; named subseries and SS packages do not become verified trims or separate configurations."
+  },
+  {
+    "make": "Chevrolet", "model": "Impala", "ranges": [[1958, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Impala",
+    "locator": "Model-years infobox and introduction explicitly list 1958–1985, 1994–1996 and 2000–2020; historical subset retained here is MY1958–1977.",
+    "limitations": "Historical nameplate only, including its original named subseries. Later hiatus years are not bridged."
+  },
+  {
+    "make": "Chevrolet", "model": "Chevy II / Nova", "ranges": [[1962, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Chevy_II_/_Nova",
+    "locator": "Combined nameplate article's model-years infobox lists 1962–1979 and 1985–1988; first historical series list 1962–1965, 1966–1967 and 1968–1974. Retained subset is MY1962–1977.",
+    "limitations": "Combined historical Chevy II / Nova family label, not a claim that both badges were retail model names in every year. No Nova trim or SS package is established."
+  },
+  {
+    "make": "Chevrolet", "model": "C/K", "ranges": [[1960, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_C/K",
+    "locator": "Introduction explicitly identifies Chevrolet and GMC versions; model-years infoboxes list 1960–1966, 1967–1972 and 1973–1991. Only MY1960–1977 is retained.",
+    "limitations": "C/K historical truck-family identity, not an exact capacity, cab, drive, chassis or retail trim. Foreign-market continuation and later R/V renaming are not inferred."
+  },
+  {
+    "make": "GMC", "model": "C/K", "ranges": [[1960, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_C/K",
+    "locator": "Introduction explicitly states that GM marketed the C/K series through both Chevrolet and GMC. Historical model-years infoboxes cover 1960–1966, 1967–1972 and 1973–1991; retained GMC subset is MY1960–1977.",
+    "limitations": "GMC version of the historical C/K family only. Chevrolet's badge is not copied into GMC; no Sierra trim, capacity, cab or drivetrain configuration is established."
+  },
+  {
+    "make": "Buick", "model": "Century", "ranges": [[1936, 1942], [1954, 1958], [1973, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Buick_Century",
+    "locator": "Nameplate model-years infobox explicitly lists 1936–1942, 1954–1958 and 1973–2005. Naming history identifies the 1936 change from Series 60 to Century.",
+    "limitations": "Century nameplate only. Earlier Series 60 years and both nameplate hiatuses are excluded; post-1977 EPA coverage remains separate."
+  },
+  {
+    "make": "Buick", "model": "Roadmaster", "ranges": [[1936, 1942], [1946, 1958]],
+    "url": "https://en.wikipedia.org/wiki/Buick_Roadmaster",
+    "locator": "Nameplate model-years infobox explicitly lists 1936–1942, 1946–1958 and 1991–1996. The historical supplement retains the first two ranges only.",
+    "limitations": "Roadmaster nameplate only. Earlier Series 80 vehicles are not renamed, and wartime or intervening hiatus years are not generated."
+  },
+  {
+    "make": "Buick", "model": "Special", "ranges": [[1936, 1942], [1946, 1958], [1964, 1967]],
+    "url": "https://en.wikipedia.org/wiki/Buick_Special",
+    "locator": "Historical model-years infoboxes explicitly list 1936–1942 and 1946–1949, 1949–1958, and 1964–1967. Naming history distinguishes the earlier Series 40.",
+    "limitations": "Only these explicitly reviewed Special ranges are retained. Earlier Series 40 and other Special/Deluxe trim-label uses are not silently converted into model profiles."
+  },
+  {
+    "make": "Cadillac", "model": "DeVille", "ranges": [[1959, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Cadillac_de_Ville_series",
+    "locator": "Nameplate model-years infobox explicitly lists 1959–2005; historical model-years infoboxes list 1959–1960, 1961–1964 and 1965–1970. Retained subset is MY1959–1977.",
+    "limitations": "Independent DeVille model-line identity only. Earlier Coupe de Ville usage as a Series 62 trim is not relabeled as an independent model."
+  },
+  {
+    "make": "Cadillac", "model": "Eldorado", "ranges": [[1953, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Cadillac_Eldorado",
+    "locator": "Historical model-year sections and infoboxes cover 1953, 1954–1956, 1957–1958, 1959–1960, 1961–1962, 1963–1964, 1965–1966, 1967–1970 and 1971–1978. Only MY1953–1977 is retained.",
+    "limitations": "Eldorado nameplate only. Brougham, Biarritz, Seville, Fleetwood names and packages are not promoted to verified trims or equipment."
+  },
+  {
+    "make": "Cadillac", "model": "Series 62", "ranges": [[1940, 1942], [1946, 1964]],
+    "url": "https://en.wikipedia.org/wiki/Cadillac_Series_62",
+    "locator": "Historical model-years infoboxes explicitly cover 1940–1941, 1942 and 1946–1947, 1948–1953, 1954–1956, 1957–1958, 1959–1960 and 1961–1964.",
+    "limitations": "Series 62 nameplate only. Wartime MY1943–1945 are excluded, and successor Calais years are not added under Series 62."
+  },
+  {
+    "make": "Chrysler", "model": "New Yorker", "ranges": [[1940, 1942], [1946, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chrysler_New_Yorker",
+    "locator": "Independent-nameplate model-years infobox explicitly lists 1940–1942 and 1946–1996. Earlier 1938 usage is identified as a version of the Imperial. Retained subset ends at MY1977.",
+    "limitations": "Independent New Yorker model line only; earlier Imperial subseries usage and wartime MY1943–1945 are excluded."
+  },
+  {
+    "make": "Chrysler", "model": "Newport", "ranges": [[1961, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Chrysler_Newport",
+    "locator": "Independent Newport model-line sections and model-years infoboxes cover 1961–1964, 1965–1968, 1969–1973 and the subsequent 1974–1978 line. Retained subset ends at MY1977.",
+    "limitations": "Independent model line only. The 1940–1941 show car and earlier Newport body-style designation are not imported as equivalent retail model profiles."
+  },
+  {
+    "make": "Dodge", "model": "Charger", "ranges": [[1966, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Dodge_Charger",
+    "locator": "Nameplate model-years infobox explicitly lists 1966–1978, 1982–1987 and 2006–present. Historical subset retained here is MY1966–1977.",
+    "limitations": "Original nameplate range only; later hiatuses and other models using Charger-related trim names are not filled."
+  },
+  {
+    "make": "Dodge", "model": "Challenger", "ranges": [[1970, 1974]],
+    "url": "https://en.wikipedia.org/wiki/Dodge_Challenger",
+    "locator": "Model-years infobox and introduction explicitly identify the original US Challenger for MY1970–1974, separately from MY1978–1983 and later versions.",
+    "limitations": "Original Challenger nameplate only. Calendar production in 1969 and the MY1975–1977 hiatus do not establish extra model years."
+  },
+  {
+    "make": "Dodge", "model": "Coronet", "ranges": [[1949, 1959], [1965, 1976]],
+    "url": "https://en.wikipedia.org/wiki/Dodge_Coronet",
+    "locator": "US-market naming history and historical year-specific sections identify the original 1949–1959 line and explicitly identify the revived line as model years 1965–1976.",
+    "limitations": "Coronet nameplate only; the MY1960–1964 hiatus remains absent. Shared bodies, equipment levels and performance packages are not exact trim identities."
+  },
+  {
+    "make": "Jeep", "model": "Wagoneer", "ranges": [[1963, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Jeep_Wagoneer_(SJ)",
+    "locator": "Model-years infobox and introduction explicitly identify MY1963–1991 under the Jeep brand. Launch section distinguishes November 1962 introduction from MY1963.",
+    "limitations": "Historical Jeep Wagoneer nameplate only. Calendar launch MY1962 is not inferred; no Grand Wagoneer trim, generation or powertrain is established."
+  },
+  {
+    "make": "Tesla", "model": "Roadster", "ranges": [[2008, 2008]],
+    "sourceKey": "nhtsa-tesla-roadster-2008",
+    "publisher": "U.S. National Highway Traffic Safety Administration / vPIC",
+    "rightsUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2008?format=json",
+    "locator": "NHTSA vPIC exact make-ID 441, model-year 2008 response includes Make_Name TESLA and Model_Name Roadster. Only that make/model/year relationship is retained.",
+    "limitations": "Government-listed model/year identity, not proof of a retail trim, specific configuration or sales volume. Independent normalized facts only; no VIN, specifications or copyrighted manufacturer material is retained."
+  },
+  {
+    "make": "Tesla", "model": "Roadster", "ranges": [[2009, 2009]],
+    "sourceKey": "nhtsa-tesla-roadster-2009",
+    "publisher": "U.S. National Highway Traffic Safety Administration / vPIC",
+    "rightsUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2009?format=json",
+    "locator": "NHTSA vPIC exact make-ID 441, model-year 2009 response includes Make_Name TESLA and Model_Name Roadster. Only that make/model/year relationship is retained.",
+    "limitations": "Government-listed model/year identity, not a retail configuration. Independent normalized facts only; no VIN, specifications or copyrighted manufacturer material is retained."
+  },
+  {
+    "make": "Tesla", "model": "Roadster", "ranges": [[2010, 2010]],
+    "sourceKey": "nhtsa-tesla-roadster-2010",
+    "publisher": "U.S. National Highway Traffic Safety Administration / vPIC",
+    "rightsUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2010?format=json",
+    "locator": "NHTSA vPIC exact make-ID 441, model-year 2010 response includes Make_Name TESLA and Model_Name Roadster. The Tesla Roadster historical article independently identifies the 2010 model-year update.",
+    "limitations": "Government-listed model/year identity only; the Roadster Sport derivative is not inferred as a verified trim. No optional research is imported."
+  },
+  {
+    "make": "Tesla", "model": "Roadster", "ranges": [[2011, 2011]],
+    "sourceKey": "nhtsa-tesla-roadster-2011",
+    "publisher": "U.S. National Highway Traffic Safety Administration / vPIC",
+    "rightsUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2011?format=json",
+    "locator": "NHTSA vPIC exact make-ID 441, model-year 2011 response includes Make_Name TESLA and Model_Name Roadster.",
+    "limitations": "Government-listed model/year identity only. MY2012 is not imported because a registry listing and calendar-year production do not resolve the US-retail-market endpoint. No optional research is imported."
   }
 ]

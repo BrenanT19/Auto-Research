@@ -1,4 +1,4 @@
-"""Build a reproducible identity-only snapshot from official EPA files.
+"""Build an identity-only EPA snapshot and explicitly reviewed supplements.
 
 Only make, publisher model grouping, model year and record locators are retained.
 This does not infer retail trims, generations, specifications or US sales.
@@ -108,18 +108,23 @@ def build():
     # Manually reviewed historical model-year facts, not production-date guesses.
     classic = json.loads(pathlib.Path("lib/db/research/classic-model-year-identities.json").read_text())
     for item in classic:
-        source = f"classic-{slug(item['make'])}-{slug(item['model'])}"
+        if item["make"] not in BRANDS or not item.get("locator") or not item.get("limitations"):
+            raise ValueError("Supplement needs a target brand and reviewed scope")
+        source = item.get("sourceKey", f"classic-{slug(item['make'])}-{slug(item['model'])}")
+        if any(existing["id"] == source for existing in sources):
+            raise ValueError("Duplicate source key requires a distinct reviewed source")
+        publisher = item.get("publisher", "Wikipedia contributors")
         sources.append({
-            "id": source, "url": item["url"], "publisher": "Wikipedia contributors",
-            "rightsUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "id": source, "url": item["url"], "publisher": publisher,
+            "rightsUrl": item.get("rightsUrl", "https://creativecommons.org/licenses/by-sa/4.0/"),
             "rightsStatus": "allowed", "checksumScope": "normalized factual review",
             "sha256": hashlib.sha256(json.dumps(item, sort_keys=True).encode()).hexdigest(),
             "document": f"{item['make']} {item['model']} historical model-year identity review",
             "limitations": item["limitations"] + " Only independently normalized names/year relationships and original review notes are retained, with source attribution; no article prose or images are copied.",
         })
         for start, end in item["ranges"]:
-            if not 1900 <= start <= end < 1978:
-                raise ValueError("Classic supplement must contain reviewed historical model years")
+            if not 1900 <= start <= end <= 2027:
+                raise ValueError("Supplement must contain explicitly reviewed model years")
             for year in range(start, end + 1):
                 key = (item["make"], item["model"], year)
                 if key in groups:
@@ -149,11 +154,11 @@ def build():
         raise ValueError("Model-year ID collision")
     snapshot = {
         "reviewedAt": "2026-10-06", "market": "US",
-        "identityScope": "Source-backed model/year, not retail-trim configuration; EPA listings plus a reviewed historical supplement",
+        "identityScope": "Source-backed model/year, not retail-trim configuration; EPA listings plus reviewed historical and NHTSA vPIC omission supplements",
         "rights": {
             "status": "allowed",
             "url": "https://edg.epa.gov/EPA_Data_License.htm",
-            "basis": "Independent make/model/year facts and minimal locators only. EPA default public-domain data policy for agency facts; independently normalized historical facts with Wikipedia attribution and source-specific license metadata. No prose, images, tables, MPG or optional research retained.",
+            "basis": "Independent make/model/year facts and minimal locators only. EPA default public-domain policy for EPA facts; normalized NHTSA government registry facts with attribution and statutory public-domain basis; normalized historical facts with Wikipedia attribution and source-specific license metadata. No prose, images, tables, VINs, MPG or optional research retained.",
         },
         "sources": sources, "entries": entries,
     }

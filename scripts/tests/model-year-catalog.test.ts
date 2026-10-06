@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { readFileSync } from "node:fs";
 import {
   catalogPreviewEnabled, loadModelYearVehicles, modelYearCoverage, validateModelYearSelectors,
 } from "../../artifacts/api-server/src/lib/model-year-catalog";
@@ -18,7 +19,7 @@ test("catalog publication fails closed outside an unpublished development server
 test("every reviewed model/year gets a unique sparse profile, not an invented configuration", () => {
   process.env.NODE_ENV = "development";
   const profiles = loadModelYearVehicles();
-  assert.equal(profiles.length, 4209);
+  assert.equal(profiles.length, 4661);
   assert.equal(new Set(profiles.map(profile => profile.id)).size, profiles.length);
   assert.equal(new Set(profiles.map(profile => profile.makeSlug)).size, 13);
   for (const profile of profiles) {
@@ -62,6 +63,72 @@ test("historical market and wartime gaps are preserved", () => {
   assert.equal(loadModelYearVehicles({ vehicleId: "chevrolet-bel-air-1976-model-year" }).length, 0);
   assert.equal(loadModelYearVehicles({ vehicleId: "lincoln-continental-1943-model-year" }).length, 0);
   assert.equal(loadModelYearVehicles({ vehicleId: "lincoln-continental-1956-model-year" }).length, 0);
+});
+
+test("every reviewed supplement year has its own linked profile and exact source", () => {
+  process.env.NODE_ENV = "development";
+  const reviewed: {
+    make: string; model: string; ranges: [number, number][]; url: string;
+    publisher?: string; sourceKey?: string;
+  }[] = JSON.parse(readFileSync(
+    new URL("../../lib/db/research/classic-model-year-identities.json", import.meta.url), "utf8"));
+  const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  for (const item of reviewed) {
+    for (const [start, end] of item.ranges) {
+      for (let year = start; year <= end; year++) {
+        const id = `${slug(item.make)}-${slug(item.model)}-${year}-model-year`;
+        const [profile] = loadModelYearVehicles({ vehicleId: id });
+        assert.ok(profile, id);
+        assert.equal(profile.make, item.make);
+        assert.equal(profile.model, item.model);
+        assert.equal(profile.year, year);
+        assert.equal(loadModelYearVehicles({
+          modelKey: profile.modelKey, modelYearKey: profile.modelYearKey,
+        })[0]?.id, id);
+        const source = profile.claims[0].sources[0];
+        assert.equal(source.url, item.url);
+        assert.equal(source.publisher, item.publisher ?? "Wikipedia contributors");
+        assert.equal(source.sourceId, item.sourceKey ?? `classic-${slug(item.make)}-${slug(item.model)}`);
+        assert.match(source.sourceVersion, /normalized factual review/);
+      }
+    }
+  }
+});
+
+test("new historical ranges do not bridge wars, nameplate hiatuses or foreign-market continuation", () => {
+  process.env.NODE_ENV = "development";
+  for (const id of [
+    "ford-model-a-1927-model-year", "ford-model-a-1932-model-year",
+    "ford-galaxie-1975-model-year", "ford-galaxie-1983-model-year",
+    "ford-falcon-1971-model-year", "lincoln-capri-1951-model-year",
+    "lincoln-premiere-1955-model-year", "chevrolet-corvette-1952-model-year",
+    "chevrolet-corvette-1983-model-year", "chevrolet-camaro-1966-model-year",
+    "buick-century-1946-model-year", "buick-century-1959-model-year",
+    "buick-roadmaster-1943-model-year", "buick-roadmaster-1944-model-year",
+    "buick-roadmaster-1945-model-year", "cadillac-series-62-1944-model-year",
+    "cadillac-deville-1958-model-year", "chrysler-new-yorker-1939-model-year",
+    "chrysler-new-yorker-1943-model-year", "chrysler-newport-1941-model-year",
+    "dodge-coronet-1960-model-year", "dodge-coronet-1964-model-year",
+    "dodge-challenger-1969-model-year", "dodge-challenger-1975-model-year",
+    "jeep-wagoneer-1962-model-year", "tesla-roadster-2012-model-year",
+  ]) {
+    assert.equal(loadModelYearVehicles({ vehicleId: id }).length, 0, id);
+  }
+});
+
+test("shared C/K family names retain distinct Chevrolet and GMC identities", () => {
+  process.env.NODE_ENV = "development";
+  const [chevrolet] = loadModelYearVehicles({ vehicleId: "chevrolet-c-k-1960-model-year" });
+  const [gmc] = loadModelYearVehicles({ vehicleId: "gmc-c-k-1960-model-year" });
+  assert.ok(chevrolet);
+  assert.ok(gmc);
+  assert.notEqual(chevrolet.modelKey, gmc.modelKey);
+  assert.notEqual(chevrolet.modelYearKey, gmc.modelYearKey);
+  assert.equal(loadModelYearVehicles({ modelKey: chevrolet.modelKey, makeSlug: "gmc" }).length, 0);
+  assert.throws(() => validateModelYearSelectors({
+    modelKey: chevrolet.modelKey, modelYearKey: gmc.modelYearKey,
+  }));
+  assert.equal(modelYearCoverage().earliestYear, 1928);
 });
 
 test("catalog selectors cannot impersonate database trims or cross models", () => {

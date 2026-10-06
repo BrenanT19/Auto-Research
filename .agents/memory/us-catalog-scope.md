@@ -48,6 +48,19 @@ range-based import would turn these distinctions into false U.S. profiles.
 Where a source prints a different model name (such as Mustang II), preserve it
 unless a separate verified family crosswalk justifies grouping it.
 
+NHTSA vPIC make-name queries are substring searches, not exact brand selectors.
+Prefer the exact make-ID endpoint and verify the returned make ID and name.
+Neither an empty registry result nor a registry listing establishes U.S. retail
+availability or a nameplate's retail endpoint.
+
+**Why:** A Ram name query returned unrelated motorcycle and trailer brands,
+while its exact make-ID query returned no entries for an early model year.
+Registry coverage cannot safely fill brand-history or retail-market gaps.
+
+**How to apply:** Independently review omissions, keep year-specific source
+URLs, and do not bulk-generate retail identities from fuzzy matches, absent
+results, or production dates.
+
 Retire an illustrative profile from discovery only behind valid source-backed
 identity gates. Preserve its records and relationships; do not transfer its
 research or owner evidence to a real profile. Saved links may resolve to an

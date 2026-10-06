@@ -18,6 +18,7 @@ assert.equal(stats.vehicleCount, options.length);
 assert.equal(stats.makeCount, makes.length);
 assert.equal(makes.reduce((sum, make) => sum + make.vehicleCount, 0), options.length);
 assert.equal(coverage.completeHistoricalCatalog, false);
+assert.equal(coverage.earliestYear, 1928);
 const first = await get("/vehicles/search?limit=24&offset=0");
 const second = await get("/vehicles/search?limit=24&offset=24");
 assert.equal(first.total, options.length);
@@ -52,10 +53,20 @@ for (const make of makes) {
 }
 for (const id of ["ford-mustang-1965-model-year", "ford-mustang-1980-model-year", "ford-mustang-1998-model-year",
   "chevrolet-bel-air-1950-model-year", "lincoln-continental-1940-model-year", "dodge-dart-1967-model-year",
-  "tesla-model-3-2019-model-year", "rivian-r1t-2022-model-year"]) {
+  "tesla-model-3-2019-model-year", "rivian-r1t-2022-model-year",
+  "ford-model-a-1928-model-year", "ford-thunderbird-1955-model-year",
+  "lincoln-capri-1952-model-year", "chevrolet-camaro-1967-model-year",
+  "buick-roadmaster-1936-model-year", "gmc-c-k-1960-model-year",
+  "cadillac-eldorado-1953-model-year", "chrysler-new-yorker-1940-model-year",
+  "dodge-challenger-1970-model-year", "jeep-wagoneer-1963-model-year",
+  "tesla-roadster-2008-model-year", "tesla-roadster-2011-model-year"]) {
   const profile = await get(`/vehicles/${id}`);
   assert.equal(profile.id, id);
   assert.equal(profile.fieldStates.reliabilityEstimate.state, "not_yet_researched");
   assert.equal(profile.annualOwnershipEstimateUsd, null);
+  const option = yearOptions.find(option => option.profileId === id);
+  assert.ok(option, id);
+  const results = await get(`/vehicles/search?modelKey=${option.modelKey}&year=${option.year}`);
+  assert.ok(results.items.some(item => item.id === id), id);
 }
 console.log(`PASS: ${yearOptions.length} model/year profiles, ${makes.length} brands, pagination, historical and current links, exact filters, sparse research, and no owner-report leakage.`);
