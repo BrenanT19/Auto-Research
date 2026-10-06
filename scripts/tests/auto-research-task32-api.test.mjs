@@ -150,7 +150,7 @@ test("the production router factory defaults to an empty canonical release set",
   assert.deepEqual(await captureLegacyRows(apiBaseUrl), baselineResponses);
 });
 
-test("all 13 legacy demo profiles retain their API parity before and after canonical fixture writes", async () => {
+test("legacy demo records stay hidden and shopper API results remain stable after canonical fixture writes", async () => {
   const fixturesClient = await pool.connect();
   try {
     // Seed helper receives a connected client; keep fixture setup outside an open transaction.
@@ -163,9 +163,11 @@ test("all 13 legacy demo profiles retain their API parity before and after canon
   server = await startExpressHarness(await openRouter(synthetic.releases));
   apiBaseUrl = server.baseUrl;
   const afterInsert = await captureLegacyRows(apiBaseUrl);
-  assert.deepEqual(afterInsert, baselineResponses, "Canonical rows must not rewrite any legacy profile, child response, ID, or demo marker.");
-  assert.equal(baselineResponses.get("/vehicles?limit=100").length, 13);
-  assert.ok(baselineResponses.get("/vehicles?limit=100").every((vehicle) => vehicle.isDemo === true));
+  assert.deepEqual(afterInsert, baselineResponses, "Canonical rows must not change shopper-visible results.");
+  assert.ok(
+    baselineResponses.get("/vehicles?limit=100").every((vehicle) => vehicle.isDemo !== true),
+    "Shopper vehicle results must omit retained demo seed records.",
+  );
 });
 
 test("a released supported sparse profile has nullable research, explicit state maps, provenance, and no synthetic demo fallback", async () => {

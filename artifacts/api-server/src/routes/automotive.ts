@@ -166,6 +166,9 @@ async function loadLegacyVehicles(options: {
     }
   }
   conditions.push(inArray(trimsTable.id, fallbackTrimIds));
+  // The legacy seed catalog is retained for internal fixtures, but its demo
+  // profiles must not be discoverable through shopper-facing vehicle routes.
+  conditions.push(eq(trimsTable.isDemo, false));
 
   const sort = options.sort ?? "popular";
   const order =
@@ -482,9 +485,15 @@ const releases = [...publicReleases, ...developmentPreviews];
 async function getDiscoveryLegacyTrimIds(
   eligible?: CatalogVehicle[],
 ): Promise<number[]> {
-  return getLegacyFallbackTrimIds(getRetiredDemoSlugs(
+  const fallbackTrimIds = await getLegacyFallbackTrimIds(getRetiredDemoSlugs(
     eligible ?? await loadCanonicalVehicles({}, releases),
   ));
+  if (fallbackTrimIds.length === 0) return [];
+  const visibleTrims = await db
+    .select({ id: trimsTable.id })
+    .from(trimsTable)
+    .where(and(inArray(trimsTable.id, fallbackTrimIds), eq(trimsTable.isDemo, false)));
+  return visibleTrims.map(({ id }) => id);
 }
 const OWNER_EXPERIENCE_CONSENT_VERSION = "owner-experience-v1";
 const OWNER_EXPERIENCE_FIRSTHAND_TEXT =
@@ -604,7 +613,9 @@ router.get("/makes", async (_req, res): Promise<void> => {
       profileKind: "canonical",
     });
   }
-  const makesBySlug = new Map(makes.map((make) => [make.slug, { ...make }]));
+  const makesBySlug = new Map(makes
+    .filter((make) => make.vehicleCount > 0)
+    .map((make) => [make.slug, { ...make }]));
   for (const canonicalMake of canonicalMakes.values()) {
     const existing = makesBySlug.get(canonicalMake.slug);
     if (existing) existing.vehicleCount += canonicalMake.vehicleCount;
@@ -744,17 +755,20 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
   }
 
   const canonical = await loadCatalogVehicles({ makeSlug: make.slug }, releases);
+  if (make.vehicleCount === 0 && canonical.length === 0) {
+    res.status(404).json({ error: "Manufacturer not found" });
+    return;
+  }
   const combinedMake = {
     ...make,
     vehicleCount: make.vehicleCount + canonical.length,
   };
   const vehicles = await loadVehicles({ makeSlug: make.slug, limit: 100 }, releases);
-  const demoCount = vehicles.filter((vehicle) => vehicle.isDemo).length;
   res.json({
       make: combinedMake,
       description: canonical.length === 0
-        ? `${make.name} sample vehicle profiles for ownership research. All figures and problem descriptions in this demo are illustrative, not verified manufacturer or reliability data.`
-        : `${make.name} U.S. catalog: ${canonical.length} source-backed vehicle identities${demoCount ? ` and ${demoCount} separately labeled illustrative demo profiles` : ""}. Optional research is not inferred from vehicle identity.`,
+        ? `${make.name} U.S. vehicle catalog. Optional research is not inferred from vehicle identity.`
+        : `${make.name} U.S. catalog: ${canonical.length} source-backed vehicle identities. Optional research is not inferred from vehicle identity.`,
       vehicles: serializeVehicleList(vehicles),
   });
 });
@@ -948,7 +962,11 @@ router.get("/owner-reports", async (req, res): Promise<void> => {
     .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
     // This legacy table has no canonical subject or reviewed applicability.
     // Only its explicitly illustrative reports may be published.
-    .where(and(eq(ownerReportsTable.isDemo, true), reportFilter))
+    .where(and(
+      eq(ownerReportsTable.isDemo, true),
+      eq(trimsTable.isDemo, false),
+      reportFilter,
+    ))
     .orderBy(desc(ownerReportsTable.createdAt), asc(ownerReportsTable.id));
 
   const publicSlugs = await getLegacyPublicSlugs(
@@ -1072,8 +1090,8 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
     vehicleCount: (vehicleStats[0]?.value ?? 0) + canonicalVehicles.length,
     reportCount: (reportStats[0]?.value ?? 0) + canonicalVehicles.reduce((total, vehicle) => total + vehicle.ownerReports.length, 0),
     demoLabel: canonicalVehicles.length
-      ? `Development catalog: ${canonicalVehicles.length} source-backed identities and ${fallbackTrimIds.length} illustrative demo profiles`
-      : "Illustrative demo catalog",
+      ? `Development catalog: ${canonicalVehicles.length} source-backed identities`
+      : "No released vehicle profiles",
   };
   res.json(GetDiscoveryStatsResponse.parse(stats));
 });

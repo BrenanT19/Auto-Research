@@ -62,6 +62,32 @@ test("Model S refreshes narrow years and transition years remain candidates in b
   }
 });
 
+test("new U.S. catalog mappings retain source-backed transition overlaps and stop at verified years", () => {
+  const names = (make: string, model: string, year: number) =>
+    getCatalogBrowseEras({ make, model, year }).map(era => era.name);
+  const includes = (make: string, model: string, year: number, expected: string) =>
+    assert.ok(names(make, model, year).includes(expected), `${make} ${model} ${year}: ${expected}`);
+
+  includes("Ford", "F150", 1997, "Ninth generation");
+  includes("Ford", "F150", 1997, "Tenth generation");
+  includes("Ford", "F150", 2004, "Tenth generation");
+  includes("Ford", "F150", 2004, "Eleventh generation");
+  includes("Ford", "F150", 2018, "2018 mid-cycle redesign");
+  includes("Ford", "F150", 2024, "2024 mid-cycle refresh");
+  includes("Ford", "Explorer", 2016, "2016 facelift");
+  includes("Ford", "Explorer", 2025, "2025 refresh");
+  includes("Chevrolet", "Silverado", 2019, "Third generation (K2XX)");
+  includes("Chevrolet", "Silverado", 2019, "Fourth generation (T1XX)");
+  includes("GMC", "Sierra", 2019, "Fourth generation (K2XX)");
+  includes("GMC", "Sierra", 2019, "Fifth generation (T1XX)");
+  includes("Jeep", "Grand Cherokee", 2021, "Fourth generation (WK2)");
+  includes("Jeep", "Grand Cherokee", 2021, "Fifth generation (WL)");
+  includes("Jeep", "Grand Cherokee", 2026, "2026 refresh");
+
+  assert.deepEqual(names("Ford", "Explorer", 2027), []);
+  assert.deepEqual(names("Jeep", "Grand Cherokee", 2027), []);
+});
+
 test("source-label capitalization does not omit historical years sharing a model identity", () => {
   const era = snapshot.eras.find(era => era.make === "Ford" && era.name === "Third generation (Fox)")!;
   const rows = loadModelYearVehicles({ generationKey: catalogEraKey(era) });
