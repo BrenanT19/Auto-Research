@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CatalogOptionIdentityLevel } from './catalogOptionIdentityLevel';
 import type { CatalogOptionProfileKind } from './catalogOptionProfileKind';
 
 export interface CatalogOption {
@@ -15,13 +16,14 @@ export interface CatalogOption {
   makeSlug: string;
   modelId: number;
   model: string;
-  generationId: number;
+  generationId?: number;
   generation: string;
   modelYearId: number;
   year: number;
-  trimId: number;
+  trimId?: number;
   trim: string;
   profileKind?: CatalogOptionProfileKind;
+  identityLevel?: CatalogOptionIdentityLevel;
   makeKey?: string;
   modelKey?: string;
   generationKey?: string;

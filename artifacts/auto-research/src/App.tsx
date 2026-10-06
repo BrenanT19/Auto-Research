@@ -6,7 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, useParams, Router as WouterRouter } from 'wouter';
-import { getGetVehicleQueryKey, useGetCatalogOptions, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience } from '@workspace/api-client-react';
+import { getGetVehicleQueryKey, useGetCatalogOptions, useGetCatalogCoverage, useSearchVehicles, useGetDiscoveryStats, useGetMake, useGetVehicle, useListMakes, useListOwnerReports, useListPopularVehicles, useListTrendingVehicles, useListVehicles, useSubmitOwnerExperience } from '@workspace/api-client-react';
+import { CatalogPagination } from './components/CatalogPagination';
 import type { Make, VehicleDetail, VehicleSummary } from '@workspace/api-client-react';
 import { ArrowDown, ArrowRight, ArrowUpRight, BadgeCheck, BookOpen, Calculator, Check, ChevronDown, CircleAlert, Fuel, Info, Menu, Search, Shield, SlidersHorizontal, Wrench, X } from 'lucide-react';
 import { addComparisonId, buildBrowseLocation, buildComparisonLocation, buildVehicleListParams, homeTrendEvidence, isEnteredCalculatorValue, mergeCanonicalCalculatorPrefill, missingCanonicalFinancingInputs, resetUneditedCalculatorDraft, calculateOwnershipEstimate, catalogGenerationKey, catalogModelKey, catalogTrimKey, clearBrowseFilters, economyUnit, getBrowseGenerationOptions, getBrowseSuggestions, getGenerationFilterHint, hasActiveBrowseFilters, hasInvalidBrowseSelection, isGenerationFilterEnabled, normalizeCalculatorNumber, parseCalculatorNumber, optionalVehicleQueryOptions, parseBrowseFilters, parseComparisonIds, profileResearchState, readOwnershipDraft, removeComparisonId, resolveBrowseFilters, researchStateLabel, summarizeMonthlyOwnershipCosts } from './shopper-tools';
@@ -63,7 +64,7 @@ function VehicleCard({ vehicle, onCompare, selected = false }: { vehicle: Vehicl
   const canonical = vehicle.profileKind === "canonical" && !vehicle.isDemo;
   return <article className="vehicle-card">
     <div className={`car-art art-${(vehicle.imageKey || 'sedan').replace(/[^a-z0-9]/gi, '').toLowerCase()}`} aria-label={`Vehicle photo placeholder for ${label(vehicle)}`}><span className="art-caption">{vehicle.bodyType || (canonical ? 'BODY TYPE NOT LISTED' : 'OWNERSHIP PROFILE')}</span></div>
-    <div className="vehicle-card-body"><div className="card-overline">{vehicle.year} · {vehicle.generation || 'MODEL YEAR'}</div><Link href={`/vehicles/${vehicle.id}`} className="vehicle-title serif">{vehicle.make} {vehicle.model}</Link><div className="trim-line">{vehicle.trim} <span>·</span> {vehicle.drivetrain || (canonical ? "—" : "")}</div>
+    <div className="vehicle-card-body"><div className="card-overline">{vehicle.year} · {vehicle.generation || 'MODEL YEAR'}</div><Link href={`/vehicles/${vehicle.id}`} className="vehicle-title serif">{vehicle.make} {vehicle.model}</Link><div className="trim-line">{vehicle.identityLevel === "model_year" ? "Trims not yet researched" : <>{vehicle.trim} <span>·</span> {vehicle.drivetrain || (canonical ? "—" : "")}</>}</div>
       <CanonicalProfileStatus vehicle={vehicle}/>
       <div className="vehicle-score-row">{canonical ? <><CanonicalEvidence state={vehicle.fieldStates?.reliabilityEstimate || vehicle.fieldStates?.reliability} claims={vehicle.claims}/>{vehicle.reliabilityEstimate != null && <span>{vehicle.reliabilityEstimate} / 10</span>}</> : <><Reliability score={vehicle.reliabilityEstimate}/><span className="estimate-caption">estimated reliability</span></>}</div>
       <div className="vehicle-card-foot"><span><b>{money(vehicle.annualOwnershipEstimateUsd)}</b><small>annual ownership est.</small></span></div>
@@ -97,7 +98,7 @@ function HomePage() {
   ).map(option => [catalogModelKey(option), option])).values()];
   const selectedSearchModel = options.find(option => catalogModelKey(option) === searchModelKey);
   const searchTrimOptions = [...new Map(options.filter(option =>
-    (!searchMake || option.makeSlug === searchMake) &&
+    option.trimId !== undefined && (!searchMake || option.makeSlug === searchMake) &&
     (!searchYear || option.year === Number(searchYear)) &&
     (!searchModelKey || catalogModelKey(option) === searchModelKey),
   ).map(option => [catalogTrimKey(option), option])).values()];
@@ -281,7 +282,9 @@ function BrowsePage() {
   const realModelNames = new Set(scoped.filter((option) => option.profileKind === "canonical").map((option) => option.model));
   const modelOptions = [...new Map(scoped.map((option) => {
     const key = catalogModelKey(option);
-    const name = option.profileKind !== "canonical" && realModelNames.has(option.model) ? `${option.model} (Demo)` : option.model;
+    const name = option.profileKind !== "canonical" && realModelNames.has(option.model) ? `${option.model} (Demo)` :
+      option.identityLevel === "model_year" ? `${option.model} (Model-year catalog)` :
+      option.profileKind === "canonical" ? `${option.model} (Verified trims)` : option.model;
     return [key, { value: option.profileKind === "canonical" ? key : String(option.modelId), name }];
   })).values()];
   const selectedModelOptions = scoped.filter((option) =>
@@ -302,12 +305,18 @@ function BrowsePage() {
     (!browse.generationKey || catalogGenerationKey(option) === browse.generationKey));
   const yearOptions = [...new Set(selectedGenerationOptions.map((option) => option.year))].sort((a, b) => a - b);
   const selectedYearOptions = selectedGenerationOptions.filter((option) => !browse.year || String(option.year) === browse.year);
-  const trimOptions = [...new Map(selectedYearOptions.map((option) => {
+  const trimOptions = [...new Map(selectedYearOptions.filter(option => option.trimId !== undefined).map((option) => {
     const key = catalogTrimKey(option);
     return [key, { value: option.profileKind === "canonical" ? key : String(option.trimId), name: option.trim }];
   })).values()];
   const filters = useMemo(() => buildVehicleListParams(browse), [browse]);
-  const vehicles = useListVehicles(filters);
+  const filterKey = JSON.stringify(filters);
+  const [pagination, setPagination] = useState({ key: filterKey, page: 0 });
+  const page = pagination.key === filterKey ? pagination.page : 0;
+  const searchResults = useSearchVehicles({ ...filters, limit: 24, offset: page * 24 });
+  const vehicles = { ...searchResults, data: searchResults.data?.items };
+  const coverage = useGetCatalogCoverage();
+  const total = searchResults.data?.total ?? 0;
   const [selected, setSelected] = useState<string[]>([]);
   const toggle = (v: VehicleSummary) => setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
   const canonicalResults = Boolean(vehicles.data?.length) && vehicles.data!.every(vehicle => vehicle.profileKind === "canonical" && !vehicle.isDemo);
@@ -339,9 +348,12 @@ function BrowsePage() {
          updateFilters({ trim: "", trimId: selectedOption && selectedOption.profileKind !== "canonical" ? String(selectedOption.trimId) : "", trimKey: selectedOption?.profileKind === "canonical" ? catalogTrimKey(selectedOption) : "" });
        }}><option value="">All trims</option>{trimOptions.map(option => <option value={option.value} key={option.value}>{option.name}</option>)}</select></label>
       <label className="field-label">Order by<select value={browse.sort} onChange={event => updateFilters({ sort: event.target.value as BrowseFilters["sort"] })}><option value="popular">Most popular</option><option value="reliability">Estimated reliability</option><option value="ownership-cost">Annual ownership cost</option></select></label>
-      {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={clearAllFilters} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Results are illustrative estimates, not independently verified guidance.</p></aside>
-    <div className="results-area" ref={resultsAreaRef}><div className="results-top"><span>{vehicles.data?.length ?? 0} profiles shown</span><span className="mono">SORT: {browse.sort.replace('-', ' ').toUpperCase()}</span></div>
+      {(hasActiveBrowseFilters(browse) || draft.trim()) && <button className="clear-filters" onClick={clearAllFilters} aria-label="Clear all search filters">Clear all filters <X size={14}/></button>}<p className="filter-foot">Source-backed model/year entries are separate from labeled demos. Reviews, maintenance, specifications and other detailed research have not been added.</p></aside>
+    <div className="results-area" ref={resultsAreaRef}>
+      {coverage.data && <p className="body-copy catalog-coverage-note">{coverage.data.profileCount.toLocaleString()} source-backed model/year profiles across all 13 target brands, spanning {coverage.data.earliestYear}–{coverage.data.latestYear}. EPA listings cover recent and older years; pre-1978 coverage includes a limited classic supplement. Historical coverage and exact trims are not yet complete. 2027 listings may be preliminary.</p>}
+      <div className="results-top"><span>{total.toLocaleString()} matching profiles{total > 0 ? ` · ${page * 24 + 1}–${Math.min((page + 1) * 24, total)} shown` : ""}</span><span className="mono">SORT: {browse.sort.replace('-', ' ').toUpperCase()}</span></div>
       {vehicles.isLoading ? <LoadingBlock/> : vehicles.isError ? <ErrorBlock retry={() => vehicles.refetch()}/> : !vehicles.data?.length ? <EmptyBlock/> : <div className="vehicle-grid browse-grid">{vehicles.data.map(v => <VehicleCard key={v.id} vehicle={v} onCompare={toggle} selected={selected.includes(v.id)}/>)}</div>}
+      <CatalogPagination page={page} total={total} pending={searchResults.isFetching} onPageChange={page => setPagination({ key: filterKey, page })}/>
     </div>
     </div>
     {selected.length > 0 && <div className="compare-dock"><span><b>{selected.length}</b> selected for comparison <small>Choose up to four vehicles</small></span><div>{selected.map(id => <button aria-label="Remove from comparison" key={id} onClick={() => setSelected(s => s.filter(x => x !== id))}><X size={13}/></button>)}</div><button className="button dark" onClick={() => setLoc(`/compare?ids=${selected.join(',')}`)}>Compare vehicles <ArrowRight size={15}/></button></div>}
@@ -351,6 +363,9 @@ function BrowsePage() {
 function ManufacturerPage() {
   const { makeSlug = '' } = useParams();
   const profile = useGetMake(makeSlug);
+  const [pagination, setPagination] = useState({ slug: makeSlug, page: 0 });
+  const page = pagination.slug === makeSlug ? pagination.page : 0;
+  const catalog = useSearchVehicles({ makeSlug, offset: page * 24, limit: 24 });
   const manufacturerVehicles = profile.data?.vehicles || [];
   const canonicalProfiles = manufacturerVehicles.length > 0 && manufacturerVehicles.every(vehicle => vehicle.profileKind === "canonical" && !vehicle.isDemo);
   const demoProfiles = manufacturerVehicles.length > 0 && manufacturerVehicles.every(vehicle => vehicle.isDemo);
@@ -359,7 +374,7 @@ function ManufacturerPage() {
     : demoProfiles
       ? "MANUFACTURER PROFILE · DEMO ESTIMATES"
       : "MIXED RESEARCH CATALOG";
-  return <Shell><div className="content-wrap page-wrap">{profile.isLoading ? <LoadingBlock/> : profile.isError || !profile.data ? <ErrorBlock retry={() => profile.refetch()}/> : <><div className="manufacturer-hero"><span className="make-mark big">{profile.data.make.mark}</span><div><span className="eyebrow">{evidenceLabel}</span><h1 className="serif">{profile.data.make.name}</h1><p>{profile.data.description}</p></div><span className="manufacturer-count mono">{profile.data.make.vehicleCount} VEHICLE TRIMS</span></div>{!canonicalProfiles && <DemoNotice/>}<section className="content-section"><SectionHeading kicker="LINEUP SNAPSHOT" title={`Explore ${profile.data.make.name}`} link="Full catalog" href={`/browse?make=${makeSlug}`}/>{profile.data.vehicles.length ? <div className="vehicle-grid">{profile.data.vehicles.map(v => <VehicleCard key={v.id} vehicle={v}/>)}</div> : <EmptyBlock title="No featured trims yet" text="Browse the catalog to see all available vehicle profiles."/ >}</section></>}</div></Shell>;
+  return <Shell><div className="content-wrap page-wrap">{profile.isLoading ? <LoadingBlock/> : profile.isError || !profile.data ? <ErrorBlock retry={() => profile.refetch()}/> : <><div className="manufacturer-hero"><span className="make-mark big">{profile.data.make.mark}</span><div><span className="eyebrow">{evidenceLabel}</span><h1 className="serif">{profile.data.make.name}</h1><p>{profile.data.description}</p></div><span className="manufacturer-count mono">{profile.data.make.vehicleCount} VEHICLE PROFILES</span></div>{!canonicalProfiles && <DemoNotice/>}<section className="content-section"><SectionHeading kicker="MODEL-YEAR CATALOG" title={`Explore ${profile.data.make.name}`} link="Filter catalog" href={`/browse?make=${makeSlug}`}/>{catalog.isLoading ? <LoadingBlock/> : catalog.isError ? <ErrorBlock retry={() => catalog.refetch()}/> : catalog.data?.items.length ? <div className="vehicle-grid">{catalog.data.items.map(v => <VehicleCard key={v.id} vehicle={v}/>)}</div> : <EmptyBlock title="No featured profiles yet" text="Browse the catalog to see all available vehicle profiles."/ >}<CatalogPagination page={page} total={catalog.data?.total ?? 0} pending={catalog.isFetching} onPageChange={page => setPagination({ slug: makeSlug, page })}/></section></>}</div></Shell>;
 }
 
 function DetailPage() {
@@ -385,7 +400,7 @@ function DetailPage() {
     <div className="crumbs"><Link href="/">Home</Link><span>/</span><Link href={`/manufacturers/${v.makeSlug}`}>{v.make}</Link><span>/</span><span>{v.model}</span></div>
     <CanonicalProfileStatus vehicle={v} explain/>
     {canonical && <CanonicalEvidence state={v.fieldStates?.identity} claims={v.claims}/>}
-    <div className="detail-hero"><div><span className="eyebrow">{v.year} · {v.generation} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>Compare this trim <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
+    <div className="detail-hero"><div><span className="eyebrow">{v.year}{v.generation && ` · ${v.generation}`} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>{v.identityLevel === "model_year" ? "Compare this model year" : "Compare this trim"} <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
     {!canonical && <DemoNotice/>}
     <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType || "")}`, 'COMBINED EST.'], [v.drivetrain || "—", 'DRIVETRAIN'], [v.fuelType || "—", 'FUEL'], [v.horsepower == null ? "—" : `${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{canonical ? caption === "STARTING EST." ? "PRICE" : caption === "COMBINED EST." ? "COMBINED ECONOMY" : caption : caption}</small>{canonical && <CanonicalEvidence state={researchState(caption === "STARTING EST." ? "priceUsd" : caption === "COMBINED EST." ? "mpgCombined" : caption === "DRIVETRAIN" ? "drivetrain" : caption === "FUEL" ? "fuelType" : "horsepower", "specifications")} claims={v.claims}/>}</div>)}</div>
     <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} onClick={event => { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigateToSection(id as ReportSectionId); }} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>

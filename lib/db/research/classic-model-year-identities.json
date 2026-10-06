@@ -1,0 +1,26 @@
+[
+  {
+    "make": "Ford", "model": "Mustang", "ranges": [[1965, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Ford_Mustang",
+    "locator": "Model-years infobox: 1965–present; first-generation introduction explains that 1964½ production cars were advertised, VIN-coded and titled as MY1965. First and second generation descriptions establish continuous 1965–1977 model-year coverage.",
+    "limitations": "Model/year identity only. MY1964 is not inferred from calendar-year introduction; no trim, generation or equipment claim is imported."
+  },
+  {
+    "make": "Chevrolet", "model": "Bel Air", "ranges": [[1950, 1975]],
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Bel_Air",
+    "locator": "Model-years infobox explicitly distinguishes 1950–1975 (US) from 1950–1981 (Canada); introduction confirms US discontinuation in 1975.",
+    "limitations": "US model/year nameplate only, including the early named body style. Canadian MY1976–1981 are excluded; no trim or equipment claim is imported."
+  },
+  {
+    "make": "Lincoln", "model": "Continental", "ranges": [[1940, 1942], [1946, 1948], [1958, 1977]],
+    "url": "https://en.wikipedia.org/wiki/Lincoln_Continental",
+    "locator": "Model-years infobox: 1940–1942, 1946–1948, 1958–1980, 1982–2002, 2017–2020. First-generation section identifies US assembly and MY1940 introduction. This supplement retains only the explicitly listed pre-1978 years.",
+    "limitations": "Model/year only. Calendar-production year 1939, wartime gap 1943–1945 and separate Continental Mark II brand years 1956–1957 are not turned into Lincoln Continental profiles."
+  },
+  {
+    "make": "Dodge", "model": "Dart", "ranges": [[1960, 1976]],
+    "url": "https://en.wikipedia.org/wiki/Dodge_Dart",
+    "locator": "Model-years infobox: 1960–1976 (North America); introduction and first-generation section identify the US-market MY1960 launch and subsequent model years.",
+    "limitations": "Original US Dart nameplate only; foreign-market production after MY1976 and later unrelated Dart model years are not inferred."
+  }
+]

@@ -188,13 +188,14 @@ export type CatalogOption = {
   makeSlug: string;
   modelId: number;
   model: string;
-  generationId: number;
+  generationId?: number;
   generation: string;
   modelYearId: number;
   year: number;
-  trimId: number;
+  trimId?: number;
   trim: string;
   profileKind?: "canonical" | "legacy";
+  identityLevel?: "model_year" | "trim_configuration";
   makeKey?: string;
   modelKey?: string;
   generationKey?: string;
@@ -207,15 +208,18 @@ export function catalogModelKey(option: CatalogOption): string {
 }
 
 export function catalogGenerationKey(option: CatalogOption): string {
+  if (option.generationId === undefined) return "";
   return option.generationKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:generation:${option.generationId}`;
 }
 
 export function catalogTrimKey(option: CatalogOption): string {
+  if (option.trimId === undefined) return "";
   return option.trimKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:trim:${option.trimId}`;
 }
 
 export function getBrowseGenerationOptions(options: CatalogOption[]) {
-  return [...new Map(options.map((option) => [
+  return [...new Map(options.filter((option): option is CatalogOption & { generationId: number } =>
+    option.generationId !== undefined).map((option) => [
     catalogGenerationKey(option),
     {
       id: option.generationId,
@@ -243,6 +247,7 @@ export function getGenerationFilterHint(options: {
 }): string | undefined {
   if (!options.catalogReady) return undefined;
   if (!options.modelSelected) return "Choose a model to view its generations.";
+  if (options.generationCount === 0) return "Generation grouping has not yet been researched for these model-year profiles.";
   if (options.generationCount === 1) return "Only one generation is currently represented in this catalog.";
   return undefined;
 }

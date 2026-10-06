@@ -36,6 +36,18 @@ to add or pull that information now.
 Leave unresearched sections empty or labeled Not yet researched until the user
 authorizes that research phase.
 
+Historical calendar production dates are not interchangeable with model years.
+Keep explicit wartime gaps, separate marques and U.S./Canadian end dates; do
+not generate every integer year between a nameplate's first and last appearance.
+
+**Why:** Reviewed classic sources distinguish calendar introductions from model
+years, omit wartime models, and sometimes show longer Canadian-only runs. A
+range-based import would turn these distinctions into false U.S. profiles.
+
+**How to apply:** Require explicit model-year evidence for each retained range.
+Where a source prints a different model name (such as Mustang II), preserve it
+unless a separate verified family crosswalk justifies grouping it.
+
 Retire an illustrative profile from discovery only behind valid source-backed
 identity gates. Preserve its records and relationships; do not transfer its
 research or owner evidence to a real profile. Saved links may resolve to an

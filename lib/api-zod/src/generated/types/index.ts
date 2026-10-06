@@ -6,7 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './catalogBrandCoverage';
+export * from './catalogCoverage';
 export * from './catalogOption';
+export * from './catalogOptionIdentityLevel';
 export * from './catalogOptionProfileKind';
 export * from './claimProvenance';
 export * from './claimProvenanceApplicability';
@@ -35,12 +38,16 @@ export * from './ownerReportFieldStates';
 export * from './reliabilityProfile';
 export * from './researchState';
 export * from './researchStateState';
+export * from './searchVehiclesParams';
+export * from './searchVehiclesSort';
 export * from './sourceCitation';
 export * from './transmission';
 export * from './transmissionFieldStates';
 export * from './vehicleDetail';
+export * from './vehicleSearchResults';
 export * from './vehicleSummary';
 export * from './vehicleSummaryFieldStates';
+export * from './vehicleSummaryIdentityLevel';
 export * from './vehicleSummaryProfileKind';
 export * from './vehicleSummaryPublicationStatus';
 export * from './vehicleSummarySectionStates';

@@ -55,6 +55,50 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CatalogOption"
+  /catalog/coverage:
+    get:
+      operationId: getCatalogCoverage
+      tags: [catalog]
+      summary: Disclose the development model-year catalog coverage and gaps
+      responses:
+        "200":
+          description: Reviewed model-year coverage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogCoverage"
+        "404":
+          description: Catalog is not publicly released
+  /vehicles/search:
+    get:
+      operationId: searchVehicles
+      tags: [catalog]
+      summary: Search vehicle profiles with an exact result count and pagination
+      parameters:
+        - { in: query, name: q, schema: { type: string } }
+        - { in: query, name: makeSlug, schema: { type: string } }
+        - { in: query, name: model, schema: { type: string } }
+        - { in: query, name: modelId, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: generationId, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: year, schema: { type: integer } }
+        - { in: query, name: trim, schema: { type: string } }
+        - { in: query, name: trimId, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: modelKey, schema: { type: string } }
+        - { in: query, name: generationKey, schema: { type: string } }
+        - { in: query, name: modelYearKey, schema: { type: string } }
+        - { in: query, name: trimKey, schema: { type: string } }
+        - { in: query, name: sort, schema: { type: string, enum: [popular, reliability, ownership-cost] } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 24 } }
+        - { in: query, name: offset, schema: { type: integer, minimum: 0, default: 0 } }
+      responses:
+        "200":
+          description: Matching profiles and complete count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleSearchResults"
+        "400":
+          description: Invalid or contradictory vehicle filters
   /makes/{makeSlug}:
     get:
       operationId: getMake
@@ -122,7 +166,7 @@ paths:
           description: Namespace-qualified model identity. Numeric modelId remains legacy-only.
           schema:
             type: string
-            pattern: '^(legacy|canonical):model:[1-9][0-9]*$'
+            pattern: '^(legacy|canonical|catalog):model:[1-9][0-9]*$'
         - in: query
           name: generationKey
           schema:
@@ -132,7 +176,7 @@ paths:
           name: modelYearKey
           schema:
             type: string
-            pattern: '^(legacy|canonical):model-year:[1-9][0-9]*$'
+            pattern: '^(legacy|canonical|catalog):model-year:[1-9][0-9]*$'
         - in: query
           name: trimKey
           schema:
@@ -144,6 +188,12 @@ paths:
             type: string
             enum: [popular, reliability, ownership-cost]
             default: popular
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
         - in: query
           name: limit
           schema:
@@ -283,6 +333,37 @@ components:
         mark: { type: string }
         makeKey: { type: string }
       required: [id, name, slug, vehicleCount, mark]
+    CatalogCoverage:
+      type: object
+      properties:
+        profileCount: { type: integer }
+        earliestYear: { type: integer }
+        latestYear: { type: integer }
+        completeHistoricalCatalog: { type: boolean }
+        scope: { type: string }
+        missingCoverage: { type: string }
+        brands:
+          type: array
+          items: { $ref: "#/components/schemas/CatalogBrandCoverage" }
+      required: [profileCount, earliestYear, latestYear, completeHistoricalCatalog, scope, missingCoverage, brands]
+    CatalogBrandCoverage:
+      type: object
+      properties:
+        make: { type: string }
+        profileCount: { type: integer }
+        firstYear: { type: integer }
+        lastYear: { type: integer }
+      required: [make, profileCount, firstYear, lastYear]
+    VehicleSearchResults:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/VehicleSummary" }
+        total: { type: integer }
+        offset: { type: integer }
+        limit: { type: integer }
+      required: [items, total, offset, limit]
     CatalogOption:
       type: object
       properties:
@@ -300,12 +381,13 @@ components:
         trimId: { type: integer }
         trim: { type: string }
         profileKind: { type: string, enum: [legacy, canonical] }
+        identityLevel: { type: string, enum: [model_year, trim_configuration] }
         makeKey: { type: string }
         modelKey: { type: string }
         generationKey: { type: string }
         modelYearKey: { type: string }
         trimKey: { type: string }
-      required: [profileId, makeId, make, makeSlug, modelId, model, generationId, generation, modelYearId, year, trimId, trim]
+      required: [profileId, makeId, make, makeSlug, modelId, model, generation, modelYearId, year, trim]
     ManufacturerProfile:
       type: object
       properties:
@@ -353,6 +435,7 @@ components:
           enum: [development_preview, publicly_released]
           description: Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.
         canonicalConfigurationId: { type: integer }
+        identityLevel: { type: string, enum: [model_year, trim_configuration] }
         fieldStates:
           type: object
           additionalProperties: { $ref: "#/components/schemas/ResearchState" }

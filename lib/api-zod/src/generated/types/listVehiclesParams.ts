@@ -28,7 +28,7 @@ trimId?: number;
 trim?: string;
 /**
  * Namespace-qualified model identity. Numeric modelId remains legacy-only.
- * @pattern ^(legacy|canonical):model:[1-9][0-9]*$
+ * @pattern ^(legacy|canonical|catalog):model:[1-9][0-9]*$
  */
 modelKey?: string;
 /**
@@ -36,7 +36,7 @@ modelKey?: string;
  */
 generationKey?: string;
 /**
- * @pattern ^(legacy|canonical):model-year:[1-9][0-9]*$
+ * @pattern ^(legacy|canonical|catalog):model-year:[1-9][0-9]*$
  */
 modelYearKey?: string;
 /**
@@ -44,6 +44,10 @@ modelYearKey?: string;
  */
 trimKey?: string;
 sort?: ListVehiclesSort;
+/**
+ * @minimum 0
+ */
+offset?: number;
 /**
  * @minimum 1
  * @maximum 100

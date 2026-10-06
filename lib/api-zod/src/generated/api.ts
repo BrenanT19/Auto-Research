@@ -43,13 +43,14 @@ export const GetCatalogOptionsResponseItem = zod.object({
   "makeSlug": zod.string(),
   "modelId": zod.number().int(),
   "model": zod.string(),
-  "generationId": zod.number().int(),
+  "generationId": zod.number().int().optional(),
   "generation": zod.string(),
   "modelYearId": zod.number().int(),
   "year": zod.number().int(),
-  "trimId": zod.number().int(),
+  "trimId": zod.number().int().optional(),
   "trim": zod.string(),
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "makeKey": zod.string().optional(),
   "modelKey": zod.string().optional(),
   "generationKey": zod.string().optional(),
@@ -57,6 +58,128 @@ export const GetCatalogOptionsResponseItem = zod.object({
   "trimKey": zod.string().optional()
 })
 export const GetCatalogOptionsResponse = zod.array(GetCatalogOptionsResponseItem)
+
+
+/**
+ * @summary Disclose the development model-year catalog coverage and gaps
+ */
+export const GetCatalogCoverageResponse = zod.object({
+  "profileCount": zod.number().int(),
+  "earliestYear": zod.number().int(),
+  "latestYear": zod.number().int(),
+  "completeHistoricalCatalog": zod.boolean(),
+  "scope": zod.string(),
+  "missingCoverage": zod.string(),
+  "brands": zod.array(zod.object({
+  "make": zod.string(),
+  "profileCount": zod.number().int(),
+  "firstYear": zod.number().int(),
+  "lastYear": zod.number().int()
+}))
+})
+
+
+/**
+ * @summary Search vehicle profiles with an exact result count and pagination
+ */
+
+
+
+export const searchVehiclesQueryLimitDefault = 24;
+export const searchVehiclesQueryLimitMax = 100;
+
+export const searchVehiclesQueryOffsetDefault = 0;
+export const searchVehiclesQueryOffsetMin = 0;
+
+
+
+export const SearchVehiclesQueryParams = zod.object({
+  "q": zod.coerce.string().optional(),
+  "makeSlug": zod.coerce.string().optional(),
+  "model": zod.coerce.string().optional(),
+  "modelId": zod.coerce.number().int().min(1).optional(),
+  "generationId": zod.coerce.number().int().min(1).optional(),
+  "year": zod.coerce.number().int().optional(),
+  "trim": zod.coerce.string().optional(),
+  "trimId": zod.coerce.number().int().min(1).optional(),
+  "modelKey": zod.coerce.string().optional(),
+  "generationKey": zod.coerce.string().optional(),
+  "modelYearKey": zod.coerce.string().optional(),
+  "trimKey": zod.coerce.string().optional(),
+  "sort": zod.enum(['popular', 'reliability', 'ownership-cost']).optional(),
+  "limit": zod.coerce.number().int().min(1).max(searchVehiclesQueryLimitMax).default(searchVehiclesQueryLimitDefault),
+  "offset": zod.coerce.number().int().min(searchVehiclesQueryOffsetMin).default(searchVehiclesQueryOffsetDefault)
+})
+
+export const SearchVehiclesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "make": zod.string(),
+  "makeSlug": zod.string(),
+  "model": zod.string(),
+  "modelSlug": zod.string(),
+  "year": zod.number().int(),
+  "generation": zod.string(),
+  "trim": zod.string(),
+  "bodyType": zod.string().nullable(),
+  "drivetrain": zod.string().nullable(),
+  "fuelType": zod.string().nullable(),
+  "mpgCity": zod.number().nullable(),
+  "mpgHighway": zod.number().nullable(),
+  "mpgCombined": zod.number().nullable(),
+  "horsepower": zod.number().nullable(),
+  "priceUsd": zod.number().nullable(),
+  "reliabilityEstimate": zod.number().nullable(),
+  "annualOwnershipEstimateUsd": zod.number().nullable(),
+  "annualMaintenanceEstimateUsd": zod.number().nullable(),
+  "annualRepairEstimateUsd": zod.number().nullable(),
+  "annualFuelEstimateUsd": zod.number().nullable(),
+  "researchRank": zod.number().int().nullable(),
+  "imageKey": zod.string(),
+  "isDemo": zod.boolean(),
+  "profileKind": zod.enum(['legacy', 'canonical']).optional(),
+  "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
+  "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
+  "fieldStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "sectionStates": zod.record(zod.string(), zod.object({
+  "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
+  "reason": zod.string().nullish(),
+  "claimIds": zod.array(zod.string())
+}).describe('Missing research is not a zero or a negative finding. N/A requires supporting evidence.')).optional(),
+  "claims": zod.array(zod.object({
+  "id": zod.string(),
+  "contentClass": zod.enum(['source_fact', 'estimate', 'calculation', 'editorial_synthesis', 'external_owner_pattern', 'direct_owner_experience']),
+  "reviewStatus": zod.string(),
+  "evidenceStrength": zod.string(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "applicability": zod.enum(['applies', 'does_not_apply', 'unknown']),
+  "applicabilityVersion": zod.string(),
+  "scopeDescription": zod.string(),
+  "sources": zod.array(zod.object({
+  "sourceId": zod.string(),
+  "revisionId": zod.string(),
+  "publisher": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "documentIdentifier": zod.string().nullable(),
+  "sourceVersion": zod.string().nullable(),
+  "publishedAt": zod.string().nullable(),
+  "retrievedAt": zod.string(),
+  "locator": zod.string(),
+  "measurementBasis": zod.string().nullish(),
+  "unit": zod.string().nullish()
+}))
+})).optional()
+}).describe('A public vehicle identity, independent of optional research completeness.\nRequired research properties may be null; null never means zero or a demo estimate.\nCanonical profiles disclose fieldStates, sectionStates, and claims to distinguish\nunknown, not_yet_researched, and not_applicable from known values.\n')),
+  "total": zod.number().int(),
+  "offset": zod.number().int(),
+  "limit": zod.number().int()
+})
 
 
 /**
@@ -104,6 +227,7 @@ export const GetMakeResponse = zod.object({
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
   "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
   "reason": zod.string().nullish(),
@@ -148,11 +272,14 @@ export const GetMakeResponse = zod.object({
 
 
 
-export const listVehiclesQueryModelKeyRegExp = new RegExp('^(legacy|canonical):model:[1-9][0-9]*$');
+export const listVehiclesQueryModelKeyRegExp = new RegExp('^(legacy|canonical|catalog):model:[1-9][0-9]*$');
 export const listVehiclesQueryGenerationKeyRegExp = new RegExp('^(legacy|canonical):generation:[1-9][0-9]*$');
-export const listVehiclesQueryModelYearKeyRegExp = new RegExp('^(legacy|canonical):model-year:[1-9][0-9]*$');
+export const listVehiclesQueryModelYearKeyRegExp = new RegExp('^(legacy|canonical|catalog):model-year:[1-9][0-9]*$');
 export const listVehiclesQueryTrimKeyRegExp = new RegExp('^(legacy|canonical):trim:[1-9][0-9]*$');
 export const listVehiclesQuerySortDefault = `popular`;
+export const listVehiclesQueryOffsetDefault = 0;
+export const listVehiclesQueryOffsetMin = 0;
+
 export const listVehiclesQueryLimitDefault = 24;
 export const listVehiclesQueryLimitMax = 100;
 
@@ -172,6 +299,7 @@ export const ListVehiclesQueryParams = zod.object({
   "modelYearKey": zod.coerce.string().regex(listVehiclesQueryModelYearKeyRegExp).optional(),
   "trimKey": zod.coerce.string().regex(listVehiclesQueryTrimKeyRegExp).optional(),
   "sort": zod.enum(['popular', 'reliability', 'ownership-cost']).default(listVehiclesQuerySortDefault),
+  "offset": zod.coerce.number().int().min(listVehiclesQueryOffsetMin).default(listVehiclesQueryOffsetDefault),
   "limit": zod.coerce.number().int().min(1).max(listVehiclesQueryLimitMax).default(listVehiclesQueryLimitDefault)
 })
 
@@ -203,6 +331,7 @@ export const ListVehiclesResponseItem = zod.object({
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
   "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
   "reason": zod.string().nullish(),
@@ -272,6 +401,7 @@ export const ListPopularVehiclesResponseItem = zod.object({
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
   "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
   "reason": zod.string().nullish(),
@@ -341,6 +471,7 @@ export const ListTrendingVehiclesResponseItem = zod.object({
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
   "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
   "reason": zod.string().nullish(),
@@ -414,6 +545,7 @@ export const GetVehicleResponse = zod.object({
   "profileKind": zod.enum(['legacy', 'canonical']).optional(),
   "publicationStatus": zod.enum(['development_preview', 'publicly_released']).optional().describe('Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles.'),
   "canonicalConfigurationId": zod.number().int().optional(),
+  "identityLevel": zod.enum(['model_year', 'trim_configuration']).optional(),
   "fieldStates": zod.record(zod.string(), zod.object({
   "state": zod.enum(['known', 'unknown', 'not_yet_researched', 'not_applicable']),
   "reason": zod.string().nullish(),

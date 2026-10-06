@@ -37,7 +37,6 @@ import {
   sourceRevisionsTable,
   transmissionsTable,
   trimsTable,
-  consumerBrandsTable,
   vehicleGenerationsTable,
   vehicleModelYearsTable,
   vehicleModelsTable,
@@ -56,6 +55,10 @@ import {
 } from "../lib/canonical-vehicle-source";
 import { parseProfileKey } from "../lib/canonical-policy";
 import { getDevelopmentPreviewManifest } from "../lib/canonical-development-preview";
+import {
+  loadModelYearVehicles, validateModelYearSelectors, catalogPreviewEnabled,
+  modelYearCoverage, type CatalogVehicle,
+} from "../lib/model-year-catalog";
 import {
   getEligibleReplacement,
   getReplacementCandidate,
@@ -257,6 +260,13 @@ function toVehicleDetail(
   };
 }
 
+async function loadCatalogVehicles(
+  filters: Parameters<typeof loadCanonicalVehicles>[0],
+  releases: readonly CanonicalManifestEntry[],
+): Promise<CatalogVehicle[]> {
+  return [...await loadCanonicalVehicles(filters, releases), ...loadModelYearVehicles(filters)];
+}
+
 async function loadVehicles(
   options: {
     q?: string;
@@ -270,12 +280,14 @@ async function loadVehicles(
     vehicleId?: string;
     sort?: VehicleSort;
     limit?: number;
+    offset?: number;
     modelKey?: string;
     generationKey?: string;
     modelYearKey?: string;
     trimKey?: string;
   },
   releases: readonly CanonicalManifestEntry[],
+  onTotal?: (total: number) => void,
 ) {
   const parseKey = (key: string | undefined, kind: "model" | "generation" | "model-year" | "trim") => {
     if (!key) return undefined;
@@ -295,11 +307,18 @@ async function loadVehicles(
   const hasLegacyNumericSelector = options.modelId !== undefined ||
     options.generationId !== undefined || options.trimId !== undefined;
   if (keyNamespaces.size > 1 ||
-      (hasLegacyNumericSelector && keyNamespaces.has("canonical"))) {
+      (hasLegacyNumericSelector && (keyNamespaces.has("canonical") || keyNamespaces.has("catalog")))) {
     throw new InvalidVehicleFilterError("Canonical and legacy selectors cannot be mixed.");
   }
   const selectedNamespace = keyNamespaces.values().next().value ??
     (hasLegacyNumericSelector ? "legacy" : undefined);
+  if (selectedNamespace === "catalog") {
+    try {
+      validateModelYearSelectors(options);
+    } catch (error) {
+      throw invalidVehicleFilter(error);
+    }
+  }
   if ((modelKey?.namespace === "legacy" && options.modelId !== undefined && modelKey.id !== options.modelId) ||
       (generationKey?.namespace === "legacy" && options.generationId !== undefined && generationKey.id !== options.generationId) ||
       (trimKey?.namespace === "legacy" && options.trimId !== undefined && trimKey.id !== options.trimId)) {
@@ -393,15 +412,18 @@ async function loadVehicles(
     year: options.year,
     trim: options.trim,
     vehicleId: getReplacementCandidate(options.vehicleId)?.canonicalId ?? options.vehicleId,
-    modelYearKey: modelYearKey?.namespace === "canonical" ? `canonical:model-year:${modelYearKey.id}` : undefined,
-    modelKey: modelKey?.namespace === "canonical" ? `canonical:model:${modelKey.id}` : undefined,
+    modelYearKey: modelYearKey && modelYearKey.namespace !== "legacy" ? options.modelYearKey : undefined,
+    modelKey: modelKey && modelKey.namespace !== "legacy" ? options.modelKey : undefined,
     generationKey: generationKey?.namespace === "canonical" ? `canonical:generation:${generationKey.id}` : undefined,
     trimKey: trimKey?.namespace === "canonical" ? `canonical:trim:${trimKey.id}` : undefined,
   };
-  const loadedCanonical = selectedNamespace === "legacy" ? [] : await loadCanonicalVehicles(canonicalFilters, releases);
+  const loadedCanonical = selectedNamespace === "legacy" ? [] :
+    selectedNamespace === "catalog" ? loadModelYearVehicles(canonicalFilters) :
+    selectedNamespace === "canonical" ? await loadCanonicalVehicles(canonicalFilters, releases) :
+    await loadCatalogVehicles(canonicalFilters, releases);
   const canonical = getReplacementCandidate(options.vehicleId) &&
     !getEligibleReplacement(options.vehicleId, loadedCanonical) ? [] : loadedCanonical;
-  const legacy = selectedNamespace === "canonical" ? [] : await loadLegacyVehicles({
+  const legacy = selectedNamespace === "canonical" || selectedNamespace === "catalog" ? [] : await loadLegacyVehicles({
     ...options,
     modelId: modelKey?.namespace === "legacy" ? modelKey.id : options.modelId,
     generationId: generationKey?.namespace === "legacy" ? generationKey.id : options.generationId,
@@ -417,7 +439,7 @@ async function loadVehicles(
     // A text search (e.g. "Preferred") or saved legacy selector can omit its
     // replacement from the filtered result. Retirement depends on the complete
     // eligible catalog, not on whether that replacement matched this query.
-    retired = getRetiredDemoSlugs(await loadCanonicalVehicles({}, releases));
+    retired = getRetiredDemoSlugs(await loadCatalogVehicles({}, releases));
   }
   const combined = options.vehicleId
     ? canonical.length ? canonical : legacy
@@ -438,9 +460,11 @@ async function loadVehicles(
     if (leftLegacy && rightLegacy) return 0;
     if (leftLegacy !== rightLegacy) return leftLegacy ? -1 : 1;
     return left.make.localeCompare(right.make) || left.model.localeCompare(right.model) ||
-      left.year - right.year || left.trim.localeCompare(right.trim) || left.id.localeCompare(right.id);
+      right.year - left.year || left.trim.localeCompare(right.trim) || left.id.localeCompare(right.id);
   });
-  return combined.slice(0, options.limit ?? 100);
+  onTotal?.(combined.length);
+  const offset = options.offset ?? 0;
+  return combined.slice(offset, offset + (options.limit ?? 100));
 }
 
 export function createAutomotiveRouter(options: {
@@ -455,7 +479,7 @@ const developmentPreviews = (options.developmentPreviews ?? [])
 const previewConfigurationIds = new Set(developmentPreviews.map((entry) => entry.configurationId));
 const releases = [...publicReleases, ...developmentPreviews];
 async function getDiscoveryLegacyTrimIds(
-  eligible?: Awaited<ReturnType<typeof loadCanonicalVehicles>>,
+  eligible?: CatalogVehicle[],
 ): Promise<number[]> {
   return getLegacyFallbackTrimIds(getRetiredDemoSlugs(
     eligible ?? await loadCanonicalVehicles({}, releases),
@@ -490,7 +514,7 @@ function respondBadQuery(error: unknown, res: import("express").Response): void 
   res.status(400).json({ error: error instanceof Error ? error.message : "Invalid vehicle filter." });
 }
 
-function toCanonicalSummary(vehicle: Awaited<ReturnType<typeof loadCanonicalVehicles>>[number]) {
+function toCanonicalSummary(vehicle: CatalogVehicle) {
   const {
     makeKey,
     makeId,
@@ -525,7 +549,8 @@ function toCanonicalSummary(vehicle: Awaited<ReturnType<typeof loadCanonicalVehi
   } = vehicle;
   return {
     ...summary,
-    publicationStatus: previewConfigurationIds.has(vehicle.canonicalConfigurationId)
+    publicationStatus: ("identityLevel" in vehicle && vehicle.identityLevel === "model_year") ||
+      (vehicle.canonicalConfigurationId !== undefined && previewConfigurationIds.has(vehicle.canonicalConfigurationId))
       ? "development_preview" as const
       : "publicly_released" as const,
     claims: summary.claims.map(({ fieldCode, value, valueState, measurementBasis, unit, claimKind, ...claim }) => claim),
@@ -543,7 +568,7 @@ function serializeVehicleList(
 }
 
 router.get("/makes", async (_req, res): Promise<void> => {
-  const canonical = await loadCanonicalVehicles({}, releases);
+  const canonical = await loadCatalogVehicles({}, releases);
   const fallbackTrimIds = await getDiscoveryLegacyTrimIds(canonical);
   const visibleVehicleCount = count(
     sql`CASE WHEN ${inArray(trimsTable.id, fallbackTrimIds)} THEN ${trimsTable.id} END`,
@@ -588,7 +613,7 @@ router.get("/makes", async (_req, res): Promise<void> => {
 });
 
 router.get("/catalog/options", async (_req, res): Promise<void> => {
-  const canonical = await loadCanonicalVehicles({}, releases);
+  const canonical = await loadCatalogVehicles({}, releases);
   const fallbackTrimIds = await getDiscoveryLegacyTrimIds(canonical);
   const queriedOptions = await db
     .select({
@@ -629,6 +654,7 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
   const canonicalOptions = canonical.map((option) => ({
     profileId: option.id,
     canonicalConfigurationId: option.canonicalConfigurationId,
+    identityLevel: "identityLevel" in option ? option.identityLevel : "trim_configuration",
     makeId: option.makeId,
     make: option.make,
     makeSlug: option.makeSlug,
@@ -648,6 +674,14 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
     profileKind: "canonical" as const,
   }));
   res.json([...legacyOptions, ...canonicalOptions]);
+});
+
+router.get("/catalog/coverage", async (_req, res): Promise<void> => {
+  if (!catalogPreviewEnabled()) {
+    res.status(404).json({ error: "Development catalog coverage is not publicly released." });
+    return;
+  }
+  res.json(modelYearCoverage());
 });
 
 router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
@@ -677,7 +711,7 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     .groupBy(makesTable.id);
 
   if (!make) {
-    const canonical = await loadCanonicalVehicles({ makeSlug: parsed.data.makeSlug }, releases);
+    const canonical = await loadCatalogVehicles({ makeSlug: parsed.data.makeSlug }, releases);
     const canonicalMake = canonical[0];
     if (!canonicalMake) {
       res.status(404).json({ error: "Manufacturer not found" });
@@ -699,7 +733,7 @@ router.get("/makes/:makeSlug", async (req, res): Promise<void> => {
     return;
   }
 
-  const canonical = await loadCanonicalVehicles({ makeSlug: make.slug }, releases);
+  const canonical = await loadCatalogVehicles({ makeSlug: make.slug }, releases);
   const combinedMake = {
     ...make,
     vehicleCount: make.vehicleCount + canonical.length,
@@ -742,6 +776,27 @@ router.get("/vehicles/popular", async (_req, res): Promise<void> => {
 router.get("/vehicles/trending", async (_req, res): Promise<void> => {
   const vehicles = await loadVehicles({ sort: "popular", limit: 8 }, releases);
   res.json(serializeVehicleList(vehicles, ListTrendingVehiclesResponse));
+});
+
+router.get("/vehicles/search", async (req, res): Promise<void> => {
+  const parsed = ListVehiclesQueryParams.safeParse(req.query);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  try {
+    let total = 0;
+    const vehicles = await loadVehicles(
+      { ...parsed.data, ...routeNamespaceFilters(req.query as Record<string, unknown>) },
+      releases, count => { total = count; },
+    );
+    res.json({
+      items: serializeVehicleList(vehicles), total,
+      offset: parsed.data.offset ?? 0, limit: parsed.data.limit ?? 24,
+    });
+  } catch (error) {
+    respondBadQuery(error, res);
+  }
 });
 
 router.get("/vehicles/:vehicleId", async (req, res): Promise<void> => {
@@ -986,12 +1041,15 @@ router.post("/owner-submissions", async (req, res): Promise<void> => {
 });
 
 router.get("/discovery/stats", async (_req, res): Promise<void> => {
-  const eligible = await loadCanonicalVehicles({}, releases);
+  const eligible = await loadCatalogVehicles({}, releases);
   const fallbackTrimIds = await getDiscoveryLegacyTrimIds(eligible);
   const [makeStats, vehicleStats, reportStats, canonicalVehicles] = await Promise.all([
-    usesCatalogProfileReads()
-      ? db.select({ value: count() }).from(consumerBrandsTable)
-      : db.select({ value: count() }).from(makesTable),
+    db.select({ slug: makesTable.slug }).from(trimsTable)
+      .innerJoin(modelYearsTable, eq(trimsTable.modelYearId, modelYearsTable.id))
+      .innerJoin(generationsTable, eq(modelYearsTable.generationId, generationsTable.id))
+      .innerJoin(modelsTable, eq(generationsTable.modelId, modelsTable.id))
+      .innerJoin(makesTable, eq(modelsTable.makeId, makesTable.id))
+      .where(inArray(trimsTable.id, fallbackTrimIds)),
     Promise.resolve([{ value: fallbackTrimIds.length }]),
     db
       .select({ value: count() })
@@ -1000,7 +1058,7 @@ router.get("/discovery/stats", async (_req, res): Promise<void> => {
     Promise.resolve(eligible),
   ]);
   const stats = {
-    makeCount: makeStats[0]?.value ?? 0,
+    makeCount: new Set([...makeStats.map(make => make.slug), ...canonicalVehicles.map(vehicle => vehicle.makeSlug)]).size,
     vehicleCount: (vehicleStats[0]?.value ?? 0) + canonicalVehicles.length,
     reportCount: (reportStats[0]?.value ?? 0) + canonicalVehicles.reduce((total, vehicle) => total + vehicle.ownerReports.length, 0),
     demoLabel: canonicalVehicles.length

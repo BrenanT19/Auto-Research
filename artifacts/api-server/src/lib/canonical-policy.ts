@@ -34,11 +34,14 @@ export function isCurrentClaim(claim: {
 export function parseProfileKey(
   raw: unknown,
   kind: "model" | "generation" | "model-year" | "trim",
-): { namespace: "legacy" | "canonical"; id: number } {
+): { namespace: "legacy" | "canonical" | "catalog"; id: number } {
   if (typeof raw !== "string") throw new Error(`${kind}Key must be a single namespaced key.`);
-  const match = /^(legacy|canonical):(model|generation|model-year|trim):([1-9]\d*)$/.exec(raw);
+  const match = /^(legacy|canonical|catalog):(model|generation|model-year|trim):([1-9]\d*)$/.exec(raw);
   if (!match || match[2] !== kind || !Number.isSafeInteger(Number(match[3]))) {
     throw new Error(`${kind}Key is malformed; expected legacy:${kind}:ID or canonical:${kind}:ID.`);
   }
-  return { namespace: match[1] as "legacy" | "canonical", id: Number(match[3]) };
+  if (match[1] === "catalog" && (kind === "generation" || kind === "trim")) {
+    throw new Error("Catalog generations and trims have not yet been verified.");
+  }
+  return { namespace: match[1] as "legacy" | "canonical" | "catalog", id: Number(match[3]) };
 }

@@ -47,7 +47,9 @@ for (const group of groups) {
   assert.deepEqual(leaf.map((vehicle) => vehicle.id), [last.profileId], "Actual trim is selected, not a sibling fallback");
   assert.deepEqual(await get(`/owner-reports?vehicleId=${last.profileId}`), [], "No demo reports on a real trim");
   const make = await get(`/makes/${group.brandSlug}`);
-  assert.equal(make.make.vehicleCount, make.vehicles.length);
+  // Manufacturer metadata includes the whole expanded catalog; this endpoint
+  // retains its 100-profile preview. The UI pages through /vehicles/search.
+  assert.equal(make.vehicles.length, Math.min(make.make.vehicleCount, 100));
   assert.ok(make.description.includes("source-backed"), "A real or mixed manufacturer is not labeled all-demo");
 }
 const ford = options.find((option) => option.profileId === slug(groups[0], groups[0].trims[0]));

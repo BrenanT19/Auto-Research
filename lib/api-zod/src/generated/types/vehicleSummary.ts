@@ -7,6 +7,7 @@
  */
 import type { ClaimProvenance } from './claimProvenance';
 import type { VehicleSummaryFieldStates } from './vehicleSummaryFieldStates';
+import type { VehicleSummaryIdentityLevel } from './vehicleSummaryIdentityLevel';
 import type { VehicleSummaryProfileKind } from './vehicleSummaryProfileKind';
 import type { VehicleSummaryPublicationStatus } from './vehicleSummaryPublicationStatus';
 import type { VehicleSummarySectionStates } from './vehicleSummarySectionStates';
@@ -60,6 +61,7 @@ export interface VehicleSummary {
   /** Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles. */
   publicationStatus?: VehicleSummaryPublicationStatus;
   canonicalConfigurationId?: number;
+  identityLevel?: VehicleSummaryIdentityLevel;
   fieldStates?: VehicleSummaryFieldStates;
   sectionStates?: VehicleSummarySectionStates;
   claims?: ClaimProvenance[];

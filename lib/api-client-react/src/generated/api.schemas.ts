@@ -18,34 +18,21 @@ export interface Make {
   makeKey?: string;
 }
 
-export type CatalogOptionProfileKind = typeof CatalogOptionProfileKind[keyof typeof CatalogOptionProfileKind];
-
-
-export const CatalogOptionProfileKind = {
-  legacy: 'legacy',
-  canonical: 'canonical',
-} as const;
-
-export interface CatalogOption {
-  profileId: string;
-  canonicalConfigurationId?: number;
-  makeId: number;
+export interface CatalogBrandCoverage {
   make: string;
-  makeSlug: string;
-  modelId: number;
-  model: string;
-  generationId: number;
-  generation: string;
-  modelYearId: number;
-  year: number;
-  trimId: number;
-  trim: string;
-  profileKind?: CatalogOptionProfileKind;
-  makeKey?: string;
-  modelKey?: string;
-  generationKey?: string;
-  modelYearKey?: string;
-  trimKey?: string;
+  profileCount: number;
+  firstYear: number;
+  lastYear: number;
+}
+
+export interface CatalogCoverage {
+  profileCount: number;
+  earliestYear: number;
+  latestYear: number;
+  completeHistoricalCatalog: boolean;
+  scope: string;
+  missingCoverage: string;
+  brands: CatalogBrandCoverage[];
 }
 
 export type VehicleSummaryProfileKind = typeof VehicleSummaryProfileKind[keyof typeof VehicleSummaryProfileKind];
@@ -65,6 +52,14 @@ export type VehicleSummaryPublicationStatus = typeof VehicleSummaryPublicationSt
 export const VehicleSummaryPublicationStatus = {
   development_preview: 'development_preview',
   publicly_released: 'publicly_released',
+} as const;
+
+export type VehicleSummaryIdentityLevel = typeof VehicleSummaryIdentityLevel[keyof typeof VehicleSummaryIdentityLevel];
+
+
+export const VehicleSummaryIdentityLevel = {
+  model_year: 'model_year',
+  trim_configuration: 'trim_configuration',
 } as const;
 
 export type ResearchStateState = typeof ResearchStateState[keyof typeof ResearchStateState];
@@ -197,9 +192,56 @@ export interface VehicleSummary {
   /** Canonical visibility classification. Development previews are never part of the public release manifest. Omitted for legacy demo profiles. */
   publicationStatus?: VehicleSummaryPublicationStatus;
   canonicalConfigurationId?: number;
+  identityLevel?: VehicleSummaryIdentityLevel;
   fieldStates?: VehicleSummaryFieldStates;
   sectionStates?: VehicleSummarySectionStates;
   claims?: ClaimProvenance[];
+}
+
+export interface VehicleSearchResults {
+  items: VehicleSummary[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export type CatalogOptionProfileKind = typeof CatalogOptionProfileKind[keyof typeof CatalogOptionProfileKind];
+
+
+export const CatalogOptionProfileKind = {
+  legacy: 'legacy',
+  canonical: 'canonical',
+} as const;
+
+export type CatalogOptionIdentityLevel = typeof CatalogOptionIdentityLevel[keyof typeof CatalogOptionIdentityLevel];
+
+
+export const CatalogOptionIdentityLevel = {
+  model_year: 'model_year',
+  trim_configuration: 'trim_configuration',
+} as const;
+
+export interface CatalogOption {
+  profileId: string;
+  canonicalConfigurationId?: number;
+  makeId: number;
+  make: string;
+  makeSlug: string;
+  modelId: number;
+  model: string;
+  generationId?: number;
+  generation: string;
+  modelYearId: number;
+  year: number;
+  trimId?: number;
+  trim: string;
+  profileKind?: CatalogOptionProfileKind;
+  identityLevel?: CatalogOptionIdentityLevel;
+  makeKey?: string;
+  modelKey?: string;
+  generationKey?: string;
+  modelYearKey?: string;
+  trimKey?: string;
 }
 
 export interface ManufacturerProfile {
@@ -412,6 +454,49 @@ export interface DiscoveryStats {
   demoLabel: string;
 }
 
+export type SearchVehiclesParams = {
+q?: string;
+makeSlug?: string;
+model?: string;
+/**
+ * @minimum 1
+ */
+modelId?: number;
+/**
+ * @minimum 1
+ */
+generationId?: number;
+year?: number;
+trim?: string;
+/**
+ * @minimum 1
+ */
+trimId?: number;
+modelKey?: string;
+generationKey?: string;
+modelYearKey?: string;
+trimKey?: string;
+sort?: SearchVehiclesSort;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+/**
+ * @minimum 0
+ */
+offset?: number;
+};
+
+export type SearchVehiclesSort = typeof SearchVehiclesSort[keyof typeof SearchVehiclesSort];
+
+
+export const SearchVehiclesSort = {
+  popular: 'popular',
+  reliability: 'reliability',
+  'ownership-cost': 'ownership-cost',
+} as const;
+
 export type ListVehiclesParams = {
 q?: string;
 makeSlug?: string;
@@ -433,7 +518,7 @@ trimId?: number;
 trim?: string;
 /**
  * Namespace-qualified model identity. Numeric modelId remains legacy-only.
- * @pattern ^(legacy|canonical):model:[1-9][0-9]*$
+ * @pattern ^(legacy|canonical|catalog):model:[1-9][0-9]*$
  */
 modelKey?: string;
 /**
@@ -441,7 +526,7 @@ modelKey?: string;
  */
 generationKey?: string;
 /**
- * @pattern ^(legacy|canonical):model-year:[1-9][0-9]*$
+ * @pattern ^(legacy|canonical|catalog):model-year:[1-9][0-9]*$
  */
 modelYearKey?: string;
 /**
@@ -449,6 +534,10 @@ modelYearKey?: string;
  */
 trimKey?: string;
 sort?: ListVehiclesSort;
+/**
+ * @minimum 0
+ */
+offset?: number;
 /**
  * @minimum 1
  * @maximum 100

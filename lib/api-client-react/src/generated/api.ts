@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CatalogCoverage,
   CatalogOption,
   DiscoveryStats,
   HealthStatus,
@@ -30,7 +31,9 @@ import type {
   OwnerExperienceSubmissionInput,
   OwnerExperienceSubmissionReceipt,
   OwnerReport,
+  SearchVehiclesParams,
   VehicleDetail,
+  VehicleSearchResults,
   VehicleSummary
 } from './api.schemas';
 
@@ -282,6 +285,167 @@ export function useGetCatalogOptions<TData = Awaited<ReturnType<typeof getCatalo
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetCatalogOptionsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetCatalogCoverageUrl = () => {
+
+
+
+
+  return `/api/catalog/coverage`
+}
+
+/**
+ * @summary Disclose the development model-year catalog coverage and gaps
+ */
+export const getCatalogCoverage = async ( options?: Parameters<typeof customFetch>[1]): Promise<CatalogCoverage> => {
+
+  return customFetch<CatalogCoverage>(getGetCatalogCoverageUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCatalogCoverageQueryKey = () => {
+    return [
+    `/api/catalog/coverage`
+    ] as const;
+    }
+
+
+export const getGetCatalogCoverageQueryOptions = <TData = Awaited<ReturnType<typeof getCatalogCoverage>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogCoverage>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCatalogCoverageQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCatalogCoverage>>> = ({ signal }) => getCatalogCoverage({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCatalogCoverage>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCatalogCoverageQueryResult = NonNullable<Awaited<ReturnType<typeof getCatalogCoverage>>>
+export type GetCatalogCoverageQueryError = ErrorType<void>
+
+
+/**
+ * @summary Disclose the development model-year catalog coverage and gaps
+ */
+
+export function useGetCatalogCoverage<TData = Awaited<ReturnType<typeof getCatalogCoverage>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogCoverage>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCatalogCoverageQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSearchVehiclesUrl = (params?: SearchVehiclesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/vehicles/search?${stringifiedParams}` : `/api/vehicles/search`
+}
+
+/**
+ * @summary Search vehicle profiles with an exact result count and pagination
+ */
+export const searchVehicles = async (params?: SearchVehiclesParams, options?: Parameters<typeof customFetch>[1]): Promise<VehicleSearchResults> => {
+
+  return customFetch<VehicleSearchResults>(getSearchVehiclesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getSearchVehiclesQueryKey = (params?: SearchVehiclesParams,) => {
+    return [
+    `/api/vehicles/search`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getSearchVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof searchVehicles>>, TError = ErrorType<void>>(params?: SearchVehiclesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchVehicles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchVehiclesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchVehicles>>> = ({ signal }) => searchVehicles(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchVehicles>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type SearchVehiclesQueryResult = NonNullable<Awaited<ReturnType<typeof searchVehicles>>>
+export type SearchVehiclesQueryError = ErrorType<void>
+
+
+/**
+ * @summary Search vehicle profiles with an exact result count and pagination
+ */
+
+export function useSearchVehicles<TData = Awaited<ReturnType<typeof searchVehicles>>, TError = ErrorType<void>>(
+ params?: SearchVehiclesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchVehicles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getSearchVehiclesQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
