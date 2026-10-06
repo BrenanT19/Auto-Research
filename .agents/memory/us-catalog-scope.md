@@ -26,15 +26,16 @@ like the Mustang presentation.
 all-history catalog, never as fulfillment of the entire request. Preserve
 year-specific identities and the established presentation.
 
-Owner reviews, maintenance issues, and other detailed vehicle research are
-future work requiring an explicit user command.
+Detailed maintenance-source and owner-reported-problem research is authorized
+for **all catalog vehicles in verified batches**, not only recent vehicles.
 
-**Why:** The user wants these capabilities eventually but explicitly said not
-to add or pull that information now.
+**Why:** The user explicitly selected “All catalog vehicles in verified batches”
+when asked which vehicles to research, superseding the earlier research deferral.
 
-**How to apply:** Keep catalog identity work separate from research ingestion.
-Leave unresearched sections empty or labeled Not yet researched until the user
-authorizes that research phase.
+**How to apply:** Keep evidence collection separate from public publication.
+Report partial batch coverage and leave unresearched sections truthful. Verify
+source provenance, occurrence-mileage limitations, applicability and source-use
+rights independently; research authorization does not itself approve a release.
 
 Historical calendar production dates are not interchangeable with model years.
 Keep explicit wartime gaps, separate marques and U.S./Canadian end dates; do

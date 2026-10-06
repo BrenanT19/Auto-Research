@@ -42,3 +42,31 @@ mtime_ms = 1790892803672
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/1ce7964f-4ee2-4c1d-84e1-322aa0d8cae7/7626a54c-f600-4929-a14b-a36b6472bc43"
 storage_version_token = "1790892830656351"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "iEpXCwU9-lYqWxHLNGmnH"
+uri = "file://docs/research/maintenance-and-issues/research-review.pdf"
+type = "pdf"
+title = "Maintenance and reported-problem source review"
+description = "Five-page first-batch report: verified source statements, official directories, applicability limits and unresolved publication checks."
+logical_id = "b4f9069e-d323-4677-a720-f08053b78470"
+content_hash = "sha256:bd58213d05223559c151c8fc23d237eb8fdd8fcadc6388386fd837930f0ffd5e"
+size = 41413
+mtime_ms = 1791265906789
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/b4f9069e-d323-4677-a720-f08053b78470/8abaf0a0-b3ed-45ab-bc2e-e8101c844c61"
+storage_version_token = "1791265973986134"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "6apy4rwNzApLmj7tRftdh"
+uri = "file://docs/research/maintenance-and-issues/research-review-bundle.zip"
+type = "unspecified"
+title = "Research evidence and full catalog coverage"
+description = "Report, source list, maintenance and complaint CSVs, structured evidence ledger, and all 4,661 profile research statuses. Private review drafts; not ingested or published."
+logical_id = "c060b86d-4193-4fc4-84bf-dfe3370413ac"
+content_hash = "sha256:7bb48e95aa4f15dfde34ceaabdd34d1e424ab3b439147e3c8ade5fe42777e51c"
+size = 74378
+mtime_ms = 1791265906813
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/c060b86d-4193-4fc4-84bf-dfe3370413ac/ede9e544-b595-432b-b87f-063f59123bb2"
+storage_version_token = "1791265974527904"
+content_type = "application/octet-stream"
