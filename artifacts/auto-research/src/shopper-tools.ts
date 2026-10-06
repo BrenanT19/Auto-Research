@@ -208,6 +208,7 @@ export function catalogModelKey(option: CatalogOption): string {
 }
 
 export function catalogGenerationKey(option: CatalogOption): string {
+  if (option.generationKey) return option.generationKey;
   if (option.generationId === undefined) return "";
   return option.generationKey || `${option.profileKind === "canonical" ? "canonical" : "legacy"}:generation:${option.generationId}`;
 }
@@ -219,7 +220,7 @@ export function catalogTrimKey(option: CatalogOption): string {
 
 export function getBrowseGenerationOptions(options: CatalogOption[]) {
   return [...new Map(options.filter((option): option is CatalogOption & { generationId: number } =>
-    option.generationId !== undefined).map((option) => [
+    option.generationId !== undefined && Boolean(option.generation.trim())).map((option) => [
     catalogGenerationKey(option),
     {
       id: option.generationId,
@@ -232,8 +233,9 @@ export function getBrowseGenerationOptions(options: CatalogOption[]) {
 export function isGenerationFilterEnabled(options: {
   catalogReady: boolean;
   modelSelected: boolean;
+  generationCount?: number;
 }): boolean {
-  return options.catalogReady && options.modelSelected;
+  return options.catalogReady && options.modelSelected && options.generationCount !== 0;
 }
 
 export type BrowseSuggestion =
@@ -244,10 +246,14 @@ export function getGenerationFilterHint(options: {
   catalogReady: boolean;
   modelSelected: boolean;
   generationCount: number;
+  hasUnmappedYears?: boolean;
+  hasOverlappingYears?: boolean;
 }): string | undefined {
   if (!options.catalogReady) return undefined;
   if (!options.modelSelected) return "Choose a model to view its generations.";
   if (options.generationCount === 0) return "Generation grouping has not yet been researched for these model-year profiles.";
+  if (options.hasUnmappedYears) return "Grouping is partially researched. Unmapped years remain available under All generations / refreshes.";
+  if (options.hasOverlappingYears) return "Some transition years appear in more than one group. A model year alone does not identify the exact version.";
   if (options.generationCount === 1) return "Only one generation is currently represented in this catalog.";
   return undefined;
 }

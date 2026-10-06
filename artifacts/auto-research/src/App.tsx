@@ -294,11 +294,14 @@ function BrowsePage() {
   const generationFilterEnabled = isGenerationFilterEnabled({
     catalogReady,
     modelSelected: Boolean(browse.modelId || browse.modelKey),
+    generationCount: generationOptions.length,
   });
   const generationHint = getGenerationFilterHint({
     catalogReady,
     modelSelected: Boolean(browse.modelId || browse.modelKey),
     generationCount: generationOptions.length,
+    hasUnmappedYears: selectedModelOptions.some(option => !catalogGenerationKey(option)),
+    hasOverlappingYears: new Set(selectedModelOptions.map(option => option.profileId)).size < selectedModelOptions.length,
   });
   const selectedGenerationOptions = selectedModelOptions.filter((option) =>
     (!browse.generationId || String(option.generationId) === browse.generationId) &&
@@ -338,7 +341,7 @@ function BrowsePage() {
          const selectedOption = scoped.find(option => (option.profileKind === "canonical" ? catalogModelKey(option) : String(option.modelId)) === event.target.value);
          updateFilters({ model: "", modelId: selectedOption && selectedOption.profileKind !== "canonical" ? String(selectedOption.modelId) : "", modelKey: selectedOption?.profileKind === "canonical" ? catalogModelKey(selectedOption) : "", generationId: "", generationKey: "", year: "", trim: "", trimId: "", trimKey: "" });
        }}><option value="">All models</option>{modelOptions.map(option => <option value={option.value} key={option.value}>{option.name}</option>)}</select></label>
-       <div className="field-label"><label htmlFor="browse-generation">Generation</label><GenerationSelect describedBy={generationHint ? "browse-generation-help" : undefined} disabled={!generationFilterEnabled} value={browse.generationKey || browse.generationId} options={generationOptions.map(option => ({ id: option.key || String(option.id), name: option.name }))} onChange={generationValue => {
+       <div className="field-label"><label htmlFor="browse-generation">Generation / refresh</label><GenerationSelect emptyLabel={catalogReady && (browse.modelId || browse.modelKey) && !generationOptions.length ? "Not yet researched" : undefined} describedBy={generationHint ? "browse-generation-help" : undefined} disabled={!generationFilterEnabled} value={browse.generationKey || browse.generationId} options={generationOptions.map(option => ({ id: option.key || String(option.id), name: option.name }))} onChange={generationValue => {
          const selectedOption = selectedModelOptions.find(option => (option.profileKind === "canonical" ? catalogGenerationKey(option) : String(option.generationId)) === generationValue);
          updateFilters({ generationId: selectedOption && selectedOption.profileKind !== "canonical" ? String(selectedOption.generationId) : "", generationKey: selectedOption?.profileKind === "canonical" ? catalogGenerationKey(selectedOption) : "", year: "", trim: "", trimId: "", trimKey: "" });
        }}/>{generationHint && <small id="browse-generation-help" className="filter-help">{generationHint}</small>}</div>

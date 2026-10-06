@@ -32,7 +32,7 @@ trim?: string;
  */
 modelKey?: string;
 /**
- * @pattern ^(legacy|canonical):generation:[1-9][0-9]*$
+ * @pattern ^(legacy|canonical|catalog):generation:[1-9][0-9]*$
  */
 generationKey?: string;
 /**

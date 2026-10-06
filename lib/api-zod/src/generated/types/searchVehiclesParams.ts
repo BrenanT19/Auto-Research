@@ -26,6 +26,9 @@ trim?: string;
  */
 trimId?: number;
 modelKey?: string;
+/**
+ * @pattern ^(legacy|canonical|catalog):generation:[1-9][0-9]*$
+ */
 generationKey?: string;
 modelYearKey?: string;
 trimKey?: string;

@@ -5,6 +5,7 @@ import {
   catalogPreviewEnabled, loadModelYearVehicles, modelYearCoverage, validateModelYearSelectors,
 } from "../../artifacts/api-server/src/lib/model-year-catalog";
 import { parseProfileKey } from "../../artifacts/api-server/src/lib/canonical-policy";
+import { getCatalogBrowseEras } from "../../artifacts/api-server/src/lib/catalog-browse-eras";
 import {
   catalogGenerationKey, catalogTrimKey, getBrowseGenerationOptions,
 } from "../../artifacts/auto-research/src/shopper-tools";
@@ -27,15 +28,17 @@ test("every reviewed model/year gets a unique sparse profile, not an invented co
     assert.equal(profile.trimId, undefined);
     assert.equal(profile.generationId, undefined);
     assert.equal(profile.trim, "");
-    assert.equal(profile.generation, "");
+    const eras = getCatalogBrowseEras(profile);
+    assert.equal(Boolean(profile.generation), eras.length > 0);
     assert.equal(profile.fieldStates.identity.state, "known");
-    for (const field of ["trim", "generation", "horsepower", "priceUsd", "mpgCombined", "reliabilityEstimate"]) {
+    assert.equal(profile.fieldStates.generation.state, eras.length ? "known" : "not_yet_researched");
+    for (const field of ["trim", "horsepower", "priceUsd", "mpgCombined", "reliabilityEstimate"]) {
       assert.equal(profile.fieldStates[field].state, "not_yet_researched");
     }
     for (const field of ["ownerReports", "externalOwnerPatterns", "commonProblems", "maintenance", "engines", "transmissions"] as const) {
       assert.deepEqual(profile[field], []);
     }
-    assert.equal(profile.claims.length, 1);
+    assert.equal(profile.claims.length, 1 + eras.length);
     assert.equal(profile.claims[0].sources.length, 1);
     assert.ok(profile.claims[0].sources[0].locator);
     assert.equal(profile.isDemo, false);
@@ -137,7 +140,8 @@ test("catalog selectors cannot impersonate database trims or cross models", () =
   const chevy = loadModelYearVehicles({ vehicleId: "chevrolet-bel-air-1950-model-year" })[0];
   assert.equal(parseProfileKey(ford.modelKey, "model").namespace, "catalog");
   assert.throws(() => parseProfileKey("catalog:trim:12", "trim"));
-  assert.throws(() => parseProfileKey("catalog:generation:12", "generation"));
+  assert.equal(parseProfileKey("catalog:generation:12", "generation").namespace, "catalog");
+  assert.throws(() => validateModelYearSelectors({ generationKey: "catalog:generation:12" }));
   assert.throws(() => validateModelYearSelectors({ modelKey: ford.modelKey, modelYearKey: chevy.modelYearKey }));
   assert.equal(loadModelYearVehicles({ modelKey: "catalog:model:1" }).length, 0);
   assert.equal(loadModelYearVehicles({ trim: "GT" }).length, 0);

@@ -53,6 +53,7 @@ import {
   loadCanonicalVehicles,
   type CanonicalManifestEntry,
 } from "../lib/canonical-vehicle-source";
+import { catalogEraKey, getCatalogBrowseEras } from "../lib/catalog-browse-eras";
 import { parseProfileKey } from "../lib/canonical-policy";
 import { getDevelopmentPreviewManifest } from "../lib/canonical-development-preview";
 import {
@@ -414,7 +415,7 @@ async function loadVehicles(
     vehicleId: getReplacementCandidate(options.vehicleId)?.canonicalId ?? options.vehicleId,
     modelYearKey: modelYearKey && modelYearKey.namespace !== "legacy" ? options.modelYearKey : undefined,
     modelKey: modelKey && modelKey.namespace !== "legacy" ? options.modelKey : undefined,
-    generationKey: generationKey?.namespace === "canonical" ? `canonical:generation:${generationKey.id}` : undefined,
+    generationKey: generationKey && generationKey.namespace !== "legacy" ? options.generationKey : undefined,
     trimKey: trimKey?.namespace === "canonical" ? `canonical:trim:${trimKey.id}` : undefined,
   };
   const loadedCanonical = selectedNamespace === "legacy" ? [] :
@@ -673,7 +674,16 @@ router.get("/catalog/options", async (_req, res): Promise<void> => {
     trimKey: option.trimKey,
     profileKind: "canonical" as const,
   }));
-  res.json([...legacyOptions, ...canonicalOptions]);
+  const groupedOptions = canonicalOptions.flatMap(option => {
+    if (option.identityLevel !== "model_year") return [option];
+    const eras = getCatalogBrowseEras(option);
+    if (!eras.length) return [option];
+    return eras.map(era => ({
+      ...option, generationId: era.id, generationKey: catalogEraKey(era),
+      generation: `${era.name} (${era.startYear}–${era.endYear})`,
+    }));
+  });
+  res.json([...legacyOptions, ...groupedOptions]);
 });
 
 router.get("/catalog/coverage", async (_req, res): Promise<void> => {

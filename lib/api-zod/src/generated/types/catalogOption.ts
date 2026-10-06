@@ -8,6 +8,9 @@
 import type { CatalogOptionIdentityLevel } from './catalogOptionIdentityLevel';
 import type { CatalogOptionProfileKind } from './catalogOptionProfileKind';
 
+/**
+ * One selectable catalog membership. A model-year profile may have multiple rows with the same profileId when reviewed generation/refresh eras overlap. Deduplicate by profileId for vehicle counts and comparison choices; generationKey represents a broad browse grouping, not an exact build identity.
+ */
 export interface CatalogOption {
   profileId: string;
   canonicalConfigurationId?: number;

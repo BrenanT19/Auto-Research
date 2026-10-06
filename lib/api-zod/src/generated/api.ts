@@ -56,7 +56,7 @@ export const GetCatalogOptionsResponseItem = zod.object({
   "generationKey": zod.string().optional(),
   "modelYearKey": zod.string().optional(),
   "trimKey": zod.string().optional()
-})
+}).describe('One selectable catalog membership. A model-year profile may have multiple rows with the same profileId when reviewed generation/refresh eras overlap. Deduplicate by profileId for vehicle counts and comparison choices; generationKey represents a broad browse grouping, not an exact build identity.\n')
 export const GetCatalogOptionsResponse = zod.array(GetCatalogOptionsResponseItem)
 
 
@@ -85,6 +85,7 @@ export const GetCatalogCoverageResponse = zod.object({
 
 
 
+export const searchVehiclesQueryGenerationKeyRegExp = new RegExp('^(legacy|canonical|catalog):generation:[1-9][0-9]*$');
 export const searchVehiclesQueryLimitDefault = 24;
 export const searchVehiclesQueryLimitMax = 100;
 
@@ -103,7 +104,7 @@ export const SearchVehiclesQueryParams = zod.object({
   "trim": zod.coerce.string().optional(),
   "trimId": zod.coerce.number().int().min(1).optional(),
   "modelKey": zod.coerce.string().optional(),
-  "generationKey": zod.coerce.string().optional(),
+  "generationKey": zod.coerce.string().regex(searchVehiclesQueryGenerationKeyRegExp).optional(),
   "modelYearKey": zod.coerce.string().optional(),
   "trimKey": zod.coerce.string().optional(),
   "sort": zod.enum(['popular', 'reliability', 'ownership-cost']).optional(),
@@ -273,7 +274,7 @@ export const GetMakeResponse = zod.object({
 
 
 export const listVehiclesQueryModelKeyRegExp = new RegExp('^(legacy|canonical|catalog):model:[1-9][0-9]*$');
-export const listVehiclesQueryGenerationKeyRegExp = new RegExp('^(legacy|canonical):generation:[1-9][0-9]*$');
+export const listVehiclesQueryGenerationKeyRegExp = new RegExp('^(legacy|canonical|catalog):generation:[1-9][0-9]*$');
 export const listVehiclesQueryModelYearKeyRegExp = new RegExp('^(legacy|canonical|catalog):model-year:[1-9][0-9]*$');
 export const listVehiclesQueryTrimKeyRegExp = new RegExp('^(legacy|canonical):trim:[1-9][0-9]*$');
 export const listVehiclesQuerySortDefault = `popular`;

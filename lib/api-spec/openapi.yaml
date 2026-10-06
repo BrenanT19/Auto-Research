@@ -84,7 +84,7 @@ paths:
         - { in: query, name: trim, schema: { type: string } }
         - { in: query, name: trimId, schema: { type: integer, minimum: 1 } }
         - { in: query, name: modelKey, schema: { type: string } }
-        - { in: query, name: generationKey, schema: { type: string } }
+        - { in: query, name: generationKey, schema: { type: string, pattern: '^(legacy|canonical|catalog):generation:[1-9][0-9]*$' } }
         - { in: query, name: modelYearKey, schema: { type: string } }
         - { in: query, name: trimKey, schema: { type: string } }
         - { in: query, name: sort, schema: { type: string, enum: [popular, reliability, ownership-cost] } }
@@ -171,7 +171,7 @@ paths:
           name: generationKey
           schema:
             type: string
-            pattern: '^(legacy|canonical):generation:[1-9][0-9]*$'
+            pattern: '^(legacy|canonical|catalog):generation:[1-9][0-9]*$'
         - in: query
           name: modelYearKey
           schema:
@@ -366,6 +366,11 @@ components:
       required: [items, total, offset, limit]
     CatalogOption:
       type: object
+      description: >
+        One selectable catalog membership. A model-year profile may have multiple
+        rows with the same profileId when reviewed generation/refresh eras overlap.
+        Deduplicate by profileId for vehicle counts and comparison choices;
+        generationKey represents a broad browse grouping, not an exact build identity.
       properties:
         profileId: { type: string }
         canonicalConfigurationId: { type: integer }

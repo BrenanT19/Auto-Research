@@ -1,5 +1,6 @@
 import snapshot from "../data/model-year-catalog.json";
 import type { CanonicalClaim, CanonicalFilters, CanonicalVehicle } from "./canonical-vehicle-source";
+import { catalogBrowseEraClaims, catalogEraKey, getCatalogBrowseEra, getCatalogBrowseEras } from "./catalog-browse-eras";
 
 /** Catalog IDs are not database configuration, trim, or generation IDs. */
 export type ModelYearVehicle = Omit<CanonicalVehicle,
@@ -68,13 +69,16 @@ const vehicles: ModelYearVehicle[] = snapshot.entries.map(entry => {
       locator: `Make ${entry.make}; model year ${entry.year}; publisher model grouping ${entry.model}. ${locators.join("; ")}`,
     }],
   };
+  const eras = getCatalogBrowseEras(entry);
+  const eraClaims = catalogBrowseEraClaims(entry);
   return {
     id: entry.id, identityLevel: "model_year", make: entry.make, makeSlug: entry.makeSlug,
     makeId: entry.makeId, makeKey: `catalog:make:${entry.makeId}`,
     model: entry.model, modelSlug: entry.modelSlug, modelId: entry.modelId,
     modelKey: `catalog:model:${entry.modelId}`, modelYearId: entry.modelYearId,
     modelYearKey: `catalog:model-year:${entry.modelYearId}`, year: entry.year,
-    generation: "", trim: "", bodyType: null, drivetrain: null, fuelType: null,
+    generation: eras.map(era => era.name).join(" / ") + (eras.length > 1 ? " (transition / overlapping year)" : ""),
+    trim: "", bodyType: null, drivetrain: null, fuelType: null,
     mpgCity: null, mpgHighway: null, mpgCombined: null, horsepower: null,
     priceUsd: null, reliabilityEstimate: null, annualOwnershipEstimateUsd: null,
     annualMaintenanceEstimateUsd: null, annualRepairEstimateUsd: null, annualFuelEstimateUsd: null,
@@ -82,9 +86,11 @@ const vehicles: ModelYearVehicle[] = snapshot.entries.map(entry => {
     fieldStates: {
       ...Object.fromEntries(optionalFields.map(field => [field, unresearched])),
       identity: { state: "known", claimIds: [claimId] },
+      ...(eraClaims.length ? { generation: { state: "known" as const, claimIds: eraClaims.map(claim => claim.id),
+        reason: "Broad generation/refresh candidates, not an exact build or configuration assignment." } } : {}),
     },
     sectionStates: Object.fromEntries(sections.map(section => [section, unresearched])),
-    claims: [claim], commonProblems: [], maintenance: [], reliabilityClaimIds: [],
+    claims: [claim, ...eraClaims], commonProblems: [], maintenance: [], reliabilityClaimIds: [],
     overview: null, fuelRequirement: null, fuelTankCapacityGallons: null,
     engineName: null, transmissionName: null, reliabilityLabel: null, reliabilityNote: null,
     insuranceEstimateUsd: null, fiveYearDepreciationPercent: null, expectedLifespanMiles: null,
@@ -106,6 +112,18 @@ export function validateModelYearSelectors(filters: CanonicalFilters): void {
   if (modelId !== undefined && year && year.modelId !== modelId) {
     throw new Error("Model and model-year selectors describe different catalog identities.");
   }
+  if (filters.generationKey) {
+    const era = getCatalogBrowseEra(filters.generationKey);
+    if (!era) throw new Error("Generation/refresh selector is not a reviewed catalog grouping.");
+    const matches = vehicles.filter(vehicle => getCatalogBrowseEras(vehicle).some(candidate => candidate.id === era.id));
+    if ((filters.modelKey && !matches.some(vehicle => vehicle.modelKey === filters.modelKey)) ||
+        (filters.makeSlug && !matches.some(vehicle => vehicle.makeSlug === filters.makeSlug)) ||
+        (filters.model && !matches.some(vehicle => vehicle.model.toLocaleLowerCase() === filters.model!.toLocaleLowerCase())) ||
+        (filters.modelYearKey && !matches.some(vehicle => vehicle.modelYearKey === filters.modelYearKey)) ||
+        (filters.year && !matches.some(vehicle => vehicle.year === filters.year))) {
+      throw new Error("Generation/refresh selector contradicts the selected model or year.");
+    }
+  }
 }
 
 export function loadModelYearVehicles(filters: CanonicalFilters = {}): ModelYearVehicle[] {
@@ -118,7 +136,8 @@ export function loadModelYearVehicles(filters: CanonicalFilters = {}): ModelYear
     (!filters.year || vehicle.year === filters.year) &&
     (!filters.modelKey || vehicle.modelKey === filters.modelKey) &&
     (!filters.modelYearKey || vehicle.modelYearKey === filters.modelYearKey) &&
-    !filters.generationKey && !filters.trimKey && !filters.trim &&
+    (!filters.generationKey || getCatalogBrowseEras(vehicle).some(era => catalogEraKey(era) === filters.generationKey)) &&
+    !filters.trimKey && !filters.trim &&
     (!query || query.split(/\s+/).every(term =>
       `${vehicle.make} ${vehicle.model} ${vehicle.year}`.toLocaleLowerCase().includes(term))),
   );

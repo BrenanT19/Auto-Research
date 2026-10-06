@@ -8,6 +8,7 @@ type GenerationSelectProps = {
   options: Array<{ id: number | string; name: string }>;
   disabled: boolean;
   describedBy?: string;
+  emptyLabel?: string;
   onChange: (generationId: string) => void;
 };
 
@@ -17,6 +18,7 @@ export function GenerationSelect({
   options,
   disabled,
   describedBy,
+  emptyLabel,
   onChange,
 }: GenerationSelectProps) {
   return (
@@ -43,7 +45,7 @@ export function GenerationSelect({
           collisionPadding={8}
         >
           <Select.Viewport>
-            <GenerationItem value={ALL_GENERATIONS}>All generations</GenerationItem>
+            <GenerationItem value={ALL_GENERATIONS}>{emptyLabel || "All generations / refreshes"}</GenerationItem>
             {options.map((option) => (
               <GenerationItem key={option.id} value={String(option.id)}>
                 {option.name}

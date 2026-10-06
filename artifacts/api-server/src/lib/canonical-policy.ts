@@ -40,8 +40,8 @@ export function parseProfileKey(
   if (!match || match[2] !== kind || !Number.isSafeInteger(Number(match[3]))) {
     throw new Error(`${kind}Key is malformed; expected legacy:${kind}:ID or canonical:${kind}:ID.`);
   }
-  if (match[1] === "catalog" && (kind === "generation" || kind === "trim")) {
-    throw new Error("Catalog generations and trims have not yet been verified.");
+  if (match[1] === "catalog" && kind === "trim") {
+    throw new Error("Catalog trims have not yet been verified.");
   }
   return { namespace: match[1] as "legacy" | "canonical" | "catalog", id: Number(match[3]) };
 }
