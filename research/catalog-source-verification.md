@@ -60,7 +60,7 @@ The Tesla endpoint year and Ram query parameter scope each request to the releva
 
 The 539 historical entries use selected secondary references; 533 are pre-1978 and 6 fall in 1978–1983. Their source records are linked, but this pass did not independently verify every historical fact against a complete U.S. archive. The searches found no single source promising complete pre-1984 coverage across all 13 makes.
 
-All 43 trim/configuration profiles return a development-preview detail record with 237 accepted claim-source rows and 26 distinct source URLs. These are provenance links, not an independent audit of each source's terms, and do not establish that every retail trim or package has been catalogued.
+All 43 trim/configuration profiles return a development-preview detail record with 237 accepted claim-source rows tied to 25 distinct public URLs; two rows point to the same internal research-review source without a URL. These are provenance links, not an independent audit of each source's terms, and do not establish that every retail trim or package has been catalogued.
 
 ## Coverage leads and limits
 
@@ -80,7 +80,7 @@ The separate [release-readiness report](catalog-release-readiness.md) and [row-l
 - `catalog-options.csv` — all 4,818 Browse options, including intentional multi-era choices.
 - `catalog-trim-evidence.csv` — source URLs and accepted claim rows for the 43 exact trim/configuration previews.
 - `catalog-release-readiness.csv` — one disposition row for each of the 4,715 profiles.
-- `sources/release-review-trim-source-ledger.md` — 26 exact trim-source URLs and their linked profile counts; not rights clearance.
+- `sources/release-review-trim-source-ledger.md` — 25 public trim-source URLs and their linked profile counts, with URL-less internal review rows shown separately; not rights clearance.
 - `catalog-source-inventory.csv` — the 46 bundled source records.
 - `catalog-year-gap-leads.csv` — 660 within-name year gaps to review.
 - `catalog-coverage-by-make.csv` — observed make/year counts and historical source layers.

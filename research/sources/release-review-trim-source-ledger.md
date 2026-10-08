@@ -2,13 +2,13 @@
 
 **Generated from:** `research/catalog-trim-evidence.csv` (237 rows, 2026-10-08 review).
 
-This ledger establishes which URLs the development preview claims cite. It is not a full capture of every linked webpage/PDF, is not a license, and does not independently clear access, storage, attribution, or public-display rights. See the row-level CSV for source locators and claim IDs.
+This ledger establishes which public URLs the development preview claims cite and separately identifies claim rows with no public URL. It is not a full capture of every linked webpage/PDF, is not a license, and does not independently clear access, storage, attribution, or public-display rights. See the row-level CSV for source locators and claim IDs.
 
-**Distinct URLs:** 26 · **Profiles:** 43 · **Claim rows:** 237 · **Strength:** 235 moderate, 2 strong.
+**Distinct public URLs:** 25 · **Profiles:** 43 · **Claim rows:** 237 · **URL-less claim rows:** 2 (1 internal source record) · **Strength:** 235 moderate, 2 strong.
 
-| URL | Profiles | Claim rows | Claim strength | Document identifiers |
+| URL or source note | Profiles | Claim rows | Claim strength | Document identifiers |
 |---|---:|---:|---|---|
-| `` | 1 | 2 | moderate=2 | AutoResearch research review |
+| No public URL (internal research review) | 1 | 2 | moderate=2 | AutoResearch research review |
 | `https://api.nhtsa.gov/SafetyRatings/VehicleId/19149?format=json` | 1 | 2 | moderate=2 | National Highway Traffic Safety Administration |
 | `https://api.nhtsa.gov/complaints/complaintsByVehicle?make=ford&model=mustang&modelYear=2024` | 1 | 1 | moderate=1 | National Highway Traffic Safety Administration |
 | `https://api.nhtsa.gov/recalls/recallsByVehicle?make=ford&model=mustang&modelYear=2024` | 1 | 12 | moderate=12 | National Highway Traffic Safety Administration |

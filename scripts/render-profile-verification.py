@@ -5,6 +5,7 @@ import html
 import json
 import pathlib
 import re
+import urllib.parse
 
 ROOT = pathlib.Path("research")
 AUDIT = ROOT / "profile-information-audit"
@@ -106,14 +107,164 @@ def make_html(markdown, title):
     return f"<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>{html.escape(title)}</title><style>{css}</style><main>{''.join(blocks)}</main></html>"
 
 
+def render_trim_source_ledger(trim_evidence_rows):
+    grouped = collections.defaultdict(list)
+    for row in trim_evidence_rows:
+        grouped[(row.get("source_url") or "").strip()].append(row)
+
+    public_urls = [url for url in grouped if url]
+    url_less_rows = grouped.get("", [])
+    url_less_source_ids = {
+        row["source_id"] for row in url_less_rows if row.get("source_id")
+    }
+    strength_counts = collections.Counter(
+        row["evidence_strength"] for row in trim_evidence_rows
+        if row.get("evidence_strength")
+    )
+    strength_text = ", ".join(
+        f"{strength_counts[key]} {key}"
+        for key in ("moderate", "strong")
+        if strength_counts.get(key)
+    )
+    source_word = "source record" if len(url_less_source_ids) == 1 else "source records"
+
+    lines = [
+        "# Trim-evidence source ledger",
+        "",
+        f"**Generated from:** `research/catalog-trim-evidence.csv` ({len(trim_evidence_rows)} rows, 2026-10-08 review).",
+        "",
+        "This ledger establishes which public URLs the development preview claims cite and separately identifies claim rows with no public URL. It is not a full capture of every linked webpage/PDF, is not a license, and does not independently clear access, storage, attribution, or public-display rights. See the row-level CSV for source locators and claim IDs.",
+        "",
+        (
+            f"**Distinct public URLs:** {len(public_urls)} · "
+            f"**Profiles:** {len({row['profile_id'] for row in trim_evidence_rows})} · "
+            f"**Claim rows:** {len(trim_evidence_rows)} · "
+            f"**URL-less claim rows:** {len(url_less_rows)} "
+            f"({len(url_less_source_ids)} internal {source_word}) · "
+            f"**Strength:** {strength_text}."
+        ),
+        "",
+        "| URL or source note | Profiles | Claim rows | Claim strength | Document identifiers |",
+        "|---|---:|---:|---|---|",
+    ]
+
+    for url in sorted(grouped, key=lambda value: (bool(value), value)):
+        records = grouped[url]
+        counts = collections.Counter(
+            row["evidence_strength"] for row in records
+            if row.get("evidence_strength")
+        )
+        claim_strength = "; ".join(
+            f"{strength}={counts[strength]}" for strength in sorted(counts)
+        )
+        documents = "; ".join(sorted({
+            row["document_identifier"] for row in records
+            if row.get("document_identifier")
+        }))
+        url_label = (
+            f"`{url}`" if url
+            else "No public URL (internal research review)"
+        )
+        lines.append(
+            f"| {url_label} | {len({row['profile_id'] for row in records})} "
+            f"| {len(records)} | {claim_strength} | {documents} |"
+        )
+
+    return "\n".join(lines) + "\n"
+
+
 def main():
     summary = json.loads((AUDIT / "summary.json").read_text())
     epa = json.loads((AUDIT / "epa-live-recheck.json").read_text())
     profiles, fields = rows("profiles.csv"), rows("populated-information.csv")
+    sibling_lineage = summary.get("sibling_trim_item_lineage", {})
+    source_revision_provenance = summary.get("source_revision_provenance", {})
+    if sibling_lineage:
+        assert sibling_lineage["listed_items"] == sibling_lineage["items_with_profile_links"]
+        assert sibling_lineage["claim_ids_resolved"] > 0
+    claim_sources = rows("claim-sources.csv")
+    if source_revision_provenance:
+        assert claim_sources and "stored_revision_key" in claim_sources[0]
+        assert "revision_id" not in claim_sources[0]
+        wikipedia_rows = [
+            row for row in claim_sources
+            if "wikipedia.org" in (row["source_url"] or "").lower()
+            or "wikimedia.org" in (row["source_url"] or "").lower()
+        ]
+        wikipedia_oldid_rows = [
+            row for row in wikipedia_rows
+            if any(
+                value.isdigit()
+                for value in urllib.parse.parse_qs(
+                    urllib.parse.urlparse(row["source_url"]).query
+                ).get("oldid", [])
+            )
+        ]
+        historical_review_hash_profiles = {
+            row["profile_id"]
+            for row in wikipedia_rows
+            if "normalized factual review" in (row["source_version"] or "").lower()
+            and len(row["stored_revision_key"] or "") == 64
+            and all(
+                character in "0123456789abcdef"
+                for character in row["stored_revision_key"].lower()
+            )
+        }
+        assert len(wikipedia_rows) == source_revision_provenance["wikipedia_claim_source_rows"]
+        assert len(wikipedia_oldid_rows) == source_revision_provenance["wikipedia_urls_with_explicit_oldid"]
+        assert len(historical_review_hash_profiles) == source_revision_provenance[
+            "wikipedia_profiles_with_local_normalized_fact_hash"
+        ]
+    with (ROOT / "catalog-trim-evidence.csv").open(newline="", encoding="utf-8") as file:
+        trim_evidence_rows = list(csv.DictReader(file))
+    trim_profile_ids = {row["profile_id"] for row in trim_evidence_rows}
+    trim_public_urls = {
+        (row.get("source_url") or "").strip()
+        for row in trim_evidence_rows
+        if (row.get("source_url") or "").strip()
+    }
+    trim_url_less_rows = [
+        row for row in trim_evidence_rows
+        if not (row.get("source_url") or "").strip()
+    ]
+    trim_url_less_source_ids = {
+        row["source_id"] for row in trim_url_less_rows if row.get("source_id")
+    }
+    trim_strength_counts = collections.Counter(
+        row["evidence_strength"] for row in trim_evidence_rows
+        if row.get("evidence_strength")
+    )
+    trim_url_less_row_word = "row" if len(trim_url_less_rows) == 1 else "rows"
+    trim_url_less_source_word = (
+        "source record" if len(trim_url_less_source_ids) == 1 else "source records"
+    )
+    trim_scope_summary = (
+        f"{len(trim_evidence_rows)} accepted internal claim-source rows link to "
+        f"{len(trim_public_urls)} distinct public URLs; {len(trim_url_less_rows)} "
+        f"{trim_url_less_row_word} point to {len(trim_url_less_source_ids)} "
+        f"URL-less internal research-review {trim_url_less_source_word}. "
+        f"Evidence strength: {trim_strength_counts.get('moderate', 0)} moderate, "
+        f"{trim_strength_counts.get('strong', 0)} strong. Accepted is an internal "
+        "status, not independent release clearance."
+    )
+    (ROOT / "sources/release-review-trim-source-ledger.md").write_text(
+        render_trim_source_ledger(trim_evidence_rows)
+    )
+    incomplete_gm_trim_profiles = {
+        row["profile_id"]
+        for row in trim_evidence_rows
+        if (row["make"], row["model"], row["year"]) in {
+            ("Chevrolet", "Silverado 1500", "2024"),
+            ("GMC", "Sierra 1500", "2024"),
+        }
+        and "available in ... trims list" in row["source_locator"].lower()
+    }
     assert len(profiles) == summary["distinct_profile_count"] == 4715
     assert len({row["profile_id"] for row in profiles}) == len(profiles)
     assert epa["same_hashed_payload"] and not epa["mismatches"]
     issues = rows("structural-issues.csv")
+    assert len(issues) == summary["structural_issue_count"]
+    issue_counts = collections.Counter(row["issue"] for row in issues)
     assert not any(row["issue"] in {"request_failed", "wrong_profile_id", "browse_detail_mismatch"} for row in issues)
     generations = {row["profile_id"] for row in fields if row["field"] == "generation"}
     identity_rows = rows("my2027-identity-crosscheck.csv") if (AUDIT / "my2027-identity-crosscheck.csv").exists() else []
@@ -138,6 +289,11 @@ def main():
         "chevelle-profile-fact-check.csv",
         "corvette-profile-fact-check.csv",
         "corvette-generation-fact-check.csv",
+        "thunderbird-profile-fact-check.csv",
+        "charger-profile-fact-check.csv",
+        "gmc-ck-profile-fact-check.csv",
+        "chrysler-new-yorker-profile-fact-check.csv",
+        "chrysler-newport-profile-fact-check.csv",
     ):
         for check in rows(matrix_name):
             assert check["profile_id"] not in fact_checks, (
@@ -145,6 +301,68 @@ def main():
             )
             check["_matrix_file"] = matrix_name
             fact_checks[check["profile_id"]] = check
+    with (ROOT / "catalog-source-inventory.csv").open(
+        newline="", encoding="utf-8"
+    ) as file:
+        source_inventory = list(csv.DictReader(file))
+    catalog_rights_by_url = collections.defaultdict(list)
+    for record in source_inventory:
+        if record.get("url"):
+            catalog_rights_by_url[record["url"]].append(record)
+    claim_sources_by_url = collections.defaultdict(list)
+    for record in claim_sources:
+        if record.get("source_url"):
+            claim_sources_by_url[record["source_url"]].append(record)
+    source_rights_coverage = []
+    for url, records in sorted(claim_sources_by_url.items()):
+        rights_records = catalog_rights_by_url.get(url, [])
+        source_rights_coverage.append({
+            "source_url": url,
+            "claim_source_rows": len(records),
+            "distinct_profiles": len({record["profile_id"] for record in records}),
+            "source_ids": ";".join(sorted({
+                record["source_id"] for record in records if record.get("source_id")
+            })),
+            "catalog_ledger_records": len(rights_records),
+            "catalog_ledger_publishers": ";".join(sorted({
+                record["publisher"] for record in rights_records if record.get("publisher")
+            })),
+            "catalog_ledger_rights_status": ";".join(sorted({
+                record["rights_status"] for record in rights_records if record.get("rights_status")
+            })) if rights_records else "not listed",
+            "catalog_ledger_rights_urls": ";".join(sorted({
+                record["rights_url"] for record in rights_records if record.get("rights_url")
+            })),
+        })
+    assert len(source_rights_coverage) == summary["distinct_source_urls"]
+    with (AUDIT / "source-rights-coverage.csv").open(
+        "w", newline="", encoding="utf-8"
+    ) as file:
+        writer = csv.DictWriter(file, fieldnames=list(source_rights_coverage[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(source_rights_coverage)
+    catalog_ledger_match_count = sum(
+        row["catalog_ledger_records"] > 0 for row in source_rights_coverage
+    )
+    catalog_ledger_outside_count = len(source_rights_coverage) - catalog_ledger_match_count
+    unlinked_source_record_count = sum(
+        not (record.get("source_url") or "").strip() for record in claim_sources
+    )
+    historical_source_ids = {
+        row["source_id"]
+        for row in source_inventory
+        if row["publisher"] == "Wikipedia contributors"
+    }
+    historical_profile_ids = {
+        row["profile_id"]
+        for row in prior
+        if row["source_id"] in historical_source_ids
+    }
+    checked_historical_ids = set(fact_checks) & historical_profile_ids
+    checked_historical_fact_count = sum(
+        1 for row in fields if row["profile_id"] in checked_historical_ids
+    )
+    unchecked_historical_count = len(historical_profile_ids) - len(checked_historical_ids)
     excluded_source_keys = {
         source["key"] for source in registry
         if source.get("citationEligible") is False
@@ -300,7 +518,12 @@ def main():
                 "original-source provenance and source-use review remain open."
                 if all_values_supported
                 else (
-                    "Targeted fact check leaves make/model/year identity and generation unverified."
+                    (
+                        "Targeted fact check leaves make/model/year identity unverified; "
+                        "no generation field is populated."
+                        if generation_status == "NOT_PRESENT"
+                        else "Targeted fact check leaves make/model/year identity and generation unverified."
+                    )
                     if identity_status == "UNVERIFIED"
                     else "Targeted fact check supports make/model/year; generation value remains unverified."
                 )
@@ -331,6 +554,8 @@ def main():
                 )
             else:
                 row["review_disposition"] = fact_check["release_disposition"]
+        if row["profile_id"] in trim_profile_ids:
+            row["evidence_and_scope"] = trim_scope_summary
         row["api_profile_retrieved"] = "Yes"
         row["browse_identity_matches_detail"] = "Yes"
         row["populated_top_level_information_fields"] = counts[row["profile_id"]]["populated_information_fields"]
@@ -403,6 +628,85 @@ def main():
                 "See the Pacifica fact-level review below."
             )
 
+    eldorado_unverified_years = sorted({
+        int(check["year"])
+        for check in fact_checks.values()
+        if check["make"] == "Cadillac"
+        and check["model"] == "Eldorado"
+        and check["identity_content_status"] == "UNVERIFIED"
+    })
+    eldorado_unverified_summary = (
+        f"{len(eldorado_unverified_years)} additional selected Eldorado "
+        "model-year identities remain unverified: "
+        + ", ".join(f"MY{year}" for year in eldorado_unverified_years)
+        + "."
+        if eldorado_unverified_years
+        else "No additional selected Eldorado model-year identity remains unverified."
+    )
+    inventory_notes = []
+    if sibling_lineage:
+        inventory_notes.append(
+            f"**Derived sibling-trim links:** {sibling_lineage['listed_items']} labels across "
+            f"{sibling_lineage['populated_arrays']} populated arrays resolve to same-year sibling "
+            f"profile IDs, with {sibling_lineage['claim_ids_resolved']} linked claim references "
+            "and source URLs. This derived lineage does not independently verify trim facts or "
+            "clear source-use rights; it is not release approval."
+        )
+    if incomplete_gm_trim_profiles:
+        inventory_notes.append(
+            f"**Incomplete GM trim locators:** {len(incomplete_gm_trim_profiles)} MY2024 "
+            "Silverado 1500/Sierra 1500 trim profiles have saved source locators that say "
+            "“Available in ... trims list” without preserving the exact name list or page locator. "
+            "Those values are not independently reproducible from the saved locator. See the "
+            "[trim-evidence ledger](catalog-trim-evidence.csv)."
+        )
+    sibling_and_trim_note = "\n\n".join(inventory_notes)
+    revision_provenance_note = ""
+    if source_revision_provenance:
+        revision_provenance_note = (
+            f"**Source-revision pinning:** The export labels the API's raw value as "
+            f"`stored_revision_key` because it is not consistently a publisher revision. Across "
+            f"{source_revision_provenance['wikipedia_claim_source_rows']:,} Wikipedia/Wikimedia "
+            f"claim-source rows, {source_revision_provenance['wikipedia_urls_with_explicit_oldid']:,} "
+            f"saved URLs include a numeric `oldid`. The {source_revision_provenance['wikipedia_profiles_with_local_normalized_fact_hash']:,} "
+            "selected historical profiles use a SHA-256 digest of a local normalized factual review "
+            "as the stored key; it does not identify the original Wikipedia revision. Exact source "
+            "revisions remain unpinned. See the [claim/source inventory](profile-information-audit/claim-sources.csv)."
+        )
+    rights_coverage_note = (
+        f"**Rights-ledger scope:** The catalog identity-source ledger has exact URL matches for "
+        f"{catalog_ledger_match_count} of {len(source_rights_coverage)} profile claim-source URLs; "
+        f"{catalog_ledger_outside_count} are outside that ledger. Its `allowed` status is not blanket "
+        "clearance for every profile fact or source use, as the [catalog verification report](catalog-source-verification.md) "
+        f"states. The unmatched URLs are not automatically prohibited; check their source-specific records. "
+        f"{unlinked_source_record_count} claim-source records have no URL and are not in the URL crosswalk. "
+        "See the [URL crosswalk](profile-information-audit/source-rights-coverage.csv) and "
+        "[structural findings](profile-information-audit/structural-issues.csv)."
+    )
+    claim_integrity_parts = []
+    missing_claim_links = issue_counts["field_state_claim_not_returned"]
+    if missing_claim_links:
+        claim_integrity_parts.append(
+            f"**Claim projection gaps:** {missing_claim_links} field-state references point to claim IDs "
+            "omitted from the profile's returned claim list. Their source details are therefore unavailable "
+            "to this inventory. See the [structural findings](profile-information-audit/structural-issues.csv)."
+        )
+    missing_url_records = issue_counts["claim_source_record_without_url"]
+    claims_without_public_urls = issue_counts["claim_no_public_source_url"]
+    if missing_url_records or claims_without_public_urls:
+        claim_integrity_parts.append(
+            f"**Public source URL gaps:** {missing_url_records} source records lack a public URL, "
+            f"and {claims_without_public_urls} claims have no public source URL. "
+            "Internal review notes do not replace reproducible external evidence."
+        )
+    unresolved_applicability = summary.get("claims_with_unresolved_applicability", 0)
+    if unresolved_applicability:
+        claim_integrity_parts.append(
+            f"**Unresolved applicability:** {unresolved_applicability} claims are explicitly marked "
+            "`unknown`; they are not treated as verified facts or malformed records."
+        )
+    claim_integrity_note = "\n\n".join(claim_integrity_parts)
+
     draft = f"""# All-profile information verification — current results
 
 **Checked:** 2026-10-08 UTC / 2026-10-07 Pacific<br>
@@ -410,7 +714,17 @@ def main():
 
 ## What was checked
 
-Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **97 distinct external source URLs**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified. [Inventory summary](profile-information-audit/summary.json) · [Field-by-field inventory](profile-information-audit/populated-information.csv)
+Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **97 distinct external source URLs**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified.
+
+{sibling_and_trim_note}
+
+[Inventory summary](profile-information-audit/summary.json) · [Field-by-field inventory](profile-information-audit/populated-information.csv)
+
+{revision_provenance_note}
+
+{rights_coverage_note}
+
+{claim_integrity_note}
 
 The request is to verify existing information before publication. Missing research may remain clearly labeled missing; it need not be invented. A model-year identity does not require a complete retail build sheet, and a trim-name preview does not require an exhaustive option matrix unless it claims such facts. Conversely, a populated generation label, fuel specification, or factual overview needs evidence for the actual value and scope displayed.
 
@@ -426,11 +740,25 @@ EPA's default public-domain statement is favorable for EPA-produced data, subjec
 |---|---|---|
 | EPA identities | 3,639 profiles / 18,764 reference rows match and CSV hash matches | Record support is scoped to EPA's dataset, not every retail offering |
 | Annual-guide identities | Prior check: 488 profiles / 908 locators and six file hashes match | Preserve guide scope and source-specific conditions |
-| Historical identities | Twenty-five Chevrolet Corvette profiles (MY1953–1977), fourteen Chevrolet Chevelle profiles (MY1964–1977), five Ford F-150, four Ford Model A, twenty-four Mustang, and eleven Camaro profiles have bounded identity support; four MY1974–1977 Mustang identities remain unverified after source exclusion | 87 of 539 historical profiles have targeted fact-level matrices; 452 remain unchecked. Twenty additional Corvette and twelve Chevelle identities rely on GM archive index titles, not reviewed PDFs; source revision, rights, and exact configurations remain open |
+| Historical identities | {len(checked_historical_ids)} of {len(historical_profile_ids)} selected historical profiles now have targeted field-level matrices covering {checked_historical_fact_count} populated values; bounded evidence strength varies by source and field | {unchecked_historical_count} remain unchecked. Exact configurations remain unverified; original Wikipedia revisions and source-use terms remain open. The Charger batch uses candidate secondary guides, some of which cite the imported Wikipedia article |
 | MY2027 | The 34 displayed make/model/year identities also match NHTSA's 2027 make/year records | The separate preliminary guide has no exact vehicle-ID join; it is not evidence for retail-sales coverage |
 | Trim names | Fresh document support for 17 Chevrolet/GMC, 12 Ram and four Lucid labels | Ten other previews lack new original-document checks; exact claimed market scope and source-use conditions remain open |
 | Generation information | 699 profiles contain it; 142 bundled era rows were inventoried | All 70 populated Corvette generation values from MY1953–2026 fit Chevrolet's official C1–C8 timeline; 45 additional rows for MY1981–1982 and MY1984–2026 are checked in the new matrix. All 28 Mustang generation values previously tied to Car and Driver are now unverified; 15 MY1979–1993 model-year identities remain supported by EPA records, while the four MY1974–1977 identity labels also lack currently eligible evidence. Three F-150 intervals (MY1975–1979 generation, MY1976–1977 grille change, and MY1978–1979 front-end update) remain supported by Ford and Hagerty across five generation fields; the same five profiles' make/model/year facts are also supported. Wikipedia revision/license and source-use terms remain unresolved; the “split-grille” locator detail remains uncorroborated; the MY2027 Pacifica field is partial because RU-code coverage stops at MY2025. Most generation fields and intervals remain unverified |
 | Mustang specifications | Final-year EPA evidence supports RWD and 10-speed automatic in its own record scope | Fastback applicability/EcoBoost naming remain partial; exact octane wording and 15.9 U.S. gallons unresolved |
+
+### GMC C/K model-year checks: MY1960–1977
+
+All 18 selected GMC C/K profile rows were checked. Period brochure evidence supports broad GMC pickup/truck-family year labels for MY1966, MY1967, and MY1973–1977, but not exact C/K retail wording, a complete U.S. sales roster, or body/trim/configuration applicability. Eleven years remain unverified: MY1960–1961 retain an unresolved family-versus-GMC-badge naming conflict; the extracted MY1962–1963 brochure text does not establish its year; MY1964–1965 Suburban/panel leads do not establish the selected profile; the surfaced MY1969 brochure is Canadian; and available MY1968 and MY1970–1972 leads do not establish the selected U.S. light-duty profile. Holley's truck-history articles were excluded after its terms review; no Holley claims were used. XR793 scan authenticity and reuse rights, and the imported Wikipedia revision provenance, remain open. All 18 rows stay on hold. See the [GMC fact-check matrix](profile-information-audit/gmc-ck-profile-fact-check.csv), [year-by-year source review](sources/gmc-c-k-brochure-review.md), and [Holley exclusion record](sources/holley-automated-collection-exclusion.md). {cite('https://carmodelhistory.com/gmc/c-k')} {cite('https://xr793.com/wp-content/uploads/2025/02/1966-GMC-Light-Trucks.pdf')} {cite('https://xr793.com/wp-content/uploads/2024/09/1967-GMC-Pickup.pdf')} {cite('https://xr793.com/wp-content/uploads/2017/07/1973-GMC-Pickups-and-Suburbans.pdf')} {cite('https://xr793.com/wp-content/uploads/2017/08/1974-GMC-PIckups.pdf')} {cite('https://xr793.com/wp-content/uploads/2017/08/1975-GMC-Pickups.pdf')} {cite('https://xr793.com/wp-content/uploads/2017/08/1976-GMC-Pickups.pdf')} {cite('https://xr793.com/wp-content/uploads/2017/07/1977-GMC-Trucks.pdf')}
+
+### Chrysler Newport model-year checks: MY1961–1977
+
+All 17 selected profile rows were checked. Year-specific brochure evidence supports the Newport name/year identities for MY1961–1966 and MY1977, but does not establish exact configurations or a complete U.S. sales roster. The 1961, 1962, and 1977 page locators are preserved; the prior 1963–1966 scan observations lack exact page locators and must be restored before independent reproduction. Ten years remain unverified: MY1967–1976. The pages inspected in the 1967 brochure show other Chrysler material and do not establish Newport; those partial pages do not prove the nameplate was absent. Further 1967 screenshots and the 1972 Auto-Brochures PDF failed with HTTP 402/429 and were not retried. Year-folder titles and brochure listings were not treated as evidence. See the [Newport fact-check matrix](profile-information-audit/chrysler-newport-profile-fact-check.csv) and [brochure evidence review](sources/chrysler-newport-brochure-review.md). {cite('https://oldcarbrochures.org/United%20States/Chrysler_and_Imperial/1961_Chrysler/1961%20Chrysler%20Brochure/slides/1961%20Chrysler-02-03.html')} {cite('https://oldcarbrochures.org/United%20States/Chrysler_and_Imperial/1962_Chrysler/1962%20Chrysler%20Prestige/slides/1962%20Chrysler%20Prestige-02-03.html')} {cite('https://oldcarbrochures.org/United%20States/Chrysler_and_Imperial/index.html')} {cite('https://oldcarbrochures.org/United%20States/Chrysler_and_Imperial/1967_Chrysler/1967%20Chrysler%20Prestige/slides/1967%20Chrysler%20Prestige-10-11.html')} {cite('https://oldcarbrochures.org/United%20States/Chrysler_and_Imperial/1977_Chrysler/1977_Chrysler_Brochure/slides/1977%20Chrysler%20Brochure-06.html')} {cite('https://oldcarbrochures.org/')}
+
+The Old Car Manual Project's general research/public-domain statements do not grant rights in individual scans. Scan provenance and reuse terms for fact retention/derivation, commercial storage, automated access, attribution, and public display remain unresolved. The exact imported Wikipedia revisions and attribution/license basis are also unknown; all 17 Newport rows remain on HOLD. {cite('https://oldcarbrochures.org/')}
+
+### Chrysler New Yorker model-year checks: MY1940–1977
+
+All 35 selected Chrysler New Yorker rows were checked. Period-brochure text supports the MY1952 and MY1956 name/year identities, and Savoy Automobile Museum's vehicle record supports the broad MY1977 New Yorker identity. This evidence does not establish a complete U.S. sales roster, exact retail configurations, or generation values. Thirty-two selected years remain unverified; the 1950 archive viewer title is only a lead, and the Chrysler.com MY1963 history page was excluded after FCA terms prohibited automated extraction. The 1943–1945 gap is not independently resolved by this cohort check. Auto-Brochures' checked pages did not establish a reuse license for hosted scans; the Old Car Manual Project's general public-domain/fair-use statements are not item-specific permission; Savoy restricts photo publication and no image was used. The imported Wikipedia revision, attribution, and source-use status remain open. All 35 rows remain on hold. See the [New Yorker matrix](profile-information-audit/chrysler-new-yorker-profile-fact-check.csv) and [source-rights review](sources/chrysler-new-yorker-source-rights-review.md). {cite('https://www.auto-brochures.com/makes/Chrysler/New%20Yorker/Chrysler_US%20NewYorker_1952.pdf')} {cite('https://www.auto-brochures.com/makes/Chrysler/New%20Yorker/Chrysler_US%20NewYorker_1956.pdf')} {cite('https://savoymuseum.org/portfolio-items/1977-chrysler-new-yorker-4-door-sedan')} {cite('https://savoymuseum.org/faq')} {cite('https://www.auto-brochures.com/_about.html')} {cite('https://oldcarbrochures.org/')} {cite('https://oldcarbrochures.org/December%202023/1950%20Chrysler%20Saratoga%20and%20New%20Yorker/slides/1950%20Chrysler%20Saratoga%20and%20New%20Yorker%20%28TP%29.pdf-2023-11-26%2012.2.19_Page_01.html')} {cite('https://www.chrysler.com/crossbrand_us/terms-of-use')}
 
 The seven original GM profiles have support from the relevant extracted identity sections of their year-specific vehicle-information kits. Five long PDF extractions stopped at 50,000 characters after those identity sections; remaining pages were not reviewed. The five Corvette generation values in that original batch match Chevrolet's official C1 (1953–1962) and C2 (1963–1967) ranges. The row-level evidence and limits are in the [GM profile fact-check matrix](profile-information-audit/gm-profile-fact-check.csv). {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1953-Chevrolet-Corvette.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1954-Chevrolet-Corvette.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1955-Chevrolet-Corvette.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1964-Chevrolet-Chevelle.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1964-Chevrolet-Corvette.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1965-Chevrolet-Chevelle.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1965-Chevrolet-Corvette.pdf')} {cite('https://www.chevrolet.com/legacy/corvette')}
 
@@ -503,11 +831,15 @@ The GM Heritage index has exact year-specific titles for a 1953 Cadillac Eldorad
 
 ### Cadillac Series 62, Eldorado, and DeVille: year-specific kit text
 
-Targeted text from 22 year-specific GM Cadillac kits supports make/model/year for 13 Series 62 profiles, 16 Eldorado profiles, and 13 DeVille profiles. The relevant name reference appeared in the first retrieved text segment for each kit; the complete PDFs were not reviewed. This does not establish a complete U.S. sales roster or exact variant, body, trim, or configuration applicability. Text retrieval failed for seven other indexed kit PDFs, and no profile was inferred from those files. Imported Wikipedia revision provenance and GM source-use rights remain open, so all 42 profiles stay on hold. See the [year-by-year Cadillac source review](sources/full-verification-gm-cadillac-1941-74.md) and [fact-check rows](profile-information-audit/gm-profile-fact-check.csv). {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1941_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1942_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1947_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1949_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1951_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1952_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1954_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1955_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1956_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1959_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1960_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1961_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1962_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1965_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1966_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1967_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1968_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1970_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1971_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1972_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1973_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1974_Cadillac_VVI.pdf')}
+Targeted text from 22 year-specific GM Cadillac kits supports make/model/year for 13 Series 62 profiles, 16 Eldorado profiles, and 13 DeVille profiles. The relevant name reference appeared in the first retrieved text segment for each kit; the complete PDFs were not reviewed. This does not establish a complete U.S. sales roster or exact variant, body, trim, or configuration applicability. Text retrieval failed for seven other indexed kit PDFs, and no profile was inferred from those files. The 42 kit-supported profiles remain on hold because imported Wikipedia revision provenance and GM source-use rights remain open. {eldorado_unverified_summary} GM kit texts for MY1958, MY1963, MY1964, and MY1969 were unavailable; no general kit is indexed for MY1975–1977. These gaps do not establish that Eldorado was absent. See the [year-by-year Cadillac source review](sources/full-verification-gm-cadillac-1941-74.md) and [fact-check rows](profile-information-audit/gm-profile-fact-check.csv). {cite('https://www.gm.com/heritage/archive/vehicle-information-kits')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1941_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1942_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1947_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1949_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1951_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1952_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1954_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1955_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1956_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1959_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1960_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1961_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1962_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1965_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1966_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1967_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1968_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1970_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1971_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1972_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1973_Cadillac_VVI.pdf')} {cite('https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1974_Cadillac_VVI.pdf')}
 
 ### Ford Thunderbird model-year identities: MY1955–1977
 
-Car Model History has an exact-year guide for every Thunderbird model year from 1955 through 1977. Each guide labels its review as verified from cited period Ford materials, but those underlying documents were not independently retrieved or reviewed; the site also disclaims accuracy. This batch is bounded secondary support for make/model/year only, not a complete U.S. roster or exact variant/configuration check. The site's robots.txt permits crawlers, while its terms restrict uses beyond link sharing and do not resolve use rights for the underlying documents. No guide prose or images were copied. The imported Wikipedia revision provenance and broader use rights remain unresolved, so all 23 profiles stay on hold. See the [year-by-year evidence and cited records](sources/full-verification-ford-thunderbird-1955-77.md) and [fact-check rows](profile-information-audit/gm-profile-fact-check.csv). {cite('https://carmodelhistory.com/ford/thunderbird')} {cite('https://carmodelhistory.com/ford/thunderbird/1955/')} {cite('https://carmodelhistory.com/ford/thunderbird/1956/')} {cite('https://carmodelhistory.com/ford/thunderbird/1957/')} {cite('https://carmodelhistory.com/ford/thunderbird/1958/')} {cite('https://carmodelhistory.com/ford/thunderbird/1959/')} {cite('https://carmodelhistory.com/ford/thunderbird/1960/')} {cite('https://carmodelhistory.com/ford/thunderbird/1961/')} {cite('https://carmodelhistory.com/ford/thunderbird/1962/')} {cite('https://carmodelhistory.com/ford/thunderbird/1963/')} {cite('https://carmodelhistory.com/ford/thunderbird/1964/')} {cite('https://carmodelhistory.com/ford/thunderbird/1965/')} {cite('https://carmodelhistory.com/ford/thunderbird/1966/')} {cite('https://carmodelhistory.com/ford/thunderbird/1967/')} {cite('https://carmodelhistory.com/ford/thunderbird/1968/')} {cite('https://carmodelhistory.com/ford/thunderbird/1969/')} {cite('https://carmodelhistory.com/ford/thunderbird/1970/')} {cite('https://carmodelhistory.com/ford/thunderbird/1971/')} {cite('https://carmodelhistory.com/ford/thunderbird/1972/')} {cite('https://carmodelhistory.com/ford/thunderbird/1973/')} {cite('https://carmodelhistory.com/ford/thunderbird/1974/')} {cite('https://carmodelhistory.com/ford/thunderbird/1975/')} {cite('https://carmodelhistory.com/ford/thunderbird/1976/')} {cite('https://carmodelhistory.com/ford/thunderbird/1977/')} {cite('https://carmodelhistory.com/legal/terms')} {cite('https://carmodelhistory.com/robots.txt')}
+Car Model History has an exact-year guide for every Thunderbird model year from 1955 through 1977. Each guide labels its review as verified from cited period Ford materials, but those underlying documents were not independently retrieved or reviewed; the site also disclaims accuracy. This batch is bounded secondary support for make/model/year only, not a complete U.S. roster or exact variant/configuration check. The site's robots.txt permits crawlers, while its terms restrict uses beyond link sharing and do not resolve use rights for the underlying documents. No guide prose or images were copied. The imported Wikipedia revision provenance and broader use rights remain unresolved, so all 23 profiles stay on hold. See the [year-by-year evidence and cited records](sources/full-verification-ford-thunderbird-1955-77.md) and [fact-check rows](profile-information-audit/thunderbird-profile-fact-check.csv). {cite('https://carmodelhistory.com/ford/thunderbird')} {cite('https://carmodelhistory.com/ford/thunderbird/1955/')} {cite('https://carmodelhistory.com/ford/thunderbird/1956/')} {cite('https://carmodelhistory.com/ford/thunderbird/1957/')} {cite('https://carmodelhistory.com/ford/thunderbird/1958/')} {cite('https://carmodelhistory.com/ford/thunderbird/1959/')} {cite('https://carmodelhistory.com/ford/thunderbird/1960/')} {cite('https://carmodelhistory.com/ford/thunderbird/1961/')} {cite('https://carmodelhistory.com/ford/thunderbird/1962/')} {cite('https://carmodelhistory.com/ford/thunderbird/1963/')} {cite('https://carmodelhistory.com/ford/thunderbird/1964/')} {cite('https://carmodelhistory.com/ford/thunderbird/1965/')} {cite('https://carmodelhistory.com/ford/thunderbird/1966/')} {cite('https://carmodelhistory.com/ford/thunderbird/1967/')} {cite('https://carmodelhistory.com/ford/thunderbird/1968/')} {cite('https://carmodelhistory.com/ford/thunderbird/1969/')} {cite('https://carmodelhistory.com/ford/thunderbird/1970/')} {cite('https://carmodelhistory.com/ford/thunderbird/1971/')} {cite('https://carmodelhistory.com/ford/thunderbird/1972/')} {cite('https://carmodelhistory.com/ford/thunderbird/1973/')} {cite('https://carmodelhistory.com/ford/thunderbird/1974/')} {cite('https://carmodelhistory.com/ford/thunderbird/1975/')} {cite('https://carmodelhistory.com/ford/thunderbird/1976/')} {cite('https://carmodelhistory.com/ford/thunderbird/1977/')} {cite('https://carmodelhistory.com/legal/terms')} {cite('https://carmodelhistory.com/robots.txt')}
+
+### Dodge Charger model-year identities: MY1966–1977
+
+Car Model History's archive links exact-year guides for all 12 selected Dodge Charger profiles. Their model-year headings and Charger descriptions provide candidate bounded secondary support for make/model/year only; this is not independent confirmation of a complete U.S. roster or exact trim/body/configuration. The pages' source lists vary: the MY1966 and MY1968 guides name only the Dodge Charger Wikipedia article, and the MY1969 guide names Wikipedia articles for Charger and Charger Daytona. Other guides name period brochures, data books, specifications, and secondary sources, but these were not independently retrieved or reviewed. Some guides also cite Wikipedia, so their citations do not establish provenance for the imported claim. Car Model History disclaims accuracy; its terms limit use beyond link sharing and do not resolve rights for underlying sources or derived data. No source text, images, tables, or document contents were copied. All 12 profiles remain on hold. See the [year-by-year evidence and citation limitations](sources/full-verification-dodge-charger-1966-77.md) and [Charger fact-check rows](profile-information-audit/charger-profile-fact-check.csv). {cite('https://carmodelhistory.com/dodge/charger')} {cite('https://carmodelhistory.com/dodge/charger/1966/')} {cite('https://carmodelhistory.com/dodge/charger/1967/')} {cite('https://carmodelhistory.com/dodge/charger/1968/')} {cite('https://carmodelhistory.com/dodge/charger/1969/')} {cite('https://carmodelhistory.com/dodge/charger/1970/')} {cite('https://carmodelhistory.com/dodge/charger/1971/')} {cite('https://carmodelhistory.com/dodge/charger/1972/')} {cite('https://carmodelhistory.com/dodge/charger/1973/')} {cite('https://carmodelhistory.com/dodge/charger/1974/')} {cite('https://carmodelhistory.com/dodge/charger/1975/')} {cite('https://carmodelhistory.com/dodge/charger/1976/')} {cite('https://carmodelhistory.com/dodge/charger/1977/')} {cite('https://carmodelhistory.com/legal/terms')} {cite('https://carmodelhistory.com/robots.txt')}
 
 ### Chevrolet Impala and C/K continuity checks: MY1976–1977
 

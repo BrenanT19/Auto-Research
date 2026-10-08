@@ -22,6 +22,10 @@
 - The retrieved Europe-market 2024 specification URL returned only a service error. It supplies no usable content and would not, without a defensible cross-market mapping, establish U.S. retail-trim applicability.
 - The profile’s overview is an editorial scope note about recalls, complaints, safety-rating scope, and unresolved EPA package/body mapping. It is not used here as factual specification support.
 
+- **Overview provenance gap:** The claim map for this overview links NHTSA recall, complaint, safety-rating, and two recall-report sources plus an internal development note. It contains no EPA source row for the sentence about standard versus Performance Package records. That EPA clause still needs direct claim-level provenance.
+- **Snapshot freshness:** The overview’s October 3 claim-source record says 81 complaint reports. The saved NHTSA query payload retrieved October 8 has `count=82` and 82 unique complaint records. Treat 81 as the October 3 snapshot only, not as a current count. The October 8 recall payload still returns 12 campaigns; query results are not configuration- or VIN-specific recall determinations.
+- **Owner-manual reconciliation:** The capacity source metadata says the 2.3L EcoBoost chapter was rendered and its scope/footer checked on October 3, while the retained evidence contains only an indexed “15.9 gal” excerpt and the direct section fetch returns navigation. A fresh browser screenshot attempt on October 8 returned HTTP 402. The numeric table value was not retained in inspectable page content during this audit, so keep 15.9 unresolved. The separate fuel-quality PDF request was previously blocked with HTTP 403 and was not retried; the exact 87 AKI / 91+ recommendation remains unverified.
+
 ## Source Quality Assessment
 
 1. **EPA / FuelEconomy.gov vehicle record — high authority for listed government-record attributes.** Final MY2024 record for model 46646. It supplies engine displacement/cylinder count, transmission, fuel type, body door count, and drivetrain; it does not resolve retail Fastback-vs-convertible identity or minimum octane.

@@ -1,0 +1,98 @@
+source_url,claim_source_rows,distinct_profiles,source_ids,catalog_ledger_records,catalog_ledger_publishers,catalog_ledger_rights_status,catalog_ledger_rights_urls
+https://api.nhtsa.gov/SafetyRatings/VehicleId/19149?format=json,2,1,9,0,,not listed,
+https://api.nhtsa.gov/complaints/complaintsByVehicle?make=ford&model=mustang&modelYear=2024,1,1,8,0,,not listed,
+https://api.nhtsa.gov/recalls/recallsByVehicle?make=ford&model=mustang&modelYear=2024,12,1,7,0,,not listed,
+https://en.wikipedia.org/wiki/Buick_Century,17,17,classic-buick-century,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Buick_Enclave,25,22,21;catalog-era:8000601;catalog-era:8000602;catalog-era:8000603;catalog-era:8000604;catalog-era:8000605,0,,not listed,
+https://en.wikipedia.org/wiki/Buick_Roadmaster,20,20,classic-buick-roadmaster,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Buick_Special,24,24,classic-buick-special,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Cadillac_Eldorado,25,25,classic-cadillac-eldorado,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Cadillac_Escalade,27,27,catalog-era:8000801;catalog-era:8000802;catalog-era:8000803;catalog-era:8000804;catalog-era:8000805;catalog-era:8000806,0,,not listed,
+https://en.wikipedia.org/wiki/Cadillac_Series_62,22,22,classic-cadillac-series-62,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Cadillac_de_Ville_series,19,19,classic-cadillac-deville,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Bel_Air,26,26,classic-chevrolet-bel-air,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_C/K,36,36,classic-chevrolet-c-k;classic-gmc-c-k,2,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Camaro,11,11,classic-chevrolet-camaro,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Chevelle,14,14,classic-chevrolet-chevelle,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Chevy_II_/_Nova,16,16,classic-chevrolet-chevy-ii-nova,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Corvette,95,70,catalog-era:8000401;catalog-era:8000402;catalog-era:8000403;catalog-era:8000404;catalog-era:8000405;catalog-era:8000406;catalog-era:8000407;catalog-era:8000408;classic-chevrolet-corvette,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Impala,20,20,classic-chevrolet-impala,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chevrolet_Silverado,118,83,19;23;catalog-era:8001801;catalog-era:8001802;catalog-era:8001803;catalog-era:8001804;catalog-era:8001805;catalog-era:8001806;catalog-era:8001901;catalog-era:8001902;catalog-era:8001903;catalog-era:8001904;catalog-era:8001905;catalog-era:8001906;catalog-era:8001907,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_200,7,7,catalog-era:8003001;catalog-era:8003002,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_300,37,28,catalog-era:8003012;catalog-era:8003013;catalog-era:8003014;catalog-era:8003021;catalog-era:8003022,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_300M,6,6,catalog-era:8003011,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Crossfire,5,5,catalog-era:8003041,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_New_Yorker,35,35,classic-chrysler-new-yorker,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chrysler_Newport,17,17,classic-chrysler-newport,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Chrysler_PT_Cruiser,15,10,catalog-era:8003051;catalog-era:8003052,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Pacifica_(crossover),9,5,catalog-era:8002009;catalog-era:8002010;catalog-era:8002011,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Pacifica_(minivan),18,11,catalog-era:8000901;catalog-era:8000902;catalog-era:8002014,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Sebring,19,16,catalog-era:8003061;catalog-era:8003062;catalog-era:8003063;catalog-era:8003064,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Town_%26_Country_(1941%E2%80%931988),7,7,catalog-era:8003071;catalog-era:8003072,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Town_%26_Country_(minivan),25,19,catalog-era:8003073;catalog-era:8003074;catalog-era:8003075;catalog-era:8003076;catalog-era:8003077;catalog-era:8003078,0,,not listed,
+https://en.wikipedia.org/wiki/Chrysler_Voyager,7,7,catalog-era:8003081,0,,not listed,
+https://en.wikipedia.org/wiki/Dodge_Challenger,5,5,classic-dodge-challenger,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Dodge_Charger,12,12,classic-dodge-charger,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Dodge_Coronet,23,23,classic-dodge-coronet,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Dodge_Dart,17,17,classic-dodge-dart,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Dodge_Durango,28,28,catalog-era:8001001;catalog-era:8001002;catalog-era:8001003;catalog-era:8001004;catalog-era:8001005;catalog-era:8001006,0,,not listed,
+https://en.wikipedia.org/wiki/Dodge_Durango#Chrysler_Aspen,3,3,catalog-era:8003031,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_Explorer,42,36,catalog-era:8001701;catalog-era:8001702;catalog-era:8001703;catalog-era:8001704;catalog-era:8001705;catalog-era:8001706;catalog-era:8001707;catalog-era:8001708,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_F-Series,55,47,catalog-era:8001601;catalog-era:8001602;catalog-era:8001603;catalog-era:8001604;catalog-era:8001605;catalog-era:8001606;catalog-era:8001607;catalog-era:8001608;catalog-era:8001609;catalog-era:8001610,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_F-Series_(eleventh_generation),3,3,catalog-era:8001616,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_F-Series_(fourteenth_generation),12,6,17,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_F-Series_(seventh_generation),9,7,catalog-era:8001614;classic-ford-f150-seventh,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_F-Series_(sixth_generation),14,5,catalog-era:8001611;catalog-era:8001612;catalog-era:8001613;classic-ford-f150-sixth,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_F-Series_(tenth_generation),6,6,catalog-era:8001615,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_F-Series_(twelfth_generation),2,2,catalog-era:8001617,0,,not listed,
+https://en.wikipedia.org/wiki/Ford_Fairlane_(Americas),16,16,classic-ford-fairlane,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Falcon_(North_America),11,11,classic-ford-falcon,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Galaxie,16,16,classic-ford-galaxie,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Model_A_(1927%E2%80%9331),4,4,classic-ford-model-a,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Mustang,75,62,catalog-era:8000201;catalog-era:8000202;catalog-era:8000203;catalog-era:8000204;catalog-era:8000205;catalog-era:8000206;catalog-era:8000207;catalog-era:8000208;catalog-era:8000209;catalog-era:8000301;catalog-era:8000390;classic-ford-mustang,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Thunderbird,23,23,classic-ford-thunderbird,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Ford_Torino,9,9,classic-ford-torino,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/GMC_Acadia,21,20,catalog-era:8000701;catalog-era:8000702;catalog-era:8000703;catalog-era:8000704;catalog-era:8000705,0,,not listed,
+https://en.wikipedia.org/wiki/Jeep_Grand_Cherokee,41,34,catalog-era:8002001;catalog-era:8002002;catalog-era:8002003;catalog-era:8002004;catalog-era:8002005;catalog-era:8002006;catalog-era:8002007;catalog-era:8002008,0,,not listed,
+https://en.wikipedia.org/wiki/Jeep_Wagoneer_(SJ),15,15,classic-jeep-wagoneer,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Jeep_Wrangler,36,35,catalog-era:8001101;catalog-era:8001102;catalog-era:8001103;catalog-era:8001104,0,,not listed,
+https://en.wikipedia.org/wiki/Lincoln_Capri,8,8,classic-lincoln-capri,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Lincoln_Continental,26,26,classic-lincoln-continental,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Lincoln_Navigator,29,29,catalog-era:8000501;catalog-era:8000502;catalog-era:8000503;catalog-era:8000504;catalog-era:8000505;catalog-era:8000506;catalog-era:8000507,0,,not listed,
+https://en.wikipedia.org/wiki/Lincoln_Premiere,5,5,classic-lincoln-premiere,1,Wikipedia contributors,allowed,https://creativecommons.org/licenses/by-sa/4.0/
+https://en.wikipedia.org/wiki/Lucid_Air,13,9,25;catalog-era:8001501,0,,not listed,
+https://en.wikipedia.org/wiki/Ram_Heavy_Duty_(fifth_generation),24,12,50;54,0,,not listed,
+https://en.wikipedia.org/wiki/Ram_pickup,20,14,catalog-era:8001202;catalog-era:8001203,0,,not listed,
+https://en.wikipedia.org/wiki/Rivian_R1S,5,5,catalog-era:8001401;catalog-era:8001402,0,,not listed,
+https://en.wikipedia.org/wiki/Rivian_R1T,5,5,catalog-era:8001301;catalog-era:8001302,0,,not listed,
+https://en.wikipedia.org/wiki/Tesla_Model_3,10,10,catalog-era:8000101;catalog-era:8000102,0,,not listed,
+https://en.wikipedia.org/wiki/Tesla_Model_S,17,15,catalog-era:8000001;catalog-era:8000002;catalog-era:8000003,0,,not listed,
+https://ir.lucidmotors.com/news-releases/news-release-details/lucid-air-model-line-updates-offer-customers-more-freedom-power,8,4,24,0,,not listed,
+https://media.chevrolet.com/content/dam/Media/images/US/Vehicles/Chevrolet/Trucks/Silverado/2024/2024-Chevrolet-Silverado-033023.pdf,18,9,18,0,,not listed,
+https://media.ford.com/content/dam/fordmedia/North%20America/US/2022/09/14/2024-mustang-technical-specifications.pdf,6,1,3,0,,not listed,
+https://media.gmc.com/content/dam/Media/images/US/Vehicles/GMC/Sierra/2024/2024-GMC-Sierra-1500.pdf,16,8,22,0,,not listed,
+https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&fIId=25845&mid=69,2,2,52,0,,not listed,
+https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&mid=69,24,12,49;53,0,,not listed,
+https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2024_RAM_2500_3500_HD_FA.pdf,24,12,51;55,0,,not listed,
+https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V220-4944.PDF,2,1,11,0,,not listed,
+https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V394-3723.PDF,1,1,12,0,,not listed,
+https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V593-3301.PDF,1,1,13,0,,not listed,
+https://static.nhtsa.gov/odi/rcl/2026/RCLRPT-26V547-3184.pdf,1,1,14,0,,not listed,
+https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/RAM?format=json&modelYear=2024,2,2,nhtsa-vpic-ram-2500-my2024;nhtsa-vpic-ram-3500-my2024,2,NHTSA vPIC,allowed,https://vpic.nhtsa.dot.gov/api/
+https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2008?format=json,1,1,nhtsa-tesla-roadster-2008,1,U.S. National Highway Traffic Safety Administration / vPIC,allowed,https://www.copyright.gov/title17/92chap1.html#105
+https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2009?format=json,1,1,nhtsa-tesla-roadster-2009,1,U.S. National Highway Traffic Safety Administration / vPIC,allowed,https://www.copyright.gov/title17/92chap1.html#105
+https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2010?format=json,1,1,nhtsa-tesla-roadster-2010,1,U.S. National Highway Traffic Safety Administration / vPIC,allowed,https://www.copyright.gov/title17/92chap1.html#105
+https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2011?format=json,1,1,nhtsa-tesla-roadster-2011,1,U.S. National Highway Traffic Safety Administration / vPIC,allowed,https://www.copyright.gov/title17/92chap1.html#105
+https://www.auto-brochures.com/makes/Ford/F-150/Ford_US%20F-150_2021-specs.pdf,12,6,16,0,,not listed,
+https://www.buick.com/content/dam/buick/na/us/en/index/shopping-tools/download-catalog/02-pdfs/GMBE23CT100-2024-ENCLAVE-FO_050924.pdf,6,3,20,0,,not listed,
+https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx,5,1,4,0,,not listed,
+https://www.fordservicecontent.com/Ford_Content/Catalog/owner_information/2024_Ford_Mustang_Owners_Manual_version_1_om_EN-US.pdf,1,1,5,0,,not listed,
+https://www.fordservicecontent.com/Ford_Content/vdirsnet/OwnerManual/Home/Content?variantid=9122&languageCode=en&countryCode=USA&moidRef=G2133836&Uid=G2301084&ProcUid=G2301085&userMarket=usa&div=f&vFilteringEnabled=False&buildtype=web,1,1,6,0,,not listed,
+https://www.fueleconomy.gov/feg/epadata/78guide.txt,52,52,epa-guide-1978,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/79guide.txt,52,52,epa-guide-1979,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/80guide.txt,48,48,epa-guide-1980,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/81guide.txt,96,96,epa-guide-1981,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/82guide.txt,114,114,epa-guide-1982,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/83guide.txt,126,126,epa-guide-1983,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm
+https://www.fueleconomy.gov/feg/epadata/vehicles.csv,8,4,26,0,,not listed,
+https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip,3639,3639,epa-1984-present,1,U.S. Environmental Protection Agency / FuelEconomy.gov,allowed,https://edg.epa.gov/EPA_Data_License.htm

@@ -24,3 +24,9 @@ MotorTrend Group's Terms of Use prohibit robots, crawlers, and other automatic d
 **Why:** Search results surfaced explicit access restrictions for both publishers during Mustang research. Their article captures cannot support the audit after those restrictions are known.
 
 **How to apply:** Do not automate retrieval or use saved article captures from these publishers as evidence. Replace each factual claim with a compatible source or mark it unverified; preserve only the minimum metadata needed to record the exclusion.
+
+FCA Website Terms of Use cover Chrysler.com and prohibit robots, spiders, scrapers, or other automated systems from extracting site data. Exclude Chrysler.com history or vehicle-page claims fetched before this restriction is discovered; do not retain page captures as evidence.
+
+**Why:** A Chrysler history page was fetched before reviewing FCA's terms and then had to be excluded from the New Yorker model-year check.
+
+**How to apply:** Check FCA terms before automated retrieval from Chrysler.com. If a page was already fetched, keep only minimal exclusion metadata, discard its factual content from the audit, and seek a source with compatible access terms.

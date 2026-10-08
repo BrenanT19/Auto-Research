@@ -14,6 +14,36 @@
   "nonempty_array_item_counts": {
     "siblingTrims": 238
   },
-  "structural_issue_count": 19,
+  "section_state_counts": {
+    "not_yet_researched": 65794,
+    "known": 42,
+    "unknown": 2
+  },
+  "claim_review_status_counts": {
+    "accepted": 5537
+  },
+  "claim_applicability_counts": {
+    "applies": 5525,
+    "unknown": 12
+  },
+  "claims_with_unresolved_applicability": 12,
+  "sibling_trim_item_lineage": {
+    "populated_arrays": 42,
+    "listed_items": 238,
+    "items_with_profile_links": 238,
+    "claim_ids_resolved": 476
+  },
+  "source_revision_provenance": {
+    "wikipedia_claim_source_rows": 1382,
+    "wikipedia_distinct_profiles": 1190,
+    "wikipedia_urls_with_explicit_oldid": 0,
+    "wikipedia_profiles_with_local_normalized_fact_hash": 539,
+    "wikipedia_source_version_categories": {
+      "normalized_factual_review": 539,
+      "normalized_metadata_checksum": 759,
+      "normalized_identity_review": 84
+    }
+  },
+  "structural_issue_count": 7,
   "all_release_ready": false
 }
