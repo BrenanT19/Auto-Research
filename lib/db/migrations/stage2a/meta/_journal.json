@@ -36,6 +36,13 @@
       "when": 1790894746039,
       "tag": "0004_stage2a_fail_closed_constraints",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791419326180,
+      "tag": "0005_publish_safe_spec_field_key",
+      "breakpoints": true
     }
   ]
 }

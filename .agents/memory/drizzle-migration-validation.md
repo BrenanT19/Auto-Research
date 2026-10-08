@@ -16,3 +16,9 @@ Distinguish migrations committed in an earlier invocation from migrations pendin
 **Why:** A later SQL error rolls back the current pending batch, but must not undo a prefix already committed by a prior invocation. Assuming per-entry commits would test the wrong recovery guarantee.
 
 **How to apply:** For committed-prefix recovery rehearsals, apply an unmodified prefix in a separate invocation before injecting the later failure; compare committed journal identities and schema before and after failure.
+
+Use explicit UNIQUE table constraints for composite keys referenced by foreign keys, rather than relying only on standalone unique indexes. Rehearse the actual Publish-generated schema diff separately from checked-in migrations.
+
+**Why:** The managed Publish diff omitted a standalone composite unique index even though it existed in development and the checked-in migration created it before its dependent foreign key. The resulting publish SQL failed with PostgreSQL SQLSTATE 42830. An inline UNIQUE constraint survived introspection and restored correct dependency ordering.
+
+**How to apply:** Preserve existing foreign-key dependencies by attaching an existing unique index as a table constraint instead of dropping it. Update the schema source and migration metadata, apply the change to development only, and replay the regenerated Publish diff in disposable PostgreSQL. Never add production migration hooks or startup DDL.

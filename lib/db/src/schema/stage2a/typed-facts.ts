@@ -11,6 +11,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { researchClaimsTable } from "./claims";
@@ -50,7 +51,9 @@ export const specFieldDefinitionsTable = pgTable(
       "spec_field_definitions_unit_by_type_check",
       sql`(${table.valueType} = 'numeric' AND ${table.canonicalUnit} IS NOT NULL AND length(btrim(${table.canonicalUnit})) > 0) OR (${table.valueType} <> 'numeric' AND ${table.canonicalUnit} IS NULL)`,
     ),
-    uniqueIndex("spec_field_definitions_code_type_idx").on(table.code, table.valueType),
+    // A referenced composite key must be a table constraint so publish-time
+    // schema diffs include it before creating the dependent foreign key.
+    unique("spec_field_definitions_code_type_idx").on(table.code, table.valueType),
   ],
 );
 
