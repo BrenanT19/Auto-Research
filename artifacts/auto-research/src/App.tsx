@@ -22,6 +22,7 @@ import { CanonicalEvidence } from './components/CanonicalEvidence';
 import { CanonicalProfileStatus } from './components/CanonicalProfileStatus';
 import { ExternalOwnerPatterns } from './components/ExternalOwnerPatterns';
 import { GenerationHistoryDetailPage, GenerationHistoryIndexPage } from './pages/GenerationHistory';
+import { trackEvent } from '@/lib/analytics';
 
 const queryClient = new QueryClient();
 const money = (n?: number | null) => n == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -106,6 +107,16 @@ function HomePage() {
   const selectedSearchTrim = options.find(option => catalogTrimKey(option) === searchTrimKey);
   const find = (e: FormEvent) => {
     e.preventDefault();
+    const hasTextSearch = Boolean(q.trim());
+    const selectedFilterCount = [searchYear, searchMake, selectedSearchModel, selectedSearchTrim].filter(Boolean).length;
+    trackEvent('vehicle_search_submitted', {
+      source: 'home',
+      search_mode: hasTextSearch ? selectedFilterCount ? 'mixed' : 'text' : selectedFilterCount ? 'filters' : 'all',
+      has_make: Boolean(searchMake),
+      has_model: Boolean(selectedSearchModel),
+      has_year: Boolean(searchYear),
+      has_trim: Boolean(selectedSearchTrim),
+    });
     const params = new URLSearchParams();
     if (q.trim()) params.set('q', q.trim());
     if (searchYear) params.set('year', searchYear);
@@ -135,7 +146,7 @@ function HomePage() {
         <div className="hero-shortcuts">
           <span>TRY</span>
           {['Ford F-150', 'Chevrolet Silverado', 'Tesla Model Y'].map(x => (
-            <button key={x} onClick={() => { setQ(x); setLoc(`/browse?q=${encodeURIComponent(x)}`); }}>{x}</button>
+            <button key={x} onClick={() => { trackEvent('vehicle_search_submitted', { source: 'home_shortcut', search_mode: 'text' }); setQ(x); setLoc(`/browse?q=${encodeURIComponent(x)}`); }}>{x}</button>
           ))}
         </div>
       </div>
@@ -227,6 +238,26 @@ function BrowsePage() {
   }, []);
 
   const commit = (next: BrowseFilters, replace = false) => {
+    const changed = JSON.stringify(next) !== JSON.stringify(browse);
+    if (changed) {
+      trackEvent('vehicle_browse_filters_updated', {
+        active_filter_count: [
+          next.q.trim(),
+          next.make,
+          next.modelId || next.modelKey,
+          next.generationId || next.generationKey,
+          next.year,
+          next.trim || next.trimId || next.trimKey,
+        ].filter(Boolean).length,
+        has_text_search: Boolean(next.q.trim()),
+        has_make_filter: Boolean(next.make),
+        has_model_filter: Boolean(next.modelId || next.modelKey || next.model),
+        has_generation_filter: Boolean(next.generationId || next.generationKey),
+        has_year_filter: Boolean(next.year),
+        has_trim_filter: Boolean(next.trim || next.trimId || next.trimKey),
+        sort_mode: next.sort,
+      });
+    }
     setBrowse(next);
     setDraft(next.q);
     setSuggestionsOpen(false);
@@ -329,7 +360,20 @@ function BrowsePage() {
   const coverage = useGetCatalogCoverage();
   const total = searchResults.data?.total ?? 0;
   const [selected, setSelected] = useState<string[]>([]);
-  const toggle = (v: VehicleSummary) => setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
+  const toggle = (v: VehicleSummary) => {
+    const isSelected = selected.includes(v.id);
+    if (!isSelected && selected.length >= 4) return;
+    trackEvent('comparison_vehicle_changed', {
+      action: isSelected ? 'remove' : 'add',
+      source: 'browse',
+      comparison_size: isSelected ? selected.length - 1 : selected.length + 1,
+      make: v.make,
+      model: v.model,
+      model_year: v.year,
+      profile_type: v.profileKind === 'canonical' && !v.isDemo ? 'canonical' : 'demo',
+    });
+    setSelected(s => s.includes(v.id) ? s.filter(id => id !== v.id) : s.length < 4 ? [...s, v.id] : s);
+  };
   const canonicalResults = Boolean(vehicles.data?.length) && vehicles.data!.every(vehicle => vehicle.profileKind === "canonical" && !vehicle.isDemo);
   return <Shell><div className="content-wrap page-wrap"><PageIntro eyebrow="THE VEHICLE INDEX" title="Find the right long view." sub="Search trims, narrow the field, and see what ownership may look like beyond the purchase price." action={<span className="small-stamp"><BookOpen size={16}/> {vehicles.data?.length ?? '—'} profiles</span>}/>{!canonicalResults && <DemoNotice/>}
     <div className="browse-layout"><aside className="filter-panel"><div className="filter-title"><SlidersHorizontal size={16}/> Refine research</div>
@@ -375,7 +419,7 @@ function BrowsePage() {
       <CatalogPagination page={page} total={total} pending={searchResults.isFetching} onPageChange={page => setPagination({ key: filterKey, page })}/>
     </div>
     </div>
-    {selected.length > 0 && <div className="compare-dock"><span><b>{selected.length}</b> selected for comparison <small>Choose up to four vehicles</small></span><div>{selected.map(id => <button aria-label="Remove from comparison" key={id} onClick={() => setSelected(s => s.filter(x => x !== id))}><X size={13}/></button>)}</div><button className="button dark" onClick={() => setLoc(`/compare?ids=${selected.join(',')}`)}>Compare vehicles <ArrowRight size={15}/></button></div>}
+     {selected.length > 0 && <div className="compare-dock"><span><b>{selected.length}</b> selected for comparison <small>Choose up to four vehicles</small></span><div>{selected.map(id => <button aria-label="Remove from comparison" key={id} onClick={() => { trackEvent('comparison_vehicle_changed', { action: 'remove', source: 'browse', comparison_size: selected.length - 1 }); setSelected(s => s.filter(x => x !== id)); }}><X size={13}/></button>)}</div><button className="button dark" onClick={() => { trackEvent('comparison_started', { source: 'browse', vehicle_count: selected.length }); setLoc(`/compare?ids=${selected.join(',')}`); }}>Compare vehicles <ArrowRight size={15}/></button></div>}
   </div></Shell>;
 }
 
@@ -423,10 +467,10 @@ function DetailPage() {
     <CanonicalProfileStatus vehicle={v} explain/>
     {canonical && <CanonicalEvidence state={v.fieldStates?.identity} claims={v.claims}/>}
     {hasGenerationHistory && <div className="generation-history-vehicle-link"><span><History size={15}/> MODEL LINEAGE</span><Link href={`/generation-history/${v.makeSlug}/${v.modelSlug}`}>View sourced generation history <ArrowRight size={15}/></Link></div>}
-    <div className="detail-hero"><div><span className="eyebrow">{v.year}{v.generation && ` · ${v.generation}`} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => setLoc(`/compare?ids=${v.id}`)}>{v.identityLevel === "model_year" ? "Compare this model year" : "Compare this trim"} <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
+     <div className="detail-hero"><div><span className="eyebrow">{v.year}{v.generation && ` · ${v.generation}`} · {v.bodyType || (canonical ? "Body type not listed" : "")}</span><h1 className="serif">{v.make} {v.model}<br/><em>{v.trim}</em></h1>{canonical ? <><p>{v.overview || "No profile overview is available."}</p><CanonicalEvidence state={researchState("overview", "specifications")} claims={v.claims}/></> : <p>{v.overview}</p>}<div className="detail-actions"><button className="button dark" onClick={() => { trackEvent('comparison_started', { source: 'vehicle_profile', vehicle_count: 1 }); setLoc(`/compare?ids=${v.id}`); }}>{v.identityLevel === "model_year" ? "Compare this model year" : "Compare this trim"} <ArrowRight size={15}/></button><button className="button secondary" onClick={() => setLoc(`/calculator?vehicle=${v.id}`)}><Calculator size={15}/> Estimate my costs</button></div></div><div className="detail-score"><span className="eyebrow">RELIABILITY ESTIMATE</span>{canonical ? <><CanonicalEvidence state={researchState("reliabilityEstimate", "reliability")} claims={v.claims}/>{v.reliability.score != null && <b>{v.reliability.score} / 10</b>}{v.reliability.label && <b>{v.reliability.label}</b>}{v.reliability.note && <small>{v.reliability.note}</small>}</> : <><Reliability score={v.reliability.score} size="large"/><b>{v.reliability.label}</b><small>{v.reliability.note}</small><span className="demo-tag">DEMO / ESTIMATE</span></>}</div></div>
     {!canonical && <DemoNotice/>}
     <div className="spec-strip">{[[v.mpgCombined == null ? "—" : `${v.mpgCombined} ${economyUnit(v.fuelType || "")}`, 'COMBINED EST.'], [v.drivetrain || "—", 'DRIVETRAIN'], [v.fuelType || "—", 'FUEL'], [v.horsepower == null ? "—" : `${v.horsepower} hp`, 'POWER'], [money(v.priceUsd), 'STARTING EST.']].map(([val, caption]) => <div key={caption}><b>{val}</b><small>{canonical ? caption === "STARTING EST." ? "PRICE" : caption === "COMBINED EST." ? "COMBINED ECONOMY" : caption : caption}</small>{canonical && <CanonicalEvidence state={researchState(caption === "STARTING EST." ? "priceUsd" : caption === "COMBINED EST." ? "mpgCombined" : caption === "DRIVETRAIN" ? "drivetrain" : caption === "FUEL" ? "fuelType" : "horsepower", "specifications")} claims={v.claims}/>}</div>)}</div>
-    <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} onClick={event => { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigateToSection(id as ReportSectionId); }} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>
+     <div className="detail-body"><nav className="detail-tabs" aria-label="Vehicle report sections" ref={detailNavRef}>{tabs.map(([id, title]) => <a href={`#${id}`} onClick={event => { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); trackEvent('vehicle_report_section_opened', { section: id, profile_type: canonical ? 'canonical' : 'demo' }); navigateToSection(id as ReportSectionId); }} className={activeSection === id ? "active" : ""} aria-current={activeSection === id ? "location" : undefined} key={id}>{title}</a>)}</nav>
     <div className="detail-columns">
       <div className="detail-main">
          <section id="overview" className="detail-section"><span className="eyebrow">01 / POWERTRAIN & TRIM</span><h2 className="serif">What this vehicle is.</h2>{canonical ? <><CanonicalEvidence state={sectionState("specifications")} claims={v.claims}/>{v.overview?.split("\n\n").map((paragraph, index) => <p className="body-copy" key={index}>{paragraph}</p>)}</> : <p className="body-copy">This profile represents the {v.year} {v.make} {v.model} {v.trim} in the {v.generation}. Specifications and availability vary by market and configuration; confirm against the original window sticker and manufacturer documentation.</p>}<div className="powertrain-grid"><div><span className="eyebrow">FEATURED ENGINE</span><h3>{v.engineName || "—"}</h3>{canonical && <CanonicalEvidence state={researchState("engineName", "specifications")} claims={v.claims}/ >}{v.engines.map((e, index) => <p className="option-line" key={`${e.name}-${index}`}><b>{e.name}</b><span>{e.horsepower == null ? "—" : `${e.horsepower} hp`} · {e.fuelType || "—"}</span><small>{e.availability || "—"}</small>{canonical && <CanonicalEvidence claimIds={e.claimIds} claims={v.claims}/>}</p>)}</div><div><span className="eyebrow">FEATURED TRANSMISSION</span><h3>{v.transmissionName || "—"}</h3>{canonical && <CanonicalEvidence state={researchState("transmissionName", "specifications")} claims={v.claims}/ >}{v.transmissions.map(t => <p className="option-line" key={t.name}><b>{t.name}</b><span>{t.gears || "—"}</span><small>{t.availability || "—"}</small>{canonical && <CanonicalEvidence claimIds={t.claimIds} claims={v.claims}/>}</p>)}</div></div>
@@ -480,10 +524,29 @@ function ComparePage() {
     // Query each selected vehicle by ID below; catalog provides convenient quick-add options.
     return id;
   });
-  const remove = (id: string) => { const next = removeComparisonId(ids, id); setIds(next); setLoc(buildComparisonLocation(next)); };
+  const remove = (id: string) => {
+    const next = removeComparisonId(ids, id);
+    if (next !== ids) {
+      trackEvent('comparison_vehicle_changed', { action: 'remove', source: 'comparison', comparison_size: next.length });
+      setIds(next);
+      setLoc(buildComparisonLocation(next));
+    }
+  };
   const add = (id: string) => {
     const next = addComparisonId(ids, id);
     if (next !== ids) {
+      const vehicle = catalog.data?.find(item => item.id === id);
+      trackEvent('comparison_vehicle_changed', {
+        action: 'add',
+        source: 'comparison',
+        comparison_size: next.length,
+        ...(vehicle ? {
+          make: vehicle.make,
+          model: vehicle.model,
+          model_year: vehicle.year,
+          profile_type: vehicle.profileKind === 'canonical' && !vehicle.isDemo ? 'canonical' : 'demo',
+        } : {}),
+      });
       setIds(next);
       setLoc(buildComparisonLocation(next));
       setSearch('');
@@ -624,18 +687,43 @@ function CalculatorPage() {
   ]);
   const hasMonthlyEstimate = monthlyCosts.total !== null;
   const monthly = monthlyCosts.total ?? 0;
-  const chooseState = (code: string) => { setStateCode(code); setTaxRateEdited(Boolean(code)); setTaxRate(code ? String(STATE_TAX_ESTIMATES.find(x => x.code === code)?.rate ?? 0) : canonicalCalculatorMode ? "" : "0"); };
+  const analyticsContext = vehicleId || "standalone";
+  const previousAnalyticsContext = useRef(analyticsContext);
+  const estimateAdjustmentTracked = useRef(false);
+  useEffect(() => {
+    if (previousAnalyticsContext.current !== analyticsContext) {
+      previousAnalyticsContext.current = analyticsContext;
+      estimateAdjustmentTracked.current = false;
+    }
+  }, [analyticsContext]);
+  const trackEstimateAdjustment = (inputGroup: "purchase" | "energy" | "ongoing_costs") => {
+    if (estimateAdjustmentTracked.current) return;
+    estimateAdjustmentTracked.current = true;
+    trackEvent("ownership_estimate_adjusted", {
+      input_group: inputGroup,
+      vehicle_context: vehicleId ? "vehicle_profile" : "standalone",
+    });
+  };
+  const chooseState = (code: string) => { trackEstimateAdjustment("purchase"); setStateCode(code); setTaxRateEdited(Boolean(code)); setTaxRate(code ? String(STATE_TAX_ESTIMATES.find(x => x.code === code)?.rate ?? 0) : canonicalCalculatorMode ? "" : "0"); };
   const currency = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
   const setField = (field: keyof OwnershipDraft) => (value: string) => {
+    const inputGroup = ["miles", "mpg", "gas", "electricity"].includes(field)
+      ? "energy"
+      : ["insurance", "maintenance", "repairs"].includes(field)
+        ? "ongoing_costs"
+        : "purchase";
+    trackEstimateAdjustment(inputGroup);
     setShopperEditedFields(current => ({ ...current, [field]: true }));
     setPrefilledFields(current => ({ ...current, [field]: false }));
     setDraft(current => ({ ...current, [field]: value }));
   };
   const setTaxRateField = (value: string) => {
+    trackEstimateAdjustment("purchase");
     setTaxRateEdited(true);
     setTaxRate(value);
   };
   const setDealerFeesField = (value: string) => {
+    trackEstimateAdjustment("purchase");
     setDealerFeesEdited(true);
     setDealerFees(value);
   };
@@ -667,6 +755,7 @@ function CalculatorPage() {
     if (!profile || !canonical) return;
     const merged = mergeCanonicalCalculatorPrefill(profile, draft, canonicalPrefillFields);
     if (!merged.appliedFields.length) return;
+    trackEstimateAdjustment("purchase");
     setPrefilledFields(current => ({ ...current, ...Object.fromEntries(merged.appliedFields.map(field => [field, true])) }));
     setPrefilledProfileId(profile.id);
     setDraft(merged.draft);
@@ -693,11 +782,12 @@ function CalculatorPage() {
     }}>{canonical ? "Use known profile values" : "Use vehicle profile estimates"}</button></div>}
     <div className="calculator-layout"><div className="calculator-form">
       <section className="calc-group"><span className="eyebrow">01 / FINANCING</span><h2 className="serif">Purchase assumptions</h2><div className="input-grid"><NumberField label="Vehicle price" value={displayDraft.price} set={setField('price')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Down payment" value={displayDraft.down} set={setField('down')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Trade-in value<select aria-label="Trade-in value" data-testid="select-trade-in" value={tradeInSelection} onChange={event => setTradeInSelection(event.target.value)}>{TRADE_IN_PRESET_AMOUNTS.map(amount => <option key={amount} value={amount}>{amount === 0 ? "No trade-in ($0)" : money(amount)}</option>)}<option value="custom">Custom amount…</option></select></label>{tradeInSelection === "custom" && <NumberField label="Custom trade-in value" value={customTradeInValue} set={setCustomTradeInValue} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/>}<NumberField label="APR" value={displayDraft.apr} set={setField('apr')} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Loan term<select value={term} onChange={e => setTerm(Number(e.target.value))}><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></label><label className="field-label">State (for sales tax estimate)<select aria-label="State" data-testid="select-state" value={stateCode} onChange={e => chooseState(e.target.value)}><option value="">Select a state</option>{STATE_TAX_ESTIMATES.map(x => <option key={x.code} value={x.code}>{x.name}</option>)}</select></label><NumberField label="Estimated sales tax rate (editable)" value={displayTaxRate} set={setTaxRateField} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Estimated dealer fees" value={displayDealerFees} set={setDealerFeesField} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/></div>
+       <section className="calc-group"><span className="eyebrow">01 / FINANCING</span><h2 className="serif">Purchase assumptions</h2><div className="input-grid"><NumberField label="Vehicle price" value={displayDraft.price} set={setField('price')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Down payment" value={displayDraft.down} set={setField('down')} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Trade-in value<select aria-label="Trade-in value" data-testid="select-trade-in" value={tradeInSelection} onChange={event => { trackEstimateAdjustment("purchase"); setTradeInSelection(event.target.value); }}>{TRADE_IN_PRESET_AMOUNTS.map(amount => <option key={amount} value={amount}>{amount === 0 ? "No trade-in ($0)" : money(amount)}</option>)}<option value="custom">Custom amount…</option></select></label>{tradeInSelection === "custom" && <NumberField label="Custom trade-in value" value={customTradeInValue} set={value => { trackEstimateAdjustment("purchase"); setCustomTradeInValue(value); }} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/>}<NumberField label="APR" value={displayDraft.apr} set={setField('apr')} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><label className="field-label">Loan term<select value={term} onChange={e => { trackEstimateAdjustment("purchase"); setTerm(Number(e.target.value)); }}><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></label><label className="field-label">State (for sales tax estimate)<select aria-label="State" data-testid="select-state" value={stateCode} onChange={e => chooseState(e.target.value)}><option value="">Select a state</option>{STATE_TAX_ESTIMATES.map(x => <option key={x.code} value={x.code}>{x.name}</option>)}</select></label><NumberField label="Estimated sales tax rate (editable)" value={displayTaxRate} set={setTaxRateField} suffix="%" normalizeOnBlur={!canonicalCalculatorMode}/><NumberField label="Estimated dealer fees" value={displayDealerFees} set={setDealerFeesField} prefix="$" normalizeOnBlur={!canonicalCalculatorMode}/></div>
         <p className="field-hint">Prototype state-level estimates, not official. Local taxes, trade-ins, exemptions and registration location change the real rate. Dealer fees vary by dealer.</p>
-        <fieldset className="segmented" data-testid="group-taxes-fees"><legend>Taxes &amp; fees payment</legend><button type="button" className={taxMode === 'financed' ? 'on' : ''} aria-pressed={taxMode === 'financed'} onClick={() => setTaxMode('financed')}>Include taxes &amp; fees in loan</button><button type="button" className={taxMode === 'upfront' ? 'on' : ''} aria-pressed={taxMode === 'upfront'} onClick={() => setTaxMode('upfront')}>Pay taxes &amp; fees upfront</button></fieldset>
+         <fieldset className="segmented" data-testid="group-taxes-fees"><legend>Taxes &amp; fees payment</legend><button type="button" className={taxMode === 'financed' ? 'on' : ''} aria-pressed={taxMode === 'financed'} onClick={() => { trackEstimateAdjustment("purchase"); setTaxMode('financed'); }}>Include taxes &amp; fees in loan</button><button type="button" className={taxMode === 'upfront' ? 'on' : ''} aria-pressed={taxMode === 'upfront'} onClick={() => { trackEstimateAdjustment("purchase"); setTaxMode('upfront'); }}>Pay taxes &amp; fees upfront</button></fieldset>
          {financingReady ? <PurchaseBreakdown f={financing}/> : <p className="field-hint" role="status">Add {missingFinance.join(", ")} to calculate the purchase breakdown.</p>}</section>
       <section className="calc-group"><span className="eyebrow">02 / ENERGY USE</span><h2 className="serif">Energy assumptions</h2><div className="input-grid">
-        {!fuelTypeKnown && <label className="field-label">{energyBasisFieldLabel}<select aria-label={energyBasisFieldLabel} value={energyBasisValue} onChange={event => setShopperEnergyBasis(event.target.value)}><option value="">Choose an assumption</option><option value="gasoline">Gasoline (MPG)</option><option value="electric">Electricity (MPGe)</option></select>{canonicalCalculatorMode && <small>This is your calculation assumption, not a researched vehicle fact.</small>}</label>}
+         {!fuelTypeKnown && <label className="field-label">{energyBasisFieldLabel}<select aria-label={energyBasisFieldLabel} value={energyBasisValue} onChange={event => { trackEstimateAdjustment("energy"); setShopperEnergyBasis(event.target.value); }}><option value="">Choose an assumption</option><option value="gasoline">Gasoline (MPG)</option><option value="electric">Electricity (MPGe)</option></select>{canonicalCalculatorMode && <small>This is your calculation assumption, not a researched vehicle fact.</small>}</label>}
         <NumberField label="Miles driven per year" value={displayDraft.miles} set={setField('miles')} suffix="mi" normalizeOnBlur={!canonicalCalculatorMode}/>
         <NumberField label={canonicalCalculatorMode && !energyBasisSelected ? "Combined fuel economy (unit unknown)" : "Combined fuel economy"} value={displayDraft.mpg} set={setField('mpg')} suffix={canonicalCalculatorMode && !energyBasisSelected ? undefined : vehicleIsElectric ? 'MPGe' : 'mpg'} normalizeOnBlur={!canonicalCalculatorMode}/>
         {canonicalCalculatorMode && !fuelTypeKnown && <CanonicalEvidence state={vehicleProfile?.fieldStates?.fuelType} claims={vehicleProfile?.claims}/>}

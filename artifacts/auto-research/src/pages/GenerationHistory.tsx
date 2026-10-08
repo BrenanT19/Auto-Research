@@ -9,6 +9,7 @@ import type {
   GenerationHistoryDetail,
 } from "@workspace/api-client-react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, CircleAlert, History, Search, ShieldCheck, X } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const yearRange = (start: number, end: number) => start === end ? String(start) : `${start}–${end}`;
 const hasSourceEntries = (model: GenerationHistoryModelSummary) => model.historyStatus === "partial";
@@ -33,7 +34,7 @@ function HistoryLoading() {
 
 function HistoryModelRow({ model }: { model: GenerationHistoryModelSummary }) {
   const hasHistory = hasSourceEntries(model);
-  return <Link className={`history-model-row ${hasHistory ? "" : "not-researched"}`} href={`/generation-history/${model.makeSlug}/${model.modelSlug}`}>
+  return <Link className={`history-model-row ${hasHistory ? "" : "not-researched"}`} href={`/generation-history/${model.makeSlug}/${model.modelSlug}`} onClick={() => trackEvent("generation_history_model_opened", { source: "history_index", make: model.make, model: model.model, has_sourced_history: hasHistory, catalog_year_count: model.modelYearCount })}>
     <span className="history-model-mark">{model.make.slice(0, 2).toUpperCase()}</span>
     <span className="history-model-name"><small>{model.make}</small><b>{model.model}</b></span>
     <span className="history-model-years">{yearRange(model.firstCatalogYear, model.lastCatalogYear)}<small>{model.modelYearCount} catalog years</small></span>
