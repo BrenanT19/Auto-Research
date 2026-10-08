@@ -1,0 +1,12 @@
+{
+  "source_url": "https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip",
+  "zip_sha256": "33d32caa0343cdb11c47be631e8a80b7ed7c351ee8503646a4e96485bd67b22f",
+  "extracted_csv_sha256": "b1ff0e3071c46cdc1c99e0015878b98a01851462d7e447237ce2fc1294ccf303",
+  "catalog_csv_sha256": "b1ff0e3071c46cdc1c99e0015878b98a01851462d7e447237ce2fc1294ccf303",
+  "same_hashed_payload": true,
+  "live_source_rows": 50407,
+  "profiles_checked": 3639,
+  "record_locators_checked": 18764,
+  "mismatches": [],
+  "checksum_basis": "Builder hashes extracted vehicles.csv, not ZIP archive; see scripts/build-model-year-catalog.py."
+}

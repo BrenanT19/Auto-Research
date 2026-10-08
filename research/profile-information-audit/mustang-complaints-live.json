@@ -1,0 +1,1822 @@
+{
+  "url": "https://api.nhtsa.gov/complaints/complaintsByVehicle?make=ford&model=mustang&modelYear=2024",
+  "retrieved_at": "2026-10-08T05:04:37.016767+00:00",
+  "data": {
+    "count": 82,
+    "message": "Results returned successfully",
+    "results": [
+      {
+        "odiNumber": 11768337,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/03/2026",
+        "dateComplaintFiled": "10/01/2026",
+        "vin": "1FA6P8TH4R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "My car would not start so I had it towed to the Ford Dealership where I bought the car - The car would not start even though the battery had power - it also had a burning wire smell which is consistent with the recall  The dealer has not looked at the car since it was towed to them on 9/3/26",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11767404,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/30/2025",
+        "dateComplaintFiled": "09/28/2026",
+        "vin": "1FA6P8TH5R5",
+        "components": "POWER TRAIN,VEHICLE SPEED CONTROL,FUEL/PROPULSION SYSTEM",
+        "summary": "2024 Ford Mustang has shown severe defects since September of 2025. Vehicle has been in and out of shop every month since first incident of vehicle going completely dead without cause or warning. Vehicle has since produced escalating engine misfires, loss of acceleration while driving on highway, and occasional antifreeze seeping through a/c vents on startup. Dash has started to glitch upon startup as well and fuel economy has dropped 7mpg in one month. Every Ford dealership I have went to for repairs, except for Town and Country Ford, has told me, \"there's no issue with your vehicle\". After a year of issues that are getting worse, and trying to receive answers from my Ford case manager, I went to check on any recalls myself and found there is a recall for my vehicle that has no remedy until December 21st, 2026. Ford case manager did not inform me of any recalls, my Ford app does not display any active recalls, and no dealership has made me aware either. When asked why I didn't receive a letter of notice, Ford Motor Company said, \"it got lost in the mail I suppose and we can't send it again\". My vehicle is getting increasingly worse and it can not remain in current condition for another 3 months.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11766775,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/24/2026",
+        "dateComplaintFiled": "09/24/2026",
+        "vin": "1fa6p8cf8r5",
+        "components": "ELECTRICAL SYSTEM,STRUCTURE",
+        "summary": "Bought the car in XXX noticed mold on the passenger floor board, non Ford dealer said window must of been left down made sense at time. They cleaned mold up. Drove it today in the rain noticed water on floor did my research found out it had a recall of 25C43 or NHTSA 25V546. Went to my dealer they said it was inspected in Dec and closed as complete with another dealership. Obviously it\u2019s not fixed correctly because water is still running into the floor board and across the BCM. I did a water test of my own on XXX. I removed the passenger side kick plate ran the hose on the cowl off the car waited 6-10 minutes saw water intruding into the car, which proves repair was not completed properly. My problem is the dealer won\u2019t touch it without me paying because it\u2019s a closed recall on there end. I called Ford Corporate they told me it\u2019s been completed in December to pay dealer and have it fixed and keep receipts and see if I\u2019m eligible for a refund. Not holding my money hostage for there recall. This is a major safety recall that Ford is suppose to fix free of charge. I as the consumer should not have to pay for a diagnostic test to get this resolved. I\u2019m going back to dealer tomorrow.  I spoke with was [XXX] of Kingsport. I have both a dealer and Ford corporate selling me to pay out of pocket. Totally unacceptable. INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11765731,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/09/2026",
+        "dateComplaintFiled": "09/20/2026",
+        "vin": "1FAGP8UH9R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "My vehicle is subject to Ford safety recall 26C40 / NHTSA recall 26V547. I contacted an authorized Ford dealership to have the recall remedied. The dealership confirmed in writing that the recall is currently under Advance Notice and that Ford has not yet provided dealers with the remedy or technical repair instructions. Therefore, the dealership cannot perform the recall repair at this time.  NHTSA\u2019s recall lookup currently shows the status as \u201cRecall Incomplete, remedy not yet available\u201d and states that the remedy is anticipated to be available on December 21, 2026.  I am willing to have the recall repair performed immediately when the remedy becomes available. I am filing this complaint because the manufacturer is currently unable to remedy this open safety recall. I have written correspondence from an authorized Ford dealer confirming that no repair can currently be performed.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11764864,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "08/12/2026",
+        "dateComplaintFiled": "09/17/2026",
+        "vin": "1FA6P8TH0R5",
+        "components": "STEERING,SERVICE BRAKES,FORWARD COLLISION AVOIDANCE",
+        "summary": "*While driving at a normal, non-excessive speed, another vehicle began pulling out of a neighborhood ahead of me. I attempted to slow down, but the vehicle did not respond to braking as expected \u2014 it continued moving despite my attempt to stop. When I tried to turn the steering wheel to avoid the situation, the wheel felt stuck/resistant and did not respond normally. As a result, I began sliding and lost control, crossing into the oncoming lane of traffic. I was able to regain enough control of the steering to pull back into my own lane. Fortunately, there was no oncoming traffic at that moment, or this could have resulted in a head-on collision. Weather conditions were dry and clear; it was not raining. This occurred after I received a recall notice (NHTSA Recall 26V547 / Ford Compliance Recall 26C40) for my vehicle stating that engine wire harness grounds may fAil. potentially causing loss of motive power, and that Ford does not currently have a remedy available. I reported this incident to Ford shortly after it occurred.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11765084,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/07/2026",
+        "dateComplaintFiled": "09/17/2026",
+        "vin": "1FA6P8TH9R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving 75 MPH, the vehicle stalled. The contact coasted the vehicle to the side of the road, shifted to park(P) and waited five minutes, and restarted the vehicle. The failure was a recurring failure. Additionally, the  vehicle lost windshield washer fluid pump functionality and days later by the check engine warning light illuminated due to a weak or failing battery. The contact associated the failure with NHTSA Campaign Number: 26V547000 (Electrical System). The dealer was contacted but was unable to reproduce failure and stated that vehicle needed a software update. The contact stated that the manufacturer had exceeded a reasonable amount of time for the recall repair. The failure mileage was approximately 27,500.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11764257,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/10/2026",
+        "dateComplaintFiled": "09/14/2026",
+        "vin": "1FA6P8TH7R5",
+        "components": "ELECTRICAL SYSTEM,EXTERIOR LIGHTING",
+        "summary": "The manufacturer marked Safety Recall 25C43 as completed on this VIN. However, the remedy has failed. The vehicle is currently suffering from the exact safety hazard described in NHTSA Campaign 25V546000 (water intrusion, wiring harness corrosion, and total taillight failure). The authorized dealer refuses to re-service the vehicle because the recall is marked 'complete' on the VIN, and Ford Corporate has denied goodwill assistance and failed to fulfill scheduled manager callbacks. The vehicle remains an active safety hazard on public roads.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11763251,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/09/2026",
+        "dateComplaintFiled": "09/09/2026",
+        "vin": "1FA6P8TH7R5",
+        "components": "AIR BAGS",
+        "summary": "Restraint indicator lamp warning. The restraint control module has detected a fault with the passenger airbag.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11761510,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "04/25/2026",
+        "dateComplaintFiled": "09/02/2026",
+        "vin": "1FAGP8UH2R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact received notification of NHTSA Campaign Number: 26V547000 (Electrical System); however, the part for the recall repair was unavailable. The contact stated the manufacturer had exceeded a reasonable amount of time for the recall repair. The contact stated that while driving at various speeds and accelerating, the vehicle jumped and hesitated before accelerating. The contact stated the \u201cService Vehicle\u201d warning light illuminated, and the message of an electrical wiring failure was displayed. The vehicle was taken to the dealer and was first diagnosed with power train failure. The power train system was reset; however, the failure persisted. The vehicle was returned to the dealer to be diagnosed, and the failure was associated with the recall. The failure mileage was approximately 43,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11754503,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/27/2026",
+        "dateComplaintFiled": "08/03/2026",
+        "vin": "1FAGP8FF5R5",
+        "components": "ELECTRICAL SYSTEM,UNKNOWN OR OTHER",
+        "summary": "I am extremely disappointed with Ford\u2019s handling of my situation and the lack of customer support for what appears to be a premature major component failure. I own a 2024 Ford Mustang GT with only 56,022 miles. While driving, my air conditioning suddenly stopped blowing cold air. I took the vehicle to an authorized Ford dealership, where it was diagnosed with a catastrophic A/C compressor failure. The compressor had internally locked up, sending metal shavings throughout the A/C system. I was told the repair would require replacing the compressor, expansion valve, desiccant, belt, flushing the system, and recharging the A/C, with an estimated cost of nearly $5,000. I contacted Ford Customer Relationship Center and requested goodwill assistance because this is a 2024 vehicle and this type of catastrophic failure should not happen at only 56,000 miles. I explained that I had only owned the vehicle for approximately 7,000 miles after purchasing it used with around 49,000 miles. Unfortunately, I was simply told that there was nothing Ford could do because the vehicle was outside of the basic warranty. There was no meaningful effort to review the circumstances, no offer of partial assistance, and no indication that Ford was willing to stand behind what appears to be an unusually premature failure of a major factory component. I understand warranties have limits, but customer service should go beyond simply reading warranty terms. A compressor that fails catastrophically and contaminates the entire A/C system on a vehicle this new is not something most owners would reasonably expect. I wasn\u2019t asking Ford to ignore its warranty\u2014I was asking the company to stand behind its product through goodwill assistance for an unusual failure. This experience has left me questioning Ford\u2019s commitment to customer satisfaction. When a major component fails unexpectedly on a relatively new vehicle, customers deserve more than a quick denial. I expected better from a company with Ford.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11751918,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/26/2024",
+        "dateComplaintFiled": "07/21/2026",
+        "vin": "1FA6P8TH9R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "I bought a new 2024 Mustang in 11/2024 from Town & Country Ford in Port Arthur, Tx. Days after the purchase, I recieved a voicemail to return asap and was told by the owner that I would recieve a gift card if I did.  I didn't understand why at the time, as it wasn't explained.  Unfortunately, I was unable to return because the dealership is 4 hours drive from my residence.  That was the last I heard anything.  Recently, in 6/2026 I noticed that there were 2 active recalls in the Ford app.  I then made an appointment with my local dealership, Tyler Ford in Tyler, Tx and the recalls were performed.  The service tech at the Tyler dealership advised me then that there was no warranty start date entered in the system from when the vehicle was purchased and that he could not enter the recall information, nor could he perform any future warranty work.  The week after, I noticed a crack in my passenger tailight and took it to the Tyler dealership.  The same service tech (Vegas) advised that they couldn't do anything because of the warranty service date issue.  Myself and Vegas have attempted multiple times over a 3 week period to have this date entered by Town & Country.  Further research finds that there was a stop sale recall on the Mustang issued 10/2024 24C35 for the IPC screen that was not performed prior to its sale to me 11/2024 and now the dealership management is attempting to cover it up.  I've spoken with the dealership warranty person (DeMarcus) and he has advised that management is aware and he has relayed the info several times.  Nonetheless, aside from their violation of federal law and elusive cover up, I am seemingly without warranty coverage and forced to drive un unsafe vehicle because the turn signal does not operate due to penetrating water damage into the light housing. Town & Country says they will enter the date when the recalls are entered, but Tyler says they can't enter the recalls until the warranty start date is entered.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11749942,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/12/2026",
+        "dateComplaintFiled": "07/13/2026",
+        "vin": "1FA6P8TH8R5",
+        "components": "TIRES",
+        "summary": "Hello, the tire blew out on the interstate and is only at 25k mileage. Warranty stated is 40k mileage and I\u2019m an extremely safe driver, I bought the car brand new with the tires on it",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          },
+          {
+            "type": "Tire",
+            "productYear": "9999",
+            "productMake": "CONTINENTAL",
+            "productModel": "SPORT CONTACT",
+            "size": null,
+            "manufacturer": "Continental Tire the Americas, LLC"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11746325,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/10/2026",
+        "dateComplaintFiled": "06/24/2026",
+        "vin": "1FA6P8CF9R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "Infotainment system flickers/goes blank even after being repaired at Ford Service center. Back up camera unavailable and anything controlled by touchscreen does not work",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11741353,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/01/2026",
+        "dateComplaintFiled": "06/01/2026",
+        "vin": "1FA6P8THXR5",
+        "components": "EXTERIOR LIGHTING",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact received notification of NHTSA Campaign Number:  25V546000(EXTERIOR LIGHTING); however, the part to do the recall repair was unavailable. The local dealer was contacted and it was confirmed that the part was not available. The contact stated that the manufacturer exceeded a reasonable amount of time for the recall repair. The manufacturer was made aware of the issue. The vehicle was taken to the local dealer who confirmed corrosion was present. The failure mileage was 11,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11735446,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "05/03/2026",
+        "dateComplaintFiled": "05/04/2026",
+        "vin": "1FA6P8CF8R5",
+        "components": "VISIBILITY/WIPER",
+        "summary": "Rear view mirror came away from windshield when adjusting. Resulted in damaged windshield that needed to be replaced. Shards of glass in the vehicle. Replacement cost from Safelite around $1000  (It seems that the glass wasn't correctly laminated, meaning the top later peeled away easily with the mirror mount",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11732865,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "04/17/2026",
+        "dateComplaintFiled": "04/21/2026",
+        "vin": "1FAGP8FF3R5",
+        "components": "POWER TRAIN,ENGINE",
+        "summary": "I purchased this vehicle CPO and shortly after purchase the vehicle experienced a major mechanical failure involving the clutch/transmission.  The vehicle had a prior safety recall (Recall #24S36) listed as \u201ccompleted\u201d before I purchased it. However, the issue has now reoccurred despite that recall being marked as repaired.  The dealership is now claiming the failure is due to \u201cwear and tear,\u201d but the failure occurred after only approximately 1,000 miles of driving since purchase, which raises concern that the defect existed prior to sale or that the recall repair was not properly completed.  The vehicle is currently unsafe to drive due to the risk of sudden loss of power and drivability issues. I do not feel safe operating the vehicle.  I am requesting that this issue be investigated as a potential recall-related defect or improper recall repair, as it poses a safety risk.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11729817,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "02/16/2026",
+        "dateComplaintFiled": "04/07/2026",
+        "vin": "1FA6P8R09R5",
+        "components": "POWER TRAIN,ELECTRICAL SYSTEM,LANE DEPARTURE",
+        "summary": "I am filing a safety complaint regarding an open manufacturer recall on my vehicle that has not been completed despite being scheduled for repair.  On or about 2/16/2026, I scheduled the recall repair with an authorized dealership/service center. The repair was accepted and scheduled; however, the repair has not been completed to date. It has now been approximately 50 days (or more) since the scheduled appointment, and the recall remedy remains unresolved.  Despite multiple attempts to follow up, the repair has not been performed, and no reasonable timeline has been provided for completion. This ongoing delay leaves the vehicle in an unrepaired condition subject to a known safety-related recall issue.  Safety Concern: The unresolved recall defect presents a potential safety risk, as the manufacturer has identified the issue as significant enough to warrant a recall. The continued delay in remedy increases the risk of operating a vehicle with a known safety defect.  Dealer / Manufacturer Response: \u2022Recall repair was scheduled and acknowledged by the dealer - suburban ford of Ferndale.  \u2022Repair has not been completed after an extended period. \u2022No adequate resolution timeline has been provided. \u2022Communication regarding the delay has been insufficient.  Impact: \u2022Vehicle remains in an unsafe or potentially unsafe condition. \u2022Loss of use / inability to rely on manufacturer recall remedy. \u2022Unreasonable delay in addressing a safety recall.  Requested Action: I am requesting that NHTSA: \u2022Review this matter as a potential failure to timely remedy a safety recall \u2022Ensure the manufacturer and/or dealer fulfills its obligations to complete the recall repair promptly \u2022Investigate whether systemic delays or failures are occurring in the recall remedy process  Additional Notes: This issue is not merely about the existence of a recall, but rather the failure to complete a scheduled recall repair within a reasonable timeframe after acceptance by the dealership.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11728343,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "12/01/2025",
+        "dateComplaintFiled": "03/31/2026",
+        "vin": "1FA6P8TH4R5",
+        "components": "SUSPENSION,UNKNOWN OR OTHER",
+        "summary": "I was driving one day when I began to hear a knocking sound on my vehicle. I then took the time to look up the recall on my current vehicle and it had mentioned \u201cRear Suspension Knuckles (24S49): Certain vehicles have defective rear suspension castings that can fail, leading to loss of vehicle control\u201d. I just got off the phone with Ford and they expressed me how I do not have that recall under my vin however I am experiencing the exact same description of what is going on and I am trying to get it looked at, but when I told them that I need this issue resolved before something major happens to my vehicle. They had told me that I had to pay for the diagnostic fee as well as it may not be covered once it is fixed. The sound has only got louder and I am afraid I will be driving and something serious will happen.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11722053,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/15/2025",
+        "dateComplaintFiled": "03/04/2026",
+        "vin": "1FA6P8TH7R5",
+        "components": "POWER TRAIN,UNKNOWN OR OTHER,ENGINE",
+        "summary": "My 2024 Ford Mustang has been experiencing a serious mechanical issue that the manufacturer has been unable to repair. The vehicle has been at the dealership for an extended period because a defective component cannot be replaced. Ford acknowledged that the required part has not yet been manufactured. The vehicle has remained unresolved for over five months. This creates a potential safety concern because the vehicle cannot be reliably used or repaired.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11704736,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/21/2025",
+        "dateComplaintFiled": "12/12/2025",
+        "vin": "1FA6P8CF2R5",
+        "components": "ELECTRICAL SYSTEM,EXTERIOR LIGHTING,LANE DEPARTURE",
+        "summary": "On [XXX], multiple electrical systems on my 2024 Ford Mustang suddenly failed while the vehicle was in normal operation. The following systems stopped functioning: HVAC/climate control, heated seats, outside temperature display, rear turn signals, and blind spot monitoring. No prior warning lights were displayed before the failure.   These failures significantly compromised safety because the rear turn signals and blind spot monitoring stopped working without warning while driving. Loss of exterior signaling and driver-assistance systems created a risk of collision. The lack of HVAC also created visibility concerns due to inability to defog windows.  The vehicle was taken to an authorized Ford dealer the same day. The dealer confirmed the issue, diagnosed water intrusion into the Body Control Module, and stated that the failure is linked to an open Ford recall regarding BCM water intrusion. The dealer has had the vehicle since 10/21/25, and the BCM and related components remain available for inspection. The repair has been delayed for nearly two months, and the dealer reports they are \u201cwaiting on engineering approval\u201d from Ford with no estimated completion date.  The defect has been reproduced and confirmed by the dealer but has not yet been repaired. The manufacturer has not inspected the vehicle directly, and no police or insurance inspection has occurred.  The safety risk remains significant because BCM failure disables multiple critical signaling and monitoring systems without warning.  INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11703025,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/20/2025",
+        "dateComplaintFiled": "12/04/2025",
+        "vin": "1FA6P8CF7R5",
+        "components": "ELECTRICAL SYSTEM,EXTERIOR LIGHTING",
+        "summary": "I own a new manual 2024 Ford Mustang GT now with 800 miles. When turning on the unit on 2 occasions, one on November 20 and another on December 3, documented with photographs and videos, the unit presents a black screen with no image. Either in reverse or drive without the possibility of viewing any image. The agency was notified and commented that these failures had never occurred.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11698017,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/01/2025",
+        "dateComplaintFiled": "11/06/2025",
+        "vin": "1FA6P8TH2R5",
+        "components": "EXTERIOR LIGHTING",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact received notification of NHTSA Campaign Number: 25V546000 ( EXTERIOR LIGHTING); however, the part to do the recall repair was unavailable. The contact stated that the manufacturer had exceeded a reasonable amount of time for the recall repair. The manufacturer was made aware of the issue. The contact had not experienced a failure.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11697615,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/09/2025",
+        "dateComplaintFiled": "11/05/2025",
+        "vin": "1FA6P8TH5R5",
+        "components": "ENGINE",
+        "summary": "Blown 2.3 Ecoboost. At approx 4700 miles while driving got an engine light and severe misfire. Report from Ford technician says that part of a spark plug broke off in #4 cylinder and caused severe damage. Motor (long block) and turbo replaced under warranty and after 700 miles is running fine.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11696476,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/29/2025",
+        "dateComplaintFiled": "10/29/2025",
+        "vin": "1FA6P8CF4R5",
+        "components": "VISIBILITY/WIPER",
+        "summary": "While driving approximately 55 mph on a four-lane highway around 8 p.m., the rear window of my 2024 Mustang GT 5.0 Premium exploded/shattered and is now visibly pulling away from the frame. The glass appears ready to collapse inward. Weather conditions were damp with light misting rain and a temperature near 55\u00b0F. The rear defroster was not in use, and there were no warning signs or cracks prior to the failure. Only one other vehicle was nearby, so it is not consistent with road debris. The explosion/shatter occurred suddenly and without impact. Photos clearly show the glass shattered separating from the body seam. This presents a clear safety hazard because the rear window could shatter or detach while driving, risking injury to occupants and other motorists.  I have photos documenting the damage.  The vehicle has not yet been repaired.  Ford dealership will be notified when they open in the morning.  No injuries occurred, but safety risk is significant. This vehicle is a year old and is garage kept and not exposed to harsh environments. There was no reason for the window to shatter.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11690868,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/01/2025",
+        "dateComplaintFiled": "10/01/2025",
+        "vin": "1FAGP8UHXR5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "I am concerned about a serious safety recall affecting the vehicle. To date, the manufacturer has not taken corrective action, which has placed an undue amount of stress on me. I respectfully request prompt steps to resolve this issue.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11689916,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/15/2024",
+        "dateComplaintFiled": "09/26/2025",
+        "vin": "1FA6P8TH3R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving at an undisclosed speed, the infotainment system failed to display pertinent vehicle information. No warning lights were illuminated. The vehicle was taken to the dealer, who determined that the system required a software update. The vehicle was repaired, but the failure reoccurred and had since become a regular failure. The manufacturer was notified of the failure, a case was opened, and the contact was referred to the NHTSA Hotline for assistance. The failure mileage was 1,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11689693,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/23/2025",
+        "dateComplaintFiled": "09/25/2025",
+        "vin": "1FA6P8CF0R5",
+        "components": "ELECTRICAL SYSTEM,EXTERIOR LIGHTING",
+        "summary": "Driving down the road all tire sensors went into default \u2013 started flickering on and off headlights kept flickering on and off AC kept working and then stopped working.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11687399,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/13/2025",
+        "dateComplaintFiled": "09/15/2025",
+        "vin": "1FA6P8TH9R5",
+        "components": "ELECTRICAL SYSTEM,BACK OVER PREVENTION",
+        "summary": "The auxiliary display that contains the rear camera view failed on several occasions even after the software installation from Ford to fix the failure of this display. The aural alert for cross traffic and pedestrian warning still functions, however, without the display I do not know what is behind or beside the car and from which direction it is coming from when backing out of blind parking spot (between two trucks in the last case). The Mustang is currently being inspected by the local dealer again.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11686178,
+        "manufacturer": "Ford Motor Company",
+        "crash": true,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "04/01/2025",
+        "dateComplaintFiled": "09/10/2025",
+        "vin": "1FA6P8R09R5",
+        "components": "AIR BAGS,STRUCTURE,UNKNOWN OR OTHER",
+        "summary": "Subject: Request for Investigation - Fraudulent and Falsified Vehicle Records (Crest Ford & Roy O'Brien Ford, Possible Involvement of Bell Ford) Dear Attorney General, I am submitting this complaint to formally request an investigation into fraud committed by Roy O'Brien, an automobile dealership located in Michigan. On [XXX], 1 purchased a 2024 dark horse mustang #R8911 from Roy O'Brien under the representation that the vehicle was brand new, undamaged, and met all safety standards. After the sale, I obtained evidence that the vehicle had, in fact, been in an accident during transport and subsequently altered and resold without disclosure. This constitutes misrepresentation and consumer fraud under Michigan law. Specifically: \u2022 The dealership and its employees knowingly concealed the accident and subsequent alterations. \u2022 The vehicle was sold as \"factory new,\" despite being materially compromised in safety and integrity. \u2022 I paid full market value under false pretenses, believing the vehicle to be undamaged and original. I have retained documentation, communications, and repair evidence that substantiate this fraud, including proof that dealership personnel were aware of the accident. I am prepared to provide all supporting records for your review. This misconduct not only caused me financial harm but also created a serious public safety risk, as the vehicle does not meet proper safety standards. I respectfully request that your office investigate this matter for potential violations of Michigan's Consumer Protection Act and any applicable fraud statutes. Please advise me on next steps and whether additional information is required. I am willing to fully cooperate with your investigation. 1. The vehicle had been in an accident during transport prior to sale. 2. Crest Ford appears to have falsely documented services that were never performed, in an effort to disguise the vehicle's accident history and damage. 3. These falsified service records were used to conspire.  INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11685239,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/04/2025",
+        "dateComplaintFiled": "09/05/2025",
+        "vin": "1FAGP8UH7R5",
+        "components": "UNKNOWN OR OTHER",
+        "summary": "My 2024 Ford Mustang is affected by Recall 25C43 / NHTSA Campaign No. 25V546 concerning water intrusion into the Body Control Module (BCM) that may cause exterior lighting failure.  Yesterday, on September 05, 2025, I contacted Autonation Ford Miami and requested the required interim inspection and BCM check. The dealer provided me with a written refusal, stating they \u201cwill not be able to perform inspection on Recall 25C43 due to instructions for mechanic not available.\u201d  This is unacceptable because under 49 U.S.C. \u00a7 30120(c)(1), a manufacturer must remedy a defect \u201cwithout charge when the vehicle is presented for remedy.\u201d Ford\u2019s dealer communication of Aug 25, 2025 instructed dealers to inspect body seams and the BCM for water or corrosion, and replace the BCM if needed.  By refusing inspection, the dealer has left me driving a car at risk of safety-critical lighting failure. I am requesting that NHTSA enforce compliance so Ford dealers provide at least the required inspection and interim remedy immediately, rather than forcing customers to wait until 2026.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11684108,
+        "manufacturer": "Ford Motor Company",
+        "crash": true,
+        "fire": false,
+        "numberOfInjuries": 2,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "08/09/2025",
+        "dateComplaintFiled": "08/30/2025",
+        "vin": "1FA6P8TH1R5",
+        "components": "AIR BAGS",
+        "summary": "In a hit-and-run accident, we were hit head on and the airbags did not deploy yet the car is a total loss. No side or front airbags deployed. Myself and my passenger needed medical care, my passenger specifically had hit the windshield and the airbags again still did not deploy. At impact, was traveling over 25 miles per hour when I was struck.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11681471,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "04/01/2025",
+        "dateComplaintFiled": "08/18/2025",
+        "vin": "1FA6P8CF5R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "In April 2025 as i was driving my vehicle I noticed my digital dashboard completely blacked out for a few minutes then reappeared. at the time i wasn't sure if an update was happening or not. The issue resurfaced late June but was worst. I took the vehicle to my ford dealership in (Courtesy Ford of Conyers,Georgia). They kept the vehicle for a few weeks and replaced the dash. However, the fix was short lived and in I received the back in Aug 2025. With three days of receipt of the vehicle the same problem was still present although the dash had been replaced. Current shop time is approx 30 days. I'm looking at processing this under the GA lemon law.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11679224,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/01/2024",
+        "dateComplaintFiled": "08/07/2025",
+        "vin": "1FAGP8FF2R5",
+        "components": "ELECTRICAL SYSTEM,VEHICLE SPEED CONTROL,UNKNOWN OR OTHER",
+        "summary": "Ford Motor Company has an issue with their 2024 Ford Mustang Convertibles, where condensation forms in the footwell ducts during air conditioner operation. As condensation accumulates, water drips onto the driver's foot and potentially the gas and/or brake pedal, creating a risk of driver error. This issue has been known since the vehicle's delivery nearly two years ago. Ford has acknowledged the problem but has not provided a resolution, stating that this occurrence is \"expected.\"  Some additional drivers are also experiencing this:  [XXX]  [XXX]    INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11678608,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/06/2025",
+        "dateComplaintFiled": "08/05/2025",
+        "vin": "1FA6P8TH2R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The center screen / infotainment system will not turn on sometimes when I start the car.  I am unable to use the backup camera, navigation, and air conditioning controls.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11677673,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/10/2025",
+        "dateComplaintFiled": "07/31/2025",
+        "vin": "1FA6P8CF5R5",
+        "components": "POWER TRAIN",
+        "summary": "The shift knob in this car has an issue where the silver ABS plastic piece with the gear numbers and the shift pattern detaches from the rest of the shift knob. This issue has been confirmed and repaired by a Ford dealer twice already in the 9 months I have owned the car.  The first time this issue occurred, the silver piece was loose. Before it completely detached, I was able to get it repaired at a Ford dealer. The issue was confirmed by the dealer in the receipt they gave me: \"Verified customer concern, shifter knob loose, the aluminum to the leather, replaced shifter knob. No other concerns at this time.\"  The second time this issue occurred, the silver piece suddenly detached when shifting gears during normal city driving. When this happened, the silver piece flew off the shift knob and fell into a gap next to the passenger seat. I was able to get it repaired at a Ford dealer again. They again confirmed the issue on the service receipt: \"Verified customer concern, Replaced gear shifter knob\".  This is a safety issue since it is hard to tell what gear I am shifting into if the plastic piece with the shift patterns breaks off. Once the piece breaks off, it is not easy to grip the shift knob normally, requiring the driver contort their arm in a different direction to grip the shift knob, making it harder and slower to shift. As someone who is experienced with the car, I can get around these issues. However, if someone who just started driving this car experiences this issue, they may not be able to shift gears or shift into reverse, since they may not be familiar with the shift pattern.  During the second occurrence of the issue, it caused a lot of confusion and momentarily reduced my attention to the road and the surroundings as I was shocked by the shift knob suddenly breaking and the piece flying off.  I attached pictures of the second occurrence of the issue and receipts from the two service visits to a Ford dealer.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11677150,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/09/2025",
+        "dateComplaintFiled": "07/30/2025",
+        "vin": "1FA6P8TH6R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "Condensing Core failed at 16k miles, 2024 new Ecoboost mustang. Been in the shop 3 weeks with no help.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11676041,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 2,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/04/2025",
+        "dateComplaintFiled": "07/24/2025",
+        "vin": "1FA6P8TH9R5",
+        "components": "AIR BAGS,UNKNOWN OR OTHER",
+        "summary": "The curtain airbags deployed without any collision or impact. This suggests a failure of the airbag sensors. The vehicle and all components, including the deployed airbags and related sensors, are available for inspection upon request. The sudden airbag deployment created a significant safety hazard. If this had occurred while driving at higher speeds, it could have caused me to lose control of the vehicle. The force of the deployment itself poses a risk of injury and can cause burns, bruises, or hearing damage. Myself and the passenger experienced these injuries. Other drivers could have been endangered if my vehicle reacted unexpectedly due to the deployment. The manufacturer inspected the EDR system which claimed that there was collision. There was no collision and no physical damage on the vehicle to suggest otherwise. This suggests a fault with the EDR system, sensors, and safety components of the vehicle. The vehicle is currently under inspection by insurance representatives. A few months into initially driving my vehicle, a warning lamp stating \"RESTRAINT INDICATOR LAMP FAULT\" was appearing. In March, there was dent and paint damage on the vehicle caused by a driveway gate, unrelated to the recent airbag deployment. These damages and warning lamp were fixed by an insurance certified shop. A report from this repair shop will be provided upon request. It cannot be attached below due to significant file size. There were no indication or warnings suggesting further fault with the airbags or any other safety restraint from March to the July, when the incident occurred.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11675438,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/22/2025",
+        "dateComplaintFiled": "07/22/2025",
+        "vin": "1FA6P8CF2R5",
+        "components": "SERVICE BRAKES,FORWARD COLLISION AVOIDANCE",
+        "summary": "Automatic breaking engaged too sensitively, the driver infront of me had stopped a few yards away and I was already starting to stop when the vehicle suddenly stopped. The driver behind me almost rear ended me. This was at a green light.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11673481,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/23/2023",
+        "dateComplaintFiled": "07/14/2025",
+        "vin": "1FA6P8CFXR5",
+        "components": "ENGINE",
+        "summary": "I purchased a new 2024 Mustang GT. Shortly after I experiences a dead throttle. The car would coast to a near stop and pushing the gas pedal multiple times had no effect. This has happen more than 4 times  now. It was taken into the dealership twice. The first time the car was kept for a week and returned with no problem found. The second time is was returned more quickly again with no problem found. With what was asked I don't think I was taken seriously. I drive in areas with poor visibility due to hills and curves and only single lane roads without usable shoulders. Twice it happened in middle of one of these roads and I was at a near stop in middle of the roadway. I was nearly rear ended my a truck traveling at high speed twice with nowhere or no way to move. Another time exiting one street and enter on to another rather busy street with fast moving traffic. The car nearly came to a complete stop in mid turn. Power came back just in time to avoid an accident. I and possibly others could have easily been seriously injured or worse in any of those.  I have concerns taking this car anywhere at this point.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11669926,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/25/2025",
+        "dateComplaintFiled": "06/28/2025",
+        "vin": "1FAGP8UH4R5",
+        "components": "UNKNOWN OR OTHER",
+        "summary": "The front windshield on my vehicle has cracked twice under normal driving conditions, without any significant impact or debris striking it. The cracks originated near the middle top and then another time lower edge of the glass and expanded rapidly across the surface. This seems to indicate a structural or design flaw, especially since I have seen multiple reports from other owners of the same make and model experiencing similar spontaneous windshield cracking.  No, the cracked windshield is not available for inspection upon request. But I did have it sent to the dealership for review.  The cracks compromised my visibility, particularly in sunlight and during night driving, which directly put my safety\u2014and the safety of others\u2014at risk. The second incident occurred on a highway, which was especially dangerous due to high-speed travel and glare from sunlight refracting through the cracks.  This problem has not yet been formally reproduced or confirmed by a dealer or service center, but I have found numerous owner complaints online and in forums documenting the same issue. I believe this supports the theory that it's a broader defect rather than isolated cases.  The vehicle has not been inspected by the manufacturer, police, or insurance agents regarding this specific issue. I am open to having the damaged windshield reviewed by any party they recommend.  There were no warning lights, error messages, or visible signs of damage before the cracks appeared. Both times, the windshield cracked suddenly while the car was parked or driving at moderate speeds, and the temperature conditions were not extreme.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11668126,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/20/2025",
+        "dateComplaintFiled": "06/20/2025",
+        "vin": "1FA6P8CF4R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "Center dashboard screen visually displaying BACKUP CAMERA, ventilation controls, radio, etc., does not boot leaving screen blank and nonfunctional.    This problem did not begin until the NHTSA Campaign Number: 24V802000 software update was installed in January 2025.  Safety hazard: Cannot view backup camera.  This VIN appears to not have been included yet in current NHTSA Campaign Number: 25V315000 recall.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11666787,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/01/2025",
+        "dateComplaintFiled": "06/13/2025",
+        "vin": "1FAGP8FF4R5",
+        "components": "SEAT BELTS",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while seated in the front driver's seat, the front driver's side seat belt failed to properly retract and failed to properly secure the driver. The vehicle was taken to the local dealer who inspected the vehicle and determined that the seat belt operated normally, and no failure was found. The contact was concerned that the seatbelt would not function properly during a crash. The manufacturer was notified of the failure, but no assistance was offered. The failure mileage was 5,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11663377,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "05/28/2025",
+        "dateComplaintFiled": "05/28/2025",
+        "vin": "1FA6P8TH7R5",
+        "components": "POWER TRAIN,ENGINE",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving at an undisclosed speed, the vehicle inadvertently lost motive power. The contact was able to pull over to the shoulder of the roadway, where the vehicle was able to restart. No warning lights were illuminated. The vehicle was taken to the dealer, who was unable to duplicate the failure. The vehicle was not repaired. The manufacturer was notified of the failure but provided no assistance. The failure mileage was not available.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11661263,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/04/2024",
+        "dateComplaintFiled": "05/15/2025",
+        "vin": "1FAGP8UH9R5",
+        "components": "ELECTRICAL SYSTEM,BACK OVER PREVENTION",
+        "summary": "dashboard screen visually displaying backup camera, ventilation controls, radio, etc goes blank intermittently without warning.  Other 2024 mustangs have been recalled for this issue.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11660807,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "05/13/2025",
+        "dateComplaintFiled": "05/14/2025",
+        "vin": "1FAGP8FF8R5",
+        "components": "UNKNOWN OR OTHER",
+        "summary": "I received a recall from Ford,  about the rear camera screen software update. But ford said repair is unavailable until three quarter of 2025, which means it may repair from July to September. Now is only 13th of May. It said it cause the risk of crash. I bought a brand new car and I cannot drive it for nearly 5 months? To save my life , I cannot drive it as I need to protect myself.It\u2019s ridiculous. No any compensation for these recall. No exact repair date. Only wait! And I still responsible for the loan payment and the devalued of the vehicle? I called the dealership and they said they have nothing to do with this. What can I do ? It\u2019s really making troubles to my life and everyday is getting lost of money. But this is not my fault!",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11661043,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/20/1975",
+        "dateComplaintFiled": "05/14/2025",
+        "vin": "1FA6P8TH5R5",
+        "components": "ENGINE",
+        "summary": "2024 Ford Mustang Ecoboost, Purchased New, Under 6,000 miles, check engine light came on. Vehicle was entering freeway and immediately had a loss of power. When taken to dealer, they stated that it was a cylinder 2 misfire, 2 weeks later they said I needed a new engine. The safety of myself and others were at risk because my vehicle lost power on the highway and immediately started shaking and making noise while operating at road posted speeds. This is not a first time occurance, I have the same model vehicle that I purchased in 2015 that did the exact same thing, only before 90k miles. There is a common element and I've heard other vehicle owners that have this same vehicle complaining of the same problem. They call it \"Ecoboom\" and Ford seems to be ignoring the problem.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11649474,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/17/2025",
+        "dateComplaintFiled": "03/20/2025",
+        "vin": "1FA6P8R09R5",
+        "components": "VISIBILITY/WIPER",
+        "summary": "I was driving on the highway went to adjust my rearview mirror and my mirror just snapped from the windshield and broke off from the windshield also breaking the windshield as well took it to the ford dealership the car is just only 5k miles they wouldn\u2019t even cover it said it was \u201cexcessive force\u201d multiple people with the same vehicle had the same issue and they don\u2019t want to cover it it\u2019s $1000 to replace the windshield or you rearview mirror is just broke and the windshield is just cracked",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11648339,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/14/2025",
+        "dateComplaintFiled": "03/14/2025",
+        "vin": "1FA6P8TH0R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact was made aware of NHTSA Campaign Number: 24V802000 (ELECTRICAL SYSTEM). The vehicle was taken to the dealer for the recall repair. The contact stated that while at the dealer, the dealer informed the contact that the remedy had made the vehicle disabled. The vehicle was not repaired. The manufacturer was not notified of the failure. The failure mileage was approximately 42,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11648069,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "12/26/2024",
+        "dateComplaintFiled": "03/13/2025",
+        "vin": "1FA6P8CF0R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while making a left or right turn, the left or right turn signals were activated; however, the audible chime failed to engage. A dealer was not contacted. The vehicle was taken to a dealer, and failure was replicated. The vehicle was not repaired. The contact stated that the failure had occurred on several occasions. The manufacturer was notified of the failure and opened a case. The manufacturer referred the contact to the NHTSA Hotline to report the failure and then transferred the contact to the NHTSA Hotline. The approximate failure mileage was 2,894.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11648225,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/13/2025",
+        "dateComplaintFiled": "03/13/2025",
+        "vin": "1FA6P8CF4R5",
+        "components": "ELECTRICAL SYSTEM,UNKNOWN OR OTHER",
+        "summary": "My new 2024 Mustang GT\u2019s AC doesn't blow cold air. It has less than 3,000 miles. It is beginning to be a known problem for 2024 mustang owners. This can be dangerous if a driver is trying to use the touch screen to work the air conditioner and settings.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11647744,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/08/2025",
+        "dateComplaintFiled": "03/11/2025",
+        "vin": null,
+        "components": "SUSPENSION",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving 35 MPH, the contact felt a jolt from the rear driver\u2019s side of the vehicle and heard the rear driver\u2019s side tire rubbing. The contact stopped vehicle on the side of the road and had the vehicle towed to a local dealer, where the vehicle was diagnosed, and the contact was informed that the rear suspension knuckle had failed and needed to be replaced. The vehicle was not repaired. The contact referenced NHTSA Campaign Number: 24V593000 (SUSPENSION); as possible cause for the failure. The manufacturer was notified of the failure. The approximate failure mileage was 13,000.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11647228,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "12/17/2024",
+        "dateComplaintFiled": "03/09/2025",
+        "vin": null,
+        "components": "VEHICLE SPEED CONTROL,ENGINE",
+        "summary": "\u2022 Std Cruise Control failure.  Yes, available for inspection,  test drive and failure analysis.    \u2022 Upon turning CC (Cruise control) on the Green Icon appears (should be Ghost Icon) AND is set at the speed limit.  If below the speed limit NO speed up to \"SET\" speed occurs. Instead if you speed up, manually,  to \"SET\" speed you can't go past the \"SET\" speed.  Pressing on the accelerator has a power loss and flat lining. Speed does not increase until you go to heavy open throttle then it \"TAKES OFF\".  Impossible to drive in Cruise control mode.  \u2022 Problem was presented to Gaudin Ford Dealership >>> Twice. Once on December 17th, 2024 and again on March 4th, 2025 Gaudio Ford States \" NPF - No problem found normal operation at this time\".   Also,  \"unable to duplicate concern no DTC were present no tabs or scams for this concern rise with shop foremen all systems are working with spec at this time\". Back on Dec 17th, 2024 Reported \"Checked Oasis found SSM 53160. Per SSM they will be an update available at first quarter of 2025. Recommend returning when update is available \". \u2022 Has the vehicle or component been inspected by the manufacturer, police, insurance representatives or others? NO.  \u2022 Were there any warning lamps, messages or other symptoms of the problem prior to the failure, and when did they first appear? NO. Not aware of.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11640929,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "08/15/2024",
+        "dateComplaintFiled": "02/05/2025",
+        "vin": "1FA6P8TH3R5",
+        "components": "SERVICE BRAKES, HYDRAULIC",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving at various speeds, the brake pedal felt loosened and squeaked while being depressed. The contact stated that occasionally the brake pedal would depress and remain on the floorboard. There was no warning light illuminated. The contact stated that the failure had progressed over time. The vehicle was taken to the local dealer; however, the cause of the failure was not determined. The vehicle was not repaired. Upon further investigation, the contact related the failure to NHTSA Campaign Number: 23V800000 (Service Brakes, Hydraulic); however, the VIN was not included. The manufacturer was notified of the failure and referred the contact to the NHTSA Hotline for assistance. The failure mileage was approximately 100.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11638156,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "01/04/2025",
+        "dateComplaintFiled": "01/23/2025",
+        "vin": "1FA6P8CF4R5",
+        "components": "POWER TRAIN,ELECTRICAL SYSTEM,VEHICLE SPEED CONTROL",
+        "summary": "Georgia, Metro Atlanta area, on [XXX]; while driving on [XXX] , at speed of around 65 mph, car dashboard displayed message of Drive Mode Disabled; Service Engine Soon.  2024 Mustang GT lost ability to accelerate, or change gears; was forced to pull over to the far right in order to exit highway.  Stopped at a Shell gas station parking lot, turned off ignition, waited a couple of minutes, turned on ignition, the warning signs of service engine soon disappeared.  Was able to drive to nearest Ford dealer for service appointment.  Is available for inspection upon request.  Personal safety and safety of others on road were at risk since car lost ability to drive while at highway speed.  Dealer service was unable to diagnose or confirm the problem.  Vehicle has not been inspected by manufacturer.   INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11637439,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "01/20/2025",
+        "dateComplaintFiled": "01/21/2025",
+        "vin": "1FA6P8TH4R5",
+        "components": "ELECTRICAL SYSTEM,SERVICE BRAKES",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact received notification of NHTSA Campaign Number: 24V802000 (Electrical System); however, the part to do the recall repair was unavailable. The contact stated that the manufacturer had exceeded a reasonable amount of time for the recall repair. The manufacturer was made aware of the issue. The contact stated while driving approximately 10 MPH, the instrument cluster went black. The contact was in a parking lot and had stopped the vehicle. The contact turned off and restarted the vehicle and regained instrument panel functionality. The contact stated that the failure was intermittent but became a recurring failure while driving at various speeds. Additionally, the contact stated that while driving approximately 65 MPH, while following a left curve in the roadway, the brake pedal was depressed, and the rear end swerved to the right while turning the steering wheel to the left. The contact stated that the instrument cluster was black, and he was not aware of any warning lights being illuminated. The contact was able to regain control of the vehicle and drove to the residence. The contact had not taken the vehicle to a dealer or independent mechanic. The vehicle was not diagnosed or repaired. The failure mileage was approximately 5,000. VIN tool confirms parts not available.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11635774,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "01/13/2025",
+        "dateComplaintFiled": "01/13/2025",
+        "vin": "1FA6P8TH7R5",
+        "components": "POWER TRAIN,ENGINE",
+        "summary": "I was driving home from work at approximately 65mph when my transmission shifted and slammed back into gear. I stopped in a safe location, cut the car off and then back on, but the transmission is still slipping. The dealership was notified of powertrain, electrical, and oil consumption issues at three different service appointments, but the manufacturer has been no help at all. Had I not known what to do, this could have been a completely different scenario.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11627952,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/22/2024",
+        "dateComplaintFiled": "11/29/2024",
+        "vin": "1FAGP8UH3R5",
+        "components": "VISIBILITY",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving at an undisclosed speed and attempting to make a left turn, the contact was unable to see oncoming traffic in the passenger's side rearview mirror. The contact adjusted the passenger's side rearview mirror, but the failure persisted. The dealer was made aware of the failure; however, the vehicle was not diagnosed or repaired. The manufacturer was made aware of the failure and advised the contact to report the failure to the NHTSA Hotline. The failure mileage was approximately 400.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11627958,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/04/2024",
+        "dateComplaintFiled": "11/29/2024",
+        "vin": "1FAGP8UH9R5",
+        "components": "ELECTRICAL SYSTEM,BACK OVER PREVENTION",
+        "summary": "The Instrument Panel Cluster (IPC) may not illuminate at startup or while driving.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11625925,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "05/06/2024",
+        "dateComplaintFiled": "11/18/2024",
+        "vin": "1FA6P8CF1R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The instrument panel goes blank.  No way to tell how fast you are driving and no way to see warning lights.  Ford has now had the car for over two months now with no solution.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11624646,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "11/12/2024",
+        "dateComplaintFiled": "11/12/2024",
+        "vin": "1FA6P8CF2R5",
+        "components": "UNKNOWN OR OTHER,BACK OVER PREVENTION",
+        "summary": "Reverse camera occasionally fails to load/display markings about car position, including rear cross traffic alert. Has happened two times, one prior to the instrument recall fix and one after the fix had been applied to my car. Prior to the recall being fixed, the rear cross traffic alert would still work.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11622983,
+        "manufacturer": "Ford Motor Company",
+        "crash": true,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/09/2024",
+        "dateComplaintFiled": "10/31/2024",
+        "vin": "1FA6P8CF0R5",
+        "components": "AIR BAGS,FORWARD COLLISION AVOIDANCE",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while his wife was driving at 25 MPH and entering a roundabout, a vehicle suddenly entered the roundabout and was rear-ended. The brake pedal was depressed however there was not enough distance to avoid the collision. The forward collision warning (FCW) system did not engage. No air bags deployed. The vehicle was towed to an independent mechanic but was not diagnosed or repaired. No injuries were sustained. A police report was filed. The manufacturer was not notified of the failure. The approximate failure mileage was 6,100.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11621551,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/09/2024",
+        "dateComplaintFiled": "10/23/2024",
+        "vin": "1FA6P8THXR5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "I visited the [XXX] in Greensboro, NC on [XXX], was inside the Y for around five minutes, and when I came out and got back to my car, the car would not start, the battery was completely dead.  I called USAA Road Service, they came and said I had a very discharged battery.  They helped me get the car started, and I got home OK.  I do not know what caused the battery to fail. After the battery failed, It was inspected on July 9, 2024 by Green Ford in Greensboro, and then replaced by the Ford dealer.  My safety was at risk because the dealer said the faulty battery probably was responsible for an accelerator problem I am experiencing (detailed in NHTSA complaint number 11619861) and a brake failure which I experienced (detailed in NHTSA complaint number 11619933).  The Ford dealer that said the battery was defective, and as I said, replaced it (under the car's warranty).  There was no warning that the battery would fail, and I do not know why it failed, and had no reason to believe it would fail.  If the Ford dealer kept the failed battery, and still has it, it should be available for inspection upon request.  INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11621102,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/03/2024",
+        "dateComplaintFiled": "10/21/2024",
+        "vin": "1FAGP8UH8R5",
+        "components": "UNKNOWN OR OTHER",
+        "summary": "\u2013In the Owner\u2019s Manual, there are numerous items of information not related to this car. By that, I don't mean a different variation (SL vs Rt). I mean it tells you to push buttons that do not exist. For example, in \"visual mode\", reviewing the steering wheel. \u2013The Owner\u2019s Manual says to accept a call, press the phone button on the steering wheel \u2013 no such button exists. The Owner\u2019s Manual says to hang up a call, press the phone button. Again no such button.  You can not say end call during a call\u2013 so no voice modes work in call mode. THIS FORCES YOU TO INTERACT WITH CAR BY REMOVING A HAND FROM STEERING WHEEL\u2013THUS VIOLATING Florida Statute 316.305  -- Another example- Using visual, it points to a button on the wrong side of the wheel. If you click on the \u201cG\u201d represented on the bottom right of the steering wheel it shows \u201cmode\u201d buttons.  Mode on the actual wheel is on the left hand side. This is just one example of several items in the manual that don\u2019t match the actual car. Plus you have to \u201cknow\u201d the correct terminology to search. In a paper manual you can normally get close and thumb through a few pages to find the right things\u2013 without that capability if you don\u2019t know the exact wording you are lost.  ---There are also numerous customizable setting that do not hold after \u201csaving\u201d.  While these may not be safety issues themselves\u2014the amount of interaction this vehicle requires to figure out \u201cwhat now?\u201d, Is a distraction and may cause accidents.  Pics are of the owners manual installed on the car (we no longer get printed versions). 2 screens telling you to end call with buttons on steering wheel. @ pics of all buttons on the wheel. 1 pic of wheel layout according to installed manual (which doesn't match the actual wheel) ---According to Dealer the vehicle's software is up to date with current version.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11619861,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/03/2024",
+        "dateComplaintFiled": "10/15/2024",
+        "vin": "1FA6P8THXR5",
+        "components": "ENGINE",
+        "summary": "From a stop at a traffic light on [XXX], I made a right turn from [XXX]  onto [XXX] in Greensboro NC, and after turning, the car did not respond when I pressed on the accelerator so as to go with the traffic.  Instead, the car gradually slowed down.  Before the car rolled to a stop in the middle of the road, the engine caught on and the car speeded up normally.  The risk is that I would become stopped in the middle of a busy road and that someone rear end into me.  If this problem were to occur as I was entering onto an interstate highway, where traffic routinely moves along at 70 mph and more, it would not be good.   I took my car to Green Ford, the local dealership, on July 9, 2024.  They found a defective battery (which was replaced under the car's warranty), and the  dealership said the problems (accelerator and also brakes) were likely caused by a defective battery.  (At the same visit the dealership also examined my brakes, which had failed, and which I am describing in a separate incident report).   The accelerator problem occurred again on [XXX] when I pulled out of my apartment parking lot onto [XXX] , and after turning onto [XXX] , the car gradually started to slow down, and would have come to a stop.  I pushed on the accelerator repeatedly and the car, before stopping, got up to speed (the speed limit is 35 mph on [XXX] ).  The next day, on October 8, 2024, at the Green Ford dealership, the dealership could find nothing wrong with the car.   On [XXX], on the way downtown (to the Ford Dealership) I experienced the accelerator problem several tines.  The dealership did not examine the car again, but advised me to keep detailed notes for a week and after a week report back to them.  .   INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11619933,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/03/2024",
+        "dateComplaintFiled": "10/15/2024",
+        "vin": "1FA6P8THXR5",
+        "components": "SERVICE BRAKES",
+        "summary": "I was slowly backing out of a parking space at the Circle K gas station on July 3, 2024, on Battleground Avenue in Greensboro, NC, and applied the brakes when the warning alert sounded that there was cross traffic.  I immediately applied the brakes, but to no avail.  Application of the car's brakes, pumping the brakes, had no effect on stopping the backward motion the car.  The car continued to roll backwards, and I very nearly collided with a car sweeping past the rear of  my car, when I could not stop.   When I drove to Green Ford on July 9, 2024 and told the dealership what happened (along with an accelerator problem, which I reported separately on incident report number 11619861), the dealership inspected my car and said the failed brakes (along with the accelerator problem) could have caused by a defective battery, which the dealership then replaced under the car's warrenty.  The safety of everyone in the car could have been affected had a collision occurred, especially if the car's gas tank had been damaged in a collision, and if a fire had resulted.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11619560,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/10/2024",
+        "dateComplaintFiled": "10/13/2024",
+        "vin": "1FA6P8TH4R5",
+        "components": "SERVICE BRAKES",
+        "summary": "The front wheels of the vehicle have different breaks - this is a factory fault (Manufacturing defect). The front right wheel has 6 piston brembo brake and the left front wheel has 4 piston caliper brakes, causing vehicle to put different braking power on both side - causing it to slid to the right side while breakin (The right wheel producing more breaking power than the left side).   This is a safety hazard for me and public, the dealership I bought this car had run their own inspection before selling it to me but they passed the inspection which means they ignore this major fault. Even before that, this vehicle passed the PDI (pre-delivery inspection) at the ford production plant and the dealership sold it to me. Its been 3 months and I experienced vibration on the front left wheel and slid towards the right side on the highway and noticed the brakes are different. This is a big issue, safety hazard, public safety risk and I went through a lot once I found this issue.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11614653,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "08/25/2024",
+        "dateComplaintFiled": "09/14/2024",
+        "vin": "1FA6P8CF7R5",
+        "components": "EXTERIOR LIGHTING",
+        "summary": "Unknown. Stress cracks on my tail light started to appear. I have asked others in the Mustang community and quite a few have reported the same cracks except they\u2019ve had water getting inside the tail light. I have taken it to the dealer but have been told I caused it with no visible impact and even the service advisors stating there isn\u2019t any sign of damage from myself or someone else. I have cameras to prove otherwise at home. I don\u2019t want to drive my car and one day my tail light is out and get pulled over especially when there are some issues reported about cracks, moisture, etc. It could cause issues if you\u2019re trying to signal someone from behind if you are getting ready to turn or hazards.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11614297,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "08/05/2024",
+        "dateComplaintFiled": "09/12/2024",
+        "vin": "1FA6P8CF1R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "In the morning when I start the car, I have a blank digital instrumentation screen. No way to tell how fast you are driving or how much gas you have and no warning lights.  Sometimes it will take over an hour to come back on.  Took it to a Ford dealership and they said they could not duplicate the problem, but a service bulletin was out on is problem was out on this to make sure software was up to date.  My car is up to date, and I was told Ford was working on the problem if that did not correct it with a time frame of October 2025.   I think this is a real safety concern how do they expect me to drive a car with no warning display or knowing how fast I'm driving for a whole year.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11608907,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/03/2024",
+        "dateComplaintFiled": "08/16/2024",
+        "vin": "1FA6P8TH7R5",
+        "components": "STRUCTURE",
+        "summary": "Body panels are misaligned. Doors do not line up to the body, bumpers don\u2019t line up to quarter fender, trunk lid has large gaps preventing proper sealing, hood has gaps and vibrates at high speeds.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11608087,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/19/2024",
+        "dateComplaintFiled": "08/12/2024",
+        "vin": "1FA6P8TH0R5",
+        "components": "STEERING",
+        "summary": "2024 Mustang steering recall Noted but not applied to my vehicle although the problem exist. The steering becomes uncontrollable for a second pulling to the right the wheel feels like it is locking up.  [XXX] .   INFORMATION REDACTED PURSUANT TO THE FREEDOM OF INFORMATION ACT (FOIA), 5 U.S.C. 552(B)(6)",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11604285,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/22/2024",
+        "dateComplaintFiled": "07/24/2024",
+        "vin": "1FA6P8CF4R5",
+        "components": "ELECTRICAL SYSTEM,UNKNOWN OR OTHER",
+        "summary": "The main display on vehicle providing speed, gas level, mileage and all gauges and vehicle information and notifications has gone completely black. Screen has not been able to turn back on after troubleshooting with Ford. Dealerships have been booked up for a week or two in a 2 state radius and ford has denied to provide a loner vehicle so I am stuck driving without knowing how much gas or how fast I\u2019m going",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11603502,
+        "manufacturer": "Ford Motor Company",
+        "crash": true,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "07/10/2024",
+        "dateComplaintFiled": "07/19/2024",
+        "vin": "1FA6P8CF2R5",
+        "components": "AIR BAGS,FORWARD COLLISION AVOIDANCE",
+        "summary": "Hit a adult male black bear broadside on a street with no lighting. The forward collision warning never engaged, seatbelt did not lock, only the knee airbag deployed, and emergency braking never engaged.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11602811,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/27/2024",
+        "dateComplaintFiled": "07/16/2024",
+        "vin": "1FA6P8CF9R5",
+        "components": "STEERING,ELECTRICAL SYSTEM,EXTERIOR LIGHTING",
+        "summary": "I am dealing with ford on two brand new mustangs.     That are both failing electrically and they claim they have fixed yet haven\u2019t and still exhibiting gross safety concerns.        This is simply large scale negligence.       Both Mustangs screens have and are randomly blacking out creating massive safety concern when no guages or functions are present.             I\u2019ve contacted them and a. Insider has given me a document showing that they know and have no answers.      And for this.     Is gross negligence. I demand replacements.     Both problems have cause financial damages.    And also psychological trauma due to prior car wreck where dash blacked out.     This is a known issue And I demand answers.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11597747,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "06/05/2024",
+        "dateComplaintFiled": "06/29/2024",
+        "vin": "1FA6P8CF2R5",
+        "components": "UNKNOWN OR OTHER",
+        "summary": "While driving or idling there is a whining sound coming from what sounds like the transmission. I also have a video of me shift from Park to Drive and back to Park again and it is making a clicking sound outside of the car. Also it is taking longer to shift. I\u2019m concerned something is wrong with the transmission. I have brought the car to a dealership who tells me it is normal without really looking at it all because Ford has sent out a bulletin stating that the whining noise is \u201cnormal.\u201d",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11592071,
+        "manufacturer": "Ford Motor Company",
+        "crash": true,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "05/01/2024",
+        "dateComplaintFiled": "06/03/2024",
+        "vin": "1FAGP8UH7R5",
+        "components": "STRUCTURE,UNKNOWN OR OTHER,SERVICE BRAKES",
+        "summary": "This is a 2024 Mustang convertible that I purchased from Autonation in Panama City and the back window was not properly installed and is now shaking and allowing water into the car. There is a major problem with the car disabling ABS as well and ive taken it to the dealership for both of these issues twice. The brakes did not function correctly when I was dropping off at school and I tapped the parents car in front of me. I went to autonation with my concern and even called FORD to file a complaint and neither of the companies took it seriously. Had I known this car was gonna be a problem and even more difficult to fix (Autonation doesnt work on convertible tops and has given me the run around about finding someone to fix the top) I would have kept my older convertible. I ALSO PURCHASED AN EXTENDED WARRANTY WHEN I BOUGHT THIS CAR TO ENSURE EVERYTHING WAS PROTECTED.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11579880,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "01/26/2024",
+        "dateComplaintFiled": "03/28/2024",
+        "vin": "1FAGP8UH0R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang.  The contact stated that when the vehicle was started, the contact had to make several attempts before the vehicle started. The contact stated that while driving at 40 MPH, the engine was independently seized.  The contact stated that several unknown warning lights were displayed.  The vehicle was taken to the dealer; however, the failure could not be duplicated. The vehicle was not repaired.   The failure reoccurred and was persistent.  The control panel display was inoperable and without power at times. The contact stated that water had entered the interior of the vehicle which had caused electrical issues.  In addition, the contact stated that when the vehicle was in reverse mode, the engine independently seized, however, the vehicle independently rolled backward.  The vehicle was taken back to the dealer again, however the failure could not be duplicated. The vehicle was not diagnosed or repaired by an independent mechanic or dealer. The manufacturer was made aware of the failure and the contact was offered to trade in the vehicle at a depreciated value. The failure mileage was approximately 60.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11579978,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "03/28/2024",
+        "dateComplaintFiled": "03/28/2024",
+        "vin": "1FA6P8CF4R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated that while driving at an undisclosed speed, the horn was pressed however it was not functioning properly. No warning lights were illuminated. The vehicle was taken to the dealer, who determined that the clock spring was missing. The vehicle was not repaired due to a parts shortage. The manufacturer was notified of the failure, confirmed the shortage, and referred the contact to the NHTSA hotline for assistance. The failure mileage was 400.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11571207,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "02/10/2024",
+        "dateComplaintFiled": "02/10/2024",
+        "vin": "1FA6P8CF8R5",
+        "components": "ELECTRICAL SYSTEM",
+        "summary": "While driving, my digital gauge cluster screen will completely go to black, and then it will fade out. This is during normal operation. The gauge cluster does not do any restart animations, so it is as if the screen loses power for a few seconds, or something causes it to stop being displayed.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11562651,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "12/27/2023",
+        "dateComplaintFiled": "12/29/2023",
+        "vin": "1FA6P8TH3R5",
+        "components": "STRUCTURE,UNKNOWN OR OTHER",
+        "summary": "Cars passener side front and the back floor was flooded with water after heavy rain. Window was not left open as the seats are completly Dry . There seems to be a sound of a puddle coming from the right side of the car as well whenever it rains. I poured water on top of the car to find a visual leak but didnt see water leaking inside .",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11561830,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "10/01/2023",
+        "dateComplaintFiled": "12/26/2023",
+        "vin": "1FA6P8CF2R5",
+        "components": "STRUCTURE",
+        "summary": "The contact owns a 2024 Ford Mustang. The contact stated while driving at various speeds, gravel, rocks, and debris became trapped in the square holes in the inner wheel well. The contact noticed that the wheel well liner and under carriage were corroded. The local dealer was not contacted. The vehicle was not diagnosed or repaired. The manufacturer was contacted, but no assistance was provided. The failure mileage was approximately 350.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11559659,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "12/12/2023",
+        "dateComplaintFiled": "12/12/2023",
+        "vin": "1FA6P8TH3R5",
+        "components": "ELECTRICAL SYSTEM,VISIBILITY/WIPER,FORWARD COLLISION AVOIDANCE",
+        "summary": "Cold weather. Warmed up the car for 10 minutes . all defoger for rear glass and winshield were used . There is accessive condenced water all over inside front and back window.  started driving and used the wiper to clean the windshield and found out water is on the inside made the visability hard. Another issue with the Camera Visibility issue is daily in cold weather where the glass in front of the camera gets foggy and there is no way to clean as it foggs up inside the winshield and camera housing makes the auto break system not working . After the snow there is a sound of a water puddle some whereon the right side on the car.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      },
+      {
+        "odiNumber": 11549995,
+        "manufacturer": "Ford Motor Company",
+        "crash": false,
+        "fire": false,
+        "numberOfInjuries": 0,
+        "numberOfDeaths": 0,
+        "dateOfIncident": "09/20/2023",
+        "dateComplaintFiled": "10/15/2023",
+        "vin": "1FA6P8CF4R5",
+        "components": "ELECTRICAL SYSTEM,UNKNOWN OR OTHER",
+        "summary": "The windshield or body seams leak water. There is rust on the interior. Concerns of mold.  Water leaking into brand new vehicle.",
+        "products": [
+          {
+            "type": "Vehicle",
+            "productYear": "2024",
+            "productMake": "FORD",
+            "productModel": "MUSTANG",
+            "manufacturer": "Ford Motor Company"
+          }
+        ]
+      }
+    ]
+  }
+}

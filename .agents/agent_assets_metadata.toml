@@ -210,3 +210,45 @@ mtime_ms = 1791427612197
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/2a095367-88a6-4fae-a43f-cc71079692ee/714e1133-5351-40a4-9bc3-b620ad2834ec"
 storage_version_token = "1791427982857829"
 content_type = "text/csv"
+
+[[outputs]]
+id = "0JiIxr4pv88axsMk6axWA"
+uri = "file://research/profile-verification-notes.md"
+type = "text"
+title = "Full Profile Verification — Working Notes"
+description = "Scope, checks, evidence groups and publication conditions for verifying every existing profile and its information."
+logical_id = "78b15b0d-cab7-4e1f-bcd7-c5e093de40d2"
+content_hash = "sha256:d3a0670c62270c7b37978ee359043c5481cc4859ef528f8f94840ecf30ca6fc3"
+size = 2012
+mtime_ms = 1791435393763
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/78b15b0d-cab7-4e1f-bcd7-c5e093de40d2/015269ae-3662-4113-881e-c17bc9fd892a"
+storage_version_token = "1791435429071579"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "0CheldDVkG-qtpDfEAgr8"
+uri = "file://research/profile-information-verification.html"
+type = "html"
+title = "Profile Verification — Findings and Remaining Gaps"
+description = "Current census, corrected EPA checksum result, factual evidence checks, unresolved information, and publication status. Full verification has not passed."
+logical_id = "24ffb715-bfaf-41a7-b150-c94d7f6d302d"
+content_hash = "sha256:d95056d0526038f964b69f9d276dfe1b9de1120a7271382f253d8330d2c4dfad"
+size = 22789
+mtime_ms = 1791436339224
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/24ffb715-bfaf-41a7-b150-c94d7f6d302d/c3eacf20-3ef2-481f-a134-844d808a428d"
+storage_version_token = "1791436368768964"
+content_type = "text/html"
+
+[[outputs]]
+id = "7ZtZYsJxfYGibUnIUXTMX"
+uri = "file://research/profile-information-audit/profile-dispositions.csv"
+type = "table"
+title = "Verification Status — All 4,715 Profiles"
+description = "One row per profile with API consistency, evidence scope, populated information, remaining verification, and conditional publication status."
+logical_id = "5c276374-0a69-44b1-890d-7418c6a047a7"
+content_hash = "sha256:e47b1838c37aee3fd862b381f947bdcfbedf0a82cc9d49a19819b2badda03ffd"
+size = 5460627
+mtime_ms = 1791436339103
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5c276374-0a69-44b1-890d-7418c6a047a7/0fa75179-1274-46a9-961f-eb20041ecbc0"
+storage_version_token = "1791436369350567"
+content_type = "text/csv"

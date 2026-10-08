@@ -1,0 +1,19 @@
+{
+  "purpose": "Structural inventory only; not factual verification or release approval",
+  "browse_option_count": 4818,
+  "distinct_profile_count": 4715,
+  "retrieved_profile_count": 4715,
+  "populated_information_rows": 14936,
+  "claim_source_rows": 5668,
+  "distinct_source_urls": 97,
+  "field_state_counts": {
+    "not_yet_researched": 140694,
+    "known": 5378,
+    "unknown": 7
+  },
+  "nonempty_array_item_counts": {
+    "siblingTrims": 238
+  },
+  "structural_issue_count": 19,
+  "all_release_ready": false
+}

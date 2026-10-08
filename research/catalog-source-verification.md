@@ -24,7 +24,7 @@ The 4,672 bundled identities divide into 3,639 FuelEconomy.gov all-years entries
 
 On 2026-10-08, the current official ZIP contained 50,407 vehicle records. All 18,764 vehicle IDs referenced by the 3,639 catalog identities were present. For every referenced row, make, model year, source model label, and EPA base-model grouping matched the catalog crosswalk. There were zero missing IDs or field mismatches.
 
-The current ZIP SHA-256 is `33d32caa0343cdb11c47be631e8a80b7ed7c351ee8503646a4e96485bd67b22f`; the catalog snapshot records `b1ff0e3071c46cdc1c99e0015878b98a01851462d7e447237ce2fc1294ccf303`. Because the checksums differ, this verifies the referenced identities against the live file retrieved on 2026-10-08, not against the byte-identical file reviewed on 2026-10-06.
+**Corrected checksum comparison, 2026-10-08:** The ZIP SHA-256 is `33d32caa0343cdb11c47be631e8a80b7ed7c351ee8503646a4e96485bd67b22f`, but the catalog builder hashes the extracted `vehicles.csv`, not the ZIP container. The extracted CSV SHA-256 is `b1ff0e3071c46cdc1c99e0015878b98a01851462d7e447237ce2fc1294ccf303`, exactly matching the catalog source record. The earlier version-mismatch conclusion compared different payloads and was incorrect. A fresh recheck again matched all 18,764 references across 3,639 profiles with zero mismatches. [Saved recheck and checksum basis](profile-information-audit/epa-live-recheck.json)
 
 ### EPA annual guides, model years 1978–1983
 

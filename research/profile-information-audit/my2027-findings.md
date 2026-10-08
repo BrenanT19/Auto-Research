@@ -1,0 +1,35 @@
+> **Checksum correction:** The original ZIP-versus-snapshot discussion below compared different payloads. The extracted CSV exactly matches the catalog hash. This does not resolve the separate preliminary-workbook identifier join. See [corrected recheck](epa-live-recheck.json).
+
+## Key Facts
+
+- **Exact join outcome: 0/34 resolved.** The saved workbook review reports that the 2027 workbook has 363 MY2027 rows and an `EPA FE Label Dataset ID` field, but no documented crosswalk to FuelEconomy.gov vehicle `id`. FuelEconomy.gov’s web-services documentation describes `id` as the vehicle-record identifier used to link other datasets; it does not document a label-dataset-ID crosswalk. Scope: structural identifier relationship only; no MY2027 profile has an exact workbook-to-catalog resolution. URLs: https://www.fueleconomy.gov/feg/ws/index.shtml and https://www.fueleconomy.gov/feg/epadata/27data.zip. Evidence: `research/sources/full-verification-my2027-02-page.md`; `research/sources/release-review-whole-catalog-04-my2027-datafile.md`.
+- **Prior name-only crosswalk: 21/34 found, 13/34 not found.** The 21 workbook make/division + carline name matches are Buick Enclave, Cadillac Escalade, Chevrolet Corvette/Equinox/Suburban/Tahoe/Traverse, Chrysler Pacifica, Dodge Durango, Ford Expedition/Explorer, GMC Acadia/Terrain/Yukon, Jeep Gladiator/Grand Cherokee/Grand Wagoneer/Wrangler, Lincoln Aviator/Navigator, and Ram 1500. Their profile IDs are `buick-enclave-2027-model-year`, `cadillac-escalade-2027-model-year`, `chevrolet-corvette-2027-model-year`, `chevrolet-equinox-2027-model-year`, `chevrolet-suburban-2027-model-year`, `chevrolet-tahoe-2027-model-year`, `chevrolet-traverse-2027-model-year`, `chrysler-pacifica-2027-model-year`, `dodge-durango-2027-model-year`, `ford-expedition-2027-model-year`, `ford-explorer-2027-model-year`, `gmc-acadia-2027-model-year`, `gmc-terrain-2027-model-year`, `gmc-yukon-2027-model-year`, `jeep-gladiator-2027-model-year`, `jeep-grand-cherokee-2027-model-year`, `jeep-grand-wagoneer-2027-model-year`, `jeep-wrangler-2027-model-year`, `lincoln-aviator-2027-model-year`, `lincoln-navigator-2027-model-year`, `ram-1500-2027-model-year`. These are **not exact resolutions**. Source: https://www.fueleconomy.gov/feg/epadata/27data.zip; saved crosswalk evidence above.
+- The 13 name-crosswalk misses are `cadillac-lyriq-2027-model-year`, `cadillac-optiq-2027-model-year`, `cadillac-vistiq-2027-model-year`, `chevrolet-bolt-2027-model-year`, `chevrolet-blazer-2027-model-year`, `dodge-charger-2027-model-year`, `lucid-air-2027-model-year`, `lucid-gravity-2027-model-year`, `rivian-r1s-2027-model-year`, `rivian-r1t-2027-model-year`, `rivian-r2-2027-model-year`, `tesla-model-3-2027-model-year`, `tesla-model-y-2027-model-year`. A missing workbook name is not evidence of no sale or unavailability.
+- The saved catalog audit reports all 34 profiles have FuelEconomy `vehicles.csv.zip` vehicle-ID locators and matched rows in the live file checked 2026-10-08. That check is structural to that file, **not** an exact join to the separate guide workbook, a finalized configuration, or a U.S. sales determination. It also records a checksum difference between the live ZIP and the catalog snapshot. Source: https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip; evidence: `research/catalog-source-verification.md`, `research/catalog-profiles.csv`.
+- FuelEconomy.gov labels the all-years file MY1984–2026 and separately links a 2027 datafile and “2027 Guide (Preliminary).” The guide listing says “updated weekly.” Scope: file/guide status, not 2027 retail availability. URLs: https://www.fueleconomy.gov/feg/download.shtml and https://fueleconomy.gov/feg/guides.shtml.
+
+## Notable Claims Requiring Cross-Reference
+
+- Whether/how each workbook `EPA FE Label Dataset ID` maps to catalog vehicle `id`; none established by inspected official documentation or saved crosswalk evidence.
+- Whether the 34 vehicle IDs in the catalog’s recorded snapshot are from the same data version/lineage as the separate preliminary workbook; checksums/source IDs do not resolve this.
+- Exact configurations and final U.S. retail availability remain unverified. A dataset listing/name is not proof of sale, delivery, or complete coverage.
+- Rights, retention, and display permission were not evaluated here; this is distinct from identifier matching.
+
+## Source Quality Assessment
+
+- **Tier 1 — government/official:** FuelEconomy.gov/DOE-EPA download, web-services, guide listing and preliminary-data links; EPA annual-guide test-data page; EPA/DOE guide-program description. Publication dates were not surfaced in the fetched pages or search snippets. These establish agency data scope, published schema/documentation and preliminary labeling; they do not establish the missing ID join.
+- No Tier 2 or Tier 3 evidence was used to resolve profile identity. No source-use permission conclusion is made.
+
+## Gaps & Unanswered Questions
+
+- MY2027 scope: **34 profiles**; recorded vehicle-ID locators / prior live-file structural matches: **34/34** (per the prior audit; not re-fetched here); workbook name-only matches: **21/34**; name-only misses: **13/34**; exact workbook-ID-to-vehicle-ID joins: **0/34**; exact configurations and actual U.S. availability verified by this pass: **0/34**; unresolved exact lineage/configuration/availability: **34/34**.
+- Keep all 34 unresolved. Do not interpret the 13 misses as unavailable and do not mark any profile verified or release-cleared.
+
+## Sources
+
+1. “Download Fuel Economy Data,” https://www.fueleconomy.gov/feg/download.shtml, publication date not surfaced; Tier 1; fetched 2026-10-08; `research/sources/full-verification-my2027-01-page.md`.
+2. “Fuel Economy Web Services,” https://www.fueleconomy.gov/feg/ws/index.shtml, publication date not surfaced; Tier 1; fetched 2026-10-08; `research/sources/full-verification-my2027-02-page.md`.
+3. “Test Data for Annual Fuel Economy Guide | US EPA,” https://www.epa.gov/compliance-and-fuel-economy-data/test-data-annual-fuel-economy-guide, publication date not surfaced; Tier 1; fetched 2026-10-08; `research/sources/full-verification-my2027-03-page.md`.
+4. “Help Promote Fuel Economy,” https://fueleconomy.gov/feg/guides.shtml, publication date not surfaced; Tier 1; search snippet captured 2026-10-08; `research/sources/full-verification-my2027-04-page.md`.
+5. “EPA's Fuel Economy Programs,” https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1005GVF.TXT, publication date not surfaced; Tier 1; search snippet captured 2026-10-08; `research/sources/full-verification-my2027-04-page.md`.
+6. “2027 EPA Fuel Economy Guide datafile,” https://www.fueleconomy.gov/feg/epadata/27data.zip, publication date not surfaced; Tier 1; checked 2026-10-08; `research/sources/release-review-whole-catalog-04-my2027-datafile.md`.

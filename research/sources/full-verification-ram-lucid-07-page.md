@@ -1,0 +1,27 @@
+Source: https://media.stellantisnorthamerica.com/page.do?file=legal
+Title: Stellantis Media
+Fetched: 2026-10-08T04:58:58.460Z
+
+[Skip to main content](https://media.stellantisnorthamerica.com/page.do?file=legal#main-content)
+
+NORTH AMERICA MEDIA WEBSITE
+
+|     |     |     |
+| --- | --- | --- |
+| ![](https://media.stellantisnorthamerica.com/images/spacer.gif) |  | ![](https://media.stellantisnorthamerica.com/images/spacer.gif) |
+|  | **Legal Notices and Terms** |
+| ![](https://media.stellantisnorthamerica.com/images/spacer.gif) |  | ![](https://media.stellantisnorthamerica.com/images/spacer.gif) |
+|  | **Copyrights**<br>Copyright 2026 Stellantis. All Rights Reserved. The text, images, graphics, sound files, animation files, video files and their arrangement on Stellantis Internet sites are all subject to Copyright and other intellectual property protection. These objects may not be copied for commercial use or distribution, nor may these objects be modified or reposted to other sites. Some Stellantis Internet sites also contain images that are subject to the copyright rights of their providers.<br>Accredited print, broadcast and Web<br>journalists may use the materials from the Stellantis Media Web<br>Site, https://media.stellantisnorthamerica.com, including print, photography and<br>video materials, for editorial use only. Personal, commercial or any<br>other use of the materials provided from this site is prohibited. |  |
+|  | **Questions regarding the use of**<br>**photography**<br>Please direct any questions regarding the allowable use of images from this <br>website to the Stellantis Communication department at communications@stellantis.com. |  |
+|  | **Trademarks**<br>Unless otherwise indicated, all marks<br>displayed on Stellantis Internet sites are subject to the<br>trademark rights of Stellantis, including each of<br>Chrysler's brands (Chrysler®, Dodge®, Jeep®, Ram®, SRT® and Mopar), its<br>model name plates, and its corporate logos, emblems and slogans. FIAT is a registered trademark of Fiat Group Marketing & Corporate Communication SpA, used under license by Chrysler Group LLC. |  |
+|  | **No Warranties or Representations**<br>This information is provided by<br>Stellantis "as is" and without warranty of any kind, expressed or<br>implied, including (but not limited to) any implied warranties of<br>merchantability, fitness for any particular purpose, or<br>non-infringement. While the information provided is believed to be<br>accurate, it may include errors or inaccuracies. |  |
+|  | **Forward-Looking Statements**<br>This website contains forward-looking statements that reflect management's current views with respect to future events. The words "anticipate", "assume", "believe"", "estimate", "expect", "intend", "may", "plan", "project", "should" and similar expressions identify forward-looking statements. Such statements are subject to risks and uncertainties, including, but not limited to: the effective implementation of the Chrysler Group LLC 2010 Business Plan outlined on November 4, 2009, and subsequent updates, including successful vehicle launches; industry SAAR levels; continued economic weakness, especially in North America, including continued high unemployment levels and limited availability of affordably priced financing for our dealers and consumers; introduction of competing products and competitive pressures which may limit our ability to reduce sales incentives; supply disruptions resulting from natural disasters and other events impacting our supply chain; and the continuation of, and our ability to realize benefits from, our industrial alliance with Fiat. In addition, any projections or targets on future performance are based on the assumption that the Company maintains its status as a partnership for U.S. federal and state income tax purposes and does not consider the impact of a potential conversion into a corporation. If any of these or other risks and uncertainties occur, or if the assumptions underlying any of these statements prove incorrect, then actual results may be materially different from those expressed or implied by such statements. We do not intend or assume any obligation to update any forward-looking statement, which speaks only as of the date on which it is made. Further details of potential risks that may affect Chrysler Group are described in Chrysler Group's 2012 Annual Report on Form 10-K, and its subsequent periodic reports filed with the SEC. |  |
+|  | **No Licenses**<br>Stellantis has sought to achieve an<br>innovative and informative Internet site. We hope that you will be as<br>enthusiastic as we are about this creative effort. However, you also<br>need to understand that Stellantis must protect its intellectual<br>property, including its patents, trademarks and copyrights.<br>Accordingly, please appreciate that no license to Stellantis'<br>intellectual property has been granted by this Internet site. |  |
+
+By using this website, you consent to our use of cookies as described in our [privacy policy](https://www.chrysler.com/crossbrand_us/privacy.html) and [terms of service](https://media.stellantisnorthamerica.com/page.do?file=legal).
+
+Accept
+
+All photography and images on this site are for editorial use only by accredited journalists. The use of these materials for advertising, marketing or any other commercial or personal use is prohibited. They may be cropped but not otherwise modified. To download these materials, you must agree to abide by these terms.
+
+I agree to the terms

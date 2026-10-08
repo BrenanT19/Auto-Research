@@ -1,10 +1,10 @@
 ---
 name: Automotive catalog release gate
-description: The development catalog may be researched privately, but production changes and publication require explicit owner approval.
+description: Verification of every current profile and its information must precede preparation for public release.
 ---
 
-Keep automotive catalog research in development. Do not change production catalog data, make the catalog visible in production, or publish a release until the owner explicitly approves it.
+Keep automotive catalog research in development until verification is complete. The owner's subsequent instruction is to verify all existing profiles and their information, then prepare publication. This is conditional release intent, not approval to expose unresolved profiles as-is.
 
-**Why:** The owner requested a private coverage and source-rights assessment before considering release; historical coverage, source permissions, and preliminary model years can remain unresolved after a census is reconciled.
+**Why:** The owner first requested private review, then explicitly requested verification before publication. Reconciling a census or matching source rows does not establish that every displayed claim is factually supported and usable.
 
-**How to apply:** Continue development-only auditing and preparation as requested. Treat deployment, production-data changes, and public catalog exposure as blocked until a clear release approval is given.
+**How to apply:** Finish fact, applicability, provenance, and source-use checks before production preparation. Missing research may remain labeled missing; never fill it with invented/demo data. Do not quietly omit requested profiles or publish unresolved claims. Present the Publish action only when ready; the owner performs publication.

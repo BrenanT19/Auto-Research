@@ -1,0 +1,9 @@
+{
+  "source_url": "https://www.fordservicecontent.com/Ford_Content/Catalog/owner_information/2024_Ford_Mustang_Owners_Manual_version_1_om_EN-US.pdf",
+  "head_status": 200,
+  "head_content_type": "application/pdf",
+  "head_content_length": 48479766,
+  "get_status": 403,
+  "facts_verified": 0,
+  "verdict": "Direct PDF retrieval was blocked. The prior extracted text omits the needed passages. No source-page inspection completed; no retry or access-control bypass."
+}

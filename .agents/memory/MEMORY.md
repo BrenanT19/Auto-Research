@@ -16,4 +16,5 @@
 - [U.S. catalog scope](us-catalog-scope.md) — all U.S. model years for 13 target brands; verified batches must report remaining coverage and preserve archived demo relationships.
 - [Generation and refresh scope](catalog-era-scope.md) — approved across all models, not Tesla-only; disclose partial mappings and preserve overlapping-year candidates.
 - [FCA site access terms](fca-site-access-terms.md) — Chrysler/FCA website terms prohibit automated extraction; use a source with compatible access rights.
-- [Automotive catalog release gate](automotive-catalog-release-gate.md) — keep audits private; never alter production catalog data or publish without explicit owner approval.
+- [Automotive catalog release gate](automotive-catalog-release-gate.md) — verify every existing profile and its information before preparing publication; unresolved facts are not approved as-is.
+- [Source checksum basis](source-checksum-basis.md) — compare the same payload; archive and extracted-file hashes cannot establish a version mismatch against each other.

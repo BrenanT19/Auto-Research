@@ -11,7 +11,9 @@
       "research/sources/epa-01-fueleconomy-download-coverage.md",
       "research/sources/epa-01-fueleconomy-downloads.md",
       "research/sources/release-review-epa-fuel-economy-02-download-metadata.md",
-      "research/sources/release-review-whole-catalog-01-epa-download.md"
+      "research/sources/release-review-whole-catalog-01-epa-download.md",
+      "research/sources/full-verification-government-01-page.md",
+      "research/sources/full-verification-my2027-01-page.md"
     ]
   },
   {
@@ -48,7 +50,9 @@
     "savedEvidencePath": "research/sources/epa-04-annual-guide-test-data.md",
     "additionalEvidencePaths": [
       "research/sources/release-review-epa-fuel-economy-snippets.md",
-      "research/sources/release-review-whole-catalog-snippets.md"
+      "research/sources/release-review-whole-catalog-snippets.md",
+      "research/sources/full-verification-government-02-page.md",
+      "research/sources/full-verification-my2027-03-page.md"
     ]
   },
   {
@@ -100,7 +104,8 @@
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/ford-lincoln-05-henry-ford-production-records.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-whole-catalog-03-historical-archive.md"
+      "research/sources/release-review-whole-catalog-03-historical-archive.md",
+      "research/sources/full-verification-historical-01-ford-production-records.md"
     ]
   },
   {
@@ -122,7 +127,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/gm-01-heritage-vehicle-information-kits.md",
     "additionalEvidencePaths": [
-      "research/sources/gm-04-vehicle-information-kits.md"
+      "research/sources/gm-04-vehicle-information-kits.md",
+      "research/sources/full-verification-historical-02-gm-vehicle-kits.md"
     ]
   },
   {
@@ -441,7 +447,8 @@
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-03-web-services.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-whole-catalog-snippets.md"
+      "research/sources/release-review-whole-catalog-snippets.md",
+      "research/sources/full-verification-my2027-02-page.md"
     ]
   },
   {
@@ -503,7 +510,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-gap-oem-06-stellantis-media-legal.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-oem-trim-snippets.md"
+      "research/sources/release-review-oem-trim-snippets.md",
+      "research/sources/full-verification-ram-lucid-05-page.md"
     ]
   },
   {
@@ -618,7 +626,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-03-api-docs.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-government-03-page.md"
+    ]
   },
   {
     "key": "release-review-nhtsa-vpic-04-recalls",
@@ -773,7 +783,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-trim-source-ledger.md"
+      "research/sources/release-review-trim-source-ledger.md",
+      "research/sources/full-verification-gm-ford-01-page.md"
     ]
   },
   {
@@ -785,7 +796,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-trim-source-ledger.md"
+      "research/sources/release-review-trim-source-ledger.md",
+      "research/sources/full-verification-gm-ford-02-page.md"
     ]
   },
   {
@@ -808,7 +820,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-ram-lucid-07-page.md"
+    ]
   },
   {
     "key": "release-review-ir-lucidmotors-com-news-releases-news-release-details-lucid-air-m",
@@ -819,7 +833,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
     "additionalEvidencePaths": [
-      "research/sources/release-review-trim-source-ledger.md"
+      "research/sources/release-review-trim-source-ledger.md",
+      "research/sources/full-verification-ram-lucid-04-page.md"
     ]
   },
   {
@@ -992,7 +1007,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-gap-mustang-02-owner-manual.md"
+    ]
   },
   {
     "key": "release-review-www-fordservicecontent-com-ford-content-vdirsnet-ownermanual-home-2",
@@ -1052,7 +1069,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-ram-lucid-08-page.md"
+    ]
   },
   {
     "key": "release-review-media-stellantisnorthamerica-com-newsrelease-do",
@@ -1062,7 +1081,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-ram-lucid-01-page.md"
+    ]
   },
   {
     "key": "release-review-en-wikipedia-org-wiki-ram-heavy-duty-fifth-generation",
@@ -1082,7 +1103,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-ram-lucid-02-page.md"
+    ]
   },
   {
     "key": "release-review-media-stellantisnorthamerica-com-newsrelease-do-2",
@@ -1092,6 +1115,154 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/full-verification-ram-lucid-03-page.md"
+    ]
+  },
+  {
+    "key": "full-verification-gap-generation-01-page",
+    "url": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-85/subpart-X/section-85.2302",
+    "title": "eCFR :: 40 CFR 85.2302 -- Definition of model year.",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-01-page.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
+  },
+  {
+    "key": "full-verification-gap-generation-02-page",
+    "url": "https://service.tesla.com/docs/ModelS/ServiceManual/Palladium/en-us/GUID-140CD6C1-7CBA-4F3F-A42B-34FA0084F185.html",
+    "title": "Global Refresh for 2021+ Model S",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-02-page.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-gap-generation-03-page",
+    "url": "https://www.tesla.com/ownersmanual/index-model-3.html",
+    "title": "Model 3 2024+ - Locale Selector",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-03-page.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-gap-generation-04-page",
+    "url": "https://www.theverge.com/2024/1/10/24032562/tesla-model-3-2024-refresh-us-available-highland",
+    "title": "Tesla’s upgraded 2024 Model 3 is now available in the US | The Verge",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-04-page.md",
+    "publicationDate": "2024-01-10",
+    "tier": "Tier 2"
+  },
+  {
+    "key": "full-verification-gap-generation-06-page",
+    "url": "https://www.stellantisfleet.com/content/dam/fca-fleet/na/fleet/en_us/chrysler/2021/buyers-guide/2021_Chrysler_Pacifica_Buyers-guide.pdf",
+    "title": "404 Error Page",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-06-page.md",
+    "publicationDate": null,
+    "tier": "Tier 3",
+    "citationEligible": false,
+    "exclusionReason": "Fetch returned 404; not factual support."
+  },
+  {
+    "key": "full-verification-gap-generation-07-page",
+    "url": "https://www.consumerreports.org/hybrids-evs/tesla-model-s-gets-facelift-upgraded-equipment",
+    "title": "Tesla Model S Gets a Face-Lift and Upgraded Equipment - Consumer Reports",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-07-page.md",
+    "publicationDate": "2016-04-12",
+    "tier": "Tier 2"
+  },
+  {
+    "key": "full-verification-gap-generation-08-page",
+    "url": "https://www.motor1.com/news/397218/2021-chrysler-pacifica-facelift-debut",
+    "title": "2021 Chrysler Pacifica Debuts Facelift, Pinnacle Trim, And AWD Option",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-generation-08-page.md",
+    "publicationDate": "2020-09-04",
+    "tier": "Tier 2"
+  },
+  {
+    "key": "full-verification-gap-mustang-01-epa-record",
+    "url": "https://fueleconomy.gov/feg/noframes/46646.shtml",
+    "title": "Fuel Economy of the 2024 Ford Mustang",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-mustang-01-epa-record.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
+  },
+  {
+    "key": "full-verification-gap-mustang-03-eu-spec",
+    "url": "https://media.ford.com/content/dam/fordmedia/Europe/en/2024/01/NewMustang/2024_Ford_Mustang_technical_specification_EU.pdf",
+    "title": "Service Unavailable - Fail to connect",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gap-mustang-03-eu-spec.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-gm-ford-03-page",
+    "url": "https://www.fromtheroad.ford.com/us/en/terms-and-conditions",
+    "title": "Terms & Conditions",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-gm-ford-03-page.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-historical-03-wikimedia-revision-reuse",
+    "url": "https://www.mediawiki.org/wiki/Wikimedia_APIs/Content_reuse",
+    "title": "Wikimedia APIs/Content reuse - MediaWiki",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-historical-03-wikimedia-revision-reuse.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-ram-lucid-06-page",
+    "url": "https://ir.lucidmotors.com/",
+    "title": "Investor Relations | Lucid Group, Inc.",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-ram-lucid-06-page.md",
+    "publicationDate": null,
+    "tier": "Tier 3"
+  },
+  {
+    "key": "full-verification-ram-lucid-09-page",
+    "url": "https://www.fueleconomy.gov/feg/Find.do?action=sbs&id=47454",
+    "title": "2024 Lucid Air Pure RWD with 19 inch wheels",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-ram-lucid-09-page.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
+  },
+  {
+    "key": "full-verification-ram-lucid-10-page",
+    "url": "https://www.fueleconomy.gov/feg/Find.do?action=sbs&id=47839",
+    "title": "2024 Lucid Air Touring AWD with 19 inch wheels",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-ram-lucid-10-page.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
+  },
+  {
+    "key": "full-verification-ram-lucid-11-page",
+    "url": "https://www.fueleconomy.gov/feg/Find.do?action=sbs&id=47836",
+    "title": "2024 Lucid Air G Touring XR AWD with19 inch wheels",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-ram-lucid-11-page.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
+  },
+  {
+    "key": "full-verification-ram-lucid-12-page",
+    "url": "https://www.fueleconomy.gov/feg/Find.do?action=sbs&id=47456",
+    "title": "2024 Lucid Air Sapphire AWD",
+    "accessedDate": "2026-10-08",
+    "savedEvidencePath": "research/sources/full-verification-ram-lucid-12-page.md",
+    "publicationDate": null,
+    "tier": "Tier 1"
   }
 ]

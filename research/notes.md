@@ -44,7 +44,7 @@ _`[@key]` markers refer to `research/sources.json`; local audit files are linked
 ### Source verification
 
 - Static model-year source composition is 3,639 EPA all-years entries, 488 EPA annual-guide entries, 539 selected historical entries, and 6 NHTSA/vPIC supplements. Five current vPIC URLs covered the six supplements. Of the 539 secondary historical entries, 533 are before MY1978 and 6 are within MY1978–1983.
-- All 18,764 vehicle-ID references attached to the 3,639 EPA identities were present in the current official file retrieved 2026-10-08; make, year, source model label, and base-model group matched with zero mismatches. The current ZIP checksum differs from the 2026-10-06 reviewed snapshot, so the match is to the live file, not a byte-identical archived version. [@epa-01-download-coverage]
+- All 18,764 vehicle-ID references attached to the 3,639 EPA identities were present in the current official file retrieved 2026-10-08; make, year, source model label, and base-model group matched with zero mismatches. **Corrected:** the builder hashes extracted CSV content, and the current CSV exactly matches the catalog hash. The earlier ZIP-to-CSV comparison was incorrect. [@epa-01-download-coverage] ([saved recheck](profile-information-audit/epa-live-recheck.json))
 - The six annual guide files for MY1978–1983 match their recorded checksums. All 908 stored line locators match the model labels in those files. This proves catalog-to-guide linkage, not completeness of EPA guide coverage. [@epa-04-annual-guide-test-data] [@epa-03-fuel-economy-guide-scope]
 - All six NHTSA model-year supplements match current exact vPIC results across five year-scoped endpoints; response JSON and exact query URLs are saved in `research/sources/catalog-vpic-01..05-identity-check.md`. vPIC's manufacturer-submission/VIN system is not an exhaustive U.S. retail-sales census. [@epa-02-nhtsa-vpic-scope] [@ev-makers-01-nhtsa-vpic-api] [@catalog-vpic-01-identity-check] [@ev-makers-05-tesla-2008-vpic] [@catalog-vpic-03-identity-check] [@catalog-vpic-04-identity-check] [@catalog-vpic-05-identity-check]
 - The EPA all-years dataset and annual guide boundary describe EPA fuel-economy data, not a complete inventory of every vehicle sold in the United States. [@epa-01-download-coverage] [@epa-03-fuel-economy-guide-scope] [@gapfill-history-01-epa]
@@ -68,7 +68,7 @@ _`[@key]` markers refer to `research/sources.json`; local audit files are linked
 ## Conflicts & Open Questions
 
 - The initial 4,818/4,672/146 and 4,775/43 totals are superseded by the live API census: 4,818 option rows, 4,715 unique IDs, 4,672 model-year profiles, and 43 trim profiles.
-- The EPA live-file match is complete for referenced identity fields, but its archive checksum differs from the catalog's saved snapshot; this is a version/provenance mismatch, not a make/year/model mismatch.
+- The EPA live-file match is complete for referenced identity fields and extracted CSV checksum. The earlier alleged version mismatch compared the ZIP with extracted CSV content and is resolved.
 - The 539 selected historical profiles remain secondary-source evidence, not a complete historical U.S. census; 660 name-year gaps remain leads only.
 - Exact retail availability and final MY2027 status are distinct from EPA/vPIC listing. Some current official product pages announce 2027 products, but a listing or preliminary catalog row is not a complete final sales roster.
 - The catalog's source metadata marks all source records `allowed`; source-specific rights and access restrictions have not been independently cleared for every retained field or trim URL.
@@ -77,7 +77,7 @@ _`[@key]` markers refer to `research/sources.json`; local audit files are linked
 
 - Moved to report Limitations: no single comprehensive pre-1984 source was found; selected historical source rows and each gap lead still need independent historical review.
 - Moved to report Limitations: exact trim evidence is linked but all 26 source URLs have not been independently assessed for access, storage, attribution, and display terms.
-- Moved to report Limitations: the EPA raw ZIP does not match the saved review checksum, and MY2027 retail/final-availability claims are not established for every entry.
+- Checksum question resolved: the extracted EPA CSV matches the saved review hash. Moved to report Limitations: MY2027 retail/final-availability claims are not established for every entry.
 
 ## Follow-up: all-profile release-readiness review
 
