@@ -5,14 +5,14 @@ generated = []
 id = "yzXKHfPPRIF4NJWJvvkXu"
 uri = "file://research/notes.md"
 type = "text"
-title = "AutoResearch Stage 2 Research Notes"
-description = "Research plan, coverage checklist, and findings log for the source-backed vehicle-data architecture review."
+title = "Research Notes: Published Automotive Catalog Coverage"
+description = "Private research plan and audit progress for the 4,818 development catalog entries; no production release."
 logical_id = "5b6c631d-d124-4d19-a8ca-36f79102f3d1"
-content_hash = "sha256:c14e8c7687052d4dbbbf7373dd3691b6c2b7c0bc06f44715142f9d0e03f0ed41"
-size = 2265
-mtime_ms = 1790890292065
-storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/06c35bd5-3ce0-4fcc-b133-454ad716f84f"
-storage_version_token = "1790890294609167"
+content_hash = "sha256:75a28b72aa18edc8337b73394d0266afa0582d9a42d5391fd28c6809ef0fb936"
+size = 4595
+mtime_ms = 1791421710725
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/01e43cf3-954d-49dc-9e34-51552f28500a"
+storage_version_token = "1791421711257058"
 content_type = "text/markdown"
 
 [[outputs]]
@@ -70,3 +70,101 @@ mtime_ms = 1791265906813
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/c060b86d-4193-4fc4-84bf-dfe3370413ac/ede9e544-b595-432b-b87f-063f59123bb2"
 storage_version_token = "1791265974527904"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "up4hRByVoc5zY0Oe2U7Lj"
+uri = "file://research/catalog-coverage-report.html"
+type = "html"
+title = "Automotive Catalog Coverage & Release Readiness"
+description = "Standalone cited HTML report with the 38-source bibliography, verified census, coverage limits, and private-release recommendation."
+logical_id = "c42908e3-5e6b-4756-a12e-1736151419de"
+content_hash = "sha256:529cd71b65076ae39c6001f4e9c615cc6905a78a42c93bc76675966055b1ddad"
+size = 46895
+mtime_ms = 1791423473256
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/c42908e3-5e6b-4756-a12e-1736151419de/95d101c0-6cc1-4da0-8248-7a218535d04f"
+storage_version_token = "1791423591147088"
+content_type = "text/html"
+
+[[outputs]]
+id = "Gke1vEDlAI9stEducjKso"
+uri = "file://research/catalog-options.csv"
+type = "table"
+title = "Browse Options Audit (4,818 rows)"
+description = "Every selectable development Browse option, including repeated era memberships that are not additional vehicle identities."
+logical_id = "6a648321-836d-4dea-91eb-c469aca0c12d"
+content_hash = "sha256:c23073b41c708cd3340290269667268c5f4a53bd0b5d59b783a26c1b3372c2b1"
+size = 456711
+mtime_ms = 1791422834074
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/6a648321-836d-4dea-91eb-c469aca0c12d/94e338fd-82f5-4c5a-b387-fa19de356670"
+storage_version_token = "1791423591747398"
+content_type = "text/csv"
+
+[[outputs]]
+id = "lPsdKssxCOUYQ8Qvl5M3Q"
+uri = "file://research/catalog-profiles.csv"
+type = "table"
+title = "Unique Profile Audit (4,715 rows)"
+description = "One row per distinct profile ID, separating 4,672 model-year identities from 43 trim/configuration previews."
+logical_id = "4cc3dadc-4a97-4ab2-b43f-027a84083937"
+content_hash = "sha256:a0cd6a30abc542ccb3cb398e69b1cc070eacabded28736c5cb55c02611ba4a14"
+size = 2551986
+mtime_ms = 1791422834066
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/4cc3dadc-4a97-4ab2-b43f-027a84083937/3a6de8de-1fbf-4370-b2f1-ccd8939210ae"
+storage_version_token = "1791423592338151"
+content_type = "text/csv"
+
+[[outputs]]
+id = "yz6TAZFwYozr5OR3xU4HV"
+uri = "file://research/catalog-coverage-by-make.csv"
+type = "table"
+title = "Coverage by Make"
+description = "Observed model-year and profile counts across the 13 target makes; not a complete retail-history claim."
+logical_id = "4f26e35a-999d-42f1-b03b-460faf9daf27"
+content_hash = "sha256:82b7ced14656c435beb69435b20ff868f7c2220ac722b199c7d335cbec29c4f4"
+size = 1220
+mtime_ms = 1791422834086
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/4f26e35a-999d-42f1-b03b-460faf9daf27/1b1033c7-319b-4873-be41-324e62901c59"
+storage_version_token = "1791423592892494"
+content_type = "text/csv"
+
+[[outputs]]
+id = "ieaOpWr2CrX62YmRb8DzW"
+uri = "file://research/catalog-year-gap-leads.csv"
+type = "table"
+title = "Historical Missing-Year Leads (660 rows)"
+description = "Investigation leads across 70 normalized make/model groups; these are not confirmed omissions or hiatuses."
+logical_id = "1f3e7844-024c-4bb8-84c5-d78e50cd7ada"
+content_hash = "sha256:ac67b7ea5b6b564b8608bc0f6129e6c4f329610478400dfaf078bcdce3db5587"
+size = 37795
+mtime_ms = 1791422834082
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/1f3e7844-024c-4bb8-84c5-d78e50cd7ada/8ce238e6-05f3-49b6-8804-d3cf5e5c4f36"
+storage_version_token = "1791423593374538"
+content_type = "text/csv"
+
+[[outputs]]
+id = "ff4aoALIDLb6fn8bswv8x"
+uri = "file://research/catalog-source-inventory.csv"
+type = "table"
+title = "Catalog Source Inventory (46 records)"
+description = "The source records linked from the development catalog; inclusion does not mean every source term has been cleared."
+logical_id = "b977ecf8-19e6-44ef-a188-a6b9efbd996a"
+content_hash = "sha256:940a15413315bd1e898c20ff017a2670404e5a9e333120b79d8a98788d8cc4f7"
+size = 10848
+mtime_ms = 1791422834082
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/b977ecf8-19e6-44ef-a188-a6b9efbd996a/3abff471-f59e-4781-8fa6-972e9ab3784e"
+storage_version_token = "1791423593852843"
+content_type = "text/csv"
+
+[[outputs]]
+id = "A1o-l9Z-b7q3i7LfZK7Dr"
+uri = "file://research/catalog-trim-evidence.csv"
+type = "table"
+title = "Trim Preview Evidence (237 rows)"
+description = "Accepted evidence rows for 43 trim/configuration previews across 25 URLs; individual source rights remain under review."
+logical_id = "b82c4481-e8e6-49b2-8035-59fb3976395b"
+content_hash = "sha256:2f91a4ecd375069705e93e42e2f7a9c97df1a4ad4c0c156a004310afac5676d6"
+size = 112808
+mtime_ms = 1791422386766
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/b82c4481-e8e6-49b2-8035-59fb3976395b/7bf46981-7896-4520-831b-327276cb7ea6"
+storage_version_token = "1791423594374895"
+content_type = "text/csv"

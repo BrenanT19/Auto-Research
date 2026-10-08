@@ -1,0 +1,398 @@
+[
+  {
+    "key": "epa-01-download-coverage",
+    "title": "Download Fuel Economy Data",
+    "url": "https://www.fueleconomy.gov/feg/download.shtml",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-01-download-coverage.md",
+    "additionalEvidencePaths": [
+      "research/sources/epa-01-fueleconomy-download-coverage.md",
+      "research/sources/epa-01-fueleconomy-downloads.md"
+    ]
+  },
+  {
+    "key": "epa-02-nhtsa-vpic-scope",
+    "title": "NHTSA Product Information Catalog and Vehicle Listing — About",
+    "url": "https://vpic.nhtsa.dot.gov/About",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-02-nhtsa-vpic-scope.md",
+    "additionalEvidencePaths": [
+      "research/sources/stellantis-01-nhtsa-vpic-about.md",
+      "research/sources/stellantis-05-vpic-scope.md"
+    ]
+  },
+  {
+    "key": "epa-03-fuel-economy-guide-scope",
+    "title": "2026 Fuel Economy Guide",
+    "url": "https://www.fueleconomy.gov/feg/pdfs/guides/FEG2026.pdf?pubDate=20260402",
+    "publicationDate": "2026-04-02",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-03-fuel-economy-guide-scope.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "epa-04-annual-guide-test-data",
+    "title": "Test Data for Annual Fuel Economy Guide | US EPA",
+    "url": "https://www.epa.gov/compliance-and-fuel-economy-data/test-data-annual-fuel-economy-guide",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-04-annual-guide-test-data.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-01-wartime-production",
+    "title": "MotorCities - World War II and the Interrupted Production of 1942 Models | 2023 | Story of the Week",
+    "url": "https://www.motorcities.org/story-of-the-week/2023/world-war-ii-and-the-interrupted-production-of-1942-models",
+    "publicationDate": "2023-07-12",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/ford-lincoln-01-wartime-production.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-02-lincoln-town-car",
+    "title": "Lincoln Town Car | Fullsize Luxury Sedan",
+    "url": "https://www.lincoln.com/luxury-cars/town-car",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/ford-lincoln-02-lincoln-town-car.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-03-ford-current-lineup",
+    "title": "Ford Corporate Newsroom",
+    "url": "https://corporate.ford.com/newsroom",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/ford-lincoln-03-ford-current-lineup.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-04-wwii-production",
+    "title": "Making Automobiles Last During World War II | The National WWII Museum | New Orleans",
+    "url": "https://www.nationalww2museum.org/war/articles/automobile-rationing-world-war-ii",
+    "publicationDate": "2022-01-06",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ford-lincoln-04-wwii-production.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-05-henry-ford-production-records",
+    "title": "Ford Vehicle Production Records - The Henry Ford",
+    "url": "https://www.thehenryford.org/collections/explore/popular-research-topics/vehicle-production-records",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ford-lincoln-05-henry-ford-production-records.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ford-lincoln-06-lincoln-2026-2027",
+    "title": "Current Lincoln® SUV Models | Luxury Vehicles",
+    "url": "https://www.lincoln.com/all-luxury-suvs",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/ford-lincoln-06-lincoln-2026-2027.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gm-01-heritage-vehicle-information-kits",
+    "title": "GM Heritage Archive: Vehicle Info Kits | General Motors",
+    "url": "https://www.gm.com/heritage/archive/vehicle-information-kits",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-01-heritage-vehicle-information-kits.md",
+    "additionalEvidencePaths": [
+      "research/sources/gm-04-vehicle-information-kits.md"
+    ]
+  },
+  {
+    "key": "gm-03-epa-test-car-data",
+    "title": "Data on Cars used for Testing Fuel Economy | US EPA",
+    "url": "https://www.epa.gov/compliance-and-fuel-economy-data/data-cars-used-testing-fuel-economy",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gm-03-epa-test-car-data.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gm-05-ecfr-model-year",
+    "title": "40 CFR Part 85, Subpart X: Determination of Model Year for Motor Vehicles and Engines",
+    "url": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-85/subpart-X",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gm-05-ecfr-model-year.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gm-06-camaro-hiatus",
+    "title": "GM to retire Camaro at the end of the 2024 model year",
+    "url": "https://news.gm.com/home.detail.html/Pages/news/us/en/2023/mar/0322-camaro.html",
+    "publicationDate": "2023-03-22",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-06-camaro-hiatus.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "stellantis-02-allpar-chrysler-history",
+    "title": "History of Chrysler Corporation and its various marques - Plymouth, Dodge, Jeep, etc.",
+    "url": "https://www.allpar.com/d3/history/index.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/stellantis-02-allpar-chrysler-history.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "stellantis-03-epa-chrysler-1990",
+    "title": "1990 Fuel Economy by Model: Chrysler",
+    "url": "https://fueleconomy.gov/feg/bymodel/Chrysler1990.shtml",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/stellantis-03-epa-chrysler-1990.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "stellantis-04-motortrend-ram-split",
+    "title": "It's Official: Ram Truck Brand Split Off From Dodge Brand; Good Idea?",
+    "url": "https://www.motortrend.com/news/its-official-ram-truck-brand-split-off-from-dodge-brand-good-idea-5581",
+    "publicationDate": "2009-10-05",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/stellantis-04-motortrend-ram-split.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-01-nhtsa-vpic-api",
+    "title": "Vehicle API",
+    "url": "https://vpic.nhtsa.dot.gov/api/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-01-nhtsa-vpic-api.md",
+    "additionalEvidencePaths": [
+      "research/sources/ev-makers-04-vpic-scope.md"
+    ]
+  },
+  {
+    "key": "ev-makers-02-epa-rivian-my2026",
+    "title": "MSF240987.pdf",
+    "url": "https://dis.epa.gov/otaqpub/display_file.jsp?docid=62830&flag=1",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-02-epa-rivian-my2026.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-03-tesla-roadster-launch",
+    "title": "Tesla Motors Begins Regular Production of 2008 Tesla Roadster | Tesla Investor Relations",
+    "url": "https://ir.tesla.com/press-release/tesla-motors-begins-regular-production-2008-tesla-roadster",
+    "publicationDate": "2008-03-16",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-03-tesla-roadster-launch.md",
+    "additionalEvidencePaths": [
+      "research/sources/ev-makers-06-tesla-roadster-launch.md"
+    ]
+  },
+  {
+    "key": "ev-makers-05-tesla-2008-vpic",
+    "title": "NHTSA vPIC Tesla model listing for model year 2008",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2008?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-05-tesla-2008-vpic.md",
+    "additionalEvidencePaths": [
+      "research/sources/catalog-vpic-02-identity-check.md"
+    ]
+  },
+  {
+    "key": "ev-makers-07-rivian-vpic-make",
+    "title": "NHTSA vPIC model list for Rivian",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/Rivian?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-07-rivian-vpic-make.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-08-lucid-vpic-make",
+    "title": "NHTSA vPIC model list for Lucid",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/Lucid?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-08-lucid-vpic-make.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-09-tesla-vpic-make",
+    "title": "NHTSA vPIC model list for Tesla",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/Tesla?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-09-tesla-vpic-make.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-10-rivian-2022-vpic",
+    "title": "NHTSA vPIC Rivian model listing for model year 2022",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/10887/modelyear/2022?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-10-rivian-2022-vpic.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-11-lucid-2022-vpic",
+    "title": "NHTSA vPIC Lucid model listing for model year 2022",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/10919/modelyear/2022?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-11-lucid-2022-vpic.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-12-rivian-2027-vpic",
+    "title": "NHTSA vPIC Rivian model listing for model year 2027",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/10887/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-12-rivian-2027-vpic.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-13-lucid-2027-vpic",
+    "title": "NHTSA vPIC Lucid model listing for model year 2027",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/10919/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-13-lucid-2027-vpic.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "ev-makers-14-tesla-2027-vpic",
+    "title": "NHTSA vPIC Tesla model listing for model year 2027",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/ev-makers-14-tesla-2027-vpic.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gapfill-history-01-epa",
+    "title": "Reports on Cars used for Testing Fuel Economy | US EPA",
+    "url": "https://www.epa.gov/compliance-and-fuel-economy-data/reports-cars-used-testing-fuel-economy",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gapfill-history-01-epa.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gapfill-history-02-gm-archive",
+    "title": "GM Heritage Archive & Special Collections | General Motors",
+    "url": "https://www.gm.com/heritage/archive",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gapfill-history-02-gm-archive.md",
+    "additionalEvidencePaths": [
+      "research/sources/gm-02-heritage-archive-coverage.md"
+    ]
+  },
+  {
+    "key": "gapfill-rights-01-epa-license",
+    "title": "EPA Standard Open Data License",
+    "url": "https://edg.epa.gov/EPA_Data_License.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gapfill-rights-01-epa-license.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gapfill-rights-02-nhtsa-api-policy",
+    "title": "API Use Policy | NHTSA",
+    "url": "https://api.nhtsa.gov/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gapfill-rights-02-nhtsa-api-policy.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "gapfill-rights-03-cc-by-sa-legalcode",
+    "title": "Creative Commons Attribution-ShareAlike 4.0 International Legal Code",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.en",
+    "publicationDate": "2013-11-25",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/gapfill-rights-03-cc-by-sa-legalcode.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "catalog-vpic-01-identity-check",
+    "title": "NHTSA vPIC exact model/year query: Ram 2500 MY2024, Ram 3500 MY2024",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/RAM?format=json&modelYear=2024",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/catalog-vpic-01-identity-check.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "catalog-vpic-03-identity-check",
+    "title": "NHTSA vPIC exact model/year query: Tesla Roadster MY2009",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2009?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/catalog-vpic-03-identity-check.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "catalog-vpic-04-identity-check",
+    "title": "NHTSA vPIC exact model/year query: Tesla Roadster MY2010",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2010?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/catalog-vpic-04-identity-check.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "catalog-vpic-05-identity-check",
+    "title": "NHTSA vPIC exact model/year query: Tesla Roadster MY2011",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/441/modelyear/2011?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/catalog-vpic-05-identity-check.md",
+    "additionalEvidencePaths": []
+  }
+]
