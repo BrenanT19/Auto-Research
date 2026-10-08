@@ -5,14 +5,14 @@ generated = []
 id = "yzXKHfPPRIF4NJWJvvkXu"
 uri = "file://research/notes.md"
 type = "text"
-title = "Research Notes: Published Automotive Catalog Coverage"
-description = "Private research plan and audit progress for the 4,818 development catalog entries; no production release."
+title = "All-profile catalog release review"
+description = "Private scope, checklist, and findings log for the review of all 4,715 development vehicle profiles."
 logical_id = "5b6c631d-d124-4d19-a8ca-36f79102f3d1"
-content_hash = "sha256:75a28b72aa18edc8337b73394d0266afa0582d9a42d5391fd28c6809ef0fb936"
-size = 4595
-mtime_ms = 1791421710725
-storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/01e43cf3-954d-49dc-9e34-51552f28500a"
-storage_version_token = "1791421711257058"
+content_hash = "sha256:3b27952981185db1131d44dd8b5c90254a8955f549654817442f712e502243cf"
+size = 11621
+mtime_ms = 1791426876320
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/8bf562fa-b8f8-43ef-af43-cd14a353b17f"
+storage_version_token = "1791426884336562"
 content_type = "text/markdown"
 
 [[outputs]]
@@ -167,4 +167,46 @@ size = 112808
 mtime_ms = 1791422386766
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/b82c4481-e8e6-49b2-8035-59fb3976395b/7bf46981-7896-4520-831b-327276cb7ea6"
 storage_version_token = "1791423594374895"
+content_type = "text/csv"
+
+[[outputs]]
+id = "zAQ9jQOfH7Q-v1sJPX2he"
+uri = "file://research/catalog-release-readiness.md"
+type = "text"
+title = "Private Catalog Release-Readiness Report"
+description = "Cited review of all 4,715 development profiles, source-use limits, unresolved evidence, and release recommendation."
+logical_id = "1c9464b7-e96a-4edb-b153-a930c2fcacdc"
+content_hash = "sha256:b2b5d51ac233c4a9c84e4c23ed2a82c43b0ab0149327e8aa2c64eb4f4f5f7a99"
+size = 26477
+mtime_ms = 1791427910021
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/1c9464b7-e96a-4edb-b153-a930c2fcacdc/1d3e6e3b-2bdb-4173-930d-b9d089e77fb8"
+storage_version_token = "1791427981718538"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "NjTmyK5PGXLG244crtXXT"
+uri = "file://research/catalog-release-readiness.html"
+type = "html"
+title = "Release-Readiness Report (HTML)"
+description = "Standalone, styled HTML companion to the cited private review."
+logical_id = "f9eea058-9bc1-43d8-99bf-a7aa7e732516"
+content_hash = "sha256:332cb87745b361ee9e6a6fa0dd9f4aa67ec24bb9e68534c087783c3ff439b795"
+size = 36014
+mtime_ms = 1791427929686
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/f9eea058-9bc1-43d8-99bf-a7aa7e732516/b2580ff2-71b2-48ed-86da-c5a18dbf1431"
+storage_version_token = "1791427982203171"
+content_type = "text/html"
+
+[[outputs]]
+id = "CO_RYbEFjWMKJJuXakCMf"
+uri = "file://research/catalog-release-readiness.csv"
+type = "table"
+title = "4,715-Profile Release Dispositions"
+description = "Row-level verification, source cohort, blockers, and release status for every development profile."
+logical_id = "2a095367-88a6-4fae-a43f-cc71079692ee"
+content_hash = "sha256:676804fdf771fcfebb434bdb8d6755e18c873d4f3fb210ec256ffe77d5c31939"
+size = 4991125
+mtime_ms = 1791427612197
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/2a095367-88a6-4fae-a43f-cc71079692ee/714e1133-5351-40a4-9bc3-b620ad2834ec"
+storage_version_token = "1791427982857829"
 content_type = "text/csv"

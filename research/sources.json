@@ -9,7 +9,9 @@
     "savedEvidencePath": "research/sources/epa-01-download-coverage.md",
     "additionalEvidencePaths": [
       "research/sources/epa-01-fueleconomy-download-coverage.md",
-      "research/sources/epa-01-fueleconomy-downloads.md"
+      "research/sources/epa-01-fueleconomy-downloads.md",
+      "research/sources/release-review-epa-fuel-economy-02-download-metadata.md",
+      "research/sources/release-review-whole-catalog-01-epa-download.md"
     ]
   },
   {
@@ -22,7 +24,8 @@
     "savedEvidencePath": "research/sources/epa-02-nhtsa-vpic-scope.md",
     "additionalEvidencePaths": [
       "research/sources/stellantis-01-nhtsa-vpic-about.md",
-      "research/sources/stellantis-05-vpic-scope.md"
+      "research/sources/stellantis-05-vpic-scope.md",
+      "research/sources/release-review-whole-catalog-02-vpic-about.md"
     ]
   },
   {
@@ -43,7 +46,10 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/epa-04-annual-guide-test-data.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-epa-fuel-economy-snippets.md",
+      "research/sources/release-review-whole-catalog-snippets.md"
+    ]
   },
   {
     "key": "ford-lincoln-01-wartime-production",
@@ -93,7 +99,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/ford-lincoln-05-henry-ford-production-records.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-whole-catalog-03-historical-archive.md"
+    ]
   },
   {
     "key": "ford-lincoln-06-lincoln-2026-2027",
@@ -125,7 +133,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/gm-03-epa-test-car-data.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-epa-fuel-economy-snippets.md"
+    ]
   },
   {
     "key": "gm-05-ecfr-model-year",
@@ -220,7 +230,8 @@
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/ev-makers-05-tesla-2008-vpic.md",
     "additionalEvidencePaths": [
-      "research/sources/catalog-vpic-02-identity-check.md"
+      "research/sources/catalog-vpic-02-identity-check.md",
+      "research/sources/release-review-nhtsa-vpic-05-roadster-2008.md"
     ]
   },
   {
@@ -322,7 +333,8 @@
     "tier": "Tier 3",
     "savedEvidencePath": "research/sources/gapfill-history-02-gm-archive.md",
     "additionalEvidencePaths": [
-      "research/sources/gm-02-heritage-archive-coverage.md"
+      "research/sources/gm-02-heritage-archive-coverage.md",
+      "research/sources/release-review-whole-catalog-snippets.md"
     ]
   },
   {
@@ -333,7 +345,10 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/gapfill-rights-01-epa-license.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-04-epa-license.md",
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
   },
   {
     "key": "gapfill-rights-02-nhtsa-api-policy",
@@ -343,7 +358,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/gapfill-rights-02-nhtsa-api-policy.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-nhtsa-vpic-01-api-policy.md"
+    ]
   },
   {
     "key": "gapfill-rights-03-cc-by-sa-legalcode",
@@ -353,7 +370,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/gapfill-rights-03-cc-by-sa-legalcode.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-historical-model-year-identities-01-cc-by-sa-4-legalcode.md"
+    ]
   },
   {
     "key": "catalog-vpic-01-identity-check",
@@ -363,7 +382,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/catalog-vpic-01-identity-check.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-nhtsa-vpic-09-ram-2024.md"
+    ]
   },
   {
     "key": "catalog-vpic-03-identity-check",
@@ -373,7 +394,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/catalog-vpic-03-identity-check.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-nhtsa-vpic-06-roadster-2009.md"
+    ]
   },
   {
     "key": "catalog-vpic-04-identity-check",
@@ -383,7 +406,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/catalog-vpic-04-identity-check.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [
+      "research/sources/release-review-nhtsa-vpic-07-roadster-2010.md"
+    ]
   },
   {
     "key": "catalog-vpic-05-identity-check",
@@ -393,6 +418,680 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 1",
     "savedEvidencePath": "research/sources/catalog-vpic-05-identity-check.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-nhtsa-vpic-08-roadster-2011.md"
+    ]
+  },
+  {
+    "key": "release-review-epa-fuel-economy-01-epa-license",
+    "title": "EPA Standard Open Data License",
+    "url": "https://edg.epa.gov/EPA_Data_License.htm",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-01-epa-license.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-epa-fuel-economy-03-web-services",
+    "title": "Fuel Economy Web Services",
+    "url": "https://www.fueleconomy.gov/feg/ws/index.shtml",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-03-web-services.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-whole-catalog-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-www-fueleconomy-gov-feg-info-shtml",
+    "title": "1. **Fuel Economy FAQ**, FuelEconomy.gov,",
+    "url": "https://www.fueleconomy.gov/feg/info.shtml",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-catalog-data-gov-dataset-www-fueleconomy-gov",
+    "title": "4. **www.FuelEconomy.gov dataset catalog entry**, Data.gov,",
+    "url": "https://catalog.data.gov/dataset/www-fueleconomy-gov",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-epa-gov-fueleconomy",
+    "title": "5. **Fuel Economy**, U.S. EPA,",
+    "url": "https://www.epa.gov/fueleconomy",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-law-cornell-edu-cfr-text-40-600-006",
+    "title": "6. **40 CFR § 600.006 — Data and information requirements for fuel economy data vehicles**, Cornell Legal Information Institute rendering of e-CFR,",
+    "url": "https://www.law.cornell.edu/cfr/text/40/600.006",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-catalog-data-gov-dataset-www-fueleconomy-gov-471cd",
+    "title": "7. **www.FuelEconomy.gov — Catalog**, Data.gov,",
+    "url": "https://catalog.data.gov/dataset/www-fueleconomy-gov-471cd",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-epa-fuel-economy-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-gap-oem-06-stellantis-media-legal",
+    "title": "Legal Notes | Stellantis Media",
+    "url": "https://www.media.stellantis.com/em-en/page/legal-notes",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-gap-oem-06-stellantis-media-legal.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-gap-oem-07-ford-pr-use",
+    "title": "Media & PR Contacts | Ford",
+    "url": "https://www.fromtheroad.ford.com/us/en/articles/2025/media-and-pr-contacts-ford",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-gap-oem-07-ford-pr-use.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-gap-oem-trim-01-auto-brochures-about",
+    "title": "Auto-Brochures | about",
+    "url": "https://www.auto-brochures.com/_about.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-gap-oem-trim-01-auto-brochures-about.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-gap-oem-trim-02-f150-pdf",
+    "title": "2021 F-150 Technical Specs",
+    "url": "https://www.auto-brochures.com/makes/Ford/F-150/Ford_US%20F-150_2021-specs.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-gap-oem-trim-02-f150-pdf.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-historical-model-year-identities-02-wikipedia-reuse-guidance",
+    "title": "Wikipedia:Reusing Wikipedia content - Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Wikipedia:Reusing_Wikipedia_content",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-02-wikipedia-reuse-guidance.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-historical-model-year-identities-03-copyright-circular-33",
+    "title": "Circular 33 Works Not Protected by Copyright",
+    "url": "https://www.copyright.gov/circs/circ33.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-03-copyright-circular-33.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-creativecommons-org-2023-06-29-wikipedia-moves-to-cc-4-0-licenses",
+    "title": "creativecommons.org source reference",
+    "url": "https://creativecommons.org/2023/06/29/wikipedia-moves-to-cc-4-0-licenses",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-wikimediafoundation-org-what-we-do-wikimedia-projects-wikipedia",
+    "title": "wikimediafoundation.org source reference",
+    "url": "https://wikimediafoundation.org/what-we-do/wikimedia-projects/wikipedia",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-model-year",
+    "title": "en.wikipedia.org source reference",
+    "url": "https://en.wikipedia.org/wiki/Model_year",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-timeline-of-early-north-american-automobile",
+    "title": "en.wikipedia.org source reference",
+    "url": "https://en.wikipedia.org/wiki/Timeline_of_early_North_American_automobiles",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-historical-model-year-identities-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-02-vpic-faq",
+    "title": "NHTSA vPIC Frequently Asked Questions",
+    "url": "https://vpic.nhtsa.dot.gov/api/home/index/faq",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-02-vpic-faq.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-03-api-docs",
+    "title": "NHTSA Product Information Catalog Vehicle Listing API documentation",
+    "url": "https://vpic.nhtsa.dot.gov/api",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-03-api-docs.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-04-recalls",
+    "title": "Check for Recalls: Vehicle, Car Seat, Tire, Equipment | NHTSA",
+    "url": "https://www.nhtsa.gov/recalls",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-04-recalls.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-10-ram-exact-id-year",
+    "title": "NHTSA vPIC make-ID/model-year response for Ram 2500 and 3500 (MY2024)",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/496/modelyear/2024?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-10-ram-exact-id-year.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-11-ncap-record",
+    "title": "NHTSA Safety Ratings API response for the 2024 Ford Mustang",
+    "url": "https://api.nhtsa.gov/SafetyRatings/VehicleId/19149?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-11-ncap-record.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-nhtsa-vpic-12-recall-api-record",
+    "title": "NHTSA vehicle-recall API response for 2024 Ford Mustang",
+    "url": "https://api.nhtsa.gov/recalls/recallsByVehicle?make=ford&model=mustang&modelYear=2024",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-12-recall-api-record.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-nhtsa-vpic-13-static-24v220",
+    "title": "NHTSA recall report 24V220",
+    "url": "https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V220-4944.PDF",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-13-static-24v220.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-nhtsa-vpic-14-static-24v394",
+    "title": "NHTSA recall report 24V394",
+    "url": "https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V394-3723.PDF",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-14-static-24v394.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-nhtsa-vpic-15-uscode-105",
+    "title": "17 U.S.C. 105 - Subject matter of copyright: United States Government works - Content Details - USCODE-2024-title17-chap1-sec105",
+    "url": "https://www.govinfo.gov/app/details/USCODE-2024-title17/USCODE-2024-title17-chap1-sec105",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-15-uscode-105.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-16-nhtsa-datasets-apis",
+    "title": "NHTSA Datasets and APIs | NHTSA",
+    "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-16-nhtsa-datasets-apis.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-17-vpic-downloads",
+    "title": "NHTSA vPIC downloads and database information",
+    "url": "https://vpic.nhtsa.dot.gov/Downloads",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-17-vpic-downloads.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nhtsa-vpic-18-copyright-title17",
+    "title": "Chapter 1 - Circular 92 | U.S. Copyright Office",
+    "url": "https://www.copyright.gov/title17/92chap1.html#105",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-nhtsa-vpic-18-copyright-title17.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-oem-trim-01-gm-copyright",
+    "title": "Copyright, Trademark & Notices Information | General Motors",
+    "url": "https://www.gm.com/copyright-trademark",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-01-gm-copyright.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-oem-trim-03-ford-terms",
+    "title": "Ford® Terms & Conditions | Ford.com",
+    "url": "https://www.ford.com/help/terms",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-03-ford-terms.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-oem-trim-05-stellantis-media-terms",
+    "title": "Legal Notices and Terms | Stellantis Blog",
+    "url": "https://blog.stellantisnorthamerica.com/legal-notices-and-terms",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-05-stellantis-media-terms.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-oem-trim-snippets.md"
+    ]
+  },
+  {
+    "key": "release-review-media-chevrolet-com-content-dam-media-images-us-vehicles-chevrole",
+    "title": "Chevrolet title: SILVERADO FAST FACTS - Chevrolet.",
+    "url": "https://media.chevrolet.com/content/dam/Media/images/US/Vehicles/Chevrolet/Trucks/Silverado/2024/2024-Chevrolet-Silverado-033023.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-media-gmc-com-content-dam-media-images-us-vehicles-gmc-sierra-202",
+    "title": "GMC title: 2024 SIERRA 1500 - GMC.",
+    "url": "https://media.gmc.com/content/dam/Media/images/US/Vehicles/GMC/Sierra/2024/2024-GMC-Sierra-1500.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-www-buick-com-content-dam-buick-na-us-en-index-shopping-tools-dow",
+    "title": "Buick PDF:",
+    "url": "https://www.buick.com/content/dam/buick/na/us/en/index/shopping-tools/download-catalog/02-pdfs/GMBE23CT100-2024-ENCLAVE-FO_050924.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-media-stellantisnorthamerica-com-page-do",
+    "title": "Direct legal page search result: Stellantis Media - Legal Notices and Terms,",
+    "url": "https://media.stellantisnorthamerica.com/page.do?file=legal",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-ir-lucidmotors-com-news-releases-news-release-details-lucid-air-m",
+    "title": "Official IR release",
+    "url": "https://ir.lucidmotors.com/news-releases/news-release-details/lucid-air-model-line-updates-offer-customers-more-freedom-power",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-lucidmotors-com-en-ca-legal",
+    "title": "lucidmotors.com source reference",
+    "url": "https://lucidmotors.com/en-ca/legal",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-epa-gov-system-files-documents-2025-05-24-testcar-2025-05-xls",
+    "title": "The Mustang preview uses the May 2025 MY2024 Test Car List workbook at",
+    "url": "https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": [
+      "research/sources/release-review-trim-source-ledger.md"
+    ]
+  },
+  {
+    "key": "release-review-www-fordservicecontent-com-ford-content-vdirsnet-ownermanual-home",
+    "title": "Ford service content search result:",
+    "url": "https://www.fordservicecontent.com/Ford_Content/vdirsnet/OwnerManual/Home/Content?ProcUid=G2136215&buildtype=web&countryCode=USA&div=f&languageCode=en&moidRef=G2123862&userMarket=usa&vFilteringEnabled=False&variantid=9156",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-ir-lucidmotors-com-investor-relations",
+    "title": "Lucid IR search: result for",
+    "url": "https://ir.lucidmotors.com/investor-relations",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-auto-brochures-com",
+    "title": "Auto-Brochures home (`",
+    "url": "https://auto-brochures.com/`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-auto-brochures-com-about-html",
+    "title": "Auto-Brochures About (`",
+    "url": "https://www.auto-brochures.com/_about.html`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-platform-tracxn-com-a-d-company-5318d5f2e4b0f7e165e99dc7-auto-bro",
+    "title": "Tracxn directory result (`",
+    "url": "https://platform.tracxn.com/a/d/company/5318d5f2e4b0f7e165e99dc7/auto%20brochures?utm_source=parallel&utm_medium=ai#a:about`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-auto-brochures-com-ford-html",
+    "title": "Ford listing (`",
+    "url": "https://www.auto-brochures.com/ford.html`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-fromtheroad-ford-com-content-dam-fordmediasite-us-en-library",
+    "title": "Search also surfaced a Ford-hosted “2021 F-150 Technical Specs” PDF at `",
+    "url": "https://www.fromtheroad.ford.com/content/dam/fordmediasite/us/en/library/2021/specs/2021-F-150-Technical-Specs.pdf`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-auto-brochures-com-makes-ford-f-150-ford-us-f-150-2021-specs",
+    "title": "Exact CSV PDF fetched at `research/sources/release-review-gap-oem-trim-02-f150-pdf.md` (`",
+    "url": "https://www.auto-brochures.com/makes/Ford/F-150/Ford_US%20F-150_2021-specs.pdf`",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-oem-trim-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-whole-catalog-04-my2027-datafile",
+    "title": "2027 EPA Fuel Economy Guide datafile (download linked from FuelEconomy.gov)",
+    "url": "https://www.fueleconomy.gov/feg/epadata/27data.zip",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-whole-catalog-04-my2027-datafile.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-nepis-epa-gov-exe-zypurl-cgi",
+    "title": "**EPA's Fuel Economy Programs**,",
+    "url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100IST6.TXT",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-whole-catalog-snippets.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-buick-enclave",
+    "title": "U.S. generation grouping",
+    "url": "https://en.wikipedia.org/wiki/Buick_Enclave",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-chevrolet-silverado",
+    "title": "U.S. generation grouping",
+    "url": "https://en.wikipedia.org/wiki/Chevrolet_Silverado",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-ford-f-series-fourteenth-generation",
+    "title": "U.S. generation grouping",
+    "url": "https://en.wikipedia.org/wiki/Ford_F-Series_(fourteenth_generation",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-media-ford-com-content-dam-fordmedia-north-america-us-2022-09-14",
+    "title": "2024 Mustang preliminary technical specifications",
+    "url": "https://media.ford.com/content/dam/fordmedia/North%20America/US/2022/09/14/2024-mustang-technical-specifications.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-fordservicecontent-com-ford-content-catalog-owner-information",
+    "title": "Ford Motor Company",
+    "url": "https://www.fordservicecontent.com/Ford_Content/Catalog/owner_information/2024_Ford_Mustang_Owners_Manual_version_1_om_EN-US.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-fordservicecontent-com-ford-content-vdirsnet-ownermanual-home-2",
+    "title": "Ford Motor Company",
+    "url": "https://www.fordservicecontent.com/Ford_Content/vdirsnet/OwnerManual/Home/Content?variantid=9122&languageCode=en&countryCode=USA&moidRef=G2133836&Uid=G2301084&ProcUid=G2301085&userMarket=usa&div=f&vFilteringEnabled=False&buildtype=web",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-api-nhtsa-gov-complaints-complaintsbyvehicle",
+    "title": "National Highway Traffic Safety Administration",
+    "url": "https://api.nhtsa.gov/complaints/complaintsByVehicle?make=ford&model=mustang&modelYear=2024",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-static-nhtsa-gov-odi-rcl-2024-rclrpt-24v593-3301-pdf",
+    "title": "Ford Motor Company, filed with NHTSA",
+    "url": "https://static.nhtsa.gov/odi/rcl/2024/RCLRPT-24V593-3301.PDF",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-static-nhtsa-gov-odi-rcl-2026-rclrpt-26v547-3184-pdf",
+    "title": "Ford Motor Company, filed with NHTSA",
+    "url": "https://static.nhtsa.gov/odi/rcl/2026/RCLRPT-26V547-3184.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-lucid-air",
+    "title": "U.S. generation grouping",
+    "url": "https://en.wikipedia.org/wiki/Lucid_Air",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-www-fueleconomy-gov-feg-epadata-vehicles-csv",
+    "title": "MY2024 Lucid Air named-model records",
+    "url": "https://www.fueleconomy.gov/feg/epadata/vehicles.csv",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-media-stellantisnorthamerica-com-newsrelease-do",
+    "title": "2024 Ram 2500 & 3500 Heavy Duty official press kit",
+    "url": "https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&mid=69",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-en-wikipedia-org-wiki-ram-heavy-duty-fifth-generation",
+    "title": "U.S. generation grouping",
+    "url": "https://en.wikipedia.org/wiki/Ram_Heavy_Duty_(fifth_generation",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-s3-amazonaws-com-chryslermedia-iconicweb-com-mediasite-specs-2024",
+    "title": "2024 Ram 2500 and 3500 Heavy Duty feature-availability matrix",
+    "url": "https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2024_RAM_2500_3500_HD_FA.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
+    "additionalEvidencePaths": []
+  },
+  {
+    "key": "release-review-media-stellantisnorthamerica-com-newsrelease-do-2",
+    "title": "2024 Ram 2500 off-road lineup announcement",
+    "url": "https://media.stellantisnorthamerica.com/newsrelease.do?id=25278&fIId=25845&mid=69",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/release-review-trim-source-ledger.md",
     "additionalEvidencePaths": []
   }
 ]

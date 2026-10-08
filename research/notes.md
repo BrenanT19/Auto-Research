@@ -39,7 +39,7 @@ _`[@key]` markers refer to `research/sources.json`; local audit files are linked
 
 - The development Browse API returns 4,818 selectable choices but only 4,715 distinct profile IDs: 4,672 model-year identities and 43 trim/configuration profiles. The 103 extra choices are intentional generation/refresh memberships on 102 model-year IDs, not additional vehicle profiles. ([options](catalog-options.csv), [profiles](catalog-profiles.csv), [source audit](catalog-source-verification.md))
 - The profile CSV preserves all source locators and the internal rights status separately from the new external verification result; its “allowed” value is not a public redistribution clearance.
-- The 43 preview trim identities have 237 accepted evidence rows and 25 distinct source URLs. This documents linked claims, not completeness of the retail trim catalog or clearance of source-specific terms. ([trim evidence](catalog-trim-evidence.csv))
+- The 43 preview trim identities have 237 accepted evidence rows and 26 distinct source URLs. This documents linked claims, not completeness of the retail trim catalog or clearance of source-specific terms. ([trim evidence](catalog-trim-evidence.csv))
 
 ### Source verification
 
@@ -76,5 +76,26 @@ _`[@key]` markers refer to `research/sources.json`; local audit files are linked
 ## Gaps
 
 - Moved to report Limitations: no single comprehensive pre-1984 source was found; selected historical source rows and each gap lead still need independent historical review.
-- Moved to report Limitations: exact trim evidence is linked but all 25 source URLs have not been independently assessed for access, storage, attribution, and display terms.
+- Moved to report Limitations: exact trim evidence is linked but all 26 source URLs have not been independently assessed for access, storage, attribution, and display terms.
 - Moved to report Limitations: the EPA raw ZIP does not match the saved review checksum, and MY2027 retail/final-availability claims are not established for every entry.
+
+## Follow-up: all-profile release-readiness review
+
+- **Question:** Which of the 4,715 development profiles, if any, can be considered for a scoped public release, and what evidence or source-use gates remain?
+- **Scope:** Audit all 4,672 model-year identities and 43 trim/configuration previews privately. Do not change production data, release settings, or public visibility.
+- **Audience:** AutoResearch product owner.
+- **Deliverable:** A cited release-readiness report and a row-level CSV with evidence cohort, verification, blockers, and disposition for every profile.
+- **Focus areas:** EPA data/guides and source versioning; NHTSA/vPIC; selected historical secondary sources; all trim-evidence sources; per-profile readiness and coverage limits.
+- **Coverage checklist:**
+  - [x] Reconcile all 4,715 profile rows and map each to its evidence cohort.
+  - [x] Review source access, retention, attribution, automation, and public-display terms by source; retain unresolved hosts/files as holds.
+  - [x] Separate identity evidence from retail-market completeness and exact-trim proof.
+  - [x] Resolve the prior report's 25-versus-26 trim-source URL discrepancy; the verified count is 26.
+  - [x] Classify every profile and identify only conditional review cohorts, without implying owner approval.
+- **Initial findings:** The profile export contains 4,715 unique profiles (4,672 model-year and 43 trim/configuration); trim evidence has 237 accepted claim rows and 26 exact URLs. All 43 trim profiles have at least two linked URLs; 235 evidence rows are marked moderate strength and two strong. The earlier 25-URL count is corrected in both reports. All 46 bundled-source inventory rows say `allowed`, but that internal status is not a source-rights clearance. The catalog includes 34 MY2027 profiles and 660 unresolved year-gap leads.
+- **Disposition:** A 4,099-profile group (3,605 non-2027 EPA all-years, 488 annual-guide, 6 vPIC) is a possible first review cohort only. All 4,715 rows remain `release_ready_now=No`; 539 historical identities, 34 MY2027 identities, and 43 trim previews are explicitly held.
+- **MY2027:** The separate preliminary workbook has 363 rows. A make/division plus model/carline name-only crosswalk found 21 of 34 catalog profiles; 13 were not found. No exact EPA vehicle-ID join was established, and unmatched names do not establish lack of U.S. availability. ([saved crosswalk](sources/release-review-whole-catalog-04-my2027-datafile.md))
+- **Trim source review:** The 26-URL ledger covers five groups: GM (20 profiles), Ram (12), Ford F-150 (6), Lucid Air (4), and Ford Mustang (1). Source terms and exact retail configuration are not cleared for any group. ([trim source ledger](sources/release-review-trim-source-ledger.md))
+- **Outputs:** [Cited Markdown report](catalog-release-readiness.md), [standalone HTML report](catalog-release-readiness.html), and [4,715-row disposition CSV](catalog-release-readiness.csv).
+- **Release decision:** Do not publish. No profile is approved by this review; production data, release settings, and public visibility were not changed.
+- **Open questions retained as Limitations:** Whether dataset-specific EPA conditions support the intended display; whether the historical Wikipedia revisions can be attributed and verified year by year; whether exact trim source terms can be cleared or replaced; and how to reconcile the 34 MY2027 source IDs to the separate preliminary file.

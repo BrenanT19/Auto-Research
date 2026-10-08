@@ -1,0 +1,7 @@
+Source: https://api.nhtsa.gov/SafetyRatings/VehicleId/19149?format=json
+Title: 
+Fetched: 2026-10-08T02:36:47.384Z
+
+```json
+{"Count":1,"Message":"Results returned successfully","Results":[{"OverallRating":"5","OverallFrontCrashRating":"5","FrontCrashDriversideRating":"5","FrontCrashPassengersideRating":"5","FrontCrashPicture":"https://static.nhtsa.gov/crashTest/images/2024/v14497P088.JPG","OverallSideCrashRating":"5","SideCrashDriversideRating":"5","SideCrashPassengersideRating":"4","SideCrashPicture":"https://static.nhtsa.gov/crashTest/images/2024/v14499P105.JPG","combinedSideBarrierAndPoleRating-Front":"5","combinedSideBarrierAndPoleRating-Rear":"4","sideBarrierRating-Overall":"5","RolloverRating":"5","RolloverRating2":"Not Rated","RolloverPossibility":0.079,"RolloverPossibility2":0.0,"dynamicTipResult":"No Tip","SidePoleCrashRating":"5","SidePolePicture":"https://static.nhtsa.gov/crashTest/images/2024/v14498P074.JPG","NHTSAElectronicStabilityControl":"Standard","NHTSAForwardCollisionWarning":"Standard & Optional","NHTSALaneDepartureWarning":"Standard","ComplaintsCount":82,"RecallsCount":12,"InvestigationCount":0,"ModelYear":2024,"Make":"FORD","Model":"MUSTANG","VehicleDescription":"2024 Ford Mustang 2 DR RWD","VehicleId":19149}]}
+```

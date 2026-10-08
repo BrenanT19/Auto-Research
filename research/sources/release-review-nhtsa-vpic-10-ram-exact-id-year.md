@@ -1,0 +1,7 @@
+Source: https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeIdYear/makeId/496/modelyear/2024?format=json
+Title: 
+Fetched: 2026-10-08T02:36:45.245Z
+
+```json
+{"Count":17,"Message":"Results returned successfully","SearchCriteria":"Make ID:496 | ModelYear:2024","Results":[{"Make_ID":496,"Make_Name":"RAM","Model_ID":13620,"Model_Name":"1500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13620,"Model_Name":"1500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13621,"Model_Name":"2500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13621,"Model_Name":"2500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13622,"Model_Name":"3500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13622,"Model_Name":"3500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13624,"Model_Name":"4500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13624,"Model_Name":"4500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13625,"Model_Name":"5500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13625,"Model_Name":"5500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13627,"Model_Name":"ProMaster 1500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13627,"Model_Name":"ProMaster 1500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13628,"Model_Name":"ProMaster 2500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13628,"Model_Name":"ProMaster 2500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13629,"Model_Name":"ProMaster 3500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13629,"Model_Name":"ProMaster 3500"},{"Make_ID":496,"Make_Name":"RAM","Model_ID":13629,"Model_Name":"ProMaster 3500"}]}
+```

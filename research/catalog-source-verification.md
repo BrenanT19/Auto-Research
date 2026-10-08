@@ -60,21 +60,27 @@ The Tesla endpoint year and Ram query parameter scope each request to the releva
 
 The 539 historical entries use selected secondary references; 533 are pre-1978 and 6 fall in 1978–1983. Their source records are linked, but this pass did not independently verify every historical fact against a complete U.S. archive. The searches found no single source promising complete pre-1984 coverage across all 13 makes.
 
-All 43 trim/configuration profiles return a development-preview detail record with 237 accepted claim-source rows and 25 distinct source URLs. These are provenance links, not an independent audit of each source's terms, and do not establish that every retail trim or package has been catalogued.
+All 43 trim/configuration profiles return a development-preview detail record with 237 accepted claim-source rows and 26 distinct source URLs. These are provenance links, not an independent audit of each source's terms, and do not establish that every retail trim or package has been catalogued.
 
 ## Coverage leads and limits
 
 - Model-year extrema and counts by make are in `catalog-coverage-by-make.csv`; they describe observed catalog rows, not each make's complete history.
 - Case-insensitive make/model grouping produces 660 missing-year leads across 70 displayed model identities. These are investigation leads, not confirmed omissions or hiatuses. Wartime stops, model-name transitions, discontinued products, and incomplete historical sources can all produce gaps.
-- MY2026 and MY2027 appear in the catalog. MY2027 is preliminary; source presence does not establish finalized retail availability, sale, or delivery.
+- MY2026 and MY2027 appear in the catalog. MY2027 is preliminary; source presence does not establish finalized retail availability, sale, or delivery. The separate preliminary workbook has 363 MY2027 rows; a make/division plus model/carline name-only crosswalk matched 21 of the 34 catalog MY2027 profiles and did not find 13. No exact vehicle-ID join was established, and a name missing from the workbook is not evidence of no U.S. availability. [Saved workbook crosswalk](sources/release-review-whole-catalog-04-my2027-datafile.md)
 - The source set explicitly states that historical coverage is incomplete. EPA/vPIC coverage, archival coverage, model identity, retail availability, and exact trim identity are separate evidence questions.
 - Source-specific retention/display/automation rights remain unresolved for some files and endpoints. In particular, the general EPA open-data statement does not resolve every field's provenance; vPIC API restrictions must be applied to the relevant endpoint; and Wikipedia-derived collections and OEM brochure sources need use-specific review.
+
+## Private release-readiness disposition
+
+The separate [release-readiness report](catalog-release-readiness.md) and [row-level disposition CSV](catalog-release-readiness.csv) classify all 4,715 profiles. A 4,099-profile group (3,605 non-2027 EPA all-years, 488 EPA annual-guide, and 6 vPIC) is only a possible first review cohort; the remaining 616 profiles (539 selected historical, 34 MY2027, and 43 trim/configuration) are held. Every row is marked `release_ready_now=No`, and owner approval is not granted. No production data or release settings were changed.
 
 ## Audit files
 
 - `catalog-profiles.csv` — one row per distinct profile ID, with source IDs, locators, and era-candidate memberships.
 - `catalog-options.csv` — all 4,818 Browse options, including intentional multi-era choices.
 - `catalog-trim-evidence.csv` — source URLs and accepted claim rows for the 43 exact trim/configuration previews.
+- `catalog-release-readiness.csv` — one disposition row for each of the 4,715 profiles.
+- `sources/release-review-trim-source-ledger.md` — 26 exact trim-source URLs and their linked profile counts; not rights clearance.
 - `catalog-source-inventory.csv` — the 46 bundled source records.
 - `catalog-year-gap-leads.csv` — 660 within-name year gaps to review.
 - `catalog-coverage-by-make.csv` — observed make/year counts and historical source layers.
