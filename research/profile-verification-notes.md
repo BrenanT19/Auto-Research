@@ -19,7 +19,8 @@
 - [x] Check field-to-claim links: zero missing links on known fields. Five unknown-field references are omitted claims, not leaked known values.
 - [x] Resolve the EPA source-version question: extracted CSV hash matches; all 18,764 references rechecked without mismatches.
 - [ ] Independently verify historical identities and revision-level provenance — moved to Limitations; seven GM archive titles corroborated, not the underlying kits or all 539 identities.
-- [ ] Resolve preliminary MY2027 source lineage and exact identity — moved to Limitations; 34/34 still lack exact joins to the separate preliminary workbook.
+- [x] Independently verify populated MY2027 make/model/year values — all 34 match EPA identity rows and current NHTSA vPIC make/year results; the separate preliminary-workbook ID crosswalk remains unresolved but is not the only identity evidence.
+- [ ] Finish the separate 2027 Chrysler Pacifica generation field — the 2017 start and 2027 fascia refresh are corroborated; RU-code evidence currently ends at MY2025.
 - [ ] Verify trim facts and source-host terms — moved to Limitations; name/year support improved for 33 profiles, but source-use and exact claimed market scope remain open. Absent configuration facts need not be invented or proved.
 - [ ] Verify displayed generation/refresh relationships — moved to Limitations; 699 profiles contain generation information; 0/142 full bundled intervals cleared by the bounded gap pass.
 - [ ] Complete factual verification of all populated Mustang information — moved to Limitations; two of six specifications supported by final-year EPA evidence; four partially supported or unresolved.

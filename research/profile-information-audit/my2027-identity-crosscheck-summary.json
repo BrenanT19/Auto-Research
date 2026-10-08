@@ -1,0 +1,31 @@
+{
+  "catalog_profiles": 34,
+  "nhtsa_make_year_records": 34,
+  "make_groups": 13,
+  "case_sensitive_matches": 30,
+  "case_only_matches": 4,
+  "missing_make_model_year_matches": 0,
+  "verified_identity_fields_per_profile": [
+    "make",
+    "model",
+    "model year"
+  ],
+  "additional_populated_fields_not_checked": [
+    {
+      "profile_id": "chrysler-pacifica-2027-model-year",
+      "field": "generation",
+      "claim_ids": [
+        "catalog:era:8000901:2027",
+        "catalog:era:8002014:2027"
+      ]
+    }
+  ],
+  "not_verified": [
+    "actual sale/delivery",
+    "final retail lineup",
+    "all configuration details",
+    "crosswalk to preliminary EPA workbook",
+    "any additional populated fact listed above"
+  ],
+  "all_profiles_release_ready": false
+}

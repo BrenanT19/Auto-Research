@@ -56,6 +56,78 @@
     ]
   },
   {
+    "key": "epa-1984-present-vehicle-data",
+    "title": "FuelEconomy.gov all-model-years vehicle data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-current-vehicle-data.md"
+  },
+  {
+    "key": "epa-guide-1981-corvette",
+    "title": "1981 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/81guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1981-corvette.md"
+  },
+  {
+    "key": "epa-guide-1982-corvette",
+    "title": "1982 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/82guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1982-corvette.md"
+  },
+  {
+    "key": "epa-guide-1979-mustang",
+    "title": "1979 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/79guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1979-mustang.md"
+  },
+  {
+    "key": "epa-guide-1980-mustang",
+    "title": "1980 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/80guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1980-mustang.md"
+  },
+  {
+    "key": "epa-guide-1981-mustang",
+    "title": "1981 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/81guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1981-mustang.md"
+  },
+  {
+    "key": "epa-guide-1982-mustang",
+    "title": "1982 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/82guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1982-mustang.md"
+  },
+  {
+    "key": "epa-guide-1983-mustang",
+    "title": "1983 EPA Fuel Economy Guide data",
+    "url": "https://www.fueleconomy.gov/feg/epadata/83guide.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/epa-guide-1983-mustang.md"
+  },
+  {
     "key": "ford-lincoln-01-wartime-production",
     "title": "MotorCities - World War II and the Interrupted Production of 1942 Models | 2023 | Story of the Week",
     "url": "https://www.motorcities.org/story-of-the-week/2023/world-war-ii-and-the-interrupted-production-of-1942-models",
@@ -128,7 +200,11 @@
     "savedEvidencePath": "research/sources/gm-01-heritage-vehicle-information-kits.md",
     "additionalEvidencePaths": [
       "research/sources/gm-04-vehicle-information-kits.md",
-      "research/sources/full-verification-historical-02-gm-vehicle-kits.md"
+      "research/sources/full-verification-historical-02-gm-vehicle-kits.md",
+      "research/sources/camaro-gm-kit-index.md",
+      "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+      "research/sources/full-verification-gm-chevrolet-impala-1958-75.md",
+      "research/sources/full-verification-gm-cadillac-1941-74.md"
     ]
   },
   {
@@ -191,7 +267,9 @@
     "accessedDate": "2026-10-08",
     "tier": "Tier 2",
     "savedEvidencePath": "research/sources/stellantis-04-motortrend-ram-split.md",
-    "additionalEvidencePaths": []
+    "additionalEvidencePaths": [],
+    "citationEligible": false,
+    "exclusionReason": "MotorTrend Group terms prohibit automated data downloads; this captured article is excluded from factual evidence."
   },
   {
     "key": "ev-makers-01-nhtsa-vpic-api",
@@ -1264,5 +1342,1435 @@
     "savedEvidencePath": "research/sources/full-verification-ram-lucid-12-page.md",
     "publicationDate": null,
     "tier": "Tier 1"
+  },
+  {
+    "key": "profile-batch-vpic-2027-buick",
+    "title": "NHTSA vPIC, 2027 model-year listing — Buick",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Buick/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-buick.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-cadillac",
+    "title": "NHTSA vPIC, 2027 model-year listing — Cadillac",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Cadillac/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-cadillac.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-chevrolet",
+    "title": "NHTSA vPIC, 2027 model-year listing — Chevrolet",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Chevrolet/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-chevrolet.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-chrysler",
+    "title": "NHTSA vPIC, 2027 model-year listing — Chrysler",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Chrysler/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-chrysler.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-dodge",
+    "title": "NHTSA vPIC, 2027 model-year listing — Dodge",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Dodge/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-dodge.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-ford",
+    "title": "NHTSA vPIC, 2027 model-year listing — Ford",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Ford/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-ford.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-gmc",
+    "title": "NHTSA vPIC, 2027 model-year listing — GMC",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/GMC/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-gmc.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-jeep",
+    "title": "NHTSA vPIC, 2027 model-year listing — Jeep",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Jeep/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-jeep.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-lincoln",
+    "title": "NHTSA vPIC, 2027 model-year listing — Lincoln",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Lincoln/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-lincoln.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-lucid",
+    "title": "NHTSA vPIC, 2027 model-year listing — Lucid",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Lucid/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-lucid.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-ram",
+    "title": "NHTSA vPIC, 2027 model-year listing — Ram",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Ram/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-ram.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-rivian",
+    "title": "NHTSA vPIC, 2027 model-year listing — Rivian",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Rivian/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-rivian.md"
+  },
+  {
+    "key": "profile-batch-vpic-2027-tesla",
+    "title": "NHTSA vPIC, 2027 model-year listing — Tesla",
+    "url": "https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Tesla/modelyear/2027?format=json",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-vpic-2027-tesla.md"
+  },
+  {
+    "key": "profile-batch-pacifica-2017-windsor",
+    "title": "Windsor Assembly Plant — Stellantis Media",
+    "url": "https://media.stellantisnorthamerica.com/newsrelease.do?id=344&mid=105",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-pacifica-2017-windsor.md"
+  },
+  {
+    "key": "profile-batch-pacifica-ru-body-code",
+    "title": "Vehicle Model Codes — Mopar Repair Connect",
+    "url": "https://www.moparrepairconnect.com/dA/c53af470f9/vehicle-model-codes.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-pacifica-ru-body-code.md"
+  },
+  {
+    "key": "profile-batch-pacifica-2027-orders",
+    "title": "Chrysler Opens Orders for the Newly Refreshed 2027 Pacifica — Stellantis Media",
+    "url": "https://www.media.stellantisnorthamerica.com/newsrelease.do?id=27519&mid=1",
+    "publicationDate": "2026-03-09",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-pacifica-2027-orders.md"
+  },
+  {
+    "key": "profile-batch-mustang-2024-tank-index",
+    "title": "2024 Mustang Owner's Manual — Fuel Tank Capacity, 2.3L EcoBoost",
+    "url": "https://www.fordservicecontent.com/Ford_Content/vdirsnet/OwnerManual/Home/Content?ProcUid=G2301085&buildtype=web&countryCode=USA&div=f&languageCode=en&moidRef=G2133836&userMarket=usa&vFilteringEnabled=False&variantid=9122",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-mustang-2024-tank-index.md"
+  },
+  {
+    "key": "profile-batch-f150-official-1975",
+    "title": "The Understated Debut of an Icon: Celebrating 50 Years of Ford F-150",
+    "url": "https://www.fromtheroad.ford.com/us/en/articles/2025/f-150-50th-anniversary",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/profile-batch-f150-official-1975.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-sixth-generation",
+    "title": "Ford's '73–79 F-Series just won't quit",
+    "url": "https://www.hagerty.com/media/market-trends/hagerty-insider/73-79-f-series-values-are-built-ford-tough",
+    "publicationDate": "2023-09-01",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-sixth-generation.md"
+  },
+  {
+    "key": "profile-batch-f150-car-and-driver-history",
+    "title": "Ford's F-Series Pickup Truck History, from the Model TT to Today",
+    "url": "https://www.caranddriver.com/features/g23897696/ford-f-series-pickup-truck-history",
+    "publicationDate": "2022-09-24",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-car-and-driver-history.md",
+    "citationEligible": false,
+    "exclusionReason": "Hearst U.S. magazine terms prohibit automated collection; this captured article is excluded from factual evidence."
+  },
+  {
+    "key": "profile-batch-f150-hagerty-buyers-guide",
+    "title": "Your handy 1973–79 Ford F-Series buyer’s guide",
+    "url": "https://www.hagerty.com/media/buying-and-selling/your-handy-1973-79-ford-f-series-buyers-guide",
+    "publicationDate": "2025-01-21",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-buyers-guide.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-1977-model-year",
+    "title": "1977 Ford F-150 1/2 Ton — Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/ford/f~150/1977/1977-ford-f~150-1!2_ton",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-1977-model-year.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-model-year-1975",
+    "title": "1975 Ford F-150 1/2 Ton — Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/Ford/F~150/1975/1975-Ford-F~150",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-model-year-1975.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-model-year-1976",
+    "title": "1976 Ford F-150 1/2 Ton — Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/ford/f~150/1976/1976-ford-f~150-1!2_ton",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-model-year-1976.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-model-year-1978",
+    "title": "1978 Ford F-150 1/2 Ton — Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/ford/f~150/1978/1978-ford-f~150-1!2_ton",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-model-year-1978.md"
+  },
+  {
+    "key": "profile-batch-f150-hagerty-model-year-1979",
+    "title": "1979 Ford F-150 1/2 Ton — Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/ford/f~150/1979/1979-ford-f~150-1!2_ton",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/profile-batch-f150-hagerty-model-year-1979.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1953-corvette",
+    "title": "1953 Chevrolet Corvette Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1953-Chevrolet-Corvette.pdf",
+    "publicationDate": "1953-11-15",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1953-corvette.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1954-corvette",
+    "title": "1954 Chevrolet Corvette Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1954-Chevrolet-Corvette.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1954-corvette.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1955-corvette",
+    "title": "1955 Chevrolet Corvette Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1955-Chevrolet-Corvette.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1955-corvette.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1964-chevelle",
+    "title": "1964 Chevrolet Chevelle Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1964-Chevrolet-Chevelle.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1964-chevelle.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1964-corvette",
+    "title": "1964 Chevrolet Corvette Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1964-Chevrolet-Corvette.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1964-corvette.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1965-chevelle",
+    "title": "1965 Chevrolet Chevelle Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1965-Chevrolet-Chevelle.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1965-chevelle.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1965-corvette",
+    "title": "1965 Chevrolet Corvette Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1965-Chevrolet-Corvette.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-vehicle-kit-1965-corvette.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1950-chevrolet",
+    "title": "1950 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1950-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1951-chevrolet",
+    "title": "1951 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1951-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1952-chevrolet",
+    "title": "1952 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1952-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1953-chevrolet",
+    "title": "1953 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1953-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1954-chevrolet",
+    "title": "1954 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1954-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1955-chevrolet",
+    "title": "1955 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1955-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1956-chevrolet",
+    "title": "1956 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1956-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1957-chevrolet",
+    "title": "1957 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1957-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1958-chevrolet",
+    "title": "1958 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1958-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1959-chevrolet",
+    "title": "1959 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1959-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1960-chevrolet",
+    "title": "1960 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1960-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1961-chevrolet",
+    "title": "1961 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1961-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1962-chevrolet",
+    "title": "1962 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1962-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1963-chevrolet",
+    "title": "1963 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1963-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1964-chevrolet",
+    "title": "1964 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1964-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1965-chevrolet",
+    "title": "1965 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1965-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1966-chevrolet",
+    "title": "1966 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1966-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1967-chevrolet",
+    "title": "1967 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1967-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1968-chevrolet",
+    "title": "1968 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1968-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1969-chevrolet",
+    "title": "1969 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1969-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1970-chevrolet",
+    "title": "1970 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1970-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1971-chevrolet",
+    "title": "1971 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1971-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1972-chevrolet",
+    "title": "1972 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1972-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1973-chevrolet",
+    "title": "1973 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1973-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1974-chevrolet",
+    "title": "1974 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1974-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1975-chevrolet",
+    "title": "1975 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1975-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/gm-chevrolet-bel-air-1950-75-review.md",
+    "additionalEvidencePaths": ["research/sources/full-verification-gm-chevrolet-impala-1958-75.md"]
+  },
+  {
+    "key": "gm-vehicle-kit-1960-chevrolet-truck",
+    "title": "1960 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1960-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1961-chevrolet-truck",
+    "title": "1961 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1961-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1962-chevrolet-truck",
+    "title": "1962 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1962-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1963-chevrolet-truck",
+    "title": "1963 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1963-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1964-chevrolet-truck",
+    "title": "1964 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1964-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1965-chevrolet-truck",
+    "title": "1965 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1965-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1966-chevrolet-truck",
+    "title": "1966 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1966-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1967-chevrolet-truck",
+    "title": "1967 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1967-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1968-chevrolet-truck",
+    "title": "1968 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1968-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1969-chevrolet-truck",
+    "title": "1969 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1969-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1970-chevrolet-truck",
+    "title": "1970 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1970-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1971-chevrolet-truck",
+    "title": "1971 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1971-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1972-chevrolet-truck",
+    "title": "1972 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1972-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1973-chevrolet-truck",
+    "title": "1973 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1973-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1974-chevrolet-truck",
+    "title": "1974 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1974-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1975-chevrolet-truck",
+    "title": "1975 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1975-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-trucks-1960-75.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1976-chevrolet",
+    "title": "1976 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1976-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-1976-77.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1977-chevrolet",
+    "title": "1977 Chevrolet Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet/1977-Chevrolet.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-1976-77.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1976-chevrolet-truck",
+    "title": "1976 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1976-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-1976-77.md"
+  },
+  {
+    "key": "gm-vehicle-kit-1977-chevrolet-truck",
+    "title": "1977 Chevrolet Truck Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/chevrolet-trucks/1977-Chevrolet-Truck.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-chevrolet-1976-77.md"
+  },
+  {
+    "key": "chevrolet-corvette-legacy-generations",
+    "title": "Chevy's Legacy Iconic Corvette",
+    "url": "https://www.chevrolet.com/legacy/corvette",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/chevrolet-corvette-legacy-generations.md"
+  },
+  {
+    "key": "car-and-driver-corvette-history",
+    "title": "The Chevrolet Corvette's Complete History, From C1 to C8",
+    "url": "https://www.caranddriver.com/features/g22035705/fully-vetted-the-visual-history-of-the-chevrolet-corvette",
+    "publicationDate": "2025-06-02",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/car-and-driver-corvette-history.md",
+    "citationEligible": false,
+    "exclusionReason": "Hearst U.S. magazine terms prohibit automated collection; this captured article is excluded from factual evidence."
+  },
+  {
+    "key": "motor1-corvette-generations",
+    "title": "Every Chevrolet Corvette Generation, Explained",
+    "url": "https://www.motor1.com/features/794843/chevy-corvette-generations/",
+    "publicationDate": "2026-05-05",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/motor1-corvette-generations.md"
+  },
+  {
+    "key": "ncrs-corvette-reference-guides",
+    "title": "Restoration Resource Guides | National Corvette Restorers Society",
+    "url": "https://www.ncrs.org/shop/index.php?cPath=1&main_page=index",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/ncrs-corvette-reference-guides.md"
+  },
+  {
+    "key": "ford-model-a-1928-history",
+    "title": "The 1928 Ford Model A",
+    "url": "https://corporate.ford.com/articles/history/the-1928-ford-model-a.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-ford-01-official-1928-history.md"
+  },
+  {
+    "key": "ford-model-a-heritage-archive",
+    "title": "The Second Model A - Ford (archived page)",
+    "url": "https://ophelia.sdsu.edu:8443/ford/07-24-2008/about-ford/heritage/vehicles/1928modela/671-model-a-1928.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-ford-02-heritage-endpoint.md"
+  },
+  {
+    "key": "ford-site-terms",
+    "title": "Ford Terms and Conditions",
+    "url": "https://corporate.ford.com/help/terms",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-ford-03-ford-terms.md"
+  },
+  {
+    "key": "hagerty-model-a-years",
+    "title": "Your handy 1928–31 Ford Model A buyer’s guide",
+    "url": "https://www.hagerty.com/media/buying-and-selling/your-handy-1928-31-ford-model-a-buyers-guide",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-independent-01-hagerty-years.md"
+  },
+  {
+    "key": "hagerty-media-terms",
+    "title": "Terms of Use and Community Guidelines | Hagerty Media",
+    "url": "https://www.hagerty.com/media/terms",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-independent-04-hagerty-terms.md"
+  },
+  {
+    "key": "hemmings-model-a-years",
+    "title": "1928 to 1931 Ford Model A History Overview Guide",
+    "url": "https://www.hemmings.com/stories/1928-31-ford-model-a-2",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-independent-02-hemmings-history.md"
+  },
+  {
+    "key": "hemmings-marketplace-terms",
+    "title": "Hemmings Marketplace User Agreement",
+    "url": "https://www.hemmings.com/auctions/user-agreement",
+    "publicationDate": "2024-04-18",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-hemmings-marketplace-terms.md"
+  },
+  {
+    "key": "henry-ford-model-a-1928",
+    "title": "1928 Ford Model A Touring Car, Owned by Thomas Edison",
+    "url": "https://www.thehenryford.org/collections/explore/artifact/64736?AssetId=THF3222",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-museum-01-henry-ford-1928.md"
+  },
+  {
+    "key": "henry-ford-model-a-1929",
+    "title": "1929 Ford Model A Town Sedan",
+    "url": "https://www.thehenryford.org/collections/explore/artifact/171189",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-museum-02-henry-ford-1929.md"
+  },
+  {
+    "key": "henry-ford-model-a-1930",
+    "title": "1930 Ford Model A artifact record (search-indexed snippet)",
+    "url": "https://www.thehenryford.org/collections/explore/artifact/142721",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-museum-snippets.md"
+  },
+  {
+    "key": "henry-ford-copyright-policy",
+    "title": "The Henry Ford Copyright Policy (search-indexed snippet)",
+    "url": "https://www.thehenryford.org/copyright-policy",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-museum-snippets.md"
+  },
+  {
+    "key": "museum-american-speed-model-a-1931",
+    "title": "1931 Model A Coupe - Museum of American Speed",
+    "url": "https://www.museumofamericanspeed.org/1931modela.html",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/model-a-independent-03-american-speed-museum.md"
+  },
+  {
+    "key": "smithsonian-model-a-1931",
+    "title": "1931 Ford Model A roadster | Smithsonian Institution",
+    "url": "https://www.si.edu/object/1931-ford-model-roadster:nmah_843058",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/model-a-museum-03-smithsonian-1931.md"
+  },
+  {
+    "key": "smithsonian-model-a-overview",
+    "title": "Ford Model Automobile | Smithsonian collection snapshot (search-indexed snippet)",
+    "url": "https://www.si.edu/collections/snapshot/ford-model-automobile",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/model-a-museum-snippets.md"
+  },
+  {
+    "key": "wikipedia-model-a-current-snippet",
+    "title": "Ford Model A article (un-pinned search-indexed claim)",
+    "url": "https://en.wikipedia.org/wiki/Ford_Model_A_(1927%E2%80%9331)",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/model-a-independent-snippets.md"
+  },
+  {
+    "key": "mustang-ford-birth-history",
+    "title": "Birth of the Mustang | Ford Motor Company",
+    "url": "https://corporate.ford.com/articles/history/mustang.html",
+    "publicationDate": "2021-04-15",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/mustang-ford-birth-history.md"
+  },
+  {
+    "key": "mustang-ford-worlds-fair",
+    "title": "Mustang Debut at World’s Fair | Ford Motor Company",
+    "url": "https://corporate.ford.com/articles/history/mustang-worlds-fair.html",
+    "publicationDate": "2020-09-30",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/mustang-ford-worlds-fair.md"
+  },
+  {
+    "key": "mustang-smithsonian-1965",
+    "title": "1965 Ford Mustang | National Museum of American History",
+    "url": "https://americanhistory.si.edu/collections/object/nmah_1293207",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 1",
+    "savedEvidencePath": "research/sources/mustang-smithsonian-1965.md"
+  },
+  {
+    "key": "mustang-henry-ford-history",
+    "title": "Genealogy of a Classic: Finding the History of Your Mustang",
+    "url": "https://www.thehenryford.org/collections/explore/articles/finding-the-history-of-your-mustang",
+    "publicationDate": "2014-12-08",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/mustang-henry-ford-history.md"
+  },
+  {
+    "key": "mustang-car-and-driver-generations",
+    "title": "Ford Mustang Through the Years: A Retrospective",
+    "url": "https://www.caranddriver.com/features/a16581329/ford-mustang-through-the-years-a-retrospective",
+    "publicationDate": "2009-04-17",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/mustang-car-and-driver-generations.md",
+    "citationEligible": false,
+    "exclusionReason": "Hearst U.S. magazine terms prohibit automated collection; this captured article is excluded from factual evidence."
+  },
+  {
+    "key": "camaro-car-and-driver-history",
+    "title": "The History of the Chevrolet Camaro, from 1967 to Today",
+    "url": "https://www.caranddriver.com/features/g15382545/chevrolet-camaro-generations-body-styles",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/camaro-car-and-driver-history.md",
+    "citationEligible": false,
+    "exclusionReason": "Hearst U.S. magazine terms prohibit automated collection; this captured article is excluded from factual evidence."
+  },
+  {
+    "key": "camaro-gm-1967-pace-car",
+    "title": "1967 Chevy Camaro Pace Car | GM Heritage | General Motors",
+    "url": "https://www.gm.com/heritage/collection/chevrolet/1967-chevrolet-camaro-pace-car",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/camaro-gm-1967-pace-car.md"
+  },
+  {
+    "key": "chevelle-hagerty-1968-72-guide",
+    "title": "Your definitive 1968–72 Chevelle SS buyer’s guide",
+    "url": "https://www.hagerty.com/media/buying-and-selling/definitive-1968-72-chevelle-ss-buyers-guide",
+    "publicationDate": "2019-11-21",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/chevelle-hagerty-1968-72-guide.md"
+  },
+  {
+    "key": "volo-linked-access-terms",
+    "title": "Website Terms and Conditions of Use | Speed Digital",
+    "url": "https://speeddigital.com/terms-and-conditions",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/volo-linked-access-terms.md"
+  },
+  {
+    "key": "hagerty-fseries-1980-86-history",
+    "title": "1983 Ford F-100 1/2 Ton | Hagerty Valuation Tools",
+    "url": "https://www.hagerty.com/valuation-tools/ford/f~100/1983/1983-ford-f~100-1!2_ton",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 2",
+    "savedEvidencePath": "research/sources/hagerty-fseries-1980-86-history.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1941",
+    "title": "1941 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1941_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1942",
+    "title": "1942 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1942_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1947",
+    "title": "1947 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1947_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1949",
+    "title": "1949 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1949_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1951",
+    "title": "1951 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1951_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1952",
+    "title": "1952 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1952_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1954",
+    "title": "1954 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1954_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1955",
+    "title": "1955 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1955_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1956",
+    "title": "1956 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1956_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1959",
+    "title": "1959 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1959_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1960",
+    "title": "1960 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1960_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1961",
+    "title": "1961 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1961_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1962",
+    "title": "1962 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1962_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1965",
+    "title": "1965 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1965_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1966",
+    "title": "1966 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1966_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1967",
+    "title": "1967 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1967_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1968",
+    "title": "1968 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1968_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1970",
+    "title": "1970 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1970_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1971",
+    "title": "1971 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1971_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1972",
+    "title": "1972 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1972_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1973",
+    "title": "1973 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1973_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "gm-cadillac-kit-1974",
+    "title": "1974 Cadillac Vehicle Information Kit",
+    "url": "https://www.gm.com/content/dam/company/no_search/heritage-archive-docs/vehicle-information-kits/cadillac/1974_Cadillac_VVI.pdf",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-gm-cadillac-1941-74.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-archive",
+    "title": "Ford Thunderbird: complete year archive | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-terms-of-use",
+    "title": "Terms of Use & Disclaimer | Car Model History",
+    "url": "https://carmodelhistory.com/legal/terms",
+    "publicationDate": "2026-08-07",
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-robots",
+    "title": "robots.txt | Car Model History",
+    "url": "https://carmodelhistory.com/robots.txt",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1955",
+    "title": "1955 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1955/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1956",
+    "title": "1956 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1956/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1957",
+    "title": "1957 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1957/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1958",
+    "title": "1958 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1958/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1959",
+    "title": "1959 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1959/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1960",
+    "title": "1960 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1960/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1961",
+    "title": "1961 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1961/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1962",
+    "title": "1962 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1962/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1963",
+    "title": "1963 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1963/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1964",
+    "title": "1964 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1964/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1965",
+    "title": "1965 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1965/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1966",
+    "title": "1966 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1966/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1967",
+    "title": "1967 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1967/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1968",
+    "title": "1968 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1968/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1969",
+    "title": "1969 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1969/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1970",
+    "title": "1970 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1970/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1971",
+    "title": "1971 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1971/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1972",
+    "title": "1972 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1972/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1973",
+    "title": "1973 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1973/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1974",
+    "title": "1974 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1974/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1975",
+    "title": "1975 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1975/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1976",
+    "title": "1976 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1976/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
+  },
+  {
+    "key": "carmodelhistory-ford-thunderbird-1977",
+    "title": "1977 Ford Thunderbird year guide | Car Model History",
+    "url": "https://carmodelhistory.com/ford/thunderbird/1977/",
+    "publicationDate": null,
+    "accessedDate": "2026-10-08",
+    "tier": "Tier 3",
+    "savedEvidencePath": "research/sources/full-verification-ford-thunderbird-1955-77.md"
   }
 ]

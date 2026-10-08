@@ -1,0 +1,7 @@
+Source: https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Cadillac/modelyear/2027?format=json
+Title: 
+Fetched: 2026-10-08T07:03:04.947Z
+
+```json
+{"Count":13,"Message":"Results returned successfully","SearchCriteria":"Make:Cadillac | ModelYear:2027","Results":[{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":1843,"Model_Name":"Escalade"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":4935,"Model_Name":"Escalade ESV"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":11442,"Model_Name":"XT5"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":11442,"Model_Name":"XT5"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":26602,"Model_Name":"CT4"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":26603,"Model_Name":"CT5"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":30011,"Model_Name":"Lyriq"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":30011,"Model_Name":"Lyriq"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":34058,"Model_Name":"Escalade IQ"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":34303,"Model_Name":"Celestiq"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":34854,"Model_Name":"Optiq"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":35294,"Model_Name":"Vistiq"},{"Make_ID":469,"Make_Name":"CADILLAC","Model_ID":35680,"Model_Name":"Escalade IQL"}]}
+```

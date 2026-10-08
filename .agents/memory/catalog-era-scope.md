@@ -20,3 +20,9 @@ Compare source model names case-insensitively for era membership, while preservi
 **Why:** Historical EPA labels such as `MUSTANG` and later `Mustang` share a browse model identity; exact display-name matching omitted historical years from researched groups.
 
 **How to apply:** Audit all rows sharing the selected model key, not only rows with identical display text. Case normalization is not permission to merge distinct nameplates, body styles or markets.
+
+For refresh-era ranges, verify the onset and carryover/end boundary separately. A source that identifies a new grille or fascia in one model year does not, by itself, establish how long that design remained in use.
+
+**Why:** The F-Series review found that a 1976 grille update needed explicit evidence that it carried into MY1977 before the 1976–1977 range could be considered supported.
+
+**How to apply:** Look for dated carryover statements or model-year-specific evidence for the end year. Record onset-only support as partial, and keep trim-dependent equipment changes separate from a broad front-end refresh.

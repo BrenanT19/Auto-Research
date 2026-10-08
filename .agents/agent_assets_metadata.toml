@@ -5,14 +5,14 @@ generated = []
 id = "yzXKHfPPRIF4NJWJvvkXu"
 uri = "file://research/notes.md"
 type = "text"
-title = "All-profile catalog release review"
-description = "Private scope, checklist, and findings log for the review of all 4,715 development vehicle profiles."
+title = "Full Profile Verification — Working Notes"
+description = "Tracks field-level factual support across all 4,715 profiles; census passed, verification remains in progress."
 logical_id = "5b6c631d-d124-4d19-a8ca-36f79102f3d1"
-content_hash = "sha256:3b27952981185db1131d44dd8b5c90254a8955f549654817442f712e502243cf"
-size = 11621
-mtime_ms = 1791426876320
-storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/8bf562fa-b8f8-43ef-af43-cd14a353b17f"
-storage_version_token = "1791426884336562"
+content_hash = "sha256:4d5c3140e202bc7ba1efb453c013746bde8ef261c7aa80424ddcecd95401f2a6"
+size = 15296
+mtime_ms = 1791442849223
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:d89f62cd-9089-452a-bf0c-d30f120e1219/5b6c631d-d124-4d19-a8ca-36f79102f3d1/08d27f88-4bb5-47d5-9b3a-3c9f43f3c8e4"
+storage_version_token = "1791442857221476"
 content_type = "text/markdown"
 
 [[outputs]]
