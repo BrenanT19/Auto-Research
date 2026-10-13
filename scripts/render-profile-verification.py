@@ -270,6 +270,60 @@ def main():
     identity_rows = rows("my2027-identity-crosscheck.csv") if (AUDIT / "my2027-identity-crosscheck.csv").exists() else []
     vpic_by_id = {row["profile_id"]: row for row in identity_rows}
     my2027_ids = set(vpic_by_id)
+    my2027_vpic_urls = {
+        row["nhtsa_source_url"].strip()
+        for row in identity_rows
+        if row.get("nhtsa_source_url", "").strip()
+    }
+    my2027_profile_claim_source_urls = {
+        row["source_url"].strip()
+        for row in claim_sources
+        if row["profile_id"] in my2027_ids and row.get("source_url", "").strip()
+    }
+    claim_source_url_count = len({
+        row["source_url"].strip()
+        for row in claim_sources
+        if row.get("source_url", "").strip()
+    })
+    vpic_crosscheck_unlinked_url_count = len(
+        my2027_vpic_urls - my2027_profile_claim_source_urls
+    )
+    vpic_supplement_ids = {
+        row["profile_id"]
+        for row in claim_sources
+        if row["source_id"].startswith(("nhtsa-vpic-", "nhtsa-tesla-roadster-"))
+    }
+    cohort_sets = {
+        "EPA-linked": {
+            row["profile_id"] for row in claim_sources
+            if row["source_id"] == "epa-1984-present"
+        },
+        "annual-guide": {
+            row["profile_id"] for row in claim_sources
+            if row["source_id"].startswith("epa-guide-")
+        },
+        "selected historical": {
+            row["profile_id"] for row in claim_sources
+            if row["source_id"].startswith("classic-")
+        },
+        "vPIC-only supplement": vpic_supplement_ids,
+        "trim": {row["profile_id"] for row in fields if row["field"] == "trim"},
+    }
+    all_profile_ids = {row["profile_id"] for row in profiles}
+    cohort_union = set().union(*cohort_sets.values())
+    assert cohort_union == all_profile_ids
+    assert sum(map(len, cohort_sets.values())) == len(cohort_union)
+    cohort_reconciliation_note = (
+        "**Profile-cohort reconciliation:** The 4,715 IDs partition into "
+        f"{len(cohort_sets['EPA-linked'])} EPA-linked profiles, "
+        f"{len(cohort_sets['annual-guide'])} annual-guide profiles, "
+        f"{len(cohort_sets['selected historical'])} selected historical profiles, "
+        f"{len(cohort_sets['vPIC-only supplement'])} vPIC-only supplements, and "
+        f"{len(cohort_sets['trim'])} trim profiles. These counts are inventory coverage, "
+        "not fact approval. The 34 MY2027 profiles are included in the EPA-linked count "
+        "and separately cross-checked against vPIC; the EPA dataset's published scope "
+        "and retail-market completeness remain distinct questions."
+    )
     my2027_additional_facts = [
         row for row in fields
         if row["profile_id"] in my2027_ids and row["field"] not in {"make", "model", "year"}
@@ -616,7 +670,11 @@ def main():
             f"to current NHTSA vPIC make/year listings; {exact} names match text-and-case exactly and "
             f"{case_only} differ only in capitalization. The separate preliminary workbook still has no "
             "exact vehicle-ID join, but it is not the only identity evidence. These database listings do "
-            "not establish a retail-sales count, delivery, or every final trim/configuration."
+            "not establish a retail-sales count, delivery, or every final trim/configuration. The row-level "
+            f"crosscheck is audit-only: {len(identity_rows)} rows across {len(my2027_vpic_urls)} make/year "
+            f"URLs. None of those URLs appears in the profiles' field-level claim-source rows, and they are "
+            f"outside the {claim_source_url_count}-URL claim-source rights crosswalk; this identity check "
+            "does not support other populated facts."
         )
         if my2027_additional_facts:
             details = "; ".join(
@@ -706,15 +764,25 @@ def main():
             "`unknown`; they are not treated as verified facts or malformed records."
         )
     claim_integrity_note = "\n\n".join(claim_integrity_parts)
+    release_ready_count = sum(
+        row.get("release_ready_now") == "Yes"
+        for row in prior
+    )
+    pending_review_count = sum(
+        row.get("verification") == "PENDING CONTENT/APPLICABILITY/SOURCE-USE REVIEW"
+        for row in fields
+    )
 
     draft = f"""# All-profile information verification — current results
 
 **Checked:** 2026-10-08 UTC / 2026-10-07 Pacific<br>
-**Status:** Full factual verification is incomplete. No public release was prepared or published.
+**Status:** Full factual verification is incomplete; **{release_ready_count} of {len(profiles)} profiles are release-ready**, and **{pending_review_count} of {len(fields)} populated fields remain flagged `PENDING CONTENT/APPLICABILITY/SOURCE-USE REVIEW`**. No public release was prepared or published.
 
 ## What was checked
 
-Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **97 distinct external source URLs**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified.
+Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **{claim_source_url_count} distinct external URLs in the profile claim-source export**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified.
+
+{cohort_reconciliation_note}
 
 {sibling_and_trim_note}
 
@@ -740,6 +808,7 @@ EPA's default public-domain statement is favorable for EPA-produced data, subjec
 |---|---|---|
 | EPA identities | 3,639 profiles / 18,764 reference rows match and CSV hash matches | Record support is scoped to EPA's dataset, not every retail offering |
 | Annual-guide identities | Prior check: 488 profiles / 908 locators and six file hashes match | Preserve guide scope and source-specific conditions |
+| NHTSA vPIC supplements | 6 profiles across five year-scoped queries (two Ram MY2024 and four Tesla Roadster MY2008–2011) match the returned make/model relation in the requested year | Each profile has a matching year-scoped query and only make/model/year fields; vPIC is not a U.S. retail-sales census. All six remain not release-ready |
 | Historical identities | {len(checked_historical_ids)} of {len(historical_profile_ids)} selected historical profiles now have targeted field-level matrices covering {checked_historical_fact_count} populated values; bounded evidence strength varies by source and field | {unchecked_historical_count} remain unchecked. Exact configurations remain unverified; original Wikipedia revisions and source-use terms remain open. The Charger batch uses candidate secondary guides, some of which cite the imported Wikipedia article |
 | MY2027 | The 34 displayed make/model/year identities also match NHTSA's 2027 make/year records | The separate preliminary guide has no exact vehicle-ID join; it is not evidence for retail-sales coverage |
 | Trim names | Fresh document support for 17 Chevrolet/GMC, 12 Ram and four Lucid labels | Ten other previews lack new original-document checks; exact claimed market scope and source-use conditions remain open |

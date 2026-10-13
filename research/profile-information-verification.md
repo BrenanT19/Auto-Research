@@ -2,11 +2,13 @@
 
 **Checked:** 2026-10-08 UTC / 2026-10-07 Pacific<br>
 **Sources cited:** 224<br>
-**Status:** Full factual verification is incomplete. No public release was prepared or published.
+**Status:** Full factual verification is incomplete; **0 of 4715 profiles are release-ready**, and **14936 of 14936 populated fields remain flagged `PENDING CONTENT/APPLICABILITY/SOURCE-USE REVIEW`**. No public release was prepared or published.
 
 ## What was checked
 
-Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **97 distinct external source URLs**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified.
+Every one of the **4,715 distinct development profiles** was retrieved, not just sampled. All profile IDs and make/model/year/trim values matched their Browse records. The census found **14,936 nonempty top-level information fields**, **5,668 claim/source associations**, and **97 distinct external URLs in the profile claim-source export**. Empty reliability objects with null values were excluded from populated research. These are reproducible local inventory results, not a claim that all facts are verified.
+
+**Profile-cohort reconciliation:** The 4,715 IDs partition into 3639 EPA-linked profiles, 488 annual-guide profiles, 539 selected historical profiles, 6 vPIC-only supplements, and 43 trim profiles. These counts are inventory coverage, not fact approval. The 34 MY2027 profiles are included in the EPA-linked count and separately cross-checked against vPIC; the EPA dataset's published scope and retail-market completeness remain distinct questions.
 
 **Derived sibling-trim links:** 238 labels across 42 populated arrays resolve to same-year sibling profile IDs, with 476 linked claim references and source URLs. This derived lineage does not independently verify trim facts or clear source-use rights; it is not release approval.
 
@@ -38,6 +40,7 @@ EPA's default public-domain statement is favorable for EPA-produced data, subjec
 |---|---|---|
 | EPA identities | 3,639 profiles / 18,764 reference rows match and CSV hash matches | Record support is scoped to EPA's dataset, not every retail offering |
 | Annual-guide identities | Prior check: 488 profiles / 908 locators and six file hashes match | Preserve guide scope and source-specific conditions |
+| NHTSA vPIC supplements | 6 profiles across five year-scoped queries (two Ram MY2024 and four Tesla Roadster MY2008–2011) match the returned make/model relation in the requested year | Each profile has a matching year-scoped query and only make/model/year fields; vPIC is not a U.S. retail-sales census. All six remain not release-ready |
 | Historical identities | 312 of 539 selected historical profiles now have targeted field-level matrices covering 983 populated values; bounded evidence strength varies by source and field | 227 remain unchecked. Exact configurations remain unverified; original Wikipedia revisions and source-use terms remain open. The Charger batch uses candidate secondary guides, some of which cite the imported Wikipedia article |
 | MY2027 | The 34 displayed make/model/year identities also match NHTSA's 2027 make/year records | The separate preliminary guide has no exact vehicle-ID join; it is not evidence for retail-sales coverage |
 | Trim names | Fresh document support for 17 Chevrolet/GMC, 12 Ram and four Lucid labels | Ten other previews lack new original-document checks; exact claimed market scope and source-use conditions remain open |
@@ -86,7 +89,7 @@ The Chevrolet timeline also supplies explicit intervals for C3 (MY1968–1982), 
 
 The separate 2027 workbook remains preliminary-source evidence. Name matching does not establish an exact identifier join, and absence from that workbook cannot prove no U.S. offering. [[77]](https://www.fueleconomy.gov/feg/epadata/27data.zip) The all-years row checks remain valid; the unresolved question is what the profile can truthfully claim about status and scope.
 
-All **34/34 MY2027 make/model/year identities** were independently matched to current NHTSA vPIC make/year listings; 30 names match text-and-case exactly and 4 differ only in capitalization. The separate preliminary workbook still has no exact vehicle-ID join, but it is not the only identity evidence. These database listings do not establish a retail-sales count, delivery, or every final trim/configuration.
+All **34/34 MY2027 make/model/year identities** were independently matched to current NHTSA vPIC make/year listings; 30 names match text-and-case exactly and 4 differ only in capitalization. The separate preliminary workbook still has no exact vehicle-ID join, but it is not the only identity evidence. These database listings do not establish a retail-sales count, delivery, or every final trim/configuration. The row-level crosscheck is audit-only: 34 rows across 13 make/year URLs. None of those URLs appears in the profiles' field-level claim-source rows, and they are outside the 97-URL claim-source rights crosswalk; this identity check does not support other populated facts.
 
 | Make | MY2027 model labels matched | NHTSA source |
 |---|---|---|
